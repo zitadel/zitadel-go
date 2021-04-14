@@ -88,17 +88,10 @@ func transportCredentials(api string) (credentials.TransportCredentials, error) 
 
 type Option func(*Connection) error
 
-//WithIssuer replaces the standard issuer (https://issuer.zitadel.ch)
-func WithIssuer(issuer string) func(*Connection) error {
+//WithCustomURL replaces the standard issuer (https://issuer.zitadel.ch) and api endpoint (api.zitadel.ch:443)
+func WithCustomURL(issuer, api string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.issuer = issuer
-		return nil
-	}
-}
-
-//WithAPI replaces the standard api (api.zitadel.ch:443)
-func WithAPI(api string) func(*Connection) error {
-	return func(client *Connection) error {
 		client.api = api
 		return nil
 	}

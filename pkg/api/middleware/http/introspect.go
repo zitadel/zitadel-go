@@ -46,15 +46,27 @@ func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionIntercep
 }
 
 //Handler creates a http.Handler for middleware usage
-func (interceptor *IntrospectionInterceptor) Handler(handler http.Handler) http.Handler {
+func (interceptor *IntrospectionInterceptor) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		err := interceptor.introspect(r)
 		if err != nil {
 			interceptor.writeError(w, 401, err.Error())
 			return
 		}
-		handler.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
+}
+
+//HandlerFunc creates a http.HandlerFunc for middleware usage
+func (interceptor *IntrospectionInterceptor) HandlerFunc(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := interceptor.introspect(r)
+		if err != nil {
+			interceptor.writeError(w, 401, err.Error())
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
 }
 
 func (interceptor *IntrospectionInterceptor) introspect(r *http.Request) error {
