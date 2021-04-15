@@ -12,11 +12,12 @@ import (
 )
 
 type Connection struct {
-	issuer  string
-	api     string
-	keyPath string
-	scopes  []string
-	orgID   string
+	issuer   string
+	api      string
+	keyPath  string
+	scopes   []string
+	orgID    string
+	insecure bool
 	*grpc.ClientConn
 }
 
@@ -33,23 +34,25 @@ func NewConnection(scopes []string, options ...Option) (*Connection, error) {
 			return nil, err
 		}
 	}
+
 	unaryInterceptors, streamInterceptors, err := interceptors(c.issuer, c.keyPath, c.orgID, c.scopes)
 	if err != nil {
 		return nil, err
 	}
-	certs, err := transportCredentials(c.api)
-	if err != nil {
-		return nil, err
-	}
-	conn, err := grpc.Dial(c.api,
-		grpc.WithTransportCredentials(certs),
+	dialOptions := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
 			unaryInterceptors...,
 		),
 		grpc.WithChainStreamInterceptor(
 			streamInterceptors...,
 		),
-	)
+	}
+	opt, err := transportOption(c.api, c.insecure)
+	if err != nil {
+		return nil, err
+	}
+	dialOptions = append(dialOptions, opt)
+	conn, err := grpc.Dial(c.api, dialOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +74,17 @@ func interceptors(issuer, keyPath, orgID string, scopes []string) ([]grpc.UnaryC
 		streamInterceptors = append(streamInterceptors, org.Stream())
 	}
 	return unaryInterceptors, streamInterceptors, nil
+}
+
+func transportOption(api string, insecure bool) (grpc.DialOption, error) {
+	if insecure {
+		return grpc.WithInsecure(), nil
+	}
+	certs, err := transportCredentials(api)
+	if err != nil {
+		return nil, err
+	}
+	return grpc.WithTransportCredentials(certs), nil
 }
 
 func transportCredentials(api string) (credentials.TransportCredentials, error) {
@@ -107,9 +121,19 @@ func WithKeyPath(keyPath string) func(*Connection) error {
 }
 
 //WithOrgID sets the organization context (where the api calls are executed)
+//if not set the resource owner (organisation) of the calling user will be used
 func WithOrgID(orgID string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.orgID = orgID
+		return nil
+	}
+}
+
+//WithInsecure disables transport security for the client connection
+//use only when absolutely necessary (local development)
+func WithInsecure() func(*Connection) error {
+	return func(client *Connection) error {
+		client.insecure = true
 		return nil
 	}
 }
