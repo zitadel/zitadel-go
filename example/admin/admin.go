@@ -15,11 +15,9 @@ func main() {
 	//create a client for the admin api providing:
 	//- scopes (including the ZITADEL project ID),
 	//- path to your key json (if not provided by environment variable)
-	//- id of the organisation where your calls will be executed (can also be provided for every call separately)
 	client, err := admin.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		zitadel.WithKeyPath("./key.json"),
-		zitadel.WithOrgID("74161146763996133"),
+		zitadel.WithKeyPath("key.json"),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)

@@ -16,11 +16,12 @@ func main() {
 	//create a client for the management api providing:
 	//- scopes (including the ZITADEL project ID),
 	//- path to your key json (if not provided by environment variable)
-	//- id of the organisation where your calls will be executed (can also be provided for every call separately)
+	//- id of the organisation where your calls will be executed
+	//(default is the resource owner / organisation of the calling user, can also be provided for every call separately)
 	client, err := management.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		zitadel.WithKeyPath("./key.json"),
-		zitadel.WithOrgID("74161146763996133"),
+		zitadel.WithKeyPath("key.json"),
+		//zitadel.WithOrgID("74161146763996133"),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)
@@ -43,7 +44,7 @@ func main() {
 	log.Printf("%s was created on: %s", resp.Org.Name, resp.Org.Details.CreationDate.AsTime())
 
 	//if you need an other organisation context for some call, you can overwrite it by setting the orgID directly
-	respOverwrite, err := client.GetMyOrg(middleware.SetOrgID(ctx, "103000304424903098"), &pb.GetMyOrgRequest{})
+	respOverwrite, err := client.GetMyOrg(middleware.SetOrgID(ctx, "74161146763996133"), &pb.GetMyOrgRequest{})
 	if err != nil {
 		log.Fatalln("call failed: ", err)
 	}
