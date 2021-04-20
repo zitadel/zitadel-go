@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: chore
+    include: scope
+- package-ecosystem: "docker"
+  directory: "/build/zitadel"
+  schedule:
+    interval: "weekly"
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: chore
+    include: scope
