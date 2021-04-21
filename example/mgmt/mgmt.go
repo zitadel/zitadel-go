@@ -20,7 +20,7 @@ func main() {
 	//(default is the resource owner / organisation of the calling user, can also be provided for every call separately)
 	client, err := management.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		zitadel.WithKeyPath("key.json"),
+		//zitadel.WithKeyPath("key.json"),
 		//zitadel.WithOrgID("74161146763996133"),
 	)
 	if err != nil {

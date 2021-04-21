@@ -17,7 +17,7 @@ func main() {
 	//- path to your key json (if not provided by environment variable)
 	client, err := auth.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		zitadel.WithKeyPath("key.json"),
+		//zitadel.WithKeyPath("key.json"),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)

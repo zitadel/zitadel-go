@@ -6,10 +6,12 @@ import (
 	"time"
 
 	http_mw "github.com/caos/zitadel-go/pkg/api/middleware/http"
+	"github.com/caos/zitadel-go/pkg/client"
+	"github.com/caos/zitadel-go/pkg/client/middleware"
 )
 
 func main() {
-	introspection, err := http_mw.NewIntrospectionInterceptor("https://issuer.zitadel.dev", "/Users/livio/Downloads/dev-api-103821073161710129.json")
+	introspection, err := http_mw.NewIntrospectionInterceptor(client.Issuer, middleware.OSKeyPath())
 	if err != nil {
 		log.Fatal(err)
 	}
