@@ -1,6 +1,5 @@
 ARG GO_VERSION=1.15.8
 ARG NODE_VERSION=15.8.0
-ARG ENV=prod
 
 #######################
 ## These steps set platform / arch type specific variables
@@ -41,7 +40,7 @@ RUN curl https://raw.githubusercontent.com/envoyproxy/protoc-gen-validate/v0.4.1
     && curl https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/field_behavior.proto --create-dirs -o include/google/api/field_behavior.proto
 
 WORKDIR /zitadel
-RUN git clone -b ${TAG_NAME} https://github.com/caos/zitadel . \
+RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/caos/zitadel . \
     && cp -r proto/* /proto/include \
     && cp -r internal/protoc/protoc-gen-authoption/authoption /proto/include
 
