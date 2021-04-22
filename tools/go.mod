@@ -1,9 +1,9 @@
 module github.com/caos/zitadel/tools
 
-go 1.15
+go 1.16
 
 require (
-	github.com/envoyproxy/protoc-gen-validate v0.4.1
+	github.com/envoyproxy/protoc-gen-validate v0.5.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
 	github.com/rakyll/statik v0.1.7
 	github.com/spf13/afero v1.5.1 // indirect

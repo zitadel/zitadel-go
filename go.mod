@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/caos/oidc v0.14.5
-	github.com/envoyproxy/protoc-gen-validate v0.4.1
+	github.com/envoyproxy/protoc-gen-validate v0.5.1
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.2.0

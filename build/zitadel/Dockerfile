@@ -32,7 +32,7 @@ RUN curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v${PR
     && rm -f $PROTOC_ZIP
 
 #proto dependencies
-RUN curl https://raw.githubusercontent.com/envoyproxy/protoc-gen-validate/v0.4.1/validate/validate.proto --create-dirs -o include/validate/validate.proto  \
+RUN curl https://raw.githubusercontent.com/envoyproxy/protoc-gen-validate/v0.5.1/validate/validate.proto --create-dirs -o include/validate/validate.proto  \
     && curl https://raw.githubusercontent.com/grpc-ecosystem/grpc-gateway/v2.2.0/protoc-gen-openapiv2/options/annotations.proto --create-dirs -o include/protoc-gen-openapiv2/options/annotations.proto \
     && curl https://raw.githubusercontent.com/grpc-ecosystem/grpc-gateway/v2.2.0/protoc-gen-openapiv2/options/openapiv2.proto --create-dirs -o include/protoc-gen-openapiv2/options/openapiv2.proto \
     && curl https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/annotations.proto --create-dirs -o include/google/api/annotations.proto \
