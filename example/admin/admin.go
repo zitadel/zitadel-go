@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 
 	"github.com/caos/oidc/pkg/oidc"
@@ -11,7 +12,13 @@ import (
 	pb "github.com/caos/zitadel-go/pkg/client/zitadel/admin"
 )
 
+var (
+	orgID = flag.String("orgID", "74161146763996133", "orgID used in the example call (default is ACME on zitadel.ch)")
+)
+
 func main() {
+	flag.Parse()
+
 	//create a client for the admin api providing:
 	//- scopes (including the ZITADEL project ID),
 	//- path to your key json (if not provided by environment variable)
@@ -33,7 +40,7 @@ func main() {
 	//call ZITADEL and print the name and creation date of the requested organisation
 	//the call was successful if no error occurred
 	resp, err := client.GetOrgByID(ctx, &pb.GetOrgByIDRequest{
-		Id: "74161146763996133",
+		Id: *orgID,
 	})
 	if err != nil {
 		log.Fatalln("call failed: ", err)

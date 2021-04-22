@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 
 	"github.com/caos/oidc/pkg/oidc"
@@ -12,7 +13,13 @@ import (
 	pb "github.com/caos/zitadel-go/pkg/client/zitadel/management"
 )
 
+var (
+	orgID = flag.String("orgID", "74161146763996133", "orgID to set for overwrite example (default is ACME on zitadel.ch)")
+)
+
 func main() {
+	flag.Parse()
+
 	//create a client for the management api providing:
 	//- scopes (including the ZITADEL project ID),
 	//- path to your key json (if not provided by environment variable)
@@ -21,7 +28,7 @@ func main() {
 	client, err := management.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
 		//zitadel.WithKeyPath("key.json"),
-		//zitadel.WithOrgID("74161146763996133"),
+		//zitadel.WithOrgID(*orgID),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)
@@ -44,7 +51,8 @@ func main() {
 	log.Printf("%s was created on: %s", resp.Org.Name, resp.Org.Details.CreationDate.AsTime())
 
 	//if you need an other organisation context for some call, you can overwrite it by setting the orgID directly
-	respOverwrite, err := client.GetMyOrg(middleware.SetOrgID(ctx, "74161146763996133"), &pb.GetMyOrgRequest{})
+	//for this example just set the `orgID` flag
+	respOverwrite, err := client.GetMyOrg(middleware.SetOrgID(ctx, *orgID), &pb.GetMyOrgRequest{})
 	if err != nil {
 		log.Fatalln("call failed: ", err)
 	}
