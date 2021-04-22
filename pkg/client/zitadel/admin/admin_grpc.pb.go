@@ -23,15 +23,19 @@ type AdminServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	//Checks whether an organisation exists by the given parameters
 	IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error)
+	// Returns an organisation by id
 	GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error)
 	//Returns all organisations matching the request
-	// all queries need to match (ANDed)
+	// all queries need to match (AND)
 	ListOrgs(ctx context.Context, in *ListOrgsRequest, opts ...grpc.CallOption) (*ListOrgsResponse, error)
 	//Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
+	// Returns a identity provider configuration of the IAM
 	GetIDPByID(ctx context.Context, in *GetIDPByIDRequest, opts ...grpc.CallOption) (*GetIDPByIDResponse, error)
+	// Returns all identity provider configurations of the IAM
 	ListIDPs(ctx context.Context, in *ListIDPsRequest, opts ...grpc.CallOption) (*ListIDPsResponse, error)
+	// Adds a new oidc identity provider configuration the IAM
 	AddOIDCIDP(ctx context.Context, in *AddOIDCIDPRequest, opts ...grpc.CallOption) (*AddOIDCIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
@@ -635,15 +639,19 @@ type AdminServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	//Checks whether an organisation exists by the given parameters
 	IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error)
+	// Returns an organisation by id
 	GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error)
 	//Returns all organisations matching the request
-	// all queries need to match (ANDed)
+	// all queries need to match (AND)
 	ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error)
 	//Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
+	// Returns a identity provider configuration of the IAM
 	GetIDPByID(context.Context, *GetIDPByIDRequest) (*GetIDPByIDResponse, error)
+	// Returns all identity provider configurations of the IAM
 	ListIDPs(context.Context, *ListIDPsRequest) (*ListIDPsResponse, error)
+	// Adds a new oidc identity provider configuration the IAM
 	AddOIDCIDP(context.Context, *AddOIDCIDPRequest) (*AddOIDCIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.

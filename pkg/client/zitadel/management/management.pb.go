@@ -84,6 +84,7 @@ func (SendHumanResetPasswordNotificationRequest_Type) EnumDescriptor() ([]byte, 
 	return file_zitadel_management_proto_rawDescGZIP(), []int{56, 0}
 }
 
+//This is an empty request
 type HealthzRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -122,6 +123,7 @@ func (*HealthzRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_management_proto_rawDescGZIP(), []int{0}
 }
 
+//This is an empty response
 type HealthzResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -160,6 +162,7 @@ func (*HealthzResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_management_proto_rawDescGZIP(), []int{1}
 }
 
+//This is an empty request
 type GetOIDCInformationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -253,6 +256,7 @@ func (x *GetOIDCInformationResponse) GetDiscoveryEndpoint() string {
 	return ""
 }
 
+//This is an empty request
 type GetIAMRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4477,6 +4481,7 @@ func (x *ListUserMembershipsResponse) GetResult() []*user.Membership {
 	return nil
 }
 
+//This is an empty request
 type GetMyOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4861,6 +4866,7 @@ func (x *AddOrgResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type DeactivateOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4946,6 +4952,7 @@ func (x *DeactivateOrgResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ReactivateOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5629,6 +5636,7 @@ func (x *SetPrimaryOrgDomainResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ListOrgMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7175,6 +7183,7 @@ func (x *RemoveProjectResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ListProjectMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -14355,6 +14364,7 @@ func (x *GetPasswordComplexityPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
+//This is an empty request
 type GetDefaultPasswordComplexityPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -14692,6 +14702,7 @@ func (x *UpdateCustomPasswordComplexityPolicyResponse) GetDetails() *object.Obje
 	return nil
 }
 
+//This is an empty request
 type ResetPasswordComplexityPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -14777,6 +14788,7 @@ func (x *ResetPasswordComplexityPolicyToDefaultResponse) GetDetails() *object.Ob
 	return nil
 }
 
+//This is an empty request
 type GetPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -14870,6 +14882,7 @@ func (x *GetPasswordAgePolicyResponse) GetIsDefault() bool {
 	return false
 }
 
+//This is an empty request
 type GetDefaultPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15159,6 +15172,7 @@ func (x *UpdateCustomPasswordAgePolicyResponse) GetDetails() *object.ObjectDetai
 	return nil
 }
 
+//This is an empty request
 type ResetPasswordAgePolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15244,6 +15258,7 @@ func (x *ResetPasswordAgePolicyToDefaultResponse) GetDetails() *object.ObjectDet
 	return nil
 }
 
+//This is an empty request
 type GetPasswordLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15337,6 +15352,7 @@ func (x *GetPasswordLockoutPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
+//This is an empty request
 type GetDefaultPasswordLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15626,6 +15642,7 @@ func (x *UpdateCustomPasswordLockoutPolicyResponse) GetDetails() *object.ObjectD
 	return nil
 }
 
+//This is an empty request
 type ResetPasswordLockoutPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15711,6 +15728,7 @@ func (x *ResetPasswordLockoutPolicyToDefaultResponse) GetDetails() *object.Objec
 	return nil
 }
 
+//This is an empty request
 type GetLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -15804,6 +15822,7 @@ func (x *GetLabelPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
+//This is an empty request
 type GetDefaultLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16109,6 +16128,7 @@ func (x *UpdateCustomLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ResetLabelPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16904,6 +16924,7 @@ func (x *RemoveOrgIDPRequest) GetIdpId() string {
 	return ""
 }
 
+//This is an empty response
 type RemoveOrgIDPResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

@@ -33,6 +33,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+//This is an empty request
 type HealthzRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -71,6 +72,7 @@ func (*HealthzRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_admin_proto_rawDescGZIP(), []int{0}
 }
 
+//This is an empty response
 type HealthzResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2792,6 +2794,7 @@ func (x *ResetCustomOrgIAMPolicyToDefaultResponse) GetDetails() *object.ObjectDe
 	return nil
 }
 
+//This is an empty request
 type GetLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2987,6 +2990,7 @@ func (x *UpdateLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type GetLoginPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3489,6 +3493,7 @@ func (x *RemoveIDPFromLoginPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ListLoginPolicySecondFactorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3770,6 +3775,7 @@ func (x *RemoveSecondFactorFromLoginPolicyResponse) GetDetails() *object.ObjectD
 	return nil
 }
 
+//This is an empty request
 type ListLoginPolicyMultiFactorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4262,6 +4268,7 @@ func (x *UpdatePasswordComplexityPolicyResponse) GetDetails() *object.ObjectDeta
 	return nil
 }
 
+//This is an empty request
 type GetPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4449,6 +4456,7 @@ func (x *UpdatePasswordAgePolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type GetPasswordLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4938,6 +4946,7 @@ func (x *RemoveIAMMemberResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+//This is an empty request
 type ListIAMMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5143,6 +5152,7 @@ func (x *ListIAMMembersResponse) GetResult() []*member.Member {
 	return nil
 }
 
+//This is an empty request
 type ListViewsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5284,6 +5294,7 @@ func (x *ClearViewRequest) GetViewName() string {
 	return ""
 }
 
+//This is an empty response
 type ClearViewResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5322,6 +5333,7 @@ func (*ClearViewResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_admin_proto_rawDescGZIP(), []int{100}
 }
 
+//This is an empty request
 type ListFailedEventsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5471,6 +5483,7 @@ func (x *RemoveFailedEventRequest) GetFailedSequence() uint64 {
 	return 0
 }
 
+//This is an empty response
 type RemoveFailedEventResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
