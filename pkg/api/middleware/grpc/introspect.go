@@ -17,7 +17,7 @@ type IntrospectionInterceptor struct {
 }
 
 //NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
-//(sending the token to the introspection endpoint)
+//by sending the token to the introspection endpoint)
 func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionInterceptor, error) {
 	resourceServer, err := rs.NewResourceServerFromKeyFile(issuer, keyPath)
 	if err != nil {
@@ -49,11 +49,7 @@ func (interceptor *IntrospectionInterceptor) Stream() grpc.StreamServerIntercept
 }
 
 func (interceptor *IntrospectionInterceptor) introspect(ctx context.Context) error {
-	auth := metautils.ExtractIncoming(ctx).Get("authorization")
-	if auth == "" {
-		return status.Error(codes.Unauthenticated, "auth header missing")
-	}
-	err := middleware.Introspect(ctx, auth, interceptor.resourceServer)
+	err := middleware.Introspect(ctx, metautils.ExtractIncoming(ctx).Get("authorization"), interceptor.resourceServer)
 	if err != nil {
 		return status.Error(codes.Unauthenticated, err.Error())
 	}

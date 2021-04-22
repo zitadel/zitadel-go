@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -33,7 +32,7 @@ func (j JSONMarshaller) ContentType() string {
 }
 
 //NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
-//(sending the token to the introspection endpoint)
+//by sending the token to the introspection endpoint)
 func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionInterceptor, error) {
 	resourceServer, err := rs.NewResourceServerFromKeyFile(issuer, keyPath)
 	if err != nil {
@@ -70,11 +69,7 @@ func (interceptor *IntrospectionInterceptor) HandlerFunc(next http.HandlerFunc) 
 }
 
 func (interceptor *IntrospectionInterceptor) introspect(r *http.Request) error {
-	auth := r.Header.Get("authorization")
-	if auth == "" {
-		return fmt.Errorf("auth header missing")
-	}
-	return middleware.Introspect(r.Context(), auth, interceptor.resourceServer)
+	return middleware.Introspect(r.Context(), r.Header.Get("authorization"), interceptor.resourceServer)
 }
 
 func (interceptor *IntrospectionInterceptor) writeError(w http.ResponseWriter, status int, errMessage interface{}) {
