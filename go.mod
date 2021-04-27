@@ -3,7 +3,7 @@ module github.com/caos/zitadel-go
 go 1.16
 
 require (
-	github.com/caos/oidc v0.14.5
+	github.com/caos/oidc v0.14.6
 	github.com/envoyproxy/protoc-gen-validate v0.5.1
 	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
