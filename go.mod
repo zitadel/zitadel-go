@@ -6,7 +6,7 @@ require (
 	github.com/caos/oidc v0.14.6
 	github.com/envoyproxy/protoc-gen-validate v0.5.1
 	github.com/golang/protobuf v1.5.2
-	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.2.0
 	golang.org/x/net v0.0.0-20201026091529-146b70c837a4 // indirect
 	golang.org/x/oauth2 v0.0.0-20210201163806-010130855d6c
