@@ -86,8 +86,13 @@ type ManagementServiceClient interface {
 	RemoveHumanPhone(ctx context.Context, in *RemoveHumanPhoneRequest, opts ...grpc.CallOption) (*RemoveHumanPhoneResponse, error)
 	// An sms will be sent to the given phone number to finish the phone verification process of the user
 	ResendHumanPhoneVerification(ctx context.Context, in *ResendHumanPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendHumanPhoneVerificationResponse, error)
-	// A Manager is only allowed to set an initial password, on the next login the user has to change his password
+	// Removes the avatar number of the human
+	RemoveMyAvatar(ctx context.Context, in *RemoveHumanAvatarRequest, opts ...grpc.CallOption) (*RemoveHumanAvatarResponse, error)
+	// deprecated: use SetHumanPassword
 	SetHumanInitialPassword(ctx context.Context, in *SetHumanInitialPasswordRequest, opts ...grpc.CallOption) (*SetHumanInitialPasswordResponse, error)
+	// Set a new password for a user, on default the user has to change the password on the next login
+	// Set no_change_required to true if the user does not have to change the password on the next login
+	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
 	// An email will be sent to the given address to reset the password of the user
 	SendHumanResetPasswordNotification(ctx context.Context, in *SendHumanResetPasswordNotificationRequest, opts ...grpc.CallOption) (*SendHumanResetPasswordNotificationResponse, error)
 	// Returns a list of all factors (second and multi) which are configured on the user
@@ -130,6 +135,8 @@ type ManagementServiceClient interface {
 	ListOrgChanges(ctx context.Context, in *ListOrgChangesRequest, opts ...grpc.CallOption) (*ListOrgChangesResponse, error)
 	// Creates a new organisation
 	AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error)
+	// Changes my organisation
+	UpdateOrg(ctx context.Context, in *UpdateOrgRequest, opts ...grpc.CallOption) (*UpdateOrgResponse, error)
 	// Sets the state of my organisation to deactivated
 	// Users of this organisation will not be able login
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
@@ -379,9 +386,12 @@ type ManagementServiceClient interface {
 	UpdateCustomPasswordLockoutPolicy(ctx context.Context, in *UpdateCustomPasswordLockoutPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPasswordLockoutPolicyResponse, error)
 	// The password lockout policy is not used at the moment
 	ResetPasswordLockoutPolicyToDefault(ctx context.Context, in *ResetPasswordLockoutPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetPasswordLockoutPolicyToDefaultResponse, error)
-	// Returns the label policy of the organisation
+	// Returns the active label policy of the organisation
 	// With this policy the private labeling can be configured (colors, etc.)
 	GetLabelPolicy(ctx context.Context, in *GetLabelPolicyRequest, opts ...grpc.CallOption) (*GetLabelPolicyResponse, error)
+	// Returns the preview label policy of the organisation
+	// With this policy the private labeling can be configured (colors, etc.)
+	GetPreviewLabelPolicy(ctx context.Context, in *GetPreviewLabelPolicyRequest, opts ...grpc.CallOption) (*GetPreviewLabelPolicyResponse, error)
 	// Returns the default label policy of the IAM
 	// With this policy the private labeling can be configured (colors, etc.)
 	GetDefaultLabelPolicy(ctx context.Context, in *GetDefaultLabelPolicyRequest, opts ...grpc.CallOption) (*GetDefaultLabelPolicyResponse, error)
@@ -391,9 +401,81 @@ type ManagementServiceClient interface {
 	// Changes the custom label policy for the organisation
 	// With this policy the private labeling can be configured (colors, etc.)
 	UpdateCustomLabelPolicy(ctx context.Context, in *UpdateCustomLabelPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomLabelPolicyResponse, error)
+	// Activates all changes of the label policy
+	ActivateCustomLabelPolicy(ctx context.Context, in *ActivateCustomLabelPolicyRequest, opts ...grpc.CallOption) (*ActivateCustomLabelPolicyResponse, error)
+	// Removes the logo of the label policy
+	RemoveCustomLabelPolicyLogo(ctx context.Context, in *RemoveCustomLabelPolicyLogoRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoResponse, error)
+	// Removes the logo dark of the label policy
+	RemoveCustomLabelPolicyLogoDark(ctx context.Context, in *RemoveCustomLabelPolicyLogoDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoDarkResponse, error)
+	// Removes the icon of the label policy
+	RemoveCustomLabelPolicyIcon(ctx context.Context, in *RemoveCustomLabelPolicyIconRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconResponse, error)
+	// Removes the logo dark of the label policy
+	RemoveCustomLabelPolicyIconDark(ctx context.Context, in *RemoveCustomLabelPolicyIconDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconDarkResponse, error)
+	// Removes the font of the label policy
+	RemoveCustomLabelPolicyFont(ctx context.Context, in *RemoveCustomLabelPolicyFontRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyFontResponse, error)
 	// Removes the custom label policy of the organisation
 	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(ctx context.Context, in *ResetLabelPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLabelPolicyToDefaultResponse, error)
+	//Returns the custom text for initial message
+	GetCustomInitMessageText(ctx context.Context, in *GetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInitMessageTextResponse, error)
+	//Returns the default text for initial message
+	GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error)
+	//Sets the default custom text for initial message
+	// it impacts all organisations without customized initial message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomInitMessageText(ctx context.Context, in *SetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*SetCustomInitMessageTextResponse, error)
+	// Removes the custom init message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomInitMessageTextToDefault(ctx context.Context, in *ResetCustomInitMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInitMessageTextToDefaultResponse, error)
+	//Returns the custom text for password reset message
+	GetCustomPasswordResetMessageText(ctx context.Context, in *GetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordResetMessageTextResponse, error)
+	//Returns the default text for password reset message
+	GetDefaultPasswordResetMessageText(ctx context.Context, in *GetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordResetMessageTextResponse, error)
+	//Sets the default custom text for password reset message
+	// it impacts all organisations without customized password reset message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomPasswordResetMessageText(ctx context.Context, in *SetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordResetMessageTextResponse, error)
+	// Removes the custom password reset message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomPasswordResetMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordResetMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
+	//Returns the custom text for verify email message
+	GetCustomVerifyEmailMessageText(ctx context.Context, in *GetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailMessageTextResponse, error)
+	//Returns the default text for verify email message
+	GetDefaultVerifyEmailMessageText(ctx context.Context, in *GetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailMessageTextResponse, error)
+	//Sets the default custom text for verify email message
+	// it impacts all organisations without customized verify email message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomVerifyEmailMessageText(ctx context.Context, in *SetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyEmailMessageTextResponse, error)
+	// Removes the custom verify email message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomVerifyEmailMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
+	//Returns the custom text for verify email message
+	GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error)
+	//Returns the custom text for verify email message
+	GetDefaultVerifyPhoneMessageText(ctx context.Context, in *GetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyPhoneMessageTextResponse, error)
+	//Sets the default custom text for verify email message
+	// it impacts all organisations without customized verify email message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomVerifyPhoneMessageText(ctx context.Context, in *SetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyPhoneMessageTextResponse, error)
+	// Removes the custom verify phone text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
+	//Returns the custom text for domain claimed message
+	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
+	//Returns the custom text for domain claimed message
+	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
+	// Sets the default custom text for domain claimed message
+	// it impacts all organisations without customized domain claimed message text
+	// The Following Variables can be used:
+	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomDomainClaimedMessageCustomText(ctx context.Context, in *SetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*SetCustomDomainClaimedMessageTextResponse, error)
+	// Removes the custom init message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomDomainClaimedMessageTextToDefault(ctx context.Context, in *ResetCustomDomainClaimedMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
 	// Returns a identity provider configuration of the organisation
 	GetOrgIDPByID(ctx context.Context, in *GetOrgIDPByIDRequest, opts ...grpc.CallOption) (*GetOrgIDPByIDResponse, error)
 	// Returns all identity provider configuration in the organisation, which match the query
@@ -669,9 +751,27 @@ func (c *managementServiceClient) ResendHumanPhoneVerification(ctx context.Conte
 	return out, nil
 }
 
+func (c *managementServiceClient) RemoveMyAvatar(ctx context.Context, in *RemoveHumanAvatarRequest, opts ...grpc.CallOption) (*RemoveHumanAvatarResponse, error) {
+	out := new(RemoveHumanAvatarResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveMyAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) SetHumanInitialPassword(ctx context.Context, in *SetHumanInitialPasswordRequest, opts ...grpc.CallOption) (*SetHumanInitialPasswordResponse, error) {
 	out := new(SetHumanInitialPasswordResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetHumanInitialPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error) {
+	out := new(SetHumanPasswordResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetHumanPassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -834,6 +934,15 @@ func (c *managementServiceClient) ListOrgChanges(ctx context.Context, in *ListOr
 func (c *managementServiceClient) AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error) {
 	out := new(AddOrgResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddOrg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateOrg(ctx context.Context, in *UpdateOrgRequest, opts ...grpc.CallOption) (*UpdateOrgResponse, error) {
+	out := new(UpdateOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateOrg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1767,6 +1876,15 @@ func (c *managementServiceClient) GetLabelPolicy(ctx context.Context, in *GetLab
 	return out, nil
 }
 
+func (c *managementServiceClient) GetPreviewLabelPolicy(ctx context.Context, in *GetPreviewLabelPolicyRequest, opts ...grpc.CallOption) (*GetPreviewLabelPolicyResponse, error) {
+	out := new(GetPreviewLabelPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetPreviewLabelPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) GetDefaultLabelPolicy(ctx context.Context, in *GetDefaultLabelPolicyRequest, opts ...grpc.CallOption) (*GetDefaultLabelPolicyResponse, error) {
 	out := new(GetDefaultLabelPolicyResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultLabelPolicy", in, out, opts...)
@@ -1794,9 +1912,243 @@ func (c *managementServiceClient) UpdateCustomLabelPolicy(ctx context.Context, i
 	return out, nil
 }
 
+func (c *managementServiceClient) ActivateCustomLabelPolicy(ctx context.Context, in *ActivateCustomLabelPolicyRequest, opts ...grpc.CallOption) (*ActivateCustomLabelPolicyResponse, error) {
+	out := new(ActivateCustomLabelPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ActivateCustomLabelPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveCustomLabelPolicyLogo(ctx context.Context, in *RemoveCustomLabelPolicyLogoRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoResponse, error) {
+	out := new(RemoveCustomLabelPolicyLogoResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyLogo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveCustomLabelPolicyLogoDark(ctx context.Context, in *RemoveCustomLabelPolicyLogoDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoDarkResponse, error) {
+	out := new(RemoveCustomLabelPolicyLogoDarkResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyLogoDark", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveCustomLabelPolicyIcon(ctx context.Context, in *RemoveCustomLabelPolicyIconRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconResponse, error) {
+	out := new(RemoveCustomLabelPolicyIconResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyIcon", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveCustomLabelPolicyIconDark(ctx context.Context, in *RemoveCustomLabelPolicyIconDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconDarkResponse, error) {
+	out := new(RemoveCustomLabelPolicyIconDarkResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyIconDark", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveCustomLabelPolicyFont(ctx context.Context, in *RemoveCustomLabelPolicyFontRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyFontResponse, error) {
+	out := new(RemoveCustomLabelPolicyFontResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyFont", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) ResetLabelPolicyToDefault(ctx context.Context, in *ResetLabelPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLabelPolicyToDefaultResponse, error) {
 	out := new(ResetLabelPolicyToDefaultResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetLabelPolicyToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetCustomInitMessageText(ctx context.Context, in *GetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInitMessageTextResponse, error) {
+	out := new(GetCustomInitMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetCustomInitMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error) {
+	out := new(GetDefaultInitMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultInitMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomInitMessageText(ctx context.Context, in *SetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*SetCustomInitMessageTextResponse, error) {
+	out := new(SetCustomInitMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetCustomInitMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomInitMessageTextToDefault(ctx context.Context, in *ResetCustomInitMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInitMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomInitMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetCustomInitMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetCustomPasswordResetMessageText(ctx context.Context, in *GetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordResetMessageTextResponse, error) {
+	out := new(GetCustomPasswordResetMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetCustomPasswordResetMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultPasswordResetMessageText(ctx context.Context, in *GetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordResetMessageTextResponse, error) {
+	out := new(GetDefaultPasswordResetMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultPasswordResetMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomPasswordResetMessageText(ctx context.Context, in *SetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordResetMessageTextResponse, error) {
+	out := new(SetCustomPasswordResetMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetCustomPasswordResetMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomPasswordResetMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordResetMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomPasswordResetMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetCustomPasswordResetMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetCustomVerifyEmailMessageText(ctx context.Context, in *GetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailMessageTextResponse, error) {
+	out := new(GetCustomVerifyEmailMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetCustomVerifyEmailMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultVerifyEmailMessageText(ctx context.Context, in *GetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailMessageTextResponse, error) {
+	out := new(GetDefaultVerifyEmailMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultVerifyEmailMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomVerifyEmailMessageText(ctx context.Context, in *SetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyEmailMessageTextResponse, error) {
+	out := new(SetCustomVerifyEmailMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetCustomVerifyEmailMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomVerifyEmailMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomVerifyEmailMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetCustomVerifyEmailMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error) {
+	out := new(GetCustomVerifyPhoneMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetCustomVerifyPhoneMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultVerifyPhoneMessageText(ctx context.Context, in *GetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyPhoneMessageTextResponse, error) {
+	out := new(GetDefaultVerifyPhoneMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultVerifyPhoneMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomVerifyPhoneMessageText(ctx context.Context, in *SetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyPhoneMessageTextResponse, error) {
+	out := new(SetCustomVerifyPhoneMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetCustomVerifyPhoneMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomVerifyPhoneMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetCustomVerifyPhoneMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error) {
+	out := new(GetCustomDomainClaimedMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetCustomDomainClaimedMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error) {
+	out := new(GetDefaultDomainClaimedMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDefaultDomainClaimedMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomDomainClaimedMessageCustomText(ctx context.Context, in *SetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*SetCustomDomainClaimedMessageTextResponse, error) {
+	out := new(SetCustomDomainClaimedMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetCustomDomainClaimedMessageCustomText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomDomainClaimedMessageTextToDefault(ctx context.Context, in *ResetCustomDomainClaimedMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomDomainClaimedMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ResetCustomDomainClaimedMessageTextToDefault", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1947,8 +2299,13 @@ type ManagementServiceServer interface {
 	RemoveHumanPhone(context.Context, *RemoveHumanPhoneRequest) (*RemoveHumanPhoneResponse, error)
 	// An sms will be sent to the given phone number to finish the phone verification process of the user
 	ResendHumanPhoneVerification(context.Context, *ResendHumanPhoneVerificationRequest) (*ResendHumanPhoneVerificationResponse, error)
-	// A Manager is only allowed to set an initial password, on the next login the user has to change his password
+	// Removes the avatar number of the human
+	RemoveMyAvatar(context.Context, *RemoveHumanAvatarRequest) (*RemoveHumanAvatarResponse, error)
+	// deprecated: use SetHumanPassword
 	SetHumanInitialPassword(context.Context, *SetHumanInitialPasswordRequest) (*SetHumanInitialPasswordResponse, error)
+	// Set a new password for a user, on default the user has to change the password on the next login
+	// Set no_change_required to true if the user does not have to change the password on the next login
+	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
 	// An email will be sent to the given address to reset the password of the user
 	SendHumanResetPasswordNotification(context.Context, *SendHumanResetPasswordNotificationRequest) (*SendHumanResetPasswordNotificationResponse, error)
 	// Returns a list of all factors (second and multi) which are configured on the user
@@ -1991,6 +2348,8 @@ type ManagementServiceServer interface {
 	ListOrgChanges(context.Context, *ListOrgChangesRequest) (*ListOrgChangesResponse, error)
 	// Creates a new organisation
 	AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error)
+	// Changes my organisation
+	UpdateOrg(context.Context, *UpdateOrgRequest) (*UpdateOrgResponse, error)
 	// Sets the state of my organisation to deactivated
 	// Users of this organisation will not be able login
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
@@ -2240,9 +2599,12 @@ type ManagementServiceServer interface {
 	UpdateCustomPasswordLockoutPolicy(context.Context, *UpdateCustomPasswordLockoutPolicyRequest) (*UpdateCustomPasswordLockoutPolicyResponse, error)
 	// The password lockout policy is not used at the moment
 	ResetPasswordLockoutPolicyToDefault(context.Context, *ResetPasswordLockoutPolicyToDefaultRequest) (*ResetPasswordLockoutPolicyToDefaultResponse, error)
-	// Returns the label policy of the organisation
+	// Returns the active label policy of the organisation
 	// With this policy the private labeling can be configured (colors, etc.)
 	GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error)
+	// Returns the preview label policy of the organisation
+	// With this policy the private labeling can be configured (colors, etc.)
+	GetPreviewLabelPolicy(context.Context, *GetPreviewLabelPolicyRequest) (*GetPreviewLabelPolicyResponse, error)
 	// Returns the default label policy of the IAM
 	// With this policy the private labeling can be configured (colors, etc.)
 	GetDefaultLabelPolicy(context.Context, *GetDefaultLabelPolicyRequest) (*GetDefaultLabelPolicyResponse, error)
@@ -2252,9 +2614,81 @@ type ManagementServiceServer interface {
 	// Changes the custom label policy for the organisation
 	// With this policy the private labeling can be configured (colors, etc.)
 	UpdateCustomLabelPolicy(context.Context, *UpdateCustomLabelPolicyRequest) (*UpdateCustomLabelPolicyResponse, error)
+	// Activates all changes of the label policy
+	ActivateCustomLabelPolicy(context.Context, *ActivateCustomLabelPolicyRequest) (*ActivateCustomLabelPolicyResponse, error)
+	// Removes the logo of the label policy
+	RemoveCustomLabelPolicyLogo(context.Context, *RemoveCustomLabelPolicyLogoRequest) (*RemoveCustomLabelPolicyLogoResponse, error)
+	// Removes the logo dark of the label policy
+	RemoveCustomLabelPolicyLogoDark(context.Context, *RemoveCustomLabelPolicyLogoDarkRequest) (*RemoveCustomLabelPolicyLogoDarkResponse, error)
+	// Removes the icon of the label policy
+	RemoveCustomLabelPolicyIcon(context.Context, *RemoveCustomLabelPolicyIconRequest) (*RemoveCustomLabelPolicyIconResponse, error)
+	// Removes the logo dark of the label policy
+	RemoveCustomLabelPolicyIconDark(context.Context, *RemoveCustomLabelPolicyIconDarkRequest) (*RemoveCustomLabelPolicyIconDarkResponse, error)
+	// Removes the font of the label policy
+	RemoveCustomLabelPolicyFont(context.Context, *RemoveCustomLabelPolicyFontRequest) (*RemoveCustomLabelPolicyFontResponse, error)
 	// Removes the custom label policy of the organisation
 	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(context.Context, *ResetLabelPolicyToDefaultRequest) (*ResetLabelPolicyToDefaultResponse, error)
+	//Returns the custom text for initial message
+	GetCustomInitMessageText(context.Context, *GetCustomInitMessageTextRequest) (*GetCustomInitMessageTextResponse, error)
+	//Returns the default text for initial message
+	GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error)
+	//Sets the default custom text for initial message
+	// it impacts all organisations without customized initial message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomInitMessageText(context.Context, *SetCustomInitMessageTextRequest) (*SetCustomInitMessageTextResponse, error)
+	// Removes the custom init message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomInitMessageTextToDefault(context.Context, *ResetCustomInitMessageTextToDefaultRequest) (*ResetCustomInitMessageTextToDefaultResponse, error)
+	//Returns the custom text for password reset message
+	GetCustomPasswordResetMessageText(context.Context, *GetCustomPasswordResetMessageTextRequest) (*GetCustomPasswordResetMessageTextResponse, error)
+	//Returns the default text for password reset message
+	GetDefaultPasswordResetMessageText(context.Context, *GetDefaultPasswordResetMessageTextRequest) (*GetDefaultPasswordResetMessageTextResponse, error)
+	//Sets the default custom text for password reset message
+	// it impacts all organisations without customized password reset message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomPasswordResetMessageText(context.Context, *SetCustomPasswordResetMessageTextRequest) (*SetCustomPasswordResetMessageTextResponse, error)
+	// Removes the custom password reset message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomPasswordResetMessageTextToDefault(context.Context, *ResetCustomPasswordResetMessageTextToDefaultRequest) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
+	//Returns the custom text for verify email message
+	GetCustomVerifyEmailMessageText(context.Context, *GetCustomVerifyEmailMessageTextRequest) (*GetCustomVerifyEmailMessageTextResponse, error)
+	//Returns the default text for verify email message
+	GetDefaultVerifyEmailMessageText(context.Context, *GetDefaultVerifyEmailMessageTextRequest) (*GetDefaultVerifyEmailMessageTextResponse, error)
+	//Sets the default custom text for verify email message
+	// it impacts all organisations without customized verify email message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomVerifyEmailMessageText(context.Context, *SetCustomVerifyEmailMessageTextRequest) (*SetCustomVerifyEmailMessageTextResponse, error)
+	// Removes the custom verify email message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomVerifyEmailMessageTextToDefault(context.Context, *ResetCustomVerifyEmailMessageTextToDefaultRequest) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
+	//Returns the custom text for verify email message
+	GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error)
+	//Returns the custom text for verify email message
+	GetDefaultVerifyPhoneMessageText(context.Context, *GetDefaultVerifyPhoneMessageTextRequest) (*GetDefaultVerifyPhoneMessageTextResponse, error)
+	//Sets the default custom text for verify email message
+	// it impacts all organisations without customized verify email message text
+	// The Following Variables can be used:
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomVerifyPhoneMessageText(context.Context, *SetCustomVerifyPhoneMessageTextRequest) (*SetCustomVerifyPhoneMessageTextResponse, error)
+	// Removes the custom verify phone text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
+	//Returns the custom text for domain claimed message
+	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
+	//Returns the custom text for domain claimed message
+	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
+	// Sets the default custom text for domain claimed message
+	// it impacts all organisations without customized domain claimed message text
+	// The Following Variables can be used:
+	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	SetCustomDomainClaimedMessageCustomText(context.Context, *SetCustomDomainClaimedMessageTextRequest) (*SetCustomDomainClaimedMessageTextResponse, error)
+	// Removes the custom init message text of the organisation
+	// The default text of the IAM will trigger after
+	ResetCustomDomainClaimedMessageTextToDefault(context.Context, *ResetCustomDomainClaimedMessageTextToDefaultRequest) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
 	// Returns a identity provider configuration of the organisation
 	GetOrgIDPByID(context.Context, *GetOrgIDPByIDRequest) (*GetOrgIDPByIDResponse, error)
 	// Returns all identity provider configuration in the organisation, which match the query
@@ -2365,8 +2799,14 @@ func (UnimplementedManagementServiceServer) RemoveHumanPhone(context.Context, *R
 func (UnimplementedManagementServiceServer) ResendHumanPhoneVerification(context.Context, *ResendHumanPhoneVerificationRequest) (*ResendHumanPhoneVerificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendHumanPhoneVerification not implemented")
 }
+func (UnimplementedManagementServiceServer) RemoveMyAvatar(context.Context, *RemoveHumanAvatarRequest) (*RemoveHumanAvatarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAvatar not implemented")
+}
 func (UnimplementedManagementServiceServer) SetHumanInitialPassword(context.Context, *SetHumanInitialPasswordRequest) (*SetHumanInitialPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetHumanInitialPassword not implemented")
+}
+func (UnimplementedManagementServiceServer) SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetHumanPassword not implemented")
 }
 func (UnimplementedManagementServiceServer) SendHumanResetPasswordNotification(context.Context, *SendHumanResetPasswordNotificationRequest) (*SendHumanResetPasswordNotificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendHumanResetPasswordNotification not implemented")
@@ -2421,6 +2861,9 @@ func (UnimplementedManagementServiceServer) ListOrgChanges(context.Context, *Lis
 }
 func (UnimplementedManagementServiceServer) AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOrg not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateOrg(context.Context, *UpdateOrgRequest) (*UpdateOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrg not implemented")
 }
 func (UnimplementedManagementServiceServer) DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeactivateOrg not implemented")
@@ -2731,6 +3174,9 @@ func (UnimplementedManagementServiceServer) ResetPasswordLockoutPolicyToDefault(
 func (UnimplementedManagementServiceServer) GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLabelPolicy not implemented")
 }
+func (UnimplementedManagementServiceServer) GetPreviewLabelPolicy(context.Context, *GetPreviewLabelPolicyRequest) (*GetPreviewLabelPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPreviewLabelPolicy not implemented")
+}
 func (UnimplementedManagementServiceServer) GetDefaultLabelPolicy(context.Context, *GetDefaultLabelPolicyRequest) (*GetDefaultLabelPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultLabelPolicy not implemented")
 }
@@ -2740,8 +3186,86 @@ func (UnimplementedManagementServiceServer) AddCustomLabelPolicy(context.Context
 func (UnimplementedManagementServiceServer) UpdateCustomLabelPolicy(context.Context, *UpdateCustomLabelPolicyRequest) (*UpdateCustomLabelPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustomLabelPolicy not implemented")
 }
+func (UnimplementedManagementServiceServer) ActivateCustomLabelPolicy(context.Context, *ActivateCustomLabelPolicyRequest) (*ActivateCustomLabelPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateCustomLabelPolicy not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveCustomLabelPolicyLogo(context.Context, *RemoveCustomLabelPolicyLogoRequest) (*RemoveCustomLabelPolicyLogoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustomLabelPolicyLogo not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveCustomLabelPolicyLogoDark(context.Context, *RemoveCustomLabelPolicyLogoDarkRequest) (*RemoveCustomLabelPolicyLogoDarkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustomLabelPolicyLogoDark not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveCustomLabelPolicyIcon(context.Context, *RemoveCustomLabelPolicyIconRequest) (*RemoveCustomLabelPolicyIconResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustomLabelPolicyIcon not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveCustomLabelPolicyIconDark(context.Context, *RemoveCustomLabelPolicyIconDarkRequest) (*RemoveCustomLabelPolicyIconDarkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustomLabelPolicyIconDark not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveCustomLabelPolicyFont(context.Context, *RemoveCustomLabelPolicyFontRequest) (*RemoveCustomLabelPolicyFontResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCustomLabelPolicyFont not implemented")
+}
 func (UnimplementedManagementServiceServer) ResetLabelPolicyToDefault(context.Context, *ResetLabelPolicyToDefaultRequest) (*ResetLabelPolicyToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetLabelPolicyToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomInitMessageText(context.Context, *GetCustomInitMessageTextRequest) (*GetCustomInitMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomInitMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultInitMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomInitMessageText(context.Context, *SetCustomInitMessageTextRequest) (*SetCustomInitMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomInitMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomInitMessageTextToDefault(context.Context, *ResetCustomInitMessageTextToDefaultRequest) (*ResetCustomInitMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomInitMessageTextToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomPasswordResetMessageText(context.Context, *GetCustomPasswordResetMessageTextRequest) (*GetCustomPasswordResetMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomPasswordResetMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultPasswordResetMessageText(context.Context, *GetDefaultPasswordResetMessageTextRequest) (*GetDefaultPasswordResetMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultPasswordResetMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomPasswordResetMessageText(context.Context, *SetCustomPasswordResetMessageTextRequest) (*SetCustomPasswordResetMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomPasswordResetMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomPasswordResetMessageTextToDefault(context.Context, *ResetCustomPasswordResetMessageTextToDefaultRequest) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomPasswordResetMessageTextToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomVerifyEmailMessageText(context.Context, *GetCustomVerifyEmailMessageTextRequest) (*GetCustomVerifyEmailMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomVerifyEmailMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultVerifyEmailMessageText(context.Context, *GetDefaultVerifyEmailMessageTextRequest) (*GetDefaultVerifyEmailMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultVerifyEmailMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomVerifyEmailMessageText(context.Context, *SetCustomVerifyEmailMessageTextRequest) (*SetCustomVerifyEmailMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomVerifyEmailMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomVerifyEmailMessageTextToDefault(context.Context, *ResetCustomVerifyEmailMessageTextToDefaultRequest) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomVerifyEmailMessageTextToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomVerifyPhoneMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultVerifyPhoneMessageText(context.Context, *GetDefaultVerifyPhoneMessageTextRequest) (*GetDefaultVerifyPhoneMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultVerifyPhoneMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomVerifyPhoneMessageText(context.Context, *SetCustomVerifyPhoneMessageTextRequest) (*SetCustomVerifyPhoneMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomVerifyPhoneMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomVerifyPhoneMessageTextToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomDomainClaimedMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultDomainClaimedMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomDomainClaimedMessageCustomText(context.Context, *SetCustomDomainClaimedMessageTextRequest) (*SetCustomDomainClaimedMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomDomainClaimedMessageCustomText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomDomainClaimedMessageTextToDefault(context.Context, *ResetCustomDomainClaimedMessageTextToDefaultRequest) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomDomainClaimedMessageTextToDefault not implemented")
 }
 func (UnimplementedManagementServiceServer) GetOrgIDPByID(context.Context, *GetOrgIDPByIDRequest) (*GetOrgIDPByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrgIDPByID not implemented")
@@ -3266,6 +3790,24 @@ func _ManagementService_ResendHumanPhoneVerification_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_RemoveMyAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveHumanAvatarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveMyAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveMyAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveMyAvatar(ctx, req.(*RemoveHumanAvatarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_SetHumanInitialPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetHumanInitialPasswordRequest)
 	if err := dec(in); err != nil {
@@ -3280,6 +3822,24 @@ func _ManagementService_SetHumanInitialPassword_Handler(srv interface{}, ctx con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).SetHumanInitialPassword(ctx, req.(*SetHumanInitialPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetHumanPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetHumanPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetHumanPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetHumanPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetHumanPassword(ctx, req.(*SetHumanPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3604,6 +4164,24 @@ func _ManagementService_AddOrg_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).AddOrg(ctx, req.(*AddOrgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateOrg(ctx, req.(*UpdateOrgRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5462,6 +6040,24 @@ func _ManagementService_GetLabelPolicy_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_GetPreviewLabelPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPreviewLabelPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetPreviewLabelPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetPreviewLabelPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetPreviewLabelPolicy(ctx, req.(*GetPreviewLabelPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_GetDefaultLabelPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDefaultLabelPolicyRequest)
 	if err := dec(in); err != nil {
@@ -5516,6 +6112,114 @@ func _ManagementService_UpdateCustomLabelPolicy_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_ActivateCustomLabelPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateCustomLabelPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ActivateCustomLabelPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ActivateCustomLabelPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ActivateCustomLabelPolicy(ctx, req.(*ActivateCustomLabelPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveCustomLabelPolicyLogo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustomLabelPolicyLogoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyLogo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyLogo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyLogo(ctx, req.(*RemoveCustomLabelPolicyLogoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveCustomLabelPolicyLogoDark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustomLabelPolicyLogoDarkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyLogoDark(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyLogoDark",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyLogoDark(ctx, req.(*RemoveCustomLabelPolicyLogoDarkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveCustomLabelPolicyIcon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustomLabelPolicyIconRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyIcon(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyIcon",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyIcon(ctx, req.(*RemoveCustomLabelPolicyIconRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveCustomLabelPolicyIconDark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustomLabelPolicyIconDarkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyIconDark(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyIconDark",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyIconDark(ctx, req.(*RemoveCustomLabelPolicyIconDarkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveCustomLabelPolicyFont_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCustomLabelPolicyFontRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyFont(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveCustomLabelPolicyFont",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveCustomLabelPolicyFont(ctx, req.(*RemoveCustomLabelPolicyFontRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_ResetLabelPolicyToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ResetLabelPolicyToDefaultRequest)
 	if err := dec(in); err != nil {
@@ -5530,6 +6234,366 @@ func _ManagementService_ResetLabelPolicyToDefault_Handler(srv interface{}, ctx c
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).ResetLabelPolicyToDefault(ctx, req.(*ResetLabelPolicyToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetCustomInitMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomInitMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomInitMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetCustomInitMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomInitMessageText(ctx, req.(*GetCustomInitMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultInitMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultInitMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultInitMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDefaultInitMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultInitMessageText(ctx, req.(*GetDefaultInitMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomInitMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomInitMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomInitMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetCustomInitMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomInitMessageText(ctx, req.(*SetCustomInitMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomInitMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomInitMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomInitMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ResetCustomInitMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomInitMessageTextToDefault(ctx, req.(*ResetCustomInitMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetCustomPasswordResetMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomPasswordResetMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomPasswordResetMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetCustomPasswordResetMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomPasswordResetMessageText(ctx, req.(*GetCustomPasswordResetMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultPasswordResetMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultPasswordResetMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultPasswordResetMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDefaultPasswordResetMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultPasswordResetMessageText(ctx, req.(*GetDefaultPasswordResetMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomPasswordResetMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomPasswordResetMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomPasswordResetMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetCustomPasswordResetMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomPasswordResetMessageText(ctx, req.(*SetCustomPasswordResetMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomPasswordResetMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomPasswordResetMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomPasswordResetMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ResetCustomPasswordResetMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomPasswordResetMessageTextToDefault(ctx, req.(*ResetCustomPasswordResetMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetCustomVerifyEmailMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomVerifyEmailMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomVerifyEmailMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetCustomVerifyEmailMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomVerifyEmailMessageText(ctx, req.(*GetCustomVerifyEmailMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultVerifyEmailMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultVerifyEmailMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultVerifyEmailMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDefaultVerifyEmailMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultVerifyEmailMessageText(ctx, req.(*GetDefaultVerifyEmailMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomVerifyEmailMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomVerifyEmailMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomVerifyEmailMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetCustomVerifyEmailMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomVerifyEmailMessageText(ctx, req.(*SetCustomVerifyEmailMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomVerifyEmailMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomVerifyEmailMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomVerifyEmailMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ResetCustomVerifyEmailMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomVerifyEmailMessageTextToDefault(ctx, req.(*ResetCustomVerifyEmailMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetCustomVerifyPhoneMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomVerifyPhoneMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomVerifyPhoneMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetCustomVerifyPhoneMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomVerifyPhoneMessageText(ctx, req.(*GetCustomVerifyPhoneMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultVerifyPhoneMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultVerifyPhoneMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultVerifyPhoneMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDefaultVerifyPhoneMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultVerifyPhoneMessageText(ctx, req.(*GetDefaultVerifyPhoneMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomVerifyPhoneMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomVerifyPhoneMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomVerifyPhoneMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetCustomVerifyPhoneMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomVerifyPhoneMessageText(ctx, req.(*SetCustomVerifyPhoneMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomVerifyPhoneMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomVerifyPhoneMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomVerifyPhoneMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ResetCustomVerifyPhoneMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomVerifyPhoneMessageTextToDefault(ctx, req.(*ResetCustomVerifyPhoneMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetCustomDomainClaimedMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomDomainClaimedMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomDomainClaimedMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetCustomDomainClaimedMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomDomainClaimedMessageText(ctx, req.(*GetCustomDomainClaimedMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultDomainClaimedMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultDomainClaimedMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultDomainClaimedMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDefaultDomainClaimedMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultDomainClaimedMessageText(ctx, req.(*GetDefaultDomainClaimedMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomDomainClaimedMessageCustomText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomDomainClaimedMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomDomainClaimedMessageCustomText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetCustomDomainClaimedMessageCustomText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomDomainClaimedMessageCustomText(ctx, req.(*SetCustomDomainClaimedMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomDomainClaimedMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomDomainClaimedMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomDomainClaimedMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ResetCustomDomainClaimedMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomDomainClaimedMessageTextToDefault(ctx, req.(*ResetCustomDomainClaimedMessageTextToDefaultRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5794,8 +6858,16 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_ResendHumanPhoneVerification_Handler,
 		},
 		{
+			MethodName: "RemoveMyAvatar",
+			Handler:    _ManagementService_RemoveMyAvatar_Handler,
+		},
+		{
 			MethodName: "SetHumanInitialPassword",
 			Handler:    _ManagementService_SetHumanInitialPassword_Handler,
+		},
+		{
+			MethodName: "SetHumanPassword",
+			Handler:    _ManagementService_SetHumanPassword_Handler,
 		},
 		{
 			MethodName: "SendHumanResetPasswordNotification",
@@ -5868,6 +6940,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddOrg",
 			Handler:    _ManagementService_AddOrg_Handler,
+		},
+		{
+			MethodName: "UpdateOrg",
+			Handler:    _ManagementService_UpdateOrg_Handler,
 		},
 		{
 			MethodName: "DeactivateOrg",
@@ -6282,6 +7358,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_GetLabelPolicy_Handler,
 		},
 		{
+			MethodName: "GetPreviewLabelPolicy",
+			Handler:    _ManagementService_GetPreviewLabelPolicy_Handler,
+		},
+		{
 			MethodName: "GetDefaultLabelPolicy",
 			Handler:    _ManagementService_GetDefaultLabelPolicy_Handler,
 		},
@@ -6294,8 +7374,112 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_UpdateCustomLabelPolicy_Handler,
 		},
 		{
+			MethodName: "ActivateCustomLabelPolicy",
+			Handler:    _ManagementService_ActivateCustomLabelPolicy_Handler,
+		},
+		{
+			MethodName: "RemoveCustomLabelPolicyLogo",
+			Handler:    _ManagementService_RemoveCustomLabelPolicyLogo_Handler,
+		},
+		{
+			MethodName: "RemoveCustomLabelPolicyLogoDark",
+			Handler:    _ManagementService_RemoveCustomLabelPolicyLogoDark_Handler,
+		},
+		{
+			MethodName: "RemoveCustomLabelPolicyIcon",
+			Handler:    _ManagementService_RemoveCustomLabelPolicyIcon_Handler,
+		},
+		{
+			MethodName: "RemoveCustomLabelPolicyIconDark",
+			Handler:    _ManagementService_RemoveCustomLabelPolicyIconDark_Handler,
+		},
+		{
+			MethodName: "RemoveCustomLabelPolicyFont",
+			Handler:    _ManagementService_RemoveCustomLabelPolicyFont_Handler,
+		},
+		{
 			MethodName: "ResetLabelPolicyToDefault",
 			Handler:    _ManagementService_ResetLabelPolicyToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomInitMessageText",
+			Handler:    _ManagementService_GetCustomInitMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultInitMessageText",
+			Handler:    _ManagementService_GetDefaultInitMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomInitMessageText",
+			Handler:    _ManagementService_SetCustomInitMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomInitMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomInitMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomPasswordResetMessageText",
+			Handler:    _ManagementService_GetCustomPasswordResetMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultPasswordResetMessageText",
+			Handler:    _ManagementService_GetDefaultPasswordResetMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomPasswordResetMessageText",
+			Handler:    _ManagementService_SetCustomPasswordResetMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomPasswordResetMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomPasswordResetMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomVerifyEmailMessageText",
+			Handler:    _ManagementService_GetCustomVerifyEmailMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultVerifyEmailMessageText",
+			Handler:    _ManagementService_GetDefaultVerifyEmailMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomVerifyEmailMessageText",
+			Handler:    _ManagementService_SetCustomVerifyEmailMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomVerifyEmailMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomVerifyEmailMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomVerifyPhoneMessageText",
+			Handler:    _ManagementService_GetCustomVerifyPhoneMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultVerifyPhoneMessageText",
+			Handler:    _ManagementService_GetDefaultVerifyPhoneMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomVerifyPhoneMessageText",
+			Handler:    _ManagementService_SetCustomVerifyPhoneMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomVerifyPhoneMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomVerifyPhoneMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomDomainClaimedMessageText",
+			Handler:    _ManagementService_GetCustomDomainClaimedMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultDomainClaimedMessageText",
+			Handler:    _ManagementService_GetDefaultDomainClaimedMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomDomainClaimedMessageCustomText",
+			Handler:    _ManagementService_SetCustomDomainClaimedMessageCustomText_Handler,
+		},
+		{
+			MethodName: "ResetCustomDomainClaimedMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomDomainClaimedMessageTextToDefault_Handler,
 		},
 		{
 			MethodName: "GetOrgIDPByID",

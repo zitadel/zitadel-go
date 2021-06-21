@@ -25,6 +25,12 @@ type AuthServiceClient interface {
 	ListMyUserChanges(ctx context.Context, in *ListMyUserChangesRequest, opts ...grpc.CallOption) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error)
+	// Returns the refresh tokens of the authorized user
+	ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error)
+	// Revokes a single refresh token of the authorized user by its (token) id
+	RevokeMyRefreshToken(ctx context.Context, in *RevokeMyRefreshTokenRequest, opts ...grpc.CallOption) (*RevokeMyRefreshTokenResponse, error)
+	// Revokes all refresh tokens of the authorized user
+	RevokeAllMyRefreshTokens(ctx context.Context, in *RevokeAllMyRefreshTokensRequest, opts ...grpc.CallOption) (*RevokeAllMyRefreshTokensResponse, error)
 	// Change the user name of the authorize user
 	UpdateMyUserName(ctx context.Context, in *UpdateMyUserNameRequest, opts ...grpc.CallOption) (*UpdateMyUserNameResponse, error)
 	// Returns the password complexity policy of my organisation
@@ -56,6 +62,8 @@ type AuthServiceClient interface {
 	ResendMyPhoneVerification(ctx context.Context, in *ResendMyPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendMyPhoneVerificationResponse, error)
 	// Removed the phone number of the authorized user
 	RemoveMyPhone(ctx context.Context, in *RemoveMyPhoneRequest, opts ...grpc.CallOption) (*RemoveMyPhoneResponse, error)
+	// Remove my avatar
+	RemoveMyAvatar(ctx context.Context, in *RemoveMyAvatarRequest, opts ...grpc.CallOption) (*RemoveMyAvatarResponse, error)
 	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(ctx context.Context, in *ListMyLinkedIDPsRequest, opts ...grpc.CallOption) (*ListMyLinkedIDPsResponse, error)
 	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
@@ -135,6 +143,33 @@ func (c *authServiceClient) ListMyUserChanges(ctx context.Context, in *ListMyUse
 func (c *authServiceClient) ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error) {
 	out := new(ListMyUserSessionsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyUserSessions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error) {
+	out := new(ListMyRefreshTokensResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyRefreshTokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RevokeMyRefreshToken(ctx context.Context, in *RevokeMyRefreshTokenRequest, opts ...grpc.CallOption) (*RevokeMyRefreshTokenResponse, error) {
+	out := new(RevokeMyRefreshTokenResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RevokeMyRefreshToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RevokeAllMyRefreshTokens(ctx context.Context, in *RevokeAllMyRefreshTokensRequest, opts ...grpc.CallOption) (*RevokeAllMyRefreshTokensResponse, error) {
+	out := new(RevokeAllMyRefreshTokensResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RevokeAllMyRefreshTokens", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -261,6 +296,15 @@ func (c *authServiceClient) ResendMyPhoneVerification(ctx context.Context, in *R
 func (c *authServiceClient) RemoveMyPhone(ctx context.Context, in *RemoveMyPhoneRequest, opts ...grpc.CallOption) (*RemoveMyPhoneResponse, error) {
 	out := new(RemoveMyPhoneResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMyAvatar(ctx context.Context, in *RemoveMyAvatarRequest, opts ...grpc.CallOption) (*RemoveMyAvatarResponse, error) {
+	out := new(RemoveMyAvatarResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyAvatar", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -440,6 +484,12 @@ type AuthServiceServer interface {
 	ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error)
+	// Returns the refresh tokens of the authorized user
+	ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error)
+	// Revokes a single refresh token of the authorized user by its (token) id
+	RevokeMyRefreshToken(context.Context, *RevokeMyRefreshTokenRequest) (*RevokeMyRefreshTokenResponse, error)
+	// Revokes all refresh tokens of the authorized user
+	RevokeAllMyRefreshTokens(context.Context, *RevokeAllMyRefreshTokensRequest) (*RevokeAllMyRefreshTokensResponse, error)
 	// Change the user name of the authorize user
 	UpdateMyUserName(context.Context, *UpdateMyUserNameRequest) (*UpdateMyUserNameResponse, error)
 	// Returns the password complexity policy of my organisation
@@ -471,6 +521,8 @@ type AuthServiceServer interface {
 	ResendMyPhoneVerification(context.Context, *ResendMyPhoneVerificationRequest) (*ResendMyPhoneVerificationResponse, error)
 	// Removed the phone number of the authorized user
 	RemoveMyPhone(context.Context, *RemoveMyPhoneRequest) (*RemoveMyPhoneResponse, error)
+	// Remove my avatar
+	RemoveMyAvatar(context.Context, *RemoveMyAvatarRequest) (*RemoveMyAvatarResponse, error)
 	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(context.Context, *ListMyLinkedIDPsRequest) (*ListMyLinkedIDPsResponse, error)
 	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
@@ -529,6 +581,15 @@ func (UnimplementedAuthServiceServer) ListMyUserChanges(context.Context, *ListMy
 func (UnimplementedAuthServiceServer) ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyUserSessions not implemented")
 }
+func (UnimplementedAuthServiceServer) ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyRefreshTokens not implemented")
+}
+func (UnimplementedAuthServiceServer) RevokeMyRefreshToken(context.Context, *RevokeMyRefreshTokenRequest) (*RevokeMyRefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevokeMyRefreshToken not implemented")
+}
+func (UnimplementedAuthServiceServer) RevokeAllMyRefreshTokens(context.Context, *RevokeAllMyRefreshTokensRequest) (*RevokeAllMyRefreshTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevokeAllMyRefreshTokens not implemented")
+}
 func (UnimplementedAuthServiceServer) UpdateMyUserName(context.Context, *UpdateMyUserNameRequest) (*UpdateMyUserNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMyUserName not implemented")
 }
@@ -570,6 +631,9 @@ func (UnimplementedAuthServiceServer) ResendMyPhoneVerification(context.Context,
 }
 func (UnimplementedAuthServiceServer) RemoveMyPhone(context.Context, *RemoveMyPhoneRequest) (*RemoveMyPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyPhone not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMyAvatar(context.Context, *RemoveMyAvatarRequest) (*RemoveMyAvatarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAvatar not implemented")
 }
 func (UnimplementedAuthServiceServer) ListMyLinkedIDPs(context.Context, *ListMyLinkedIDPsRequest) (*ListMyLinkedIDPsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyLinkedIDPs not implemented")
@@ -706,6 +770,60 @@ func _AuthService_ListMyUserSessions_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).ListMyUserSessions(ctx, req.(*ListMyUserSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListMyRefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyRefreshTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMyRefreshTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/ListMyRefreshTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMyRefreshTokens(ctx, req.(*ListMyRefreshTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RevokeMyRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeMyRefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RevokeMyRefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RevokeMyRefreshToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RevokeMyRefreshToken(ctx, req.(*RevokeMyRefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RevokeAllMyRefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeAllMyRefreshTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RevokeAllMyRefreshTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RevokeAllMyRefreshTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RevokeAllMyRefreshTokens(ctx, req.(*RevokeAllMyRefreshTokensRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -958,6 +1076,24 @@ func _AuthService_RemoveMyPhone_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).RemoveMyPhone(ctx, req.(*RemoveMyPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMyAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyAvatarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyAvatar(ctx, req.(*RemoveMyAvatarRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1310,6 +1446,18 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_ListMyUserSessions_Handler,
 		},
 		{
+			MethodName: "ListMyRefreshTokens",
+			Handler:    _AuthService_ListMyRefreshTokens_Handler,
+		},
+		{
+			MethodName: "RevokeMyRefreshToken",
+			Handler:    _AuthService_RevokeMyRefreshToken_Handler,
+		},
+		{
+			MethodName: "RevokeAllMyRefreshTokens",
+			Handler:    _AuthService_RevokeAllMyRefreshTokens_Handler,
+		},
+		{
 			MethodName: "UpdateMyUserName",
 			Handler:    _AuthService_UpdateMyUserName_Handler,
 		},
@@ -1364,6 +1512,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveMyPhone",
 			Handler:    _AuthService_RemoveMyPhone_Handler,
+		},
+		{
+			MethodName: "RemoveMyAvatar",
+			Handler:    _AuthService_RemoveMyAvatar_Handler,
 		},
 		{
 			MethodName: "ListMyLinkedIDPs",
