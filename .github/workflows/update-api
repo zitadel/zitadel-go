@@ -1,5 +1,6 @@
 name: Update ZITADEL API
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-18.04
