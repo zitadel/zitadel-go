@@ -19,12 +19,32 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
+	// Returns the default languages
+	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
 	// Returns my full blown user
 	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
 	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(ctx context.Context, in *ListMyUserChangesRequest, opts ...grpc.CallOption) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error)
+	// Sets a user metadata by key to the authorized user
+	SetMyMetadata(ctx context.Context, in *SetMyMetadataRequest, opts ...grpc.CallOption) (*SetMyMetadataResponse, error)
+	// Set a list of user metadata to the authorized user
+	BulkSetMyMetadata(ctx context.Context, in *BulkSetMyMetadataRequest, opts ...grpc.CallOption) (*BulkSetMyMetadataResponse, error)
+	// Returns the user metadata of the authorized user
+	ListMyMetadata(ctx context.Context, in *ListMyMetadataRequest, opts ...grpc.CallOption) (*ListMyMetadataResponse, error)
+	// Returns the user metadata by key of the authorized user
+	GetMyMetadata(ctx context.Context, in *GetMyMetadataRequest, opts ...grpc.CallOption) (*GetMyMetadataResponse, error)
+	// Removes a user metadata by key to the authorized user
+	RemoveMyMetadata(ctx context.Context, in *RemoveMyMetadataRequest, opts ...grpc.CallOption) (*RemoveMyMetadataResponse, error)
+	// Set a list of user metadata to the authorized user
+	BulkRemoveMyMetadata(ctx context.Context, in *BulkRemoveMyMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveMyMetadataResponse, error)
+	// Returns the refresh tokens of the authorized user
+	ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error)
+	// Revokes a single refresh token of the authorized user by its (token) id
+	RevokeMyRefreshToken(ctx context.Context, in *RevokeMyRefreshTokenRequest, opts ...grpc.CallOption) (*RevokeMyRefreshTokenResponse, error)
+	// Revokes all refresh tokens of the authorized user
+	RevokeAllMyRefreshTokens(ctx context.Context, in *RevokeAllMyRefreshTokensRequest, opts ...grpc.CallOption) (*RevokeAllMyRefreshTokensResponse, error)
 	// Change the user name of the authorize user
 	UpdateMyUserName(ctx context.Context, in *UpdateMyUserNameRequest, opts ...grpc.CallOption) (*UpdateMyUserNameResponse, error)
 	// Returns the password complexity policy of my organisation
@@ -56,6 +76,8 @@ type AuthServiceClient interface {
 	ResendMyPhoneVerification(ctx context.Context, in *ResendMyPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendMyPhoneVerificationResponse, error)
 	// Removed the phone number of the authorized user
 	RemoveMyPhone(ctx context.Context, in *RemoveMyPhoneRequest, opts ...grpc.CallOption) (*RemoveMyPhoneResponse, error)
+	// Remove my avatar
+	RemoveMyAvatar(ctx context.Context, in *RemoveMyAvatarRequest, opts ...grpc.CallOption) (*RemoveMyAvatarResponse, error)
 	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(ctx context.Context, in *ListMyLinkedIDPsRequest, opts ...grpc.CallOption) (*ListMyLinkedIDPsResponse, error)
 	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
@@ -76,11 +98,19 @@ type AuthServiceClient interface {
 	VerifyMyAuthFactorU2F(ctx context.Context, in *VerifyMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*VerifyMyAuthFactorU2FResponse, error)
 	// Removes the U2F Authentication from the authorized user
 	RemoveMyAuthFactorU2F(ctx context.Context, in *RemoveMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authentications of the authorized user
+	// Returns all configured passwordless authenticators of the authorized user
 	ListMyPasswordless(ctx context.Context, in *ListMyPasswordlessRequest, opts ...grpc.CallOption) (*ListMyPasswordlessResponse, error)
-	// Adds a new passwordless authentications to the authorized user
+	// Adds a new passwordless authenticator to the authorized user
 	// Multiple passwordless authentications can be configured
 	AddMyPasswordless(ctx context.Context, in *AddMyPasswordlessRequest, opts ...grpc.CallOption) (*AddMyPasswordlessResponse, error)
+	// Adds a new passwordless authenticator link to the authorized user and returns it directly
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	AddMyPasswordlessLink(ctx context.Context, in *AddMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*AddMyPasswordlessLinkResponse, error)
+	// Adds a new passwordless authenticator link to the authorized user and sends it to the registered email address
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	SendMyPasswordlessLink(ctx context.Context, in *SendMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*SendMyPasswordlessLinkResponse, error)
 	// Verifies the last added passwordless configuration
 	VerifyMyPasswordless(ctx context.Context, in *VerifyMyPasswordlessRequest, opts ...grpc.CallOption) (*VerifyMyPasswordlessResponse, error)
 	// Removes the passwordless configuration from the authorized user
@@ -95,6 +125,9 @@ type AuthServiceClient interface {
 	ListMyZitadelPermissions(ctx context.Context, in *ListMyZitadelPermissionsRequest, opts ...grpc.CallOption) (*ListMyZitadelPermissionsResponse, error)
 	// Returns a list of roles for the authorized user and project
 	ListMyProjectPermissions(ctx context.Context, in *ListMyProjectPermissionsRequest, opts ...grpc.CallOption) (*ListMyProjectPermissionsResponse, error)
+	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
+	// Limit should always be set, there is a default limit set by the service
+	ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error)
 }
 
 type authServiceClient struct {
@@ -108,6 +141,15 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 func (c *authServiceClient) Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error) {
 	out := new(HealthzResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/Healthz", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error) {
+	out := new(GetSupportedLanguagesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetSupportedLanguages", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +177,87 @@ func (c *authServiceClient) ListMyUserChanges(ctx context.Context, in *ListMyUse
 func (c *authServiceClient) ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error) {
 	out := new(ListMyUserSessionsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyUserSessions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) SetMyMetadata(ctx context.Context, in *SetMyMetadataRequest, opts ...grpc.CallOption) (*SetMyMetadataResponse, error) {
+	out := new(SetMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/SetMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) BulkSetMyMetadata(ctx context.Context, in *BulkSetMyMetadataRequest, opts ...grpc.CallOption) (*BulkSetMyMetadataResponse, error) {
+	out := new(BulkSetMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/BulkSetMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListMyMetadata(ctx context.Context, in *ListMyMetadataRequest, opts ...grpc.CallOption) (*ListMyMetadataResponse, error) {
+	out := new(ListMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetMyMetadata(ctx context.Context, in *GetMyMetadataRequest, opts ...grpc.CallOption) (*GetMyMetadataResponse, error) {
+	out := new(GetMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMyMetadata(ctx context.Context, in *RemoveMyMetadataRequest, opts ...grpc.CallOption) (*RemoveMyMetadataResponse, error) {
+	out := new(RemoveMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) BulkRemoveMyMetadata(ctx context.Context, in *BulkRemoveMyMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveMyMetadataResponse, error) {
+	out := new(BulkRemoveMyMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/BulkRemoveMyMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error) {
+	out := new(ListMyRefreshTokensResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyRefreshTokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RevokeMyRefreshToken(ctx context.Context, in *RevokeMyRefreshTokenRequest, opts ...grpc.CallOption) (*RevokeMyRefreshTokenResponse, error) {
+	out := new(RevokeMyRefreshTokenResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RevokeMyRefreshToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RevokeAllMyRefreshTokens(ctx context.Context, in *RevokeAllMyRefreshTokensRequest, opts ...grpc.CallOption) (*RevokeAllMyRefreshTokensResponse, error) {
+	out := new(RevokeAllMyRefreshTokensResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RevokeAllMyRefreshTokens", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -267,6 +390,15 @@ func (c *authServiceClient) RemoveMyPhone(ctx context.Context, in *RemoveMyPhone
 	return out, nil
 }
 
+func (c *authServiceClient) RemoveMyAvatar(ctx context.Context, in *RemoveMyAvatarRequest, opts ...grpc.CallOption) (*RemoveMyAvatarResponse, error) {
+	out := new(RemoveMyAvatarResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) ListMyLinkedIDPs(ctx context.Context, in *ListMyLinkedIDPsRequest, opts ...grpc.CallOption) (*ListMyLinkedIDPsResponse, error) {
 	out := new(ListMyLinkedIDPsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyLinkedIDPs", in, out, opts...)
@@ -366,6 +498,24 @@ func (c *authServiceClient) AddMyPasswordless(ctx context.Context, in *AddMyPass
 	return out, nil
 }
 
+func (c *authServiceClient) AddMyPasswordlessLink(ctx context.Context, in *AddMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*AddMyPasswordlessLinkResponse, error) {
+	out := new(AddMyPasswordlessLinkResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/AddMyPasswordlessLink", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) SendMyPasswordlessLink(ctx context.Context, in *SendMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*SendMyPasswordlessLinkResponse, error) {
+	out := new(SendMyPasswordlessLinkResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/SendMyPasswordlessLink", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) VerifyMyPasswordless(ctx context.Context, in *VerifyMyPasswordlessRequest, opts ...grpc.CallOption) (*VerifyMyPasswordlessResponse, error) {
 	out := new(VerifyMyPasswordlessResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/VerifyMyPasswordless", in, out, opts...)
@@ -429,17 +579,46 @@ func (c *authServiceClient) ListMyProjectPermissions(ctx context.Context, in *Li
 	return out, nil
 }
 
+func (c *authServiceClient) ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error) {
+	out := new(ListMyMembershipsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyMemberships", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
+	// Returns the default languages
+	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
 	// Returns my full blown user
 	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
 	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error)
+	// Sets a user metadata by key to the authorized user
+	SetMyMetadata(context.Context, *SetMyMetadataRequest) (*SetMyMetadataResponse, error)
+	// Set a list of user metadata to the authorized user
+	BulkSetMyMetadata(context.Context, *BulkSetMyMetadataRequest) (*BulkSetMyMetadataResponse, error)
+	// Returns the user metadata of the authorized user
+	ListMyMetadata(context.Context, *ListMyMetadataRequest) (*ListMyMetadataResponse, error)
+	// Returns the user metadata by key of the authorized user
+	GetMyMetadata(context.Context, *GetMyMetadataRequest) (*GetMyMetadataResponse, error)
+	// Removes a user metadata by key to the authorized user
+	RemoveMyMetadata(context.Context, *RemoveMyMetadataRequest) (*RemoveMyMetadataResponse, error)
+	// Set a list of user metadata to the authorized user
+	BulkRemoveMyMetadata(context.Context, *BulkRemoveMyMetadataRequest) (*BulkRemoveMyMetadataResponse, error)
+	// Returns the refresh tokens of the authorized user
+	ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error)
+	// Revokes a single refresh token of the authorized user by its (token) id
+	RevokeMyRefreshToken(context.Context, *RevokeMyRefreshTokenRequest) (*RevokeMyRefreshTokenResponse, error)
+	// Revokes all refresh tokens of the authorized user
+	RevokeAllMyRefreshTokens(context.Context, *RevokeAllMyRefreshTokensRequest) (*RevokeAllMyRefreshTokensResponse, error)
 	// Change the user name of the authorize user
 	UpdateMyUserName(context.Context, *UpdateMyUserNameRequest) (*UpdateMyUserNameResponse, error)
 	// Returns the password complexity policy of my organisation
@@ -471,6 +650,8 @@ type AuthServiceServer interface {
 	ResendMyPhoneVerification(context.Context, *ResendMyPhoneVerificationRequest) (*ResendMyPhoneVerificationResponse, error)
 	// Removed the phone number of the authorized user
 	RemoveMyPhone(context.Context, *RemoveMyPhoneRequest) (*RemoveMyPhoneResponse, error)
+	// Remove my avatar
+	RemoveMyAvatar(context.Context, *RemoveMyAvatarRequest) (*RemoveMyAvatarResponse, error)
 	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(context.Context, *ListMyLinkedIDPsRequest) (*ListMyLinkedIDPsResponse, error)
 	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
@@ -491,11 +672,19 @@ type AuthServiceServer interface {
 	VerifyMyAuthFactorU2F(context.Context, *VerifyMyAuthFactorU2FRequest) (*VerifyMyAuthFactorU2FResponse, error)
 	// Removes the U2F Authentication from the authorized user
 	RemoveMyAuthFactorU2F(context.Context, *RemoveMyAuthFactorU2FRequest) (*RemoveMyAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authentications of the authorized user
+	// Returns all configured passwordless authenticators of the authorized user
 	ListMyPasswordless(context.Context, *ListMyPasswordlessRequest) (*ListMyPasswordlessResponse, error)
-	// Adds a new passwordless authentications to the authorized user
+	// Adds a new passwordless authenticator to the authorized user
 	// Multiple passwordless authentications can be configured
 	AddMyPasswordless(context.Context, *AddMyPasswordlessRequest) (*AddMyPasswordlessResponse, error)
+	// Adds a new passwordless authenticator link to the authorized user and returns it directly
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	AddMyPasswordlessLink(context.Context, *AddMyPasswordlessLinkRequest) (*AddMyPasswordlessLinkResponse, error)
+	// Adds a new passwordless authenticator link to the authorized user and sends it to the registered email address
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	SendMyPasswordlessLink(context.Context, *SendMyPasswordlessLinkRequest) (*SendMyPasswordlessLinkResponse, error)
 	// Verifies the last added passwordless configuration
 	VerifyMyPasswordless(context.Context, *VerifyMyPasswordlessRequest) (*VerifyMyPasswordlessResponse, error)
 	// Removes the passwordless configuration from the authorized user
@@ -510,6 +699,9 @@ type AuthServiceServer interface {
 	ListMyZitadelPermissions(context.Context, *ListMyZitadelPermissionsRequest) (*ListMyZitadelPermissionsResponse, error)
 	// Returns a list of roles for the authorized user and project
 	ListMyProjectPermissions(context.Context, *ListMyProjectPermissionsRequest) (*ListMyProjectPermissionsResponse, error)
+	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
+	// Limit should always be set, there is a default limit set by the service
+	ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -520,6 +712,9 @@ type UnimplementedAuthServiceServer struct {
 func (UnimplementedAuthServiceServer) Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Healthz not implemented")
 }
+func (UnimplementedAuthServiceServer) GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSupportedLanguages not implemented")
+}
 func (UnimplementedAuthServiceServer) GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMyUser not implemented")
 }
@@ -528,6 +723,33 @@ func (UnimplementedAuthServiceServer) ListMyUserChanges(context.Context, *ListMy
 }
 func (UnimplementedAuthServiceServer) ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyUserSessions not implemented")
+}
+func (UnimplementedAuthServiceServer) SetMyMetadata(context.Context, *SetMyMetadataRequest) (*SetMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) BulkSetMyMetadata(context.Context, *BulkSetMyMetadataRequest) (*BulkSetMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BulkSetMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) ListMyMetadata(context.Context, *ListMyMetadataRequest) (*ListMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) GetMyMetadata(context.Context, *GetMyMetadataRequest) (*GetMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMyMetadata(context.Context, *RemoveMyMetadataRequest) (*RemoveMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) BulkRemoveMyMetadata(context.Context, *BulkRemoveMyMetadataRequest) (*BulkRemoveMyMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BulkRemoveMyMetadata not implemented")
+}
+func (UnimplementedAuthServiceServer) ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyRefreshTokens not implemented")
+}
+func (UnimplementedAuthServiceServer) RevokeMyRefreshToken(context.Context, *RevokeMyRefreshTokenRequest) (*RevokeMyRefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevokeMyRefreshToken not implemented")
+}
+func (UnimplementedAuthServiceServer) RevokeAllMyRefreshTokens(context.Context, *RevokeAllMyRefreshTokensRequest) (*RevokeAllMyRefreshTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevokeAllMyRefreshTokens not implemented")
 }
 func (UnimplementedAuthServiceServer) UpdateMyUserName(context.Context, *UpdateMyUserNameRequest) (*UpdateMyUserNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMyUserName not implemented")
@@ -571,6 +793,9 @@ func (UnimplementedAuthServiceServer) ResendMyPhoneVerification(context.Context,
 func (UnimplementedAuthServiceServer) RemoveMyPhone(context.Context, *RemoveMyPhoneRequest) (*RemoveMyPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyPhone not implemented")
 }
+func (UnimplementedAuthServiceServer) RemoveMyAvatar(context.Context, *RemoveMyAvatarRequest) (*RemoveMyAvatarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAvatar not implemented")
+}
 func (UnimplementedAuthServiceServer) ListMyLinkedIDPs(context.Context, *ListMyLinkedIDPsRequest) (*ListMyLinkedIDPsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyLinkedIDPs not implemented")
 }
@@ -604,6 +829,12 @@ func (UnimplementedAuthServiceServer) ListMyPasswordless(context.Context, *ListM
 func (UnimplementedAuthServiceServer) AddMyPasswordless(context.Context, *AddMyPasswordlessRequest) (*AddMyPasswordlessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddMyPasswordless not implemented")
 }
+func (UnimplementedAuthServiceServer) AddMyPasswordlessLink(context.Context, *AddMyPasswordlessLinkRequest) (*AddMyPasswordlessLinkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMyPasswordlessLink not implemented")
+}
+func (UnimplementedAuthServiceServer) SendMyPasswordlessLink(context.Context, *SendMyPasswordlessLinkRequest) (*SendMyPasswordlessLinkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMyPasswordlessLink not implemented")
+}
 func (UnimplementedAuthServiceServer) VerifyMyPasswordless(context.Context, *VerifyMyPasswordlessRequest) (*VerifyMyPasswordlessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyMyPasswordless not implemented")
 }
@@ -624,6 +855,9 @@ func (UnimplementedAuthServiceServer) ListMyZitadelPermissions(context.Context, 
 }
 func (UnimplementedAuthServiceServer) ListMyProjectPermissions(context.Context, *ListMyProjectPermissionsRequest) (*ListMyProjectPermissionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyProjectPermissions not implemented")
+}
+func (UnimplementedAuthServiceServer) ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyMemberships not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -652,6 +886,24 @@ func _AuthService_Healthz_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).Healthz(ctx, req.(*HealthzRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetSupportedLanguages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSupportedLanguagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetSupportedLanguages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/GetSupportedLanguages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetSupportedLanguages(ctx, req.(*GetSupportedLanguagesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -706,6 +958,168 @@ func _AuthService_ListMyUserSessions_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).ListMyUserSessions(ctx, req.(*ListMyUserSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_SetMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SetMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/SetMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SetMyMetadata(ctx, req.(*SetMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_BulkSetMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BulkSetMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).BulkSetMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/BulkSetMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).BulkSetMyMetadata(ctx, req.(*BulkSetMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/ListMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMyMetadata(ctx, req.(*ListMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/GetMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetMyMetadata(ctx, req.(*GetMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyMetadata(ctx, req.(*RemoveMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_BulkRemoveMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BulkRemoveMyMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).BulkRemoveMyMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/BulkRemoveMyMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).BulkRemoveMyMetadata(ctx, req.(*BulkRemoveMyMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListMyRefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyRefreshTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMyRefreshTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/ListMyRefreshTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMyRefreshTokens(ctx, req.(*ListMyRefreshTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RevokeMyRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeMyRefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RevokeMyRefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RevokeMyRefreshToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RevokeMyRefreshToken(ctx, req.(*RevokeMyRefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RevokeAllMyRefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeAllMyRefreshTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RevokeAllMyRefreshTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RevokeAllMyRefreshTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RevokeAllMyRefreshTokens(ctx, req.(*RevokeAllMyRefreshTokensRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -962,6 +1376,24 @@ func _AuthService_RemoveMyPhone_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RemoveMyAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyAvatarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyAvatar(ctx, req.(*RemoveMyAvatarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_ListMyLinkedIDPs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMyLinkedIDPsRequest)
 	if err := dec(in); err != nil {
@@ -1160,6 +1592,42 @@ func _AuthService_AddMyPasswordless_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_AddMyPasswordlessLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMyPasswordlessLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AddMyPasswordlessLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/AddMyPasswordlessLink",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AddMyPasswordlessLink(ctx, req.(*AddMyPasswordlessLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_SendMyPasswordlessLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendMyPasswordlessLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SendMyPasswordlessLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/SendMyPasswordlessLink",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SendMyPasswordlessLink(ctx, req.(*SendMyPasswordlessLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_VerifyMyPasswordless_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyMyPasswordlessRequest)
 	if err := dec(in); err != nil {
@@ -1286,6 +1754,24 @@ func _AuthService_ListMyProjectPermissions_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_ListMyMemberships_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyMembershipsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMyMemberships(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/ListMyMemberships",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMyMemberships(ctx, req.(*ListMyMembershipsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1298,6 +1784,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_Healthz_Handler,
 		},
 		{
+			MethodName: "GetSupportedLanguages",
+			Handler:    _AuthService_GetSupportedLanguages_Handler,
+		},
+		{
 			MethodName: "GetMyUser",
 			Handler:    _AuthService_GetMyUser_Handler,
 		},
@@ -1308,6 +1798,42 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMyUserSessions",
 			Handler:    _AuthService_ListMyUserSessions_Handler,
+		},
+		{
+			MethodName: "SetMyMetadata",
+			Handler:    _AuthService_SetMyMetadata_Handler,
+		},
+		{
+			MethodName: "BulkSetMyMetadata",
+			Handler:    _AuthService_BulkSetMyMetadata_Handler,
+		},
+		{
+			MethodName: "ListMyMetadata",
+			Handler:    _AuthService_ListMyMetadata_Handler,
+		},
+		{
+			MethodName: "GetMyMetadata",
+			Handler:    _AuthService_GetMyMetadata_Handler,
+		},
+		{
+			MethodName: "RemoveMyMetadata",
+			Handler:    _AuthService_RemoveMyMetadata_Handler,
+		},
+		{
+			MethodName: "BulkRemoveMyMetadata",
+			Handler:    _AuthService_BulkRemoveMyMetadata_Handler,
+		},
+		{
+			MethodName: "ListMyRefreshTokens",
+			Handler:    _AuthService_ListMyRefreshTokens_Handler,
+		},
+		{
+			MethodName: "RevokeMyRefreshToken",
+			Handler:    _AuthService_RevokeMyRefreshToken_Handler,
+		},
+		{
+			MethodName: "RevokeAllMyRefreshTokens",
+			Handler:    _AuthService_RevokeAllMyRefreshTokens_Handler,
 		},
 		{
 			MethodName: "UpdateMyUserName",
@@ -1366,6 +1892,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_RemoveMyPhone_Handler,
 		},
 		{
+			MethodName: "RemoveMyAvatar",
+			Handler:    _AuthService_RemoveMyAvatar_Handler,
+		},
+		{
 			MethodName: "ListMyLinkedIDPs",
 			Handler:    _AuthService_ListMyLinkedIDPs_Handler,
 		},
@@ -1410,6 +1940,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_AddMyPasswordless_Handler,
 		},
 		{
+			MethodName: "AddMyPasswordlessLink",
+			Handler:    _AuthService_AddMyPasswordlessLink_Handler,
+		},
+		{
+			MethodName: "SendMyPasswordlessLink",
+			Handler:    _AuthService_SendMyPasswordlessLink_Handler,
+		},
+		{
 			MethodName: "VerifyMyPasswordless",
 			Handler:    _AuthService_VerifyMyPasswordless_Handler,
 		},
@@ -1436,6 +1974,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMyProjectPermissions",
 			Handler:    _AuthService_ListMyProjectPermissions_Handler,
+		},
+		{
+			MethodName: "ListMyMemberships",
+			Handler:    _AuthService_ListMyMemberships_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
