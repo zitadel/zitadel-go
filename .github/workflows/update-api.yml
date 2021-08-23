@@ -1,9 +1,8 @@
-name: "Update ZITADEL API"
-on:
-  workflow_dispatch:
-  
+name: Update ZITADEL API
+on: workflow_dispatch
+
 jobs:
-  test:
+  update:
     runs-on: ubuntu-18.04
     steps:
       - name: Source checkout
