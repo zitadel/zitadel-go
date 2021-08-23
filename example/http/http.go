@@ -5,18 +5,24 @@ import (
 	"net/http"
 	"time"
 
+	api_mw "github.com/caos/zitadel-go/pkg/api/middleware"
 	http_mw "github.com/caos/zitadel-go/pkg/api/middleware/http"
 	"github.com/caos/zitadel-go/pkg/client"
 	"github.com/caos/zitadel-go/pkg/client/middleware"
 )
 
 func main() {
-	introspection, err := http_mw.NewIntrospectionInterceptor(client.Issuer, middleware.OSKeyPath())
+	introspection, err := http_mw.NewIntrospectionInterceptor(client.Issuer, middleware.OSKeyPath(),
+		http_mw.WithIgnoredPaths("/public"),
+		http_mw.WithIntrospectionOptions(api_mw.WithCheckClaim("email", "livio@caos.ch")),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	router := http.NewServeMux()
+	//router := mux.NewRouter()
+	//router.Use(introspection.Handler)
 	router.HandleFunc("/public", writeOK)
 	router.HandleFunc("/protected", introspection.HandlerFunc(writeOK))
 

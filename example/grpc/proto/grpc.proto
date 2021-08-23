@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package zitadel.go.example;
+
+option go_package = "github.com/caos/zitadel-go/example/grpc/proto";
+
+service Example {
+  rpc Public (PublicRequest) returns (PublicResponse) {}
+  rpc Protected (ProtectedRequest) returns (ProtectedResponse) {}
+}
+
+message PublicRequest {}
+
+message PublicResponse {
+  string ok = 1;
+}
+
+message ProtectedRequest{}
+
+message ProtectedResponse {
+  string ok = 1;
+}
