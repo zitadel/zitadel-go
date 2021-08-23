@@ -1,5 +1,9 @@
 name: Update ZITADEL API
-on: workflow_dispatch
+on:
+  pull_request:
+    branches-ignore:
+      - '**'
+  workflow_dispatch:
 
 jobs:
   update:
