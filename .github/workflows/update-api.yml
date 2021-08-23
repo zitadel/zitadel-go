@@ -1,7 +1,6 @@
 name: Update ZITADEL API
 
-on:
-  workflow_dispatch:
+on: ["push"]
 
 jobs:
   update:
