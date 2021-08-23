@@ -1,5 +1,5 @@
-name: Update ZITADEL API
-on: 
+name: "Update ZITADEL API"
+on:
   workflow_dispatch:
   
 jobs:
