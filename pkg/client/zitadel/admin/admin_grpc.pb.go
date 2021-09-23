@@ -39,6 +39,8 @@ type AdminServiceClient interface {
 	ListIDPs(ctx context.Context, in *ListIDPsRequest, opts ...grpc.CallOption) (*ListIDPsResponse, error)
 	// Adds a new oidc identity provider configuration the IAM
 	AddOIDCIDP(ctx context.Context, in *AddOIDCIDPRequest, opts ...grpc.CallOption) (*AddOIDCIDPResponse, error)
+	// Adds a new jwt identity provider configuration the IAM
+	AddJWTIDP(ctx context.Context, in *AddJWTIDPRequest, opts ...grpc.CallOption) (*AddJWTIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDP(ctx context.Context, in *UpdateIDPRequest, opts ...grpc.CallOption) (*UpdateIDPResponse, error)
@@ -53,6 +55,9 @@ type AdminServiceClient interface {
 	//Updates the oidc configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPOIDCConfig(ctx context.Context, in *UpdateIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateIDPOIDCConfigResponse, error)
+	//Updates the jwt configuration of the specified idp
+	// all fields are updated. If no value is provided the field will be empty afterwards.
+	UpdateIDPJWTConfig(ctx context.Context, in *UpdateIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateIDPJWTConfigResponse, error)
 	GetDefaultFeatures(ctx context.Context, in *GetDefaultFeaturesRequest, opts ...grpc.CallOption) (*GetDefaultFeaturesResponse, error)
 	SetDefaultFeatures(ctx context.Context, in *SetDefaultFeaturesRequest, opts ...grpc.CallOption) (*SetDefaultFeaturesResponse, error)
 	GetOrgFeatures(ctx context.Context, in *GetOrgFeaturesRequest, opts ...grpc.CallOption) (*GetOrgFeaturesResponse, error)
@@ -329,6 +334,15 @@ func (c *adminServiceClient) AddOIDCIDP(ctx context.Context, in *AddOIDCIDPReque
 	return out, nil
 }
 
+func (c *adminServiceClient) AddJWTIDP(ctx context.Context, in *AddJWTIDPRequest, opts ...grpc.CallOption) (*AddJWTIDPResponse, error) {
+	out := new(AddJWTIDPResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddJWTIDP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) UpdateIDP(ctx context.Context, in *UpdateIDPRequest, opts ...grpc.CallOption) (*UpdateIDPResponse, error) {
 	out := new(UpdateIDPResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateIDP", in, out, opts...)
@@ -368,6 +382,15 @@ func (c *adminServiceClient) RemoveIDP(ctx context.Context, in *RemoveIDPRequest
 func (c *adminServiceClient) UpdateIDPOIDCConfig(ctx context.Context, in *UpdateIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateIDPOIDCConfigResponse, error) {
 	out := new(UpdateIDPOIDCConfigResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateIDPOIDCConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateIDPJWTConfig(ctx context.Context, in *UpdateIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateIDPJWTConfigResponse, error) {
+	out := new(UpdateIDPJWTConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateIDPJWTConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1029,6 +1052,8 @@ type AdminServiceServer interface {
 	ListIDPs(context.Context, *ListIDPsRequest) (*ListIDPsResponse, error)
 	// Adds a new oidc identity provider configuration the IAM
 	AddOIDCIDP(context.Context, *AddOIDCIDPRequest) (*AddOIDCIDPResponse, error)
+	// Adds a new jwt identity provider configuration the IAM
+	AddJWTIDP(context.Context, *AddJWTIDPRequest) (*AddJWTIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDP(context.Context, *UpdateIDPRequest) (*UpdateIDPResponse, error)
@@ -1043,6 +1068,9 @@ type AdminServiceServer interface {
 	//Updates the oidc configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPOIDCConfig(context.Context, *UpdateIDPOIDCConfigRequest) (*UpdateIDPOIDCConfigResponse, error)
+	//Updates the jwt configuration of the specified idp
+	// all fields are updated. If no value is provided the field will be empty afterwards.
+	UpdateIDPJWTConfig(context.Context, *UpdateIDPJWTConfigRequest) (*UpdateIDPJWTConfigResponse, error)
 	GetDefaultFeatures(context.Context, *GetDefaultFeaturesRequest) (*GetDefaultFeaturesResponse, error)
 	SetDefaultFeatures(context.Context, *SetDefaultFeaturesRequest) (*SetDefaultFeaturesResponse, error)
 	GetOrgFeatures(context.Context, *GetOrgFeaturesRequest) (*GetOrgFeaturesResponse, error)
@@ -1262,6 +1290,9 @@ func (UnimplementedAdminServiceServer) ListIDPs(context.Context, *ListIDPsReques
 func (UnimplementedAdminServiceServer) AddOIDCIDP(context.Context, *AddOIDCIDPRequest) (*AddOIDCIDPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOIDCIDP not implemented")
 }
+func (UnimplementedAdminServiceServer) AddJWTIDP(context.Context, *AddJWTIDPRequest) (*AddJWTIDPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddJWTIDP not implemented")
+}
 func (UnimplementedAdminServiceServer) UpdateIDP(context.Context, *UpdateIDPRequest) (*UpdateIDPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIDP not implemented")
 }
@@ -1276,6 +1307,9 @@ func (UnimplementedAdminServiceServer) RemoveIDP(context.Context, *RemoveIDPRequ
 }
 func (UnimplementedAdminServiceServer) UpdateIDPOIDCConfig(context.Context, *UpdateIDPOIDCConfigRequest) (*UpdateIDPOIDCConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIDPOIDCConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateIDPJWTConfig(context.Context, *UpdateIDPJWTConfigRequest) (*UpdateIDPJWTConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateIDPJWTConfig not implemented")
 }
 func (UnimplementedAdminServiceServer) GetDefaultFeatures(context.Context, *GetDefaultFeaturesRequest) (*GetDefaultFeaturesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultFeatures not implemented")
@@ -1662,6 +1696,24 @@ func _AdminService_AddOIDCIDP_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_AddJWTIDP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddJWTIDPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddJWTIDP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddJWTIDP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddJWTIDP(ctx, req.(*AddJWTIDPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_UpdateIDP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateIDPRequest)
 	if err := dec(in); err != nil {
@@ -1748,6 +1800,24 @@ func _AdminService_UpdateIDPOIDCConfig_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).UpdateIDPOIDCConfig(ctx, req.(*UpdateIDPOIDCConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateIDPJWTConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateIDPJWTConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateIDPJWTConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateIDPJWTConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateIDPJWTConfig(ctx, req.(*UpdateIDPJWTConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3056,6 +3126,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_AddOIDCIDP_Handler,
 		},
 		{
+			MethodName: "AddJWTIDP",
+			Handler:    _AdminService_AddJWTIDP_Handler,
+		},
+		{
 			MethodName: "UpdateIDP",
 			Handler:    _AdminService_UpdateIDP_Handler,
 		},
@@ -3074,6 +3148,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateIDPOIDCConfig",
 			Handler:    _AdminService_UpdateIDPOIDCConfig_Handler,
+		},
+		{
+			MethodName: "UpdateIDPJWTConfig",
+			Handler:    _AdminService_UpdateIDPJWTConfig_Handler,
 		},
 		{
 			MethodName: "GetDefaultFeatures",

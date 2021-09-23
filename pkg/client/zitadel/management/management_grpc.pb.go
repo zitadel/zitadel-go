@@ -528,6 +528,8 @@ type ManagementServiceClient interface {
 	// Add a new identity provider configuration in the organisation
 	// Provider must be OIDC compliant
 	AddOrgOIDCIDP(ctx context.Context, in *AddOrgOIDCIDPRequest, opts ...grpc.CallOption) (*AddOrgOIDCIDPResponse, error)
+	// Add a new jwt identity provider configuration in the organisation
+	AddOrgJWTIDP(ctx context.Context, in *AddOrgJWTIDPRequest, opts ...grpc.CallOption) (*AddOrgJWTIDPResponse, error)
 	// Deactivate identity provider configuration
 	// Users will not be able to use this provider for login (e.g Google, Microsoft, AD, etc)
 	// Returns error if already deactivated
@@ -542,6 +544,8 @@ type ManagementServiceClient interface {
 	UpdateOrgIDP(ctx context.Context, in *UpdateOrgIDPRequest, opts ...grpc.CallOption) (*UpdateOrgIDPResponse, error)
 	// Change OIDC identity provider configuration of the organisation
 	UpdateOrgIDPOIDCConfig(ctx context.Context, in *UpdateOrgIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPOIDCConfigResponse, error)
+	// Change JWT identity provider configuration of the organisation
+	UpdateOrgIDPJWTConfig(ctx context.Context, in *UpdateOrgIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPJWTConfigResponse, error)
 }
 
 type managementServiceClient struct {
@@ -2415,6 +2419,15 @@ func (c *managementServiceClient) AddOrgOIDCIDP(ctx context.Context, in *AddOrgO
 	return out, nil
 }
 
+func (c *managementServiceClient) AddOrgJWTIDP(ctx context.Context, in *AddOrgJWTIDPRequest, opts ...grpc.CallOption) (*AddOrgJWTIDPResponse, error) {
+	out := new(AddOrgJWTIDPResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddOrgJWTIDP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) DeactivateOrgIDP(ctx context.Context, in *DeactivateOrgIDPRequest, opts ...grpc.CallOption) (*DeactivateOrgIDPResponse, error) {
 	out := new(DeactivateOrgIDPResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeactivateOrgIDP", in, out, opts...)
@@ -2454,6 +2467,15 @@ func (c *managementServiceClient) UpdateOrgIDP(ctx context.Context, in *UpdateOr
 func (c *managementServiceClient) UpdateOrgIDPOIDCConfig(ctx context.Context, in *UpdateOrgIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPOIDCConfigResponse, error) {
 	out := new(UpdateOrgIDPOIDCConfigResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateOrgIDPOIDCConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateOrgIDPJWTConfig(ctx context.Context, in *UpdateOrgIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPJWTConfigResponse, error) {
+	out := new(UpdateOrgIDPJWTConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateOrgIDPJWTConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2974,6 +2996,8 @@ type ManagementServiceServer interface {
 	// Add a new identity provider configuration in the organisation
 	// Provider must be OIDC compliant
 	AddOrgOIDCIDP(context.Context, *AddOrgOIDCIDPRequest) (*AddOrgOIDCIDPResponse, error)
+	// Add a new jwt identity provider configuration in the organisation
+	AddOrgJWTIDP(context.Context, *AddOrgJWTIDPRequest) (*AddOrgJWTIDPResponse, error)
 	// Deactivate identity provider configuration
 	// Users will not be able to use this provider for login (e.g Google, Microsoft, AD, etc)
 	// Returns error if already deactivated
@@ -2988,6 +3012,8 @@ type ManagementServiceServer interface {
 	UpdateOrgIDP(context.Context, *UpdateOrgIDPRequest) (*UpdateOrgIDPResponse, error)
 	// Change OIDC identity provider configuration of the organisation
 	UpdateOrgIDPOIDCConfig(context.Context, *UpdateOrgIDPOIDCConfigRequest) (*UpdateOrgIDPOIDCConfigResponse, error)
+	// Change JWT identity provider configuration of the organisation
+	UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error)
 	mustEmbedUnimplementedManagementServiceServer()
 }
 
@@ -3616,6 +3642,9 @@ func (UnimplementedManagementServiceServer) ListOrgIDPs(context.Context, *ListOr
 func (UnimplementedManagementServiceServer) AddOrgOIDCIDP(context.Context, *AddOrgOIDCIDPRequest) (*AddOrgOIDCIDPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOrgOIDCIDP not implemented")
 }
+func (UnimplementedManagementServiceServer) AddOrgJWTIDP(context.Context, *AddOrgJWTIDPRequest) (*AddOrgJWTIDPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOrgJWTIDP not implemented")
+}
 func (UnimplementedManagementServiceServer) DeactivateOrgIDP(context.Context, *DeactivateOrgIDPRequest) (*DeactivateOrgIDPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeactivateOrgIDP not implemented")
 }
@@ -3630,6 +3659,9 @@ func (UnimplementedManagementServiceServer) UpdateOrgIDP(context.Context, *Updat
 }
 func (UnimplementedManagementServiceServer) UpdateOrgIDPOIDCConfig(context.Context, *UpdateOrgIDPOIDCConfigRequest) (*UpdateOrgIDPOIDCConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrgIDPOIDCConfig not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrgIDPJWTConfig not implemented")
 }
 func (UnimplementedManagementServiceServer) mustEmbedUnimplementedManagementServiceServer() {}
 
@@ -7370,6 +7402,24 @@ func _ManagementService_AddOrgOIDCIDP_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddOrgJWTIDP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddOrgJWTIDPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddOrgJWTIDP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddOrgJWTIDP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddOrgJWTIDP(ctx, req.(*AddOrgJWTIDPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_DeactivateOrgIDP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeactivateOrgIDPRequest)
 	if err := dec(in); err != nil {
@@ -7456,6 +7506,24 @@ func _ManagementService_UpdateOrgIDPOIDCConfig_Handler(srv interface{}, ctx cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).UpdateOrgIDPOIDCConfig(ctx, req.(*UpdateOrgIDPOIDCConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateOrgIDPJWTConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrgIDPJWTConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateOrgIDPJWTConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateOrgIDPJWTConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateOrgIDPJWTConfig(ctx, req.(*UpdateOrgIDPJWTConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8296,6 +8364,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_AddOrgOIDCIDP_Handler,
 		},
 		{
+			MethodName: "AddOrgJWTIDP",
+			Handler:    _ManagementService_AddOrgJWTIDP_Handler,
+		},
+		{
 			MethodName: "DeactivateOrgIDP",
 			Handler:    _ManagementService_DeactivateOrgIDP_Handler,
 		},
@@ -8314,6 +8386,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOrgIDPOIDCConfig",
 			Handler:    _ManagementService_UpdateOrgIDPOIDCConfig_Handler,
+		},
+		{
+			MethodName: "UpdateOrgIDPJWTConfig",
+			Handler:    _ManagementService_UpdateOrgIDPJWTConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
