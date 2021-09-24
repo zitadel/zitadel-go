@@ -1,6 +1,6 @@
 name: Update ZITADEL
 on:
-  pull_request:
+  push:
     branches:
       - '**'
   workflow_dispatch:
