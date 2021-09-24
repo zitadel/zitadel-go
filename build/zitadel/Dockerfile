@@ -60,7 +60,7 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 ## Go base build
 #######################
 FROM go-dep as zitadel-client
-ARG PROJECT_PATH
+ARG PROJECT_PATH=github.com/caos/zitadel-go/pkg/client
 
 COPY --from=base /proto /proto
 COPY --from=base /usr/local/bin /usr/local/bin/.
