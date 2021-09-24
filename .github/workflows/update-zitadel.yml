@@ -26,3 +26,4 @@ jobs:
         with:
           branch: update-api
           draft: true
+          base: main
