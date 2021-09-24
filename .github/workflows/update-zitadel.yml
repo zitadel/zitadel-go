@@ -20,7 +20,7 @@ jobs:
           buildkitd-flags: --debug
       - name: Build
         run: |
-          DOCKER_BUILDKIT=1 docker build -f build/zitadel/Dockerfile --build-arg TAG_NAME=1.30 . -o ./pkg/client
+          DOCKER_BUILDKIT=1 docker build -f build/zitadel/Dockerfile --build-arg TAG_NAME=1.38 . -o ./pkg/client
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
