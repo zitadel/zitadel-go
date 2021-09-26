@@ -9,7 +9,7 @@ on:
         required: false
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-18.04
     name: update zitadel api
     steps:

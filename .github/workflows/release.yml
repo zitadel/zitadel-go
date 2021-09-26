@@ -1,5 +1,15 @@
 name: Release
-on: push
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
 jobs:
   test:
     runs-on: ubuntu-18.04
