@@ -21,6 +21,7 @@ protoc \
     --go_opt=Mzitadel/admin.proto=${ZITADEL_IMPORT}/admin \
     --go_opt=Mzitadel/app.proto=${ZITADEL_IMPORT}/app \
     --go_opt=Mzitadel/auth.proto=${ZITADEL_IMPORT}/auth \
+    --go_opt=Mzitadel/action.proto=${ZITADEL_IMPORT}/action \
     --go_opt=Mzitadel/auth_n_key.proto=${ZITADEL_IMPORT}/authn \
     --go_opt=Mzitadel/change.proto=${ZITADEL_IMPORT}/change \
     --go_opt=Mzitadel/features.proto=${ZITADEL_IMPORT}/features \
