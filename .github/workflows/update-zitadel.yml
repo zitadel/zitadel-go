@@ -53,13 +53,13 @@ jobs:
           ## Workaround until https://github.com/docker/build-push-action/issues/252#issuecomment-804898823 is merged
           version: v0.6.0
           buildkitd-flags: --debug
-          token: ${{ steps.generate-token.outputs.token }}
       - name: Build
         run: |
           DOCKER_BUILDKIT=1 docker build -f build/zitadel/Dockerfile --build-arg TAG_NAME=${{steps.tag.outputs.tag}} . -o ./pkg/client
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: 'fix: update zitadel api to ${{steps.tag.outputs.tag}}'
           branch: update-api
           delete-branch: true
