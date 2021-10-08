@@ -7,6 +7,7 @@
 package management
 
 import (
+	action "github.com/caos/zitadel-go/pkg/client/zitadel/action"
 	app "github.com/caos/zitadel-go/pkg/client/zitadel/app"
 	authn "github.com/caos/zitadel-go/pkg/client/zitadel/authn"
 	_ "github.com/caos/zitadel-go/pkg/client/zitadel/authoption"
@@ -22,7 +23,6 @@ import (
 	project "github.com/caos/zitadel-go/pkg/client/zitadel/project"
 	text "github.com/caos/zitadel-go/pkg/client/zitadel/text"
 	user "github.com/caos/zitadel-go/pkg/client/zitadel/user"
-	action "github.com/caos/zitadel/pkg/grpc/action"
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
