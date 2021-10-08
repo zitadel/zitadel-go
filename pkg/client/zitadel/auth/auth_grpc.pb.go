@@ -27,18 +27,10 @@ type AuthServiceClient interface {
 	ListMyUserChanges(ctx context.Context, in *ListMyUserChangesRequest, opts ...grpc.CallOption) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error)
-	// Sets a user metadata by key to the authorized user
-	SetMyMetadata(ctx context.Context, in *SetMyMetadataRequest, opts ...grpc.CallOption) (*SetMyMetadataResponse, error)
-	// Set a list of user metadata to the authorized user
-	BulkSetMyMetadata(ctx context.Context, in *BulkSetMyMetadataRequest, opts ...grpc.CallOption) (*BulkSetMyMetadataResponse, error)
 	// Returns the user metadata of the authorized user
 	ListMyMetadata(ctx context.Context, in *ListMyMetadataRequest, opts ...grpc.CallOption) (*ListMyMetadataResponse, error)
 	// Returns the user metadata by key of the authorized user
 	GetMyMetadata(ctx context.Context, in *GetMyMetadataRequest, opts ...grpc.CallOption) (*GetMyMetadataResponse, error)
-	// Removes a user metadata by key to the authorized user
-	RemoveMyMetadata(ctx context.Context, in *RemoveMyMetadataRequest, opts ...grpc.CallOption) (*RemoveMyMetadataResponse, error)
-	// Set a list of user metadata to the authorized user
-	BulkRemoveMyMetadata(ctx context.Context, in *BulkRemoveMyMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveMyMetadataResponse, error)
 	// Returns the refresh tokens of the authorized user
 	ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error)
 	// Revokes a single refresh token of the authorized user by its (token) id
@@ -183,24 +175,6 @@ func (c *authServiceClient) ListMyUserSessions(ctx context.Context, in *ListMyUs
 	return out, nil
 }
 
-func (c *authServiceClient) SetMyMetadata(ctx context.Context, in *SetMyMetadataRequest, opts ...grpc.CallOption) (*SetMyMetadataResponse, error) {
-	out := new(SetMyMetadataResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/SetMyMetadata", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) BulkSetMyMetadata(ctx context.Context, in *BulkSetMyMetadataRequest, opts ...grpc.CallOption) (*BulkSetMyMetadataResponse, error) {
-	out := new(BulkSetMyMetadataResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/BulkSetMyMetadata", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authServiceClient) ListMyMetadata(ctx context.Context, in *ListMyMetadataRequest, opts ...grpc.CallOption) (*ListMyMetadataResponse, error) {
 	out := new(ListMyMetadataResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyMetadata", in, out, opts...)
@@ -213,24 +187,6 @@ func (c *authServiceClient) ListMyMetadata(ctx context.Context, in *ListMyMetada
 func (c *authServiceClient) GetMyMetadata(ctx context.Context, in *GetMyMetadataRequest, opts ...grpc.CallOption) (*GetMyMetadataResponse, error) {
 	out := new(GetMyMetadataResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyMetadata", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) RemoveMyMetadata(ctx context.Context, in *RemoveMyMetadataRequest, opts ...grpc.CallOption) (*RemoveMyMetadataResponse, error) {
-	out := new(RemoveMyMetadataResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyMetadata", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) BulkRemoveMyMetadata(ctx context.Context, in *BulkRemoveMyMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveMyMetadataResponse, error) {
-	out := new(BulkRemoveMyMetadataResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/BulkRemoveMyMetadata", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -601,18 +557,10 @@ type AuthServiceServer interface {
 	ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error)
-	// Sets a user metadata by key to the authorized user
-	SetMyMetadata(context.Context, *SetMyMetadataRequest) (*SetMyMetadataResponse, error)
-	// Set a list of user metadata to the authorized user
-	BulkSetMyMetadata(context.Context, *BulkSetMyMetadataRequest) (*BulkSetMyMetadataResponse, error)
 	// Returns the user metadata of the authorized user
 	ListMyMetadata(context.Context, *ListMyMetadataRequest) (*ListMyMetadataResponse, error)
 	// Returns the user metadata by key of the authorized user
 	GetMyMetadata(context.Context, *GetMyMetadataRequest) (*GetMyMetadataResponse, error)
-	// Removes a user metadata by key to the authorized user
-	RemoveMyMetadata(context.Context, *RemoveMyMetadataRequest) (*RemoveMyMetadataResponse, error)
-	// Set a list of user metadata to the authorized user
-	BulkRemoveMyMetadata(context.Context, *BulkRemoveMyMetadataRequest) (*BulkRemoveMyMetadataResponse, error)
 	// Returns the refresh tokens of the authorized user
 	ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error)
 	// Revokes a single refresh token of the authorized user by its (token) id
@@ -724,23 +672,11 @@ func (UnimplementedAuthServiceServer) ListMyUserChanges(context.Context, *ListMy
 func (UnimplementedAuthServiceServer) ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyUserSessions not implemented")
 }
-func (UnimplementedAuthServiceServer) SetMyMetadata(context.Context, *SetMyMetadataRequest) (*SetMyMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetMyMetadata not implemented")
-}
-func (UnimplementedAuthServiceServer) BulkSetMyMetadata(context.Context, *BulkSetMyMetadataRequest) (*BulkSetMyMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BulkSetMyMetadata not implemented")
-}
 func (UnimplementedAuthServiceServer) ListMyMetadata(context.Context, *ListMyMetadataRequest) (*ListMyMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyMetadata not implemented")
 }
 func (UnimplementedAuthServiceServer) GetMyMetadata(context.Context, *GetMyMetadataRequest) (*GetMyMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMyMetadata not implemented")
-}
-func (UnimplementedAuthServiceServer) RemoveMyMetadata(context.Context, *RemoveMyMetadataRequest) (*RemoveMyMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyMetadata not implemented")
-}
-func (UnimplementedAuthServiceServer) BulkRemoveMyMetadata(context.Context, *BulkRemoveMyMetadataRequest) (*BulkRemoveMyMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BulkRemoveMyMetadata not implemented")
 }
 func (UnimplementedAuthServiceServer) ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyRefreshTokens not implemented")
@@ -962,42 +898,6 @@ func _AuthService_ListMyUserSessions_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_SetMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetMyMetadataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).SetMyMetadata(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.auth.v1.AuthService/SetMyMetadata",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).SetMyMetadata(ctx, req.(*SetMyMetadataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_BulkSetMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BulkSetMyMetadataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).BulkSetMyMetadata(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.auth.v1.AuthService/BulkSetMyMetadata",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).BulkSetMyMetadata(ctx, req.(*BulkSetMyMetadataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AuthService_ListMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMyMetadataRequest)
 	if err := dec(in); err != nil {
@@ -1030,42 +930,6 @@ func _AuthService_GetMyMetadata_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).GetMyMetadata(ctx, req.(*GetMyMetadataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_RemoveMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveMyMetadataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).RemoveMyMetadata(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyMetadata",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RemoveMyMetadata(ctx, req.(*RemoveMyMetadataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_BulkRemoveMyMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BulkRemoveMyMetadataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).BulkRemoveMyMetadata(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.auth.v1.AuthService/BulkRemoveMyMetadata",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).BulkRemoveMyMetadata(ctx, req.(*BulkRemoveMyMetadataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1800,28 +1664,12 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_ListMyUserSessions_Handler,
 		},
 		{
-			MethodName: "SetMyMetadata",
-			Handler:    _AuthService_SetMyMetadata_Handler,
-		},
-		{
-			MethodName: "BulkSetMyMetadata",
-			Handler:    _AuthService_BulkSetMyMetadata_Handler,
-		},
-		{
 			MethodName: "ListMyMetadata",
 			Handler:    _AuthService_ListMyMetadata_Handler,
 		},
 		{
 			MethodName: "GetMyMetadata",
 			Handler:    _AuthService_GetMyMetadata_Handler,
-		},
-		{
-			MethodName: "RemoveMyMetadata",
-			Handler:    _AuthService_RemoveMyMetadata_Handler,
-		},
-		{
-			MethodName: "BulkRemoveMyMetadata",
-			Handler:    _AuthService_BulkRemoveMyMetadata_Handler,
 		},
 		{
 			MethodName: "ListMyRefreshTokens",
