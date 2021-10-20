@@ -2985,8 +2985,9 @@ type GetCustomOrgIAMPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.OrgIAMPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                 `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.OrgIAMPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.OrgIAMPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetCustomOrgIAMPolicyResponse) Reset() {
