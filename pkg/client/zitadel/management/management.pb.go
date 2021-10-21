@@ -14128,8 +14128,9 @@ type GetLoginPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.LoginPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.LoginPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.LoginPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetLoginPolicyResponse) Reset() {
@@ -15519,8 +15520,9 @@ type GetPasswordComplexityPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.PasswordComplexityPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                             `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.PasswordComplexityPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.PasswordComplexityPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetPasswordComplexityPolicyResponse) Reset() {
@@ -16037,8 +16039,9 @@ type GetPasswordAgePolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.PasswordAgePolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                      `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.PasswordAgePolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.PasswordAgePolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetPasswordAgePolicyResponse) Reset() {
@@ -16507,8 +16510,9 @@ type GetLockoutPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.LockoutPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                  `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.LockoutPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.LockoutPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetLockoutPolicyResponse) Reset() {
@@ -17423,8 +17427,9 @@ type GetLabelPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetLabelPolicyResponse) Reset() {
@@ -17517,8 +17522,9 @@ type GetPreviewLabelPolicyResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Policy    *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	IsDefault bool                `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	Policy *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
+	//deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
+	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
 func (x *GetPreviewLabelPolicyResponse) Reset() {
