@@ -28772,7 +28772,7 @@ var file_zitadel_management_proto_rawDesc = []byte{
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a, 0x07, 0x64, 0x65, 0x74, 0x61,
 	0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x7a, 0x69, 0x74, 0x61,
 	0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x44, 0x65, 0x74,
-	0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x32, 0xb5, 0xd7,
+	0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x32, 0xab, 0xda,
 	0x02, 0x0a, 0x11, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x72,
 	0x76, 0x69, 0x63, 0x65, 0x12, 0x6a, 0x0a, 0x07, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x7a, 0x12,
 	0x25, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
@@ -31478,91 +31478,114 @@ var file_zitadel_management_proto_rawDesc = []byte{
 	0x73, 0x65, 0x22, 0x37, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x12, 0x1a, 0x0d, 0x2f, 0x61, 0x63, 0x74,
 	0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x01, 0x2a, 0x82, 0xb5, 0x18, 0x1b,
 	0x0a, 0x10, 0x6f, 0x72, 0x67, 0x2e, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x77, 0x72, 0x69,
-	0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0xa1, 0x01, 0x0a, 0x0c,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2a, 0x2e, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e,
-	0x74, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2b, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64,
+	0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0xb8, 0x01, 0x0a, 0x10,
+	0x44, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76, 0x61, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x12, 0x2e, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67,
+	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76,
+	0x61, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x2f, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67,
+	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76,
+	0x61, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x43, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1e, 0x22, 0x19, 0x2f, 0x61, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x5f, 0x64, 0x65, 0x61, 0x63, 0x74, 0x69,
+	0x76, 0x61, 0x74, 0x65, 0x3a, 0x01, 0x2a, 0x82, 0xb5, 0x18, 0x1b, 0x0a, 0x10, 0x6f, 0x72, 0x67,
+	0x2e, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x77, 0x72, 0x69, 0x74, 0x65, 0x1a, 0x07, 0x61,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0xb8, 0x01, 0x0a, 0x10, 0x52, 0x65, 0x61, 0x63, 0x74,
+	0x69, 0x76, 0x61, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2e, 0x2e, 0x7a, 0x69,
+	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
+	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76, 0x61, 0x74, 0x65, 0x41, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2f, 0x2e, 0x7a, 0x69,
+	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
+	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76, 0x61, 0x74, 0x65, 0x41, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x43, 0x82, 0xd3,
+	0xe4, 0x93, 0x02, 0x1e, 0x22, 0x19, 0x2f, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b,
+	0x69, 0x64, 0x7d, 0x2f, 0x5f, 0x72, 0x65, 0x61, 0x63, 0x74, 0x69, 0x76, 0x61, 0x74, 0x65, 0x3a,
+	0x01, 0x2a, 0x82, 0xb5, 0x18, 0x1b, 0x0a, 0x10, 0x6f, 0x72, 0x67, 0x2e, 0x61, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x2e, 0x77, 0x72, 0x69, 0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x12, 0xa1, 0x01, 0x0a, 0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x12, 0x2a, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e,
+	0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2b,
+	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d,
+	0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x38, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x12, 0x2a, 0x0d, 0x2f, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x69,
+	0x64, 0x7d, 0x3a, 0x01, 0x2a, 0x82, 0xb5, 0x18, 0x1c, 0x0a, 0x11, 0x6f, 0x72, 0x67, 0x2e, 0x61,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x1a, 0x07, 0x61, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x8b, 0x01, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x6f,
+	0x77, 0x12, 0x25, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61,
+	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x6f,
+	0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64,
 	0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31,
-	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x38, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x12, 0x2a, 0x0d, 0x2f,
-	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x01, 0x2a, 0x82,
-	0xb5, 0x18, 0x1c, 0x0a, 0x11, 0x6f, 0x72, 0x67, 0x2e, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2e,
-	0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12,
-	0x8b, 0x01, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x6f, 0x77, 0x12, 0x25, 0x2e, 0x7a, 0x69,
-	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
-	0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x26, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e,
-	0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c,
-	0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x31, 0x82, 0xd3, 0xe4, 0x93,
-	0x02, 0x0f, 0x12, 0x0d, 0x2f, 0x66, 0x6c, 0x6f, 0x77, 0x73, 0x2f, 0x7b, 0x74, 0x79, 0x70, 0x65,
-	0x7d, 0x82, 0xb5, 0x18, 0x18, 0x0a, 0x0d, 0x6f, 0x72, 0x67, 0x2e, 0x66, 0x6c, 0x6f, 0x77, 0x2e,
-	0x72, 0x65, 0x61, 0x64, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x9a, 0x01,
-	0x0a, 0x09, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x46, 0x6c, 0x6f, 0x77, 0x12, 0x27, 0x2e, 0x7a, 0x69,
-	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
-	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d,
-	0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x65,
-	0x61, 0x72, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x3a,
-	0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x22, 0x14, 0x2f, 0x66, 0x6c, 0x6f, 0x77, 0x73, 0x2f, 0x7b,
-	0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x5f, 0x63, 0x6c, 0x65, 0x61, 0x72, 0x82, 0xb5, 0x18, 0x1a,
-	0x0a, 0x0f, 0x6f, 0x72, 0x67, 0x2e, 0x66, 0x6c, 0x6f, 0x77, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0xc9, 0x01, 0x0a, 0x11, 0x53,
+	0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x31, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x0f, 0x12, 0x0d, 0x2f, 0x66, 0x6c, 0x6f, 0x77, 0x73,
+	0x2f, 0x7b, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x82, 0xb5, 0x18, 0x18, 0x0a, 0x0d, 0x6f, 0x72, 0x67,
+	0x2e, 0x66, 0x6c, 0x6f, 0x77, 0x2e, 0x72, 0x65, 0x61, 0x64, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x73, 0x12, 0x9a, 0x01, 0x0a, 0x09, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x46, 0x6c, 0x6f,
+	0x77, 0x12, 0x27, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61,
+	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x46,
+	0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x7a, 0x69, 0x74,
+	0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x3a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x22, 0x14, 0x2f, 0x66,
+	0x6c, 0x6f, 0x77, 0x73, 0x2f, 0x7b, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x5f, 0x63, 0x6c, 0x65,
+	0x61, 0x72, 0x82, 0xb5, 0x18, 0x1a, 0x0a, 0x0f, 0x6f, 0x72, 0x67, 0x2e, 0x66, 0x6c, 0x6f, 0x77,
+	0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+	0x12, 0xc9, 0x01, 0x0a, 0x11, 0x53, 0x65, 0x74, 0x54, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x41,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x2f, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
+	0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x53,
 	0x65, 0x74, 0x54, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-	0x12, 0x2f, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67,
-	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x54, 0x72, 0x69, 0x67,
-	0x67, 0x65, 0x72, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x30, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61,
-	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x54, 0x72, 0x69,
-	0x67, 0x67, 0x65, 0x72, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x51, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x2e, 0x22, 0x29, 0x2f, 0x66, 0x6c,
-	0x6f, 0x77, 0x73, 0x2f, 0x7b, 0x66, 0x6c, 0x6f, 0x77, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f,
-	0x74, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2f, 0x7b, 0x74, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72,
-	0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x3a, 0x01, 0x2a, 0x82, 0xb5, 0x18, 0x19, 0x0a, 0x0e, 0x6f,
-	0x72, 0x67, 0x2e, 0x66, 0x6c, 0x6f, 0x77, 0x2e, 0x77, 0x72, 0x69, 0x74, 0x65, 0x1a, 0x07, 0x61,
-	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x97, 0x05, 0x5a, 0x2b, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x61, 0x6f, 0x73, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64,
-	0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x6d, 0x61, 0x6e, 0x61,
-	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x92, 0x41, 0xe6, 0x04, 0x12, 0xdf, 0x02, 0x0a, 0x0e, 0x4d,
-	0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x20, 0x41, 0x50, 0x49, 0x12, 0xbd, 0x01,
-	0x54, 0x68, 0x65, 0x20, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x20, 0x41,
-	0x50, 0x49, 0x20, 0x69, 0x73, 0x20, 0x61, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x6e, 0x61, 0x6d,
-	0x65, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x69, 0x6e, 0x74,
-	0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x20, 0x77, 0x68, 0x65, 0x72, 0x65, 0x20, 0x73, 0x79, 0x73,
-	0x74, 0x65, 0x6d, 0x73, 0x20, 0x63, 0x61, 0x6e, 0x20, 0x6d, 0x75, 0x74, 0x61, 0x74, 0x65, 0x20,
-	0x49, 0x41, 0x4d, 0x20, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x20, 0x6c, 0x69, 0x6b, 0x65,
-	0x2c, 0x20, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2c,
-	0x20, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x2c, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e,
-	0x74, 0x73, 0x2c, 0x20, 0x75, 0x73, 0x65, 0x72, 0x73, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x73, 0x6f,
-	0x20, 0x6f, 0x6e, 0x20, 0x69, 0x66, 0x20, 0x74, 0x68, 0x65, 0x79, 0x20, 0x68, 0x61, 0x76, 0x65,
-	0x20, 0x74, 0x68, 0x65, 0x20, 0x6e, 0x65, 0x63, 0x65, 0x73, 0x73, 0x61, 0x72, 0x79, 0x20, 0x61,
-	0x63, 0x63, 0x65, 0x73, 0x73, 0x20, 0x72, 0x69, 0x67, 0x68, 0x74, 0x73, 0x2e, 0x22, 0x3f, 0x0a,
-	0x1a, 0x43, 0x41, 0x4f, 0x53, 0x20, 0x64, 0x65, 0x76, 0x65, 0x6c, 0x6f, 0x70, 0x65, 0x72, 0x73,
-	0x20, 0x6f, 0x66, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45, 0x4c, 0x12, 0x12, 0x68, 0x74, 0x74,
-	0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x68, 0x1a,
-	0x0d, 0x68, 0x69, 0x40, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x68, 0x2a, 0x47,
-	0x0a, 0x12, 0x41, 0x70, 0x61, 0x63, 0x68, 0x65, 0x20, 0x4c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65,
-	0x20, 0x32, 0x2e, 0x30, 0x12, 0x31, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x67, 0x69,
-	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x61, 0x6f, 0x73, 0x2f, 0x7a, 0x69,
-	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x62, 0x6c, 0x6f, 0x62, 0x2f, 0x6d, 0x61, 0x69, 0x6e, 0x2f,
-	0x4c, 0x49, 0x43, 0x45, 0x4e, 0x53, 0x45, 0x32, 0x03, 0x31, 0x2e, 0x30, 0x1a, 0x0e, 0x61, 0x70,
-	0x69, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x68, 0x22, 0x0e, 0x2f, 0x6d,
-	0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2f, 0x76, 0x31, 0x2a, 0x01, 0x02, 0x32,
-	0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f,
-	0x6e, 0x32, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67,
-	0x72, 0x70, 0x63, 0x32, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3a,
-	0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f,
-	0x6e, 0x3a, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67,
-	0x72, 0x70, 0x63, 0x3a, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x72,
-	0x3d, 0x0a, 0x22, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x65, 0x64, 0x20, 0x69, 0x6e, 0x66, 0x6f,
-	0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x61, 0x62, 0x6f, 0x75, 0x74, 0x20, 0x5a, 0x49,
-	0x54, 0x41, 0x44, 0x45, 0x4c, 0x12, 0x17, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x64,
-	0x6f, 0x63, 0x73, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x68, 0x7a, 0x20,
-	0x0a, 0x0f, 0x78, 0x2d, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2d, 0x6f, 0x72, 0x67, 0x69,
-	0x64, 0x12, 0x0d, 0x1a, 0x0b, 0x79, 0x6f, 0x75, 0x72, 0x2d, 0x6f, 0x72, 0x67, 0x2d, 0x69, 0x64,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x30, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
+	0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e,
+	0x53, 0x65, 0x74, 0x54, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x51, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x2e, 0x22, 0x29, 0x2f, 0x66, 0x6c, 0x6f, 0x77, 0x73, 0x2f, 0x7b, 0x66, 0x6c, 0x6f, 0x77, 0x5f,
+	0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x74, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2f, 0x7b, 0x74,
+	0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x3a, 0x01, 0x2a, 0x82,
+	0xb5, 0x18, 0x19, 0x0a, 0x0e, 0x6f, 0x72, 0x67, 0x2e, 0x66, 0x6c, 0x6f, 0x77, 0x2e, 0x77, 0x72,
+	0x69, 0x74, 0x65, 0x1a, 0x07, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x42, 0x97, 0x05, 0x5a,
+	0x2b, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x61, 0x6f, 0x73,
+	0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70,
+	0x63, 0x2f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x92, 0x41, 0xe6, 0x04,
+	0x12, 0xdf, 0x02, 0x0a, 0x0e, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x20,
+	0x41, 0x50, 0x49, 0x12, 0xbd, 0x01, 0x54, 0x68, 0x65, 0x20, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
+	0x6d, 0x65, 0x6e, 0x74, 0x20, 0x41, 0x50, 0x49, 0x20, 0x69, 0x73, 0x20, 0x61, 0x73, 0x20, 0x74,
+	0x68, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x20, 0x74,
+	0x68, 0x65, 0x20, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x20, 0x77, 0x68, 0x65,
+	0x72, 0x65, 0x20, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x73, 0x20, 0x63, 0x61, 0x6e, 0x20, 0x6d,
+	0x75, 0x74, 0x61, 0x74, 0x65, 0x20, 0x49, 0x41, 0x4d, 0x20, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74,
+	0x73, 0x20, 0x6c, 0x69, 0x6b, 0x65, 0x2c, 0x20, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x73, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2c, 0x20, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x2c,
+	0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x2c, 0x20, 0x75, 0x73, 0x65, 0x72, 0x73, 0x20,
+	0x61, 0x6e, 0x64, 0x20, 0x73, 0x6f, 0x20, 0x6f, 0x6e, 0x20, 0x69, 0x66, 0x20, 0x74, 0x68, 0x65,
+	0x79, 0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x74, 0x68, 0x65, 0x20, 0x6e, 0x65, 0x63, 0x65, 0x73,
+	0x73, 0x61, 0x72, 0x79, 0x20, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x20, 0x72, 0x69, 0x67, 0x68,
+	0x74, 0x73, 0x2e, 0x22, 0x3f, 0x0a, 0x1a, 0x43, 0x41, 0x4f, 0x53, 0x20, 0x64, 0x65, 0x76, 0x65,
+	0x6c, 0x6f, 0x70, 0x65, 0x72, 0x73, 0x20, 0x6f, 0x66, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45,
+	0x4c, 0x12, 0x12, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64,
+	0x65, 0x6c, 0x2e, 0x63, 0x68, 0x1a, 0x0d, 0x68, 0x69, 0x40, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
+	0x6c, 0x2e, 0x63, 0x68, 0x2a, 0x47, 0x0a, 0x12, 0x41, 0x70, 0x61, 0x63, 0x68, 0x65, 0x20, 0x4c,
+	0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x20, 0x32, 0x2e, 0x30, 0x12, 0x31, 0x68, 0x74, 0x74, 0x70,
+	0x73, 0x3a, 0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63,
+	0x61, 0x6f, 0x73, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x62, 0x6c, 0x6f, 0x62,
+	0x2f, 0x6d, 0x61, 0x69, 0x6e, 0x2f, 0x4c, 0x49, 0x43, 0x45, 0x4e, 0x53, 0x45, 0x32, 0x03, 0x31,
+	0x2e, 0x30, 0x1a, 0x0e, 0x61, 0x70, 0x69, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e,
+	0x63, 0x68, 0x22, 0x0e, 0x2f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2f,
+	0x76, 0x31, 0x2a, 0x01, 0x02, 0x32, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x32, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x32, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69,
+	0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3a, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x3a, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x3a, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69,
+	0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x72, 0x3d, 0x0a, 0x22, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x65,
+	0x64, 0x20, 0x69, 0x6e, 0x66, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x61, 0x62,
+	0x6f, 0x75, 0x74, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45, 0x4c, 0x12, 0x17, 0x68, 0x74, 0x74,
+	0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x64, 0x6f, 0x63, 0x73, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
+	0x6c, 0x2e, 0x63, 0x68, 0x7a, 0x20, 0x0a, 0x0f, 0x78, 0x2d, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
+	0x6c, 0x2d, 0x6f, 0x72, 0x67, 0x69, 0x64, 0x12, 0x0d, 0x1a, 0x0b, 0x79, 0x6f, 0x75, 0x72, 0x2d,
+	0x6f, 0x72, 0x67, 0x2d, 0x69, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -32769,236 +32792,240 @@ var file_zitadel_management_proto_depIdxs = []int32{
 	439, // 607: zitadel.management.v1.ManagementService.GetAction:input_type -> zitadel.management.v1.GetActionRequest
 	437, // 608: zitadel.management.v1.ManagementService.CreateAction:input_type -> zitadel.management.v1.CreateActionRequest
 	441, // 609: zitadel.management.v1.ManagementService.UpdateAction:input_type -> zitadel.management.v1.UpdateActionRequest
-	443, // 610: zitadel.management.v1.ManagementService.DeleteAction:input_type -> zitadel.management.v1.DeleteActionRequest
-	449, // 611: zitadel.management.v1.ManagementService.GetFlow:input_type -> zitadel.management.v1.GetFlowRequest
-	451, // 612: zitadel.management.v1.ManagementService.ClearFlow:input_type -> zitadel.management.v1.ClearFlowRequest
-	453, // 613: zitadel.management.v1.ManagementService.SetTriggerActions:input_type -> zitadel.management.v1.SetTriggerActionsRequest
-	2,   // 614: zitadel.management.v1.ManagementService.Healthz:output_type -> zitadel.management.v1.HealthzResponse
-	4,   // 615: zitadel.management.v1.ManagementService.GetOIDCInformation:output_type -> zitadel.management.v1.GetOIDCInformationResponse
-	6,   // 616: zitadel.management.v1.ManagementService.GetIAM:output_type -> zitadel.management.v1.GetIAMResponse
-	8,   // 617: zitadel.management.v1.ManagementService.GetSupportedLanguages:output_type -> zitadel.management.v1.GetSupportedLanguagesResponse
-	10,  // 618: zitadel.management.v1.ManagementService.GetUserByID:output_type -> zitadel.management.v1.GetUserByIDResponse
-	12,  // 619: zitadel.management.v1.ManagementService.GetUserByLoginNameGlobal:output_type -> zitadel.management.v1.GetUserByLoginNameGlobalResponse
-	14,  // 620: zitadel.management.v1.ManagementService.ListUsers:output_type -> zitadel.management.v1.ListUsersResponse
-	16,  // 621: zitadel.management.v1.ManagementService.ListUserChanges:output_type -> zitadel.management.v1.ListUserChangesResponse
-	18,  // 622: zitadel.management.v1.ManagementService.IsUserUnique:output_type -> zitadel.management.v1.IsUserUniqueResponse
-	20,  // 623: zitadel.management.v1.ManagementService.AddHumanUser:output_type -> zitadel.management.v1.AddHumanUserResponse
-	22,  // 624: zitadel.management.v1.ManagementService.ImportHumanUser:output_type -> zitadel.management.v1.ImportHumanUserResponse
-	24,  // 625: zitadel.management.v1.ManagementService.AddMachineUser:output_type -> zitadel.management.v1.AddMachineUserResponse
-	26,  // 626: zitadel.management.v1.ManagementService.DeactivateUser:output_type -> zitadel.management.v1.DeactivateUserResponse
-	28,  // 627: zitadel.management.v1.ManagementService.ReactivateUser:output_type -> zitadel.management.v1.ReactivateUserResponse
-	30,  // 628: zitadel.management.v1.ManagementService.LockUser:output_type -> zitadel.management.v1.LockUserResponse
-	32,  // 629: zitadel.management.v1.ManagementService.UnlockUser:output_type -> zitadel.management.v1.UnlockUserResponse
-	34,  // 630: zitadel.management.v1.ManagementService.RemoveUser:output_type -> zitadel.management.v1.RemoveUserResponse
-	36,  // 631: zitadel.management.v1.ManagementService.UpdateUserName:output_type -> zitadel.management.v1.UpdateUserNameResponse
-	42,  // 632: zitadel.management.v1.ManagementService.SetUserMetadata:output_type -> zitadel.management.v1.SetUserMetadataResponse
-	44,  // 633: zitadel.management.v1.ManagementService.BulkSetUserMetadata:output_type -> zitadel.management.v1.BulkSetUserMetadataResponse
-	38,  // 634: zitadel.management.v1.ManagementService.ListUserMetadata:output_type -> zitadel.management.v1.ListUserMetadataResponse
-	40,  // 635: zitadel.management.v1.ManagementService.GetUserMetadata:output_type -> zitadel.management.v1.GetUserMetadataResponse
-	46,  // 636: zitadel.management.v1.ManagementService.RemoveUserMetadata:output_type -> zitadel.management.v1.RemoveUserMetadataResponse
-	48,  // 637: zitadel.management.v1.ManagementService.BulkRemoveUserMetadata:output_type -> zitadel.management.v1.BulkRemoveUserMetadataResponse
-	50,  // 638: zitadel.management.v1.ManagementService.GetHumanProfile:output_type -> zitadel.management.v1.GetHumanProfileResponse
-	52,  // 639: zitadel.management.v1.ManagementService.UpdateHumanProfile:output_type -> zitadel.management.v1.UpdateHumanProfileResponse
-	54,  // 640: zitadel.management.v1.ManagementService.GetHumanEmail:output_type -> zitadel.management.v1.GetHumanEmailResponse
-	56,  // 641: zitadel.management.v1.ManagementService.UpdateHumanEmail:output_type -> zitadel.management.v1.UpdateHumanEmailResponse
-	58,  // 642: zitadel.management.v1.ManagementService.ResendHumanInitialization:output_type -> zitadel.management.v1.ResendHumanInitializationResponse
-	60,  // 643: zitadel.management.v1.ManagementService.ResendHumanEmailVerification:output_type -> zitadel.management.v1.ResendHumanEmailVerificationResponse
-	62,  // 644: zitadel.management.v1.ManagementService.GetHumanPhone:output_type -> zitadel.management.v1.GetHumanPhoneResponse
-	64,  // 645: zitadel.management.v1.ManagementService.UpdateHumanPhone:output_type -> zitadel.management.v1.UpdateHumanPhoneResponse
-	66,  // 646: zitadel.management.v1.ManagementService.RemoveHumanPhone:output_type -> zitadel.management.v1.RemoveHumanPhoneResponse
-	68,  // 647: zitadel.management.v1.ManagementService.ResendHumanPhoneVerification:output_type -> zitadel.management.v1.ResendHumanPhoneVerificationResponse
-	70,  // 648: zitadel.management.v1.ManagementService.RemoveHumanAvatar:output_type -> zitadel.management.v1.RemoveHumanAvatarResponse
-	72,  // 649: zitadel.management.v1.ManagementService.SetHumanInitialPassword:output_type -> zitadel.management.v1.SetHumanInitialPasswordResponse
-	74,  // 650: zitadel.management.v1.ManagementService.SetHumanPassword:output_type -> zitadel.management.v1.SetHumanPasswordResponse
-	76,  // 651: zitadel.management.v1.ManagementService.SendHumanResetPasswordNotification:output_type -> zitadel.management.v1.SendHumanResetPasswordNotificationResponse
-	78,  // 652: zitadel.management.v1.ManagementService.ListHumanAuthFactors:output_type -> zitadel.management.v1.ListHumanAuthFactorsResponse
-	80,  // 653: zitadel.management.v1.ManagementService.RemoveHumanAuthFactorOTP:output_type -> zitadel.management.v1.RemoveHumanAuthFactorOTPResponse
-	82,  // 654: zitadel.management.v1.ManagementService.RemoveHumanAuthFactorU2F:output_type -> zitadel.management.v1.RemoveHumanAuthFactorU2FResponse
-	84,  // 655: zitadel.management.v1.ManagementService.ListHumanPasswordless:output_type -> zitadel.management.v1.ListHumanPasswordlessResponse
-	86,  // 656: zitadel.management.v1.ManagementService.AddPasswordlessRegistration:output_type -> zitadel.management.v1.AddPasswordlessRegistrationResponse
-	88,  // 657: zitadel.management.v1.ManagementService.SendPasswordlessRegistration:output_type -> zitadel.management.v1.SendPasswordlessRegistrationResponse
-	90,  // 658: zitadel.management.v1.ManagementService.RemoveHumanPasswordless:output_type -> zitadel.management.v1.RemoveHumanPasswordlessResponse
-	92,  // 659: zitadel.management.v1.ManagementService.UpdateMachine:output_type -> zitadel.management.v1.UpdateMachineResponse
-	94,  // 660: zitadel.management.v1.ManagementService.GetMachineKeyByIDs:output_type -> zitadel.management.v1.GetMachineKeyByIDsResponse
-	96,  // 661: zitadel.management.v1.ManagementService.ListMachineKeys:output_type -> zitadel.management.v1.ListMachineKeysResponse
-	98,  // 662: zitadel.management.v1.ManagementService.AddMachineKey:output_type -> zitadel.management.v1.AddMachineKeyResponse
-	100, // 663: zitadel.management.v1.ManagementService.RemoveMachineKey:output_type -> zitadel.management.v1.RemoveMachineKeyResponse
-	102, // 664: zitadel.management.v1.ManagementService.ListHumanLinkedIDPs:output_type -> zitadel.management.v1.ListHumanLinkedIDPsResponse
-	104, // 665: zitadel.management.v1.ManagementService.RemoveHumanLinkedIDP:output_type -> zitadel.management.v1.RemoveHumanLinkedIDPResponse
-	106, // 666: zitadel.management.v1.ManagementService.ListUserMemberships:output_type -> zitadel.management.v1.ListUserMembershipsResponse
-	108, // 667: zitadel.management.v1.ManagementService.GetMyOrg:output_type -> zitadel.management.v1.GetMyOrgResponse
-	112, // 668: zitadel.management.v1.ManagementService.GetOrgByDomainGlobal:output_type -> zitadel.management.v1.GetOrgByDomainGlobalResponse
-	111, // 669: zitadel.management.v1.ManagementService.ListOrgChanges:output_type -> zitadel.management.v1.ListOrgChangesResponse
-	114, // 670: zitadel.management.v1.ManagementService.AddOrg:output_type -> zitadel.management.v1.AddOrgResponse
-	116, // 671: zitadel.management.v1.ManagementService.UpdateOrg:output_type -> zitadel.management.v1.UpdateOrgResponse
-	118, // 672: zitadel.management.v1.ManagementService.DeactivateOrg:output_type -> zitadel.management.v1.DeactivateOrgResponse
-	120, // 673: zitadel.management.v1.ManagementService.ReactivateOrg:output_type -> zitadel.management.v1.ReactivateOrgResponse
-	122, // 674: zitadel.management.v1.ManagementService.ListOrgDomains:output_type -> zitadel.management.v1.ListOrgDomainsResponse
-	124, // 675: zitadel.management.v1.ManagementService.AddOrgDomain:output_type -> zitadel.management.v1.AddOrgDomainResponse
-	126, // 676: zitadel.management.v1.ManagementService.RemoveOrgDomain:output_type -> zitadel.management.v1.RemoveOrgDomainResponse
-	128, // 677: zitadel.management.v1.ManagementService.GenerateOrgDomainValidation:output_type -> zitadel.management.v1.GenerateOrgDomainValidationResponse
-	130, // 678: zitadel.management.v1.ManagementService.ValidateOrgDomain:output_type -> zitadel.management.v1.ValidateOrgDomainResponse
-	132, // 679: zitadel.management.v1.ManagementService.SetPrimaryOrgDomain:output_type -> zitadel.management.v1.SetPrimaryOrgDomainResponse
-	134, // 680: zitadel.management.v1.ManagementService.ListOrgMemberRoles:output_type -> zitadel.management.v1.ListOrgMemberRolesResponse
-	136, // 681: zitadel.management.v1.ManagementService.ListOrgMembers:output_type -> zitadel.management.v1.ListOrgMembersResponse
-	138, // 682: zitadel.management.v1.ManagementService.AddOrgMember:output_type -> zitadel.management.v1.AddOrgMemberResponse
-	140, // 683: zitadel.management.v1.ManagementService.UpdateOrgMember:output_type -> zitadel.management.v1.UpdateOrgMemberResponse
-	142, // 684: zitadel.management.v1.ManagementService.RemoveOrgMember:output_type -> zitadel.management.v1.RemoveOrgMemberResponse
-	144, // 685: zitadel.management.v1.ManagementService.GetProjectByID:output_type -> zitadel.management.v1.GetProjectByIDResponse
-	146, // 686: zitadel.management.v1.ManagementService.GetGrantedProjectByID:output_type -> zitadel.management.v1.GetGrantedProjectByIDResponse
-	148, // 687: zitadel.management.v1.ManagementService.ListProjects:output_type -> zitadel.management.v1.ListProjectsResponse
-	150, // 688: zitadel.management.v1.ManagementService.ListGrantedProjects:output_type -> zitadel.management.v1.ListGrantedProjectsResponse
-	176, // 689: zitadel.management.v1.ManagementService.ListGrantedProjectRoles:output_type -> zitadel.management.v1.ListGrantedProjectRolesResponse
-	152, // 690: zitadel.management.v1.ManagementService.ListProjectChanges:output_type -> zitadel.management.v1.ListProjectChangesResponse
-	154, // 691: zitadel.management.v1.ManagementService.AddProject:output_type -> zitadel.management.v1.AddProjectResponse
-	156, // 692: zitadel.management.v1.ManagementService.UpdateProject:output_type -> zitadel.management.v1.UpdateProjectResponse
-	158, // 693: zitadel.management.v1.ManagementService.DeactivateProject:output_type -> zitadel.management.v1.DeactivateProjectResponse
-	160, // 694: zitadel.management.v1.ManagementService.ReactivateProject:output_type -> zitadel.management.v1.ReactivateProjectResponse
-	162, // 695: zitadel.management.v1.ManagementService.RemoveProject:output_type -> zitadel.management.v1.RemoveProjectResponse
-	174, // 696: zitadel.management.v1.ManagementService.ListProjectRoles:output_type -> zitadel.management.v1.ListProjectRolesResponse
-	166, // 697: zitadel.management.v1.ManagementService.AddProjectRole:output_type -> zitadel.management.v1.AddProjectRoleResponse
-	168, // 698: zitadel.management.v1.ManagementService.BulkAddProjectRoles:output_type -> zitadel.management.v1.BulkAddProjectRolesResponse
-	170, // 699: zitadel.management.v1.ManagementService.UpdateProjectRole:output_type -> zitadel.management.v1.UpdateProjectRoleResponse
-	172, // 700: zitadel.management.v1.ManagementService.RemoveProjectRole:output_type -> zitadel.management.v1.RemoveProjectRoleResponse
-	164, // 701: zitadel.management.v1.ManagementService.ListProjectMemberRoles:output_type -> zitadel.management.v1.ListProjectMemberRolesResponse
-	178, // 702: zitadel.management.v1.ManagementService.ListProjectMembers:output_type -> zitadel.management.v1.ListProjectMembersResponse
-	180, // 703: zitadel.management.v1.ManagementService.AddProjectMember:output_type -> zitadel.management.v1.AddProjectMemberResponse
-	182, // 704: zitadel.management.v1.ManagementService.UpdateProjectMember:output_type -> zitadel.management.v1.UpdateProjectMemberResponse
-	184, // 705: zitadel.management.v1.ManagementService.RemoveProjectMember:output_type -> zitadel.management.v1.RemoveProjectMemberResponse
-	186, // 706: zitadel.management.v1.ManagementService.GetAppByID:output_type -> zitadel.management.v1.GetAppByIDResponse
-	188, // 707: zitadel.management.v1.ManagementService.ListApps:output_type -> zitadel.management.v1.ListAppsResponse
-	190, // 708: zitadel.management.v1.ManagementService.ListAppChanges:output_type -> zitadel.management.v1.ListAppChangesResponse
-	192, // 709: zitadel.management.v1.ManagementService.AddOIDCApp:output_type -> zitadel.management.v1.AddOIDCAppResponse
-	194, // 710: zitadel.management.v1.ManagementService.AddAPIApp:output_type -> zitadel.management.v1.AddAPIAppResponse
-	196, // 711: zitadel.management.v1.ManagementService.UpdateApp:output_type -> zitadel.management.v1.UpdateAppResponse
-	198, // 712: zitadel.management.v1.ManagementService.UpdateOIDCAppConfig:output_type -> zitadel.management.v1.UpdateOIDCAppConfigResponse
-	200, // 713: zitadel.management.v1.ManagementService.UpdateAPIAppConfig:output_type -> zitadel.management.v1.UpdateAPIAppConfigResponse
-	202, // 714: zitadel.management.v1.ManagementService.DeactivateApp:output_type -> zitadel.management.v1.DeactivateAppResponse
-	204, // 715: zitadel.management.v1.ManagementService.ReactivateApp:output_type -> zitadel.management.v1.ReactivateAppResponse
-	206, // 716: zitadel.management.v1.ManagementService.RemoveApp:output_type -> zitadel.management.v1.RemoveAppResponse
-	208, // 717: zitadel.management.v1.ManagementService.RegenerateOIDCClientSecret:output_type -> zitadel.management.v1.RegenerateOIDCClientSecretResponse
-	210, // 718: zitadel.management.v1.ManagementService.RegenerateAPIClientSecret:output_type -> zitadel.management.v1.RegenerateAPIClientSecretResponse
-	212, // 719: zitadel.management.v1.ManagementService.GetAppKey:output_type -> zitadel.management.v1.GetAppKeyResponse
-	214, // 720: zitadel.management.v1.ManagementService.ListAppKeys:output_type -> zitadel.management.v1.ListAppKeysResponse
-	216, // 721: zitadel.management.v1.ManagementService.AddAppKey:output_type -> zitadel.management.v1.AddAppKeyResponse
-	218, // 722: zitadel.management.v1.ManagementService.RemoveAppKey:output_type -> zitadel.management.v1.RemoveAppKeyResponse
-	220, // 723: zitadel.management.v1.ManagementService.GetProjectGrantByID:output_type -> zitadel.management.v1.GetProjectGrantByIDResponse
-	222, // 724: zitadel.management.v1.ManagementService.ListProjectGrants:output_type -> zitadel.management.v1.ListProjectGrantsResponse
-	224, // 725: zitadel.management.v1.ManagementService.ListAllProjectGrants:output_type -> zitadel.management.v1.ListAllProjectGrantsResponse
-	226, // 726: zitadel.management.v1.ManagementService.AddProjectGrant:output_type -> zitadel.management.v1.AddProjectGrantResponse
-	228, // 727: zitadel.management.v1.ManagementService.UpdateProjectGrant:output_type -> zitadel.management.v1.UpdateProjectGrantResponse
-	230, // 728: zitadel.management.v1.ManagementService.DeactivateProjectGrant:output_type -> zitadel.management.v1.DeactivateProjectGrantResponse
-	232, // 729: zitadel.management.v1.ManagementService.ReactivateProjectGrant:output_type -> zitadel.management.v1.ReactivateProjectGrantResponse
-	234, // 730: zitadel.management.v1.ManagementService.RemoveProjectGrant:output_type -> zitadel.management.v1.RemoveProjectGrantResponse
-	236, // 731: zitadel.management.v1.ManagementService.ListProjectGrantMemberRoles:output_type -> zitadel.management.v1.ListProjectGrantMemberRolesResponse
-	238, // 732: zitadel.management.v1.ManagementService.ListProjectGrantMembers:output_type -> zitadel.management.v1.ListProjectGrantMembersResponse
-	240, // 733: zitadel.management.v1.ManagementService.AddProjectGrantMember:output_type -> zitadel.management.v1.AddProjectGrantMemberResponse
-	242, // 734: zitadel.management.v1.ManagementService.UpdateProjectGrantMember:output_type -> zitadel.management.v1.UpdateProjectGrantMemberResponse
-	244, // 735: zitadel.management.v1.ManagementService.RemoveProjectGrantMember:output_type -> zitadel.management.v1.RemoveProjectGrantMemberResponse
-	246, // 736: zitadel.management.v1.ManagementService.GetUserGrantByID:output_type -> zitadel.management.v1.GetUserGrantByIDResponse
-	248, // 737: zitadel.management.v1.ManagementService.ListUserGrants:output_type -> zitadel.management.v1.ListUserGrantResponse
-	250, // 738: zitadel.management.v1.ManagementService.AddUserGrant:output_type -> zitadel.management.v1.AddUserGrantResponse
-	252, // 739: zitadel.management.v1.ManagementService.UpdateUserGrant:output_type -> zitadel.management.v1.UpdateUserGrantResponse
-	254, // 740: zitadel.management.v1.ManagementService.DeactivateUserGrant:output_type -> zitadel.management.v1.DeactivateUserGrantResponse
-	256, // 741: zitadel.management.v1.ManagementService.ReactivateUserGrant:output_type -> zitadel.management.v1.ReactivateUserGrantResponse
-	258, // 742: zitadel.management.v1.ManagementService.RemoveUserGrant:output_type -> zitadel.management.v1.RemoveUserGrantResponse
-	260, // 743: zitadel.management.v1.ManagementService.BulkRemoveUserGrant:output_type -> zitadel.management.v1.BulkRemoveUserGrantResponse
-	262, // 744: zitadel.management.v1.ManagementService.GetFeatures:output_type -> zitadel.management.v1.GetFeaturesResponse
-	264, // 745: zitadel.management.v1.ManagementService.GetOrgIAMPolicy:output_type -> zitadel.management.v1.GetOrgIAMPolicyResponse
-	266, // 746: zitadel.management.v1.ManagementService.GetLoginPolicy:output_type -> zitadel.management.v1.GetLoginPolicyResponse
-	268, // 747: zitadel.management.v1.ManagementService.GetDefaultLoginPolicy:output_type -> zitadel.management.v1.GetDefaultLoginPolicyResponse
-	270, // 748: zitadel.management.v1.ManagementService.AddCustomLoginPolicy:output_type -> zitadel.management.v1.AddCustomLoginPolicyResponse
-	272, // 749: zitadel.management.v1.ManagementService.UpdateCustomLoginPolicy:output_type -> zitadel.management.v1.UpdateCustomLoginPolicyResponse
-	274, // 750: zitadel.management.v1.ManagementService.ResetLoginPolicyToDefault:output_type -> zitadel.management.v1.ResetLoginPolicyToDefaultResponse
-	276, // 751: zitadel.management.v1.ManagementService.ListLoginPolicyIDPs:output_type -> zitadel.management.v1.ListLoginPolicyIDPsResponse
-	278, // 752: zitadel.management.v1.ManagementService.AddIDPToLoginPolicy:output_type -> zitadel.management.v1.AddIDPToLoginPolicyResponse
-	280, // 753: zitadel.management.v1.ManagementService.RemoveIDPFromLoginPolicy:output_type -> zitadel.management.v1.RemoveIDPFromLoginPolicyResponse
-	282, // 754: zitadel.management.v1.ManagementService.ListLoginPolicySecondFactors:output_type -> zitadel.management.v1.ListLoginPolicySecondFactorsResponse
-	284, // 755: zitadel.management.v1.ManagementService.AddSecondFactorToLoginPolicy:output_type -> zitadel.management.v1.AddSecondFactorToLoginPolicyResponse
-	286, // 756: zitadel.management.v1.ManagementService.RemoveSecondFactorFromLoginPolicy:output_type -> zitadel.management.v1.RemoveSecondFactorFromLoginPolicyResponse
-	288, // 757: zitadel.management.v1.ManagementService.ListLoginPolicyMultiFactors:output_type -> zitadel.management.v1.ListLoginPolicyMultiFactorsResponse
-	290, // 758: zitadel.management.v1.ManagementService.AddMultiFactorToLoginPolicy:output_type -> zitadel.management.v1.AddMultiFactorToLoginPolicyResponse
-	292, // 759: zitadel.management.v1.ManagementService.RemoveMultiFactorFromLoginPolicy:output_type -> zitadel.management.v1.RemoveMultiFactorFromLoginPolicyResponse
-	294, // 760: zitadel.management.v1.ManagementService.GetPasswordComplexityPolicy:output_type -> zitadel.management.v1.GetPasswordComplexityPolicyResponse
-	296, // 761: zitadel.management.v1.ManagementService.GetDefaultPasswordComplexityPolicy:output_type -> zitadel.management.v1.GetDefaultPasswordComplexityPolicyResponse
-	298, // 762: zitadel.management.v1.ManagementService.AddCustomPasswordComplexityPolicy:output_type -> zitadel.management.v1.AddCustomPasswordComplexityPolicyResponse
-	300, // 763: zitadel.management.v1.ManagementService.UpdateCustomPasswordComplexityPolicy:output_type -> zitadel.management.v1.UpdateCustomPasswordComplexityPolicyResponse
-	302, // 764: zitadel.management.v1.ManagementService.ResetPasswordComplexityPolicyToDefault:output_type -> zitadel.management.v1.ResetPasswordComplexityPolicyToDefaultResponse
-	304, // 765: zitadel.management.v1.ManagementService.GetPasswordAgePolicy:output_type -> zitadel.management.v1.GetPasswordAgePolicyResponse
-	306, // 766: zitadel.management.v1.ManagementService.GetDefaultPasswordAgePolicy:output_type -> zitadel.management.v1.GetDefaultPasswordAgePolicyResponse
-	308, // 767: zitadel.management.v1.ManagementService.AddCustomPasswordAgePolicy:output_type -> zitadel.management.v1.AddCustomPasswordAgePolicyResponse
-	310, // 768: zitadel.management.v1.ManagementService.UpdateCustomPasswordAgePolicy:output_type -> zitadel.management.v1.UpdateCustomPasswordAgePolicyResponse
-	312, // 769: zitadel.management.v1.ManagementService.ResetPasswordAgePolicyToDefault:output_type -> zitadel.management.v1.ResetPasswordAgePolicyToDefaultResponse
-	314, // 770: zitadel.management.v1.ManagementService.GetLockoutPolicy:output_type -> zitadel.management.v1.GetLockoutPolicyResponse
-	316, // 771: zitadel.management.v1.ManagementService.GetDefaultLockoutPolicy:output_type -> zitadel.management.v1.GetDefaultLockoutPolicyResponse
-	318, // 772: zitadel.management.v1.ManagementService.AddCustomLockoutPolicy:output_type -> zitadel.management.v1.AddCustomLockoutPolicyResponse
-	320, // 773: zitadel.management.v1.ManagementService.UpdateCustomLockoutPolicy:output_type -> zitadel.management.v1.UpdateCustomLockoutPolicyResponse
-	322, // 774: zitadel.management.v1.ManagementService.ResetLockoutPolicyToDefault:output_type -> zitadel.management.v1.ResetLockoutPolicyToDefaultResponse
-	324, // 775: zitadel.management.v1.ManagementService.GetPrivacyPolicy:output_type -> zitadel.management.v1.GetPrivacyPolicyResponse
-	326, // 776: zitadel.management.v1.ManagementService.GetDefaultPrivacyPolicy:output_type -> zitadel.management.v1.GetDefaultPrivacyPolicyResponse
-	328, // 777: zitadel.management.v1.ManagementService.AddCustomPrivacyPolicy:output_type -> zitadel.management.v1.AddCustomPrivacyPolicyResponse
-	330, // 778: zitadel.management.v1.ManagementService.UpdateCustomPrivacyPolicy:output_type -> zitadel.management.v1.UpdateCustomPrivacyPolicyResponse
-	332, // 779: zitadel.management.v1.ManagementService.ResetPrivacyPolicyToDefault:output_type -> zitadel.management.v1.ResetPrivacyPolicyToDefaultResponse
-	334, // 780: zitadel.management.v1.ManagementService.GetLabelPolicy:output_type -> zitadel.management.v1.GetLabelPolicyResponse
-	336, // 781: zitadel.management.v1.ManagementService.GetPreviewLabelPolicy:output_type -> zitadel.management.v1.GetPreviewLabelPolicyResponse
-	338, // 782: zitadel.management.v1.ManagementService.GetDefaultLabelPolicy:output_type -> zitadel.management.v1.GetDefaultLabelPolicyResponse
-	340, // 783: zitadel.management.v1.ManagementService.AddCustomLabelPolicy:output_type -> zitadel.management.v1.AddCustomLabelPolicyResponse
-	342, // 784: zitadel.management.v1.ManagementService.UpdateCustomLabelPolicy:output_type -> zitadel.management.v1.UpdateCustomLabelPolicyResponse
-	344, // 785: zitadel.management.v1.ManagementService.ActivateCustomLabelPolicy:output_type -> zitadel.management.v1.ActivateCustomLabelPolicyResponse
-	346, // 786: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyLogo:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyLogoResponse
-	348, // 787: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyLogoDark:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyLogoDarkResponse
-	350, // 788: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyIcon:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyIconResponse
-	352, // 789: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyIconDark:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyIconDarkResponse
-	354, // 790: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyFont:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyFontResponse
-	356, // 791: zitadel.management.v1.ManagementService.ResetLabelPolicyToDefault:output_type -> zitadel.management.v1.ResetLabelPolicyToDefaultResponse
-	358, // 792: zitadel.management.v1.ManagementService.GetCustomInitMessageText:output_type -> zitadel.management.v1.GetCustomInitMessageTextResponse
-	360, // 793: zitadel.management.v1.ManagementService.GetDefaultInitMessageText:output_type -> zitadel.management.v1.GetDefaultInitMessageTextResponse
-	362, // 794: zitadel.management.v1.ManagementService.SetCustomInitMessageText:output_type -> zitadel.management.v1.SetCustomInitMessageTextResponse
-	364, // 795: zitadel.management.v1.ManagementService.ResetCustomInitMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomInitMessageTextToDefaultResponse
-	374, // 796: zitadel.management.v1.ManagementService.GetCustomPasswordResetMessageText:output_type -> zitadel.management.v1.GetCustomPasswordResetMessageTextResponse
-	376, // 797: zitadel.management.v1.ManagementService.GetDefaultPasswordResetMessageText:output_type -> zitadel.management.v1.GetDefaultPasswordResetMessageTextResponse
-	378, // 798: zitadel.management.v1.ManagementService.SetCustomPasswordResetMessageText:output_type -> zitadel.management.v1.SetCustomPasswordResetMessageTextResponse
-	380, // 799: zitadel.management.v1.ManagementService.ResetCustomPasswordResetMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomPasswordResetMessageTextToDefaultResponse
-	382, // 800: zitadel.management.v1.ManagementService.GetCustomVerifyEmailMessageText:output_type -> zitadel.management.v1.GetCustomVerifyEmailMessageTextResponse
-	384, // 801: zitadel.management.v1.ManagementService.GetDefaultVerifyEmailMessageText:output_type -> zitadel.management.v1.GetDefaultVerifyEmailMessageTextResponse
-	386, // 802: zitadel.management.v1.ManagementService.SetCustomVerifyEmailMessageText:output_type -> zitadel.management.v1.SetCustomVerifyEmailMessageTextResponse
-	388, // 803: zitadel.management.v1.ManagementService.ResetCustomVerifyEmailMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomVerifyEmailMessageTextToDefaultResponse
-	390, // 804: zitadel.management.v1.ManagementService.GetCustomVerifyPhoneMessageText:output_type -> zitadel.management.v1.GetCustomVerifyPhoneMessageTextResponse
-	392, // 805: zitadel.management.v1.ManagementService.GetDefaultVerifyPhoneMessageText:output_type -> zitadel.management.v1.GetDefaultVerifyPhoneMessageTextResponse
-	394, // 806: zitadel.management.v1.ManagementService.SetCustomVerifyPhoneMessageText:output_type -> zitadel.management.v1.SetCustomVerifyPhoneMessageTextResponse
-	396, // 807: zitadel.management.v1.ManagementService.ResetCustomVerifyPhoneMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomVerifyPhoneMessageTextToDefaultResponse
-	398, // 808: zitadel.management.v1.ManagementService.GetCustomDomainClaimedMessageText:output_type -> zitadel.management.v1.GetCustomDomainClaimedMessageTextResponse
-	400, // 809: zitadel.management.v1.ManagementService.GetDefaultDomainClaimedMessageText:output_type -> zitadel.management.v1.GetDefaultDomainClaimedMessageTextResponse
-	402, // 810: zitadel.management.v1.ManagementService.SetCustomDomainClaimedMessageCustomText:output_type -> zitadel.management.v1.SetCustomDomainClaimedMessageTextResponse
-	404, // 811: zitadel.management.v1.ManagementService.ResetCustomDomainClaimedMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomDomainClaimedMessageTextToDefaultResponse
-	406, // 812: zitadel.management.v1.ManagementService.GetCustomPasswordlessRegistrationMessageText:output_type -> zitadel.management.v1.GetCustomPasswordlessRegistrationMessageTextResponse
-	408, // 813: zitadel.management.v1.ManagementService.GetDefaultPasswordlessRegistrationMessageText:output_type -> zitadel.management.v1.GetDefaultPasswordlessRegistrationMessageTextResponse
-	410, // 814: zitadel.management.v1.ManagementService.SetCustomPasswordlessRegistrationMessageCustomText:output_type -> zitadel.management.v1.SetCustomPasswordlessRegistrationMessageTextResponse
-	412, // 815: zitadel.management.v1.ManagementService.ResetCustomPasswordlessRegistrationMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse
-	368, // 816: zitadel.management.v1.ManagementService.GetCustomLoginTexts:output_type -> zitadel.management.v1.GetCustomLoginTextsResponse
-	366, // 817: zitadel.management.v1.ManagementService.GetDefaultLoginTexts:output_type -> zitadel.management.v1.GetDefaultLoginTextsResponse
-	370, // 818: zitadel.management.v1.ManagementService.SetCustomLoginText:output_type -> zitadel.management.v1.SetCustomLoginTextsResponse
-	372, // 819: zitadel.management.v1.ManagementService.ResetCustomLoginTextToDefault:output_type -> zitadel.management.v1.ResetCustomLoginTextsToDefaultResponse
-	414, // 820: zitadel.management.v1.ManagementService.GetOrgIDPByID:output_type -> zitadel.management.v1.GetOrgIDPByIDResponse
-	417, // 821: zitadel.management.v1.ManagementService.ListOrgIDPs:output_type -> zitadel.management.v1.ListOrgIDPsResponse
-	419, // 822: zitadel.management.v1.ManagementService.AddOrgOIDCIDP:output_type -> zitadel.management.v1.AddOrgOIDCIDPResponse
-	421, // 823: zitadel.management.v1.ManagementService.AddOrgJWTIDP:output_type -> zitadel.management.v1.AddOrgJWTIDPResponse
-	423, // 824: zitadel.management.v1.ManagementService.DeactivateOrgIDP:output_type -> zitadel.management.v1.DeactivateOrgIDPResponse
-	425, // 825: zitadel.management.v1.ManagementService.ReactivateOrgIDP:output_type -> zitadel.management.v1.ReactivateOrgIDPResponse
-	427, // 826: zitadel.management.v1.ManagementService.RemoveOrgIDP:output_type -> zitadel.management.v1.RemoveOrgIDPResponse
-	429, // 827: zitadel.management.v1.ManagementService.UpdateOrgIDP:output_type -> zitadel.management.v1.UpdateOrgIDPResponse
-	431, // 828: zitadel.management.v1.ManagementService.UpdateOrgIDPOIDCConfig:output_type -> zitadel.management.v1.UpdateOrgIDPOIDCConfigResponse
-	433, // 829: zitadel.management.v1.ManagementService.UpdateOrgIDPJWTConfig:output_type -> zitadel.management.v1.UpdateOrgIDPJWTConfigResponse
-	436, // 830: zitadel.management.v1.ManagementService.ListActions:output_type -> zitadel.management.v1.ListActionsResponse
-	440, // 831: zitadel.management.v1.ManagementService.GetAction:output_type -> zitadel.management.v1.GetActionResponse
-	438, // 832: zitadel.management.v1.ManagementService.CreateAction:output_type -> zitadel.management.v1.CreateActionResponse
-	442, // 833: zitadel.management.v1.ManagementService.UpdateAction:output_type -> zitadel.management.v1.UpdateActionResponse
-	444, // 834: zitadel.management.v1.ManagementService.DeleteAction:output_type -> zitadel.management.v1.DeleteActionResponse
-	450, // 835: zitadel.management.v1.ManagementService.GetFlow:output_type -> zitadel.management.v1.GetFlowResponse
-	452, // 836: zitadel.management.v1.ManagementService.ClearFlow:output_type -> zitadel.management.v1.ClearFlowResponse
-	454, // 837: zitadel.management.v1.ManagementService.SetTriggerActions:output_type -> zitadel.management.v1.SetTriggerActionsResponse
-	614, // [614:838] is the sub-list for method output_type
-	390, // [390:614] is the sub-list for method input_type
+	445, // 610: zitadel.management.v1.ManagementService.DeactivateAction:input_type -> zitadel.management.v1.DeactivateActionRequest
+	447, // 611: zitadel.management.v1.ManagementService.ReactivateAction:input_type -> zitadel.management.v1.ReactivateActionRequest
+	443, // 612: zitadel.management.v1.ManagementService.DeleteAction:input_type -> zitadel.management.v1.DeleteActionRequest
+	449, // 613: zitadel.management.v1.ManagementService.GetFlow:input_type -> zitadel.management.v1.GetFlowRequest
+	451, // 614: zitadel.management.v1.ManagementService.ClearFlow:input_type -> zitadel.management.v1.ClearFlowRequest
+	453, // 615: zitadel.management.v1.ManagementService.SetTriggerActions:input_type -> zitadel.management.v1.SetTriggerActionsRequest
+	2,   // 616: zitadel.management.v1.ManagementService.Healthz:output_type -> zitadel.management.v1.HealthzResponse
+	4,   // 617: zitadel.management.v1.ManagementService.GetOIDCInformation:output_type -> zitadel.management.v1.GetOIDCInformationResponse
+	6,   // 618: zitadel.management.v1.ManagementService.GetIAM:output_type -> zitadel.management.v1.GetIAMResponse
+	8,   // 619: zitadel.management.v1.ManagementService.GetSupportedLanguages:output_type -> zitadel.management.v1.GetSupportedLanguagesResponse
+	10,  // 620: zitadel.management.v1.ManagementService.GetUserByID:output_type -> zitadel.management.v1.GetUserByIDResponse
+	12,  // 621: zitadel.management.v1.ManagementService.GetUserByLoginNameGlobal:output_type -> zitadel.management.v1.GetUserByLoginNameGlobalResponse
+	14,  // 622: zitadel.management.v1.ManagementService.ListUsers:output_type -> zitadel.management.v1.ListUsersResponse
+	16,  // 623: zitadel.management.v1.ManagementService.ListUserChanges:output_type -> zitadel.management.v1.ListUserChangesResponse
+	18,  // 624: zitadel.management.v1.ManagementService.IsUserUnique:output_type -> zitadel.management.v1.IsUserUniqueResponse
+	20,  // 625: zitadel.management.v1.ManagementService.AddHumanUser:output_type -> zitadel.management.v1.AddHumanUserResponse
+	22,  // 626: zitadel.management.v1.ManagementService.ImportHumanUser:output_type -> zitadel.management.v1.ImportHumanUserResponse
+	24,  // 627: zitadel.management.v1.ManagementService.AddMachineUser:output_type -> zitadel.management.v1.AddMachineUserResponse
+	26,  // 628: zitadel.management.v1.ManagementService.DeactivateUser:output_type -> zitadel.management.v1.DeactivateUserResponse
+	28,  // 629: zitadel.management.v1.ManagementService.ReactivateUser:output_type -> zitadel.management.v1.ReactivateUserResponse
+	30,  // 630: zitadel.management.v1.ManagementService.LockUser:output_type -> zitadel.management.v1.LockUserResponse
+	32,  // 631: zitadel.management.v1.ManagementService.UnlockUser:output_type -> zitadel.management.v1.UnlockUserResponse
+	34,  // 632: zitadel.management.v1.ManagementService.RemoveUser:output_type -> zitadel.management.v1.RemoveUserResponse
+	36,  // 633: zitadel.management.v1.ManagementService.UpdateUserName:output_type -> zitadel.management.v1.UpdateUserNameResponse
+	42,  // 634: zitadel.management.v1.ManagementService.SetUserMetadata:output_type -> zitadel.management.v1.SetUserMetadataResponse
+	44,  // 635: zitadel.management.v1.ManagementService.BulkSetUserMetadata:output_type -> zitadel.management.v1.BulkSetUserMetadataResponse
+	38,  // 636: zitadel.management.v1.ManagementService.ListUserMetadata:output_type -> zitadel.management.v1.ListUserMetadataResponse
+	40,  // 637: zitadel.management.v1.ManagementService.GetUserMetadata:output_type -> zitadel.management.v1.GetUserMetadataResponse
+	46,  // 638: zitadel.management.v1.ManagementService.RemoveUserMetadata:output_type -> zitadel.management.v1.RemoveUserMetadataResponse
+	48,  // 639: zitadel.management.v1.ManagementService.BulkRemoveUserMetadata:output_type -> zitadel.management.v1.BulkRemoveUserMetadataResponse
+	50,  // 640: zitadel.management.v1.ManagementService.GetHumanProfile:output_type -> zitadel.management.v1.GetHumanProfileResponse
+	52,  // 641: zitadel.management.v1.ManagementService.UpdateHumanProfile:output_type -> zitadel.management.v1.UpdateHumanProfileResponse
+	54,  // 642: zitadel.management.v1.ManagementService.GetHumanEmail:output_type -> zitadel.management.v1.GetHumanEmailResponse
+	56,  // 643: zitadel.management.v1.ManagementService.UpdateHumanEmail:output_type -> zitadel.management.v1.UpdateHumanEmailResponse
+	58,  // 644: zitadel.management.v1.ManagementService.ResendHumanInitialization:output_type -> zitadel.management.v1.ResendHumanInitializationResponse
+	60,  // 645: zitadel.management.v1.ManagementService.ResendHumanEmailVerification:output_type -> zitadel.management.v1.ResendHumanEmailVerificationResponse
+	62,  // 646: zitadel.management.v1.ManagementService.GetHumanPhone:output_type -> zitadel.management.v1.GetHumanPhoneResponse
+	64,  // 647: zitadel.management.v1.ManagementService.UpdateHumanPhone:output_type -> zitadel.management.v1.UpdateHumanPhoneResponse
+	66,  // 648: zitadel.management.v1.ManagementService.RemoveHumanPhone:output_type -> zitadel.management.v1.RemoveHumanPhoneResponse
+	68,  // 649: zitadel.management.v1.ManagementService.ResendHumanPhoneVerification:output_type -> zitadel.management.v1.ResendHumanPhoneVerificationResponse
+	70,  // 650: zitadel.management.v1.ManagementService.RemoveHumanAvatar:output_type -> zitadel.management.v1.RemoveHumanAvatarResponse
+	72,  // 651: zitadel.management.v1.ManagementService.SetHumanInitialPassword:output_type -> zitadel.management.v1.SetHumanInitialPasswordResponse
+	74,  // 652: zitadel.management.v1.ManagementService.SetHumanPassword:output_type -> zitadel.management.v1.SetHumanPasswordResponse
+	76,  // 653: zitadel.management.v1.ManagementService.SendHumanResetPasswordNotification:output_type -> zitadel.management.v1.SendHumanResetPasswordNotificationResponse
+	78,  // 654: zitadel.management.v1.ManagementService.ListHumanAuthFactors:output_type -> zitadel.management.v1.ListHumanAuthFactorsResponse
+	80,  // 655: zitadel.management.v1.ManagementService.RemoveHumanAuthFactorOTP:output_type -> zitadel.management.v1.RemoveHumanAuthFactorOTPResponse
+	82,  // 656: zitadel.management.v1.ManagementService.RemoveHumanAuthFactorU2F:output_type -> zitadel.management.v1.RemoveHumanAuthFactorU2FResponse
+	84,  // 657: zitadel.management.v1.ManagementService.ListHumanPasswordless:output_type -> zitadel.management.v1.ListHumanPasswordlessResponse
+	86,  // 658: zitadel.management.v1.ManagementService.AddPasswordlessRegistration:output_type -> zitadel.management.v1.AddPasswordlessRegistrationResponse
+	88,  // 659: zitadel.management.v1.ManagementService.SendPasswordlessRegistration:output_type -> zitadel.management.v1.SendPasswordlessRegistrationResponse
+	90,  // 660: zitadel.management.v1.ManagementService.RemoveHumanPasswordless:output_type -> zitadel.management.v1.RemoveHumanPasswordlessResponse
+	92,  // 661: zitadel.management.v1.ManagementService.UpdateMachine:output_type -> zitadel.management.v1.UpdateMachineResponse
+	94,  // 662: zitadel.management.v1.ManagementService.GetMachineKeyByIDs:output_type -> zitadel.management.v1.GetMachineKeyByIDsResponse
+	96,  // 663: zitadel.management.v1.ManagementService.ListMachineKeys:output_type -> zitadel.management.v1.ListMachineKeysResponse
+	98,  // 664: zitadel.management.v1.ManagementService.AddMachineKey:output_type -> zitadel.management.v1.AddMachineKeyResponse
+	100, // 665: zitadel.management.v1.ManagementService.RemoveMachineKey:output_type -> zitadel.management.v1.RemoveMachineKeyResponse
+	102, // 666: zitadel.management.v1.ManagementService.ListHumanLinkedIDPs:output_type -> zitadel.management.v1.ListHumanLinkedIDPsResponse
+	104, // 667: zitadel.management.v1.ManagementService.RemoveHumanLinkedIDP:output_type -> zitadel.management.v1.RemoveHumanLinkedIDPResponse
+	106, // 668: zitadel.management.v1.ManagementService.ListUserMemberships:output_type -> zitadel.management.v1.ListUserMembershipsResponse
+	108, // 669: zitadel.management.v1.ManagementService.GetMyOrg:output_type -> zitadel.management.v1.GetMyOrgResponse
+	112, // 670: zitadel.management.v1.ManagementService.GetOrgByDomainGlobal:output_type -> zitadel.management.v1.GetOrgByDomainGlobalResponse
+	111, // 671: zitadel.management.v1.ManagementService.ListOrgChanges:output_type -> zitadel.management.v1.ListOrgChangesResponse
+	114, // 672: zitadel.management.v1.ManagementService.AddOrg:output_type -> zitadel.management.v1.AddOrgResponse
+	116, // 673: zitadel.management.v1.ManagementService.UpdateOrg:output_type -> zitadel.management.v1.UpdateOrgResponse
+	118, // 674: zitadel.management.v1.ManagementService.DeactivateOrg:output_type -> zitadel.management.v1.DeactivateOrgResponse
+	120, // 675: zitadel.management.v1.ManagementService.ReactivateOrg:output_type -> zitadel.management.v1.ReactivateOrgResponse
+	122, // 676: zitadel.management.v1.ManagementService.ListOrgDomains:output_type -> zitadel.management.v1.ListOrgDomainsResponse
+	124, // 677: zitadel.management.v1.ManagementService.AddOrgDomain:output_type -> zitadel.management.v1.AddOrgDomainResponse
+	126, // 678: zitadel.management.v1.ManagementService.RemoveOrgDomain:output_type -> zitadel.management.v1.RemoveOrgDomainResponse
+	128, // 679: zitadel.management.v1.ManagementService.GenerateOrgDomainValidation:output_type -> zitadel.management.v1.GenerateOrgDomainValidationResponse
+	130, // 680: zitadel.management.v1.ManagementService.ValidateOrgDomain:output_type -> zitadel.management.v1.ValidateOrgDomainResponse
+	132, // 681: zitadel.management.v1.ManagementService.SetPrimaryOrgDomain:output_type -> zitadel.management.v1.SetPrimaryOrgDomainResponse
+	134, // 682: zitadel.management.v1.ManagementService.ListOrgMemberRoles:output_type -> zitadel.management.v1.ListOrgMemberRolesResponse
+	136, // 683: zitadel.management.v1.ManagementService.ListOrgMembers:output_type -> zitadel.management.v1.ListOrgMembersResponse
+	138, // 684: zitadel.management.v1.ManagementService.AddOrgMember:output_type -> zitadel.management.v1.AddOrgMemberResponse
+	140, // 685: zitadel.management.v1.ManagementService.UpdateOrgMember:output_type -> zitadel.management.v1.UpdateOrgMemberResponse
+	142, // 686: zitadel.management.v1.ManagementService.RemoveOrgMember:output_type -> zitadel.management.v1.RemoveOrgMemberResponse
+	144, // 687: zitadel.management.v1.ManagementService.GetProjectByID:output_type -> zitadel.management.v1.GetProjectByIDResponse
+	146, // 688: zitadel.management.v1.ManagementService.GetGrantedProjectByID:output_type -> zitadel.management.v1.GetGrantedProjectByIDResponse
+	148, // 689: zitadel.management.v1.ManagementService.ListProjects:output_type -> zitadel.management.v1.ListProjectsResponse
+	150, // 690: zitadel.management.v1.ManagementService.ListGrantedProjects:output_type -> zitadel.management.v1.ListGrantedProjectsResponse
+	176, // 691: zitadel.management.v1.ManagementService.ListGrantedProjectRoles:output_type -> zitadel.management.v1.ListGrantedProjectRolesResponse
+	152, // 692: zitadel.management.v1.ManagementService.ListProjectChanges:output_type -> zitadel.management.v1.ListProjectChangesResponse
+	154, // 693: zitadel.management.v1.ManagementService.AddProject:output_type -> zitadel.management.v1.AddProjectResponse
+	156, // 694: zitadel.management.v1.ManagementService.UpdateProject:output_type -> zitadel.management.v1.UpdateProjectResponse
+	158, // 695: zitadel.management.v1.ManagementService.DeactivateProject:output_type -> zitadel.management.v1.DeactivateProjectResponse
+	160, // 696: zitadel.management.v1.ManagementService.ReactivateProject:output_type -> zitadel.management.v1.ReactivateProjectResponse
+	162, // 697: zitadel.management.v1.ManagementService.RemoveProject:output_type -> zitadel.management.v1.RemoveProjectResponse
+	174, // 698: zitadel.management.v1.ManagementService.ListProjectRoles:output_type -> zitadel.management.v1.ListProjectRolesResponse
+	166, // 699: zitadel.management.v1.ManagementService.AddProjectRole:output_type -> zitadel.management.v1.AddProjectRoleResponse
+	168, // 700: zitadel.management.v1.ManagementService.BulkAddProjectRoles:output_type -> zitadel.management.v1.BulkAddProjectRolesResponse
+	170, // 701: zitadel.management.v1.ManagementService.UpdateProjectRole:output_type -> zitadel.management.v1.UpdateProjectRoleResponse
+	172, // 702: zitadel.management.v1.ManagementService.RemoveProjectRole:output_type -> zitadel.management.v1.RemoveProjectRoleResponse
+	164, // 703: zitadel.management.v1.ManagementService.ListProjectMemberRoles:output_type -> zitadel.management.v1.ListProjectMemberRolesResponse
+	178, // 704: zitadel.management.v1.ManagementService.ListProjectMembers:output_type -> zitadel.management.v1.ListProjectMembersResponse
+	180, // 705: zitadel.management.v1.ManagementService.AddProjectMember:output_type -> zitadel.management.v1.AddProjectMemberResponse
+	182, // 706: zitadel.management.v1.ManagementService.UpdateProjectMember:output_type -> zitadel.management.v1.UpdateProjectMemberResponse
+	184, // 707: zitadel.management.v1.ManagementService.RemoveProjectMember:output_type -> zitadel.management.v1.RemoveProjectMemberResponse
+	186, // 708: zitadel.management.v1.ManagementService.GetAppByID:output_type -> zitadel.management.v1.GetAppByIDResponse
+	188, // 709: zitadel.management.v1.ManagementService.ListApps:output_type -> zitadel.management.v1.ListAppsResponse
+	190, // 710: zitadel.management.v1.ManagementService.ListAppChanges:output_type -> zitadel.management.v1.ListAppChangesResponse
+	192, // 711: zitadel.management.v1.ManagementService.AddOIDCApp:output_type -> zitadel.management.v1.AddOIDCAppResponse
+	194, // 712: zitadel.management.v1.ManagementService.AddAPIApp:output_type -> zitadel.management.v1.AddAPIAppResponse
+	196, // 713: zitadel.management.v1.ManagementService.UpdateApp:output_type -> zitadel.management.v1.UpdateAppResponse
+	198, // 714: zitadel.management.v1.ManagementService.UpdateOIDCAppConfig:output_type -> zitadel.management.v1.UpdateOIDCAppConfigResponse
+	200, // 715: zitadel.management.v1.ManagementService.UpdateAPIAppConfig:output_type -> zitadel.management.v1.UpdateAPIAppConfigResponse
+	202, // 716: zitadel.management.v1.ManagementService.DeactivateApp:output_type -> zitadel.management.v1.DeactivateAppResponse
+	204, // 717: zitadel.management.v1.ManagementService.ReactivateApp:output_type -> zitadel.management.v1.ReactivateAppResponse
+	206, // 718: zitadel.management.v1.ManagementService.RemoveApp:output_type -> zitadel.management.v1.RemoveAppResponse
+	208, // 719: zitadel.management.v1.ManagementService.RegenerateOIDCClientSecret:output_type -> zitadel.management.v1.RegenerateOIDCClientSecretResponse
+	210, // 720: zitadel.management.v1.ManagementService.RegenerateAPIClientSecret:output_type -> zitadel.management.v1.RegenerateAPIClientSecretResponse
+	212, // 721: zitadel.management.v1.ManagementService.GetAppKey:output_type -> zitadel.management.v1.GetAppKeyResponse
+	214, // 722: zitadel.management.v1.ManagementService.ListAppKeys:output_type -> zitadel.management.v1.ListAppKeysResponse
+	216, // 723: zitadel.management.v1.ManagementService.AddAppKey:output_type -> zitadel.management.v1.AddAppKeyResponse
+	218, // 724: zitadel.management.v1.ManagementService.RemoveAppKey:output_type -> zitadel.management.v1.RemoveAppKeyResponse
+	220, // 725: zitadel.management.v1.ManagementService.GetProjectGrantByID:output_type -> zitadel.management.v1.GetProjectGrantByIDResponse
+	222, // 726: zitadel.management.v1.ManagementService.ListProjectGrants:output_type -> zitadel.management.v1.ListProjectGrantsResponse
+	224, // 727: zitadel.management.v1.ManagementService.ListAllProjectGrants:output_type -> zitadel.management.v1.ListAllProjectGrantsResponse
+	226, // 728: zitadel.management.v1.ManagementService.AddProjectGrant:output_type -> zitadel.management.v1.AddProjectGrantResponse
+	228, // 729: zitadel.management.v1.ManagementService.UpdateProjectGrant:output_type -> zitadel.management.v1.UpdateProjectGrantResponse
+	230, // 730: zitadel.management.v1.ManagementService.DeactivateProjectGrant:output_type -> zitadel.management.v1.DeactivateProjectGrantResponse
+	232, // 731: zitadel.management.v1.ManagementService.ReactivateProjectGrant:output_type -> zitadel.management.v1.ReactivateProjectGrantResponse
+	234, // 732: zitadel.management.v1.ManagementService.RemoveProjectGrant:output_type -> zitadel.management.v1.RemoveProjectGrantResponse
+	236, // 733: zitadel.management.v1.ManagementService.ListProjectGrantMemberRoles:output_type -> zitadel.management.v1.ListProjectGrantMemberRolesResponse
+	238, // 734: zitadel.management.v1.ManagementService.ListProjectGrantMembers:output_type -> zitadel.management.v1.ListProjectGrantMembersResponse
+	240, // 735: zitadel.management.v1.ManagementService.AddProjectGrantMember:output_type -> zitadel.management.v1.AddProjectGrantMemberResponse
+	242, // 736: zitadel.management.v1.ManagementService.UpdateProjectGrantMember:output_type -> zitadel.management.v1.UpdateProjectGrantMemberResponse
+	244, // 737: zitadel.management.v1.ManagementService.RemoveProjectGrantMember:output_type -> zitadel.management.v1.RemoveProjectGrantMemberResponse
+	246, // 738: zitadel.management.v1.ManagementService.GetUserGrantByID:output_type -> zitadel.management.v1.GetUserGrantByIDResponse
+	248, // 739: zitadel.management.v1.ManagementService.ListUserGrants:output_type -> zitadel.management.v1.ListUserGrantResponse
+	250, // 740: zitadel.management.v1.ManagementService.AddUserGrant:output_type -> zitadel.management.v1.AddUserGrantResponse
+	252, // 741: zitadel.management.v1.ManagementService.UpdateUserGrant:output_type -> zitadel.management.v1.UpdateUserGrantResponse
+	254, // 742: zitadel.management.v1.ManagementService.DeactivateUserGrant:output_type -> zitadel.management.v1.DeactivateUserGrantResponse
+	256, // 743: zitadel.management.v1.ManagementService.ReactivateUserGrant:output_type -> zitadel.management.v1.ReactivateUserGrantResponse
+	258, // 744: zitadel.management.v1.ManagementService.RemoveUserGrant:output_type -> zitadel.management.v1.RemoveUserGrantResponse
+	260, // 745: zitadel.management.v1.ManagementService.BulkRemoveUserGrant:output_type -> zitadel.management.v1.BulkRemoveUserGrantResponse
+	262, // 746: zitadel.management.v1.ManagementService.GetFeatures:output_type -> zitadel.management.v1.GetFeaturesResponse
+	264, // 747: zitadel.management.v1.ManagementService.GetOrgIAMPolicy:output_type -> zitadel.management.v1.GetOrgIAMPolicyResponse
+	266, // 748: zitadel.management.v1.ManagementService.GetLoginPolicy:output_type -> zitadel.management.v1.GetLoginPolicyResponse
+	268, // 749: zitadel.management.v1.ManagementService.GetDefaultLoginPolicy:output_type -> zitadel.management.v1.GetDefaultLoginPolicyResponse
+	270, // 750: zitadel.management.v1.ManagementService.AddCustomLoginPolicy:output_type -> zitadel.management.v1.AddCustomLoginPolicyResponse
+	272, // 751: zitadel.management.v1.ManagementService.UpdateCustomLoginPolicy:output_type -> zitadel.management.v1.UpdateCustomLoginPolicyResponse
+	274, // 752: zitadel.management.v1.ManagementService.ResetLoginPolicyToDefault:output_type -> zitadel.management.v1.ResetLoginPolicyToDefaultResponse
+	276, // 753: zitadel.management.v1.ManagementService.ListLoginPolicyIDPs:output_type -> zitadel.management.v1.ListLoginPolicyIDPsResponse
+	278, // 754: zitadel.management.v1.ManagementService.AddIDPToLoginPolicy:output_type -> zitadel.management.v1.AddIDPToLoginPolicyResponse
+	280, // 755: zitadel.management.v1.ManagementService.RemoveIDPFromLoginPolicy:output_type -> zitadel.management.v1.RemoveIDPFromLoginPolicyResponse
+	282, // 756: zitadel.management.v1.ManagementService.ListLoginPolicySecondFactors:output_type -> zitadel.management.v1.ListLoginPolicySecondFactorsResponse
+	284, // 757: zitadel.management.v1.ManagementService.AddSecondFactorToLoginPolicy:output_type -> zitadel.management.v1.AddSecondFactorToLoginPolicyResponse
+	286, // 758: zitadel.management.v1.ManagementService.RemoveSecondFactorFromLoginPolicy:output_type -> zitadel.management.v1.RemoveSecondFactorFromLoginPolicyResponse
+	288, // 759: zitadel.management.v1.ManagementService.ListLoginPolicyMultiFactors:output_type -> zitadel.management.v1.ListLoginPolicyMultiFactorsResponse
+	290, // 760: zitadel.management.v1.ManagementService.AddMultiFactorToLoginPolicy:output_type -> zitadel.management.v1.AddMultiFactorToLoginPolicyResponse
+	292, // 761: zitadel.management.v1.ManagementService.RemoveMultiFactorFromLoginPolicy:output_type -> zitadel.management.v1.RemoveMultiFactorFromLoginPolicyResponse
+	294, // 762: zitadel.management.v1.ManagementService.GetPasswordComplexityPolicy:output_type -> zitadel.management.v1.GetPasswordComplexityPolicyResponse
+	296, // 763: zitadel.management.v1.ManagementService.GetDefaultPasswordComplexityPolicy:output_type -> zitadel.management.v1.GetDefaultPasswordComplexityPolicyResponse
+	298, // 764: zitadel.management.v1.ManagementService.AddCustomPasswordComplexityPolicy:output_type -> zitadel.management.v1.AddCustomPasswordComplexityPolicyResponse
+	300, // 765: zitadel.management.v1.ManagementService.UpdateCustomPasswordComplexityPolicy:output_type -> zitadel.management.v1.UpdateCustomPasswordComplexityPolicyResponse
+	302, // 766: zitadel.management.v1.ManagementService.ResetPasswordComplexityPolicyToDefault:output_type -> zitadel.management.v1.ResetPasswordComplexityPolicyToDefaultResponse
+	304, // 767: zitadel.management.v1.ManagementService.GetPasswordAgePolicy:output_type -> zitadel.management.v1.GetPasswordAgePolicyResponse
+	306, // 768: zitadel.management.v1.ManagementService.GetDefaultPasswordAgePolicy:output_type -> zitadel.management.v1.GetDefaultPasswordAgePolicyResponse
+	308, // 769: zitadel.management.v1.ManagementService.AddCustomPasswordAgePolicy:output_type -> zitadel.management.v1.AddCustomPasswordAgePolicyResponse
+	310, // 770: zitadel.management.v1.ManagementService.UpdateCustomPasswordAgePolicy:output_type -> zitadel.management.v1.UpdateCustomPasswordAgePolicyResponse
+	312, // 771: zitadel.management.v1.ManagementService.ResetPasswordAgePolicyToDefault:output_type -> zitadel.management.v1.ResetPasswordAgePolicyToDefaultResponse
+	314, // 772: zitadel.management.v1.ManagementService.GetLockoutPolicy:output_type -> zitadel.management.v1.GetLockoutPolicyResponse
+	316, // 773: zitadel.management.v1.ManagementService.GetDefaultLockoutPolicy:output_type -> zitadel.management.v1.GetDefaultLockoutPolicyResponse
+	318, // 774: zitadel.management.v1.ManagementService.AddCustomLockoutPolicy:output_type -> zitadel.management.v1.AddCustomLockoutPolicyResponse
+	320, // 775: zitadel.management.v1.ManagementService.UpdateCustomLockoutPolicy:output_type -> zitadel.management.v1.UpdateCustomLockoutPolicyResponse
+	322, // 776: zitadel.management.v1.ManagementService.ResetLockoutPolicyToDefault:output_type -> zitadel.management.v1.ResetLockoutPolicyToDefaultResponse
+	324, // 777: zitadel.management.v1.ManagementService.GetPrivacyPolicy:output_type -> zitadel.management.v1.GetPrivacyPolicyResponse
+	326, // 778: zitadel.management.v1.ManagementService.GetDefaultPrivacyPolicy:output_type -> zitadel.management.v1.GetDefaultPrivacyPolicyResponse
+	328, // 779: zitadel.management.v1.ManagementService.AddCustomPrivacyPolicy:output_type -> zitadel.management.v1.AddCustomPrivacyPolicyResponse
+	330, // 780: zitadel.management.v1.ManagementService.UpdateCustomPrivacyPolicy:output_type -> zitadel.management.v1.UpdateCustomPrivacyPolicyResponse
+	332, // 781: zitadel.management.v1.ManagementService.ResetPrivacyPolicyToDefault:output_type -> zitadel.management.v1.ResetPrivacyPolicyToDefaultResponse
+	334, // 782: zitadel.management.v1.ManagementService.GetLabelPolicy:output_type -> zitadel.management.v1.GetLabelPolicyResponse
+	336, // 783: zitadel.management.v1.ManagementService.GetPreviewLabelPolicy:output_type -> zitadel.management.v1.GetPreviewLabelPolicyResponse
+	338, // 784: zitadel.management.v1.ManagementService.GetDefaultLabelPolicy:output_type -> zitadel.management.v1.GetDefaultLabelPolicyResponse
+	340, // 785: zitadel.management.v1.ManagementService.AddCustomLabelPolicy:output_type -> zitadel.management.v1.AddCustomLabelPolicyResponse
+	342, // 786: zitadel.management.v1.ManagementService.UpdateCustomLabelPolicy:output_type -> zitadel.management.v1.UpdateCustomLabelPolicyResponse
+	344, // 787: zitadel.management.v1.ManagementService.ActivateCustomLabelPolicy:output_type -> zitadel.management.v1.ActivateCustomLabelPolicyResponse
+	346, // 788: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyLogo:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyLogoResponse
+	348, // 789: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyLogoDark:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyLogoDarkResponse
+	350, // 790: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyIcon:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyIconResponse
+	352, // 791: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyIconDark:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyIconDarkResponse
+	354, // 792: zitadel.management.v1.ManagementService.RemoveCustomLabelPolicyFont:output_type -> zitadel.management.v1.RemoveCustomLabelPolicyFontResponse
+	356, // 793: zitadel.management.v1.ManagementService.ResetLabelPolicyToDefault:output_type -> zitadel.management.v1.ResetLabelPolicyToDefaultResponse
+	358, // 794: zitadel.management.v1.ManagementService.GetCustomInitMessageText:output_type -> zitadel.management.v1.GetCustomInitMessageTextResponse
+	360, // 795: zitadel.management.v1.ManagementService.GetDefaultInitMessageText:output_type -> zitadel.management.v1.GetDefaultInitMessageTextResponse
+	362, // 796: zitadel.management.v1.ManagementService.SetCustomInitMessageText:output_type -> zitadel.management.v1.SetCustomInitMessageTextResponse
+	364, // 797: zitadel.management.v1.ManagementService.ResetCustomInitMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomInitMessageTextToDefaultResponse
+	374, // 798: zitadel.management.v1.ManagementService.GetCustomPasswordResetMessageText:output_type -> zitadel.management.v1.GetCustomPasswordResetMessageTextResponse
+	376, // 799: zitadel.management.v1.ManagementService.GetDefaultPasswordResetMessageText:output_type -> zitadel.management.v1.GetDefaultPasswordResetMessageTextResponse
+	378, // 800: zitadel.management.v1.ManagementService.SetCustomPasswordResetMessageText:output_type -> zitadel.management.v1.SetCustomPasswordResetMessageTextResponse
+	380, // 801: zitadel.management.v1.ManagementService.ResetCustomPasswordResetMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomPasswordResetMessageTextToDefaultResponse
+	382, // 802: zitadel.management.v1.ManagementService.GetCustomVerifyEmailMessageText:output_type -> zitadel.management.v1.GetCustomVerifyEmailMessageTextResponse
+	384, // 803: zitadel.management.v1.ManagementService.GetDefaultVerifyEmailMessageText:output_type -> zitadel.management.v1.GetDefaultVerifyEmailMessageTextResponse
+	386, // 804: zitadel.management.v1.ManagementService.SetCustomVerifyEmailMessageText:output_type -> zitadel.management.v1.SetCustomVerifyEmailMessageTextResponse
+	388, // 805: zitadel.management.v1.ManagementService.ResetCustomVerifyEmailMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomVerifyEmailMessageTextToDefaultResponse
+	390, // 806: zitadel.management.v1.ManagementService.GetCustomVerifyPhoneMessageText:output_type -> zitadel.management.v1.GetCustomVerifyPhoneMessageTextResponse
+	392, // 807: zitadel.management.v1.ManagementService.GetDefaultVerifyPhoneMessageText:output_type -> zitadel.management.v1.GetDefaultVerifyPhoneMessageTextResponse
+	394, // 808: zitadel.management.v1.ManagementService.SetCustomVerifyPhoneMessageText:output_type -> zitadel.management.v1.SetCustomVerifyPhoneMessageTextResponse
+	396, // 809: zitadel.management.v1.ManagementService.ResetCustomVerifyPhoneMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomVerifyPhoneMessageTextToDefaultResponse
+	398, // 810: zitadel.management.v1.ManagementService.GetCustomDomainClaimedMessageText:output_type -> zitadel.management.v1.GetCustomDomainClaimedMessageTextResponse
+	400, // 811: zitadel.management.v1.ManagementService.GetDefaultDomainClaimedMessageText:output_type -> zitadel.management.v1.GetDefaultDomainClaimedMessageTextResponse
+	402, // 812: zitadel.management.v1.ManagementService.SetCustomDomainClaimedMessageCustomText:output_type -> zitadel.management.v1.SetCustomDomainClaimedMessageTextResponse
+	404, // 813: zitadel.management.v1.ManagementService.ResetCustomDomainClaimedMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomDomainClaimedMessageTextToDefaultResponse
+	406, // 814: zitadel.management.v1.ManagementService.GetCustomPasswordlessRegistrationMessageText:output_type -> zitadel.management.v1.GetCustomPasswordlessRegistrationMessageTextResponse
+	408, // 815: zitadel.management.v1.ManagementService.GetDefaultPasswordlessRegistrationMessageText:output_type -> zitadel.management.v1.GetDefaultPasswordlessRegistrationMessageTextResponse
+	410, // 816: zitadel.management.v1.ManagementService.SetCustomPasswordlessRegistrationMessageCustomText:output_type -> zitadel.management.v1.SetCustomPasswordlessRegistrationMessageTextResponse
+	412, // 817: zitadel.management.v1.ManagementService.ResetCustomPasswordlessRegistrationMessageTextToDefault:output_type -> zitadel.management.v1.ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse
+	368, // 818: zitadel.management.v1.ManagementService.GetCustomLoginTexts:output_type -> zitadel.management.v1.GetCustomLoginTextsResponse
+	366, // 819: zitadel.management.v1.ManagementService.GetDefaultLoginTexts:output_type -> zitadel.management.v1.GetDefaultLoginTextsResponse
+	370, // 820: zitadel.management.v1.ManagementService.SetCustomLoginText:output_type -> zitadel.management.v1.SetCustomLoginTextsResponse
+	372, // 821: zitadel.management.v1.ManagementService.ResetCustomLoginTextToDefault:output_type -> zitadel.management.v1.ResetCustomLoginTextsToDefaultResponse
+	414, // 822: zitadel.management.v1.ManagementService.GetOrgIDPByID:output_type -> zitadel.management.v1.GetOrgIDPByIDResponse
+	417, // 823: zitadel.management.v1.ManagementService.ListOrgIDPs:output_type -> zitadel.management.v1.ListOrgIDPsResponse
+	419, // 824: zitadel.management.v1.ManagementService.AddOrgOIDCIDP:output_type -> zitadel.management.v1.AddOrgOIDCIDPResponse
+	421, // 825: zitadel.management.v1.ManagementService.AddOrgJWTIDP:output_type -> zitadel.management.v1.AddOrgJWTIDPResponse
+	423, // 826: zitadel.management.v1.ManagementService.DeactivateOrgIDP:output_type -> zitadel.management.v1.DeactivateOrgIDPResponse
+	425, // 827: zitadel.management.v1.ManagementService.ReactivateOrgIDP:output_type -> zitadel.management.v1.ReactivateOrgIDPResponse
+	427, // 828: zitadel.management.v1.ManagementService.RemoveOrgIDP:output_type -> zitadel.management.v1.RemoveOrgIDPResponse
+	429, // 829: zitadel.management.v1.ManagementService.UpdateOrgIDP:output_type -> zitadel.management.v1.UpdateOrgIDPResponse
+	431, // 830: zitadel.management.v1.ManagementService.UpdateOrgIDPOIDCConfig:output_type -> zitadel.management.v1.UpdateOrgIDPOIDCConfigResponse
+	433, // 831: zitadel.management.v1.ManagementService.UpdateOrgIDPJWTConfig:output_type -> zitadel.management.v1.UpdateOrgIDPJWTConfigResponse
+	436, // 832: zitadel.management.v1.ManagementService.ListActions:output_type -> zitadel.management.v1.ListActionsResponse
+	440, // 833: zitadel.management.v1.ManagementService.GetAction:output_type -> zitadel.management.v1.GetActionResponse
+	438, // 834: zitadel.management.v1.ManagementService.CreateAction:output_type -> zitadel.management.v1.CreateActionResponse
+	442, // 835: zitadel.management.v1.ManagementService.UpdateAction:output_type -> zitadel.management.v1.UpdateActionResponse
+	446, // 836: zitadel.management.v1.ManagementService.DeactivateAction:output_type -> zitadel.management.v1.DeactivateActionResponse
+	448, // 837: zitadel.management.v1.ManagementService.ReactivateAction:output_type -> zitadel.management.v1.ReactivateActionResponse
+	444, // 838: zitadel.management.v1.ManagementService.DeleteAction:output_type -> zitadel.management.v1.DeleteActionResponse
+	450, // 839: zitadel.management.v1.ManagementService.GetFlow:output_type -> zitadel.management.v1.GetFlowResponse
+	452, // 840: zitadel.management.v1.ManagementService.ClearFlow:output_type -> zitadel.management.v1.ClearFlowResponse
+	454, // 841: zitadel.management.v1.ManagementService.SetTriggerActions:output_type -> zitadel.management.v1.SetTriggerActionsResponse
+	616, // [616:842] is the sub-list for method output_type
+	390, // [390:616] is the sub-list for method input_type
 	390, // [390:390] is the sub-list for extension type_name
 	390, // [390:390] is the sub-list for extension extendee
 	0,   // [0:390] is the sub-list for field type_name
