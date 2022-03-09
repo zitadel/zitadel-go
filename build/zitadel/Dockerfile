@@ -70,7 +70,10 @@ RUN mkdir -p /go/src/github.com/caos/zitadel/pkg/grpc/authoption
 ## generate all pb files and copy them to a new directory
 RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mkdir /zitadel-api \
-    && find /go/src/github.com/caos/zitadel-go/pkg/client/zitadel -iname '*.pb.go' -exec cp --parents \{\} /zitadel-api \;
+    && find /go/src/github.com/caos/zitadel-go/pkg/client/zitadel -iname '*.pb.go' -exec cp --parents \{\} /zitadel-api \; \
+    && mv /go/src/github.com/caos/zitadel/pkg/grpc/admin/admin_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/admin/ \
+    && mv /go/src/github.com/caos/zitadel/pkg/grpc/auth/auth_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/auth/ \
+    && mv /go/src/github.com/caos/zitadel/pkg/grpc/management/management_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/management/
 #######################
 ## prepare generated files for output
 #######################

@@ -23,6 +23,8 @@ type AuthServiceClient interface {
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
 	// Returns my full blown user
 	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
+	// Changes the user state to deleted
+	RemoveMyUser(ctx context.Context, in *RemoveMyUserRequest, opts ...grpc.CallOption) (*RemoveMyUserResponse, error)
 	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(ctx context.Context, in *ListMyUserChangesRequest, opts ...grpc.CallOption) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
@@ -151,6 +153,15 @@ func (c *authServiceClient) GetSupportedLanguages(ctx context.Context, in *GetSu
 func (c *authServiceClient) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error) {
 	out := new(GetMyUserResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMyUser(ctx context.Context, in *RemoveMyUserRequest, opts ...grpc.CallOption) (*RemoveMyUserResponse, error) {
+	out := new(RemoveMyUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -553,6 +564,8 @@ type AuthServiceServer interface {
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
 	// Returns my full blown user
 	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
+	// Changes the user state to deleted
+	RemoveMyUser(context.Context, *RemoveMyUserRequest) (*RemoveMyUserResponse, error)
 	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error)
 	// Returns the user sessions of the authorized user of the current useragent
@@ -665,6 +678,9 @@ func (UnimplementedAuthServiceServer) GetSupportedLanguages(context.Context, *Ge
 }
 func (UnimplementedAuthServiceServer) GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMyUser not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMyUser(context.Context, *RemoveMyUserRequest) (*RemoveMyUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyUser not implemented")
 }
 func (UnimplementedAuthServiceServer) ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyUserChanges not implemented")
@@ -858,6 +874,24 @@ func _AuthService_GetMyUser_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).GetMyUser(ctx, req.(*GetMyUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyUser(ctx, req.(*RemoveMyUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1654,6 +1688,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMyUser",
 			Handler:    _AuthService_GetMyUser_Handler,
+		},
+		{
+			MethodName: "RemoveMyUser",
+			Handler:    _AuthService_RemoveMyUser_Handler,
 		},
 		{
 			MethodName: "ListMyUserChanges",
