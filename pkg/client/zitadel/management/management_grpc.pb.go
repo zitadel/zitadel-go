@@ -118,6 +118,10 @@ type ManagementServiceClient interface {
 	RemoveHumanAuthFactorU2F(ctx context.Context, in *RemoveHumanAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorU2FResponse, error)
 	// Returns all configured passwordless authenticators
 	ListHumanPasswordless(ctx context.Context, in *ListHumanPasswordlessRequest, opts ...grpc.CallOption) (*ListHumanPasswordlessResponse, error)
+	// Adds a new passwordless authenticator link to the user and returns it directly
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error)
 	// Adds a new passwordless authenticator link to the user and sends it to the registered email address
 	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
 	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
@@ -133,8 +137,17 @@ type ManagementServiceClient interface {
 	ListMachineKeys(ctx context.Context, in *ListMachineKeysRequest, opts ...grpc.CallOption) (*ListMachineKeysResponse, error)
 	// Generates a new machine key, details should be stored after return
 	AddMachineKey(ctx context.Context, in *AddMachineKeyRequest, opts ...grpc.CallOption) (*AddMachineKeyResponse, error)
-	// Removed a machine key
+	// Removes a machine key
 	RemoveMachineKey(ctx context.Context, in *RemoveMachineKeyRequest, opts ...grpc.CallOption) (*RemoveMachineKeyResponse, error)
+	// Returns a personal access token of a (machine) user
+	GetPersonalAccessTokenByIDs(ctx context.Context, in *GetPersonalAccessTokenByIDsRequest, opts ...grpc.CallOption) (*GetPersonalAccessTokenByIDsResponse, error)
+	// Returns all personal access tokens of a (machine) user which match the query
+	// Limit should always be set, there is a default limit set by the service
+	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
+	// Generates a new personal access token for a machine user, details should be stored after return
+	AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error)
+	// Removes a personal access token
+	RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error)
 	// Lists all identity providers (social logins) which a human has configured (e.g Google, Microsoft, AD, etc..)
 	// Limit should always be set, there is a default limit set by the service
 	ListHumanLinkedIDPs(ctx context.Context, in *ListHumanLinkedIDPsRequest, opts ...grpc.CallOption) (*ListHumanLinkedIDPsResponse, error)
@@ -288,6 +301,9 @@ type ManagementServiceClient interface {
 	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
 	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrants(ctx context.Context, in *ListProjectGrantsRequest, opts ...grpc.CallOption) (*ListProjectGrantsResponse, error)
+	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
+	// Limit should always be set, there is a default limit set by the service
+	ListAllProjectGrants(ctx context.Context, in *ListAllProjectGrantsRequest, opts ...grpc.CallOption) (*ListAllProjectGrantsResponse, error)
 	// Add a new project grant (ProjectGrant = Grant another organisation for my project)
 	// Project Grant will be listed in granted project of the other organisation
 	AddProjectGrant(ctx context.Context, in *AddProjectGrantRequest, opts ...grpc.CallOption) (*AddProjectGrantResponse, error)
@@ -407,9 +423,11 @@ type ManagementServiceClient interface {
 	GetDefaultPrivacyPolicy(ctx context.Context, in *GetDefaultPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetDefaultPrivacyPolicyResponse, error)
 	// Add a custom privacy policy for the organisation
 	// With this policy privacy relevant things can be configured (e.g. tos link)
+	// Variable {{.Lang}} can be set to have different links based on the language
 	AddCustomPrivacyPolicy(ctx context.Context, in *AddCustomPrivacyPolicyRequest, opts ...grpc.CallOption) (*AddCustomPrivacyPolicyResponse, error)
 	// Update the privacy complexity policy for the organisation
 	// With this policy privacy relevant things can be configured (e.g. tos link)
+	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdateCustomPrivacyPolicy(ctx context.Context, in *UpdateCustomPrivacyPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPrivacyPolicyResponse, error)
 	// Removes the privacy policy of the organisation
 	// The default policy of the IAM will trigger after
@@ -546,6 +564,16 @@ type ManagementServiceClient interface {
 	UpdateOrgIDPOIDCConfig(ctx context.Context, in *UpdateOrgIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPOIDCConfigResponse, error)
 	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(ctx context.Context, in *UpdateOrgIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPJWTConfigResponse, error)
+	ListActions(ctx context.Context, in *ListActionsRequest, opts ...grpc.CallOption) (*ListActionsResponse, error)
+	GetAction(ctx context.Context, in *GetActionRequest, opts ...grpc.CallOption) (*GetActionResponse, error)
+	CreateAction(ctx context.Context, in *CreateActionRequest, opts ...grpc.CallOption) (*CreateActionResponse, error)
+	UpdateAction(ctx context.Context, in *UpdateActionRequest, opts ...grpc.CallOption) (*UpdateActionResponse, error)
+	DeactivateAction(ctx context.Context, in *DeactivateActionRequest, opts ...grpc.CallOption) (*DeactivateActionResponse, error)
+	ReactivateAction(ctx context.Context, in *ReactivateActionRequest, opts ...grpc.CallOption) (*ReactivateActionResponse, error)
+	DeleteAction(ctx context.Context, in *DeleteActionRequest, opts ...grpc.CallOption) (*DeleteActionResponse, error)
+	GetFlow(ctx context.Context, in *GetFlowRequest, opts ...grpc.CallOption) (*GetFlowResponse, error)
+	ClearFlow(ctx context.Context, in *ClearFlowRequest, opts ...grpc.CallOption) (*ClearFlowResponse, error)
+	SetTriggerActions(ctx context.Context, in *SetTriggerActionsRequest, opts ...grpc.CallOption) (*SetTriggerActionsResponse, error)
 }
 
 type managementServiceClient struct {
@@ -934,6 +962,15 @@ func (c *managementServiceClient) ListHumanPasswordless(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *managementServiceClient) AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error) {
+	out := new(AddPasswordlessRegistrationResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddPasswordlessRegistration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error) {
 	out := new(SendPasswordlessRegistrationResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SendPasswordlessRegistration", in, out, opts...)
@@ -991,6 +1028,42 @@ func (c *managementServiceClient) AddMachineKey(ctx context.Context, in *AddMach
 func (c *managementServiceClient) RemoveMachineKey(ctx context.Context, in *RemoveMachineKeyRequest, opts ...grpc.CallOption) (*RemoveMachineKeyResponse, error) {
 	out := new(RemoveMachineKeyResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveMachineKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetPersonalAccessTokenByIDs(ctx context.Context, in *GetPersonalAccessTokenByIDsRequest, opts ...grpc.CallOption) (*GetPersonalAccessTokenByIDsResponse, error) {
+	out := new(GetPersonalAccessTokenByIDsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetPersonalAccessTokenByIDs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error) {
+	out := new(ListPersonalAccessTokensResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListPersonalAccessTokens", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error) {
+	out := new(AddPersonalAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddPersonalAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error) {
+	out := new(RemovePersonalAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemovePersonalAccessToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1540,6 +1613,15 @@ func (c *managementServiceClient) GetProjectGrantByID(ctx context.Context, in *G
 func (c *managementServiceClient) ListProjectGrants(ctx context.Context, in *ListProjectGrantsRequest, opts ...grpc.CallOption) (*ListProjectGrantsResponse, error) {
 	out := new(ListProjectGrantsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListProjectGrants", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ListAllProjectGrants(ctx context.Context, in *ListAllProjectGrantsRequest, opts ...grpc.CallOption) (*ListAllProjectGrantsResponse, error) {
+	out := new(ListAllProjectGrantsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListAllProjectGrants", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2482,6 +2564,96 @@ func (c *managementServiceClient) UpdateOrgIDPJWTConfig(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *managementServiceClient) ListActions(ctx context.Context, in *ListActionsRequest, opts ...grpc.CallOption) (*ListActionsResponse, error) {
+	out := new(ListActionsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListActions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetAction(ctx context.Context, in *GetActionRequest, opts ...grpc.CallOption) (*GetActionResponse, error) {
+	out := new(GetActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) CreateAction(ctx context.Context, in *CreateActionRequest, opts ...grpc.CallOption) (*CreateActionResponse, error) {
+	out := new(CreateActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/CreateAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateAction(ctx context.Context, in *UpdateActionRequest, opts ...grpc.CallOption) (*UpdateActionResponse, error) {
+	out := new(UpdateActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) DeactivateAction(ctx context.Context, in *DeactivateActionRequest, opts ...grpc.CallOption) (*DeactivateActionResponse, error) {
+	out := new(DeactivateActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeactivateAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ReactivateAction(ctx context.Context, in *ReactivateActionRequest, opts ...grpc.CallOption) (*ReactivateActionResponse, error) {
+	out := new(ReactivateActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ReactivateAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) DeleteAction(ctx context.Context, in *DeleteActionRequest, opts ...grpc.CallOption) (*DeleteActionResponse, error) {
+	out := new(DeleteActionResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeleteAction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetFlow(ctx context.Context, in *GetFlowRequest, opts ...grpc.CallOption) (*GetFlowResponse, error) {
+	out := new(GetFlowResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetFlow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ClearFlow(ctx context.Context, in *ClearFlowRequest, opts ...grpc.CallOption) (*ClearFlowResponse, error) {
+	out := new(ClearFlowResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ClearFlow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetTriggerActions(ctx context.Context, in *SetTriggerActionsRequest, opts ...grpc.CallOption) (*SetTriggerActionsResponse, error) {
+	out := new(SetTriggerActionsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetTriggerActions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ManagementServiceServer is the server API for ManagementService service.
 // All implementations must embed UnimplementedManagementServiceServer
 // for forward compatibility
@@ -2586,6 +2758,10 @@ type ManagementServiceServer interface {
 	RemoveHumanAuthFactorU2F(context.Context, *RemoveHumanAuthFactorU2FRequest) (*RemoveHumanAuthFactorU2FResponse, error)
 	// Returns all configured passwordless authenticators
 	ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error)
+	// Adds a new passwordless authenticator link to the user and returns it directly
+	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
+	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
+	AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error)
 	// Adds a new passwordless authenticator link to the user and sends it to the registered email address
 	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
 	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
@@ -2601,8 +2777,17 @@ type ManagementServiceServer interface {
 	ListMachineKeys(context.Context, *ListMachineKeysRequest) (*ListMachineKeysResponse, error)
 	// Generates a new machine key, details should be stored after return
 	AddMachineKey(context.Context, *AddMachineKeyRequest) (*AddMachineKeyResponse, error)
-	// Removed a machine key
+	// Removes a machine key
 	RemoveMachineKey(context.Context, *RemoveMachineKeyRequest) (*RemoveMachineKeyResponse, error)
+	// Returns a personal access token of a (machine) user
+	GetPersonalAccessTokenByIDs(context.Context, *GetPersonalAccessTokenByIDsRequest) (*GetPersonalAccessTokenByIDsResponse, error)
+	// Returns all personal access tokens of a (machine) user which match the query
+	// Limit should always be set, there is a default limit set by the service
+	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
+	// Generates a new personal access token for a machine user, details should be stored after return
+	AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error)
+	// Removes a personal access token
+	RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error)
 	// Lists all identity providers (social logins) which a human has configured (e.g Google, Microsoft, AD, etc..)
 	// Limit should always be set, there is a default limit set by the service
 	ListHumanLinkedIDPs(context.Context, *ListHumanLinkedIDPsRequest) (*ListHumanLinkedIDPsResponse, error)
@@ -2756,6 +2941,9 @@ type ManagementServiceServer interface {
 	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
 	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrants(context.Context, *ListProjectGrantsRequest) (*ListProjectGrantsResponse, error)
+	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
+	// Limit should always be set, there is a default limit set by the service
+	ListAllProjectGrants(context.Context, *ListAllProjectGrantsRequest) (*ListAllProjectGrantsResponse, error)
 	// Add a new project grant (ProjectGrant = Grant another organisation for my project)
 	// Project Grant will be listed in granted project of the other organisation
 	AddProjectGrant(context.Context, *AddProjectGrantRequest) (*AddProjectGrantResponse, error)
@@ -2875,9 +3063,11 @@ type ManagementServiceServer interface {
 	GetDefaultPrivacyPolicy(context.Context, *GetDefaultPrivacyPolicyRequest) (*GetDefaultPrivacyPolicyResponse, error)
 	// Add a custom privacy policy for the organisation
 	// With this policy privacy relevant things can be configured (e.g. tos link)
+	// Variable {{.Lang}} can be set to have different links based on the language
 	AddCustomPrivacyPolicy(context.Context, *AddCustomPrivacyPolicyRequest) (*AddCustomPrivacyPolicyResponse, error)
 	// Update the privacy complexity policy for the organisation
 	// With this policy privacy relevant things can be configured (e.g. tos link)
+	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdateCustomPrivacyPolicy(context.Context, *UpdateCustomPrivacyPolicyRequest) (*UpdateCustomPrivacyPolicyResponse, error)
 	// Removes the privacy policy of the organisation
 	// The default policy of the IAM will trigger after
@@ -3014,6 +3204,16 @@ type ManagementServiceServer interface {
 	UpdateOrgIDPOIDCConfig(context.Context, *UpdateOrgIDPOIDCConfigRequest) (*UpdateOrgIDPOIDCConfigResponse, error)
 	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error)
+	ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error)
+	GetAction(context.Context, *GetActionRequest) (*GetActionResponse, error)
+	CreateAction(context.Context, *CreateActionRequest) (*CreateActionResponse, error)
+	UpdateAction(context.Context, *UpdateActionRequest) (*UpdateActionResponse, error)
+	DeactivateAction(context.Context, *DeactivateActionRequest) (*DeactivateActionResponse, error)
+	ReactivateAction(context.Context, *ReactivateActionRequest) (*ReactivateActionResponse, error)
+	DeleteAction(context.Context, *DeleteActionRequest) (*DeleteActionResponse, error)
+	GetFlow(context.Context, *GetFlowRequest) (*GetFlowResponse, error)
+	ClearFlow(context.Context, *ClearFlowRequest) (*ClearFlowResponse, error)
+	SetTriggerActions(context.Context, *SetTriggerActionsRequest) (*SetTriggerActionsResponse, error)
 	mustEmbedUnimplementedManagementServiceServer()
 }
 
@@ -3147,6 +3347,9 @@ func (UnimplementedManagementServiceServer) RemoveHumanAuthFactorU2F(context.Con
 func (UnimplementedManagementServiceServer) ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListHumanPasswordless not implemented")
 }
+func (UnimplementedManagementServiceServer) AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddPasswordlessRegistration not implemented")
+}
 func (UnimplementedManagementServiceServer) SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendPasswordlessRegistration not implemented")
 }
@@ -3167,6 +3370,18 @@ func (UnimplementedManagementServiceServer) AddMachineKey(context.Context, *AddM
 }
 func (UnimplementedManagementServiceServer) RemoveMachineKey(context.Context, *RemoveMachineKeyRequest) (*RemoveMachineKeyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveMachineKey not implemented")
+}
+func (UnimplementedManagementServiceServer) GetPersonalAccessTokenByIDs(context.Context, *GetPersonalAccessTokenByIDsRequest) (*GetPersonalAccessTokenByIDsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPersonalAccessTokenByIDs not implemented")
+}
+func (UnimplementedManagementServiceServer) ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPersonalAccessTokens not implemented")
+}
+func (UnimplementedManagementServiceServer) AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddPersonalAccessToken not implemented")
+}
+func (UnimplementedManagementServiceServer) RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePersonalAccessToken not implemented")
 }
 func (UnimplementedManagementServiceServer) ListHumanLinkedIDPs(context.Context, *ListHumanLinkedIDPsRequest) (*ListHumanLinkedIDPsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListHumanLinkedIDPs not implemented")
@@ -3350,6 +3565,9 @@ func (UnimplementedManagementServiceServer) GetProjectGrantByID(context.Context,
 }
 func (UnimplementedManagementServiceServer) ListProjectGrants(context.Context, *ListProjectGrantsRequest) (*ListProjectGrantsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProjectGrants not implemented")
+}
+func (UnimplementedManagementServiceServer) ListAllProjectGrants(context.Context, *ListAllProjectGrantsRequest) (*ListAllProjectGrantsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAllProjectGrants not implemented")
 }
 func (UnimplementedManagementServiceServer) AddProjectGrant(context.Context, *AddProjectGrantRequest) (*AddProjectGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddProjectGrant not implemented")
@@ -3662,6 +3880,36 @@ func (UnimplementedManagementServiceServer) UpdateOrgIDPOIDCConfig(context.Conte
 }
 func (UnimplementedManagementServiceServer) UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrgIDPJWTConfig not implemented")
+}
+func (UnimplementedManagementServiceServer) ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListActions not implemented")
+}
+func (UnimplementedManagementServiceServer) GetAction(context.Context, *GetActionRequest) (*GetActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAction not implemented")
+}
+func (UnimplementedManagementServiceServer) CreateAction(context.Context, *CreateActionRequest) (*CreateActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAction not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateAction(context.Context, *UpdateActionRequest) (*UpdateActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAction not implemented")
+}
+func (UnimplementedManagementServiceServer) DeactivateAction(context.Context, *DeactivateActionRequest) (*DeactivateActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivateAction not implemented")
+}
+func (UnimplementedManagementServiceServer) ReactivateAction(context.Context, *ReactivateActionRequest) (*ReactivateActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReactivateAction not implemented")
+}
+func (UnimplementedManagementServiceServer) DeleteAction(context.Context, *DeleteActionRequest) (*DeleteActionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAction not implemented")
+}
+func (UnimplementedManagementServiceServer) GetFlow(context.Context, *GetFlowRequest) (*GetFlowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFlow not implemented")
+}
+func (UnimplementedManagementServiceServer) ClearFlow(context.Context, *ClearFlowRequest) (*ClearFlowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClearFlow not implemented")
+}
+func (UnimplementedManagementServiceServer) SetTriggerActions(context.Context, *SetTriggerActionsRequest) (*SetTriggerActionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetTriggerActions not implemented")
 }
 func (UnimplementedManagementServiceServer) mustEmbedUnimplementedManagementServiceServer() {}
 
@@ -4432,6 +4680,24 @@ func _ManagementService_ListHumanPasswordless_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddPasswordlessRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddPasswordlessRegistrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddPasswordlessRegistration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddPasswordlessRegistration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddPasswordlessRegistration(ctx, req.(*AddPasswordlessRegistrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_SendPasswordlessRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendPasswordlessRegistrationRequest)
 	if err := dec(in); err != nil {
@@ -4554,6 +4820,78 @@ func _ManagementService_RemoveMachineKey_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).RemoveMachineKey(ctx, req.(*RemoveMachineKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetPersonalAccessTokenByIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPersonalAccessTokenByIDsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetPersonalAccessTokenByIDs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetPersonalAccessTokenByIDs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetPersonalAccessTokenByIDs(ctx, req.(*GetPersonalAccessTokenByIDsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListPersonalAccessTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPersonalAccessTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListPersonalAccessTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListPersonalAccessTokens",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListPersonalAccessTokens(ctx, req.(*ListPersonalAccessTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_AddPersonalAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddPersonalAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddPersonalAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddPersonalAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddPersonalAccessToken(ctx, req.(*AddPersonalAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemovePersonalAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePersonalAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemovePersonalAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemovePersonalAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemovePersonalAccessToken(ctx, req.(*RemovePersonalAccessTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5652,6 +5990,24 @@ func _ManagementService_ListProjectGrants_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).ListProjectGrants(ctx, req.(*ListProjectGrantsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListAllProjectGrants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAllProjectGrantsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListAllProjectGrants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListAllProjectGrants",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListAllProjectGrants(ctx, req.(*ListAllProjectGrantsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7528,6 +7884,186 @@ func _ManagementService_UpdateOrgIDPJWTConfig_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_ListActions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListActionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListActions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListActions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListActions(ctx, req.(*ListActionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetAction(ctx, req.(*GetActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_CreateAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).CreateAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/CreateAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).CreateAction(ctx, req.(*CreateActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateAction(ctx, req.(*UpdateActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_DeactivateAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivateActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).DeactivateAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/DeactivateAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).DeactivateAction(ctx, req.(*DeactivateActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ReactivateAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReactivateActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ReactivateAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ReactivateAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ReactivateAction(ctx, req.(*ReactivateActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_DeleteAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).DeleteAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/DeleteAction",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).DeleteAction(ctx, req.(*DeleteActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFlowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetFlow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetFlow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetFlow(ctx, req.(*GetFlowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ClearFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearFlowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ClearFlow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ClearFlow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ClearFlow(ctx, req.(*ClearFlowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetTriggerActions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetTriggerActionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetTriggerActions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetTriggerActions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetTriggerActions(ctx, req.(*SetTriggerActionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ManagementService_ServiceDesc is the grpc.ServiceDesc for ManagementService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -7704,6 +8240,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_ListHumanPasswordless_Handler,
 		},
 		{
+			MethodName: "AddPasswordlessRegistration",
+			Handler:    _ManagementService_AddPasswordlessRegistration_Handler,
+		},
+		{
 			MethodName: "SendPasswordlessRegistration",
 			Handler:    _ManagementService_SendPasswordlessRegistration_Handler,
 		},
@@ -7730,6 +8270,22 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveMachineKey",
 			Handler:    _ManagementService_RemoveMachineKey_Handler,
+		},
+		{
+			MethodName: "GetPersonalAccessTokenByIDs",
+			Handler:    _ManagementService_GetPersonalAccessTokenByIDs_Handler,
+		},
+		{
+			MethodName: "ListPersonalAccessTokens",
+			Handler:    _ManagementService_ListPersonalAccessTokens_Handler,
+		},
+		{
+			MethodName: "AddPersonalAccessToken",
+			Handler:    _ManagementService_AddPersonalAccessToken_Handler,
+		},
+		{
+			MethodName: "RemovePersonalAccessToken",
+			Handler:    _ManagementService_RemovePersonalAccessToken_Handler,
 		},
 		{
 			MethodName: "ListHumanLinkedIDPs",
@@ -7974,6 +8530,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListProjectGrants",
 			Handler:    _ManagementService_ListProjectGrants_Handler,
+		},
+		{
+			MethodName: "ListAllProjectGrants",
+			Handler:    _ManagementService_ListAllProjectGrants_Handler,
 		},
 		{
 			MethodName: "AddProjectGrant",
@@ -8390,6 +8950,46 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOrgIDPJWTConfig",
 			Handler:    _ManagementService_UpdateOrgIDPJWTConfig_Handler,
+		},
+		{
+			MethodName: "ListActions",
+			Handler:    _ManagementService_ListActions_Handler,
+		},
+		{
+			MethodName: "GetAction",
+			Handler:    _ManagementService_GetAction_Handler,
+		},
+		{
+			MethodName: "CreateAction",
+			Handler:    _ManagementService_CreateAction_Handler,
+		},
+		{
+			MethodName: "UpdateAction",
+			Handler:    _ManagementService_UpdateAction_Handler,
+		},
+		{
+			MethodName: "DeactivateAction",
+			Handler:    _ManagementService_DeactivateAction_Handler,
+		},
+		{
+			MethodName: "ReactivateAction",
+			Handler:    _ManagementService_ReactivateAction_Handler,
+		},
+		{
+			MethodName: "DeleteAction",
+			Handler:    _ManagementService_DeleteAction_Handler,
+		},
+		{
+			MethodName: "GetFlow",
+			Handler:    _ManagementService_GetFlow_Handler,
+		},
+		{
+			MethodName: "ClearFlow",
+			Handler:    _ManagementService_ClearFlow_Handler,
+		},
+		{
+			MethodName: "SetTriggerActions",
+			Handler:    _ManagementService_SetTriggerActions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
