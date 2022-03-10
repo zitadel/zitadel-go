@@ -14,12 +14,10 @@ import (
 func main() {
 	//create a client for the auth api providing:
 	//- scopes (including the ZITADEL project ID),
-	//- path to your key json (if not provided by environment variable)
+	//- a JWT Profile source token (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	client, err := auth.NewClient(
-		[]string{oidc.ScopeOpenID, zitadel.ScopeProjectID("124406231057084973")},
-		zitadel.WithCustomURL("http://localhost:50002/oauth/v2", "localhost:50001"),
-		zitadel.WithInsecure(),
-		//zitadel.WithKeyPath("key.json"),
+		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
+		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)

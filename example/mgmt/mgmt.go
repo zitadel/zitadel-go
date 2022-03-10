@@ -22,12 +22,12 @@ func main() {
 
 	//create a client for the management api providing:
 	//- scopes (including the ZITADEL project ID),
-	//- path to your key json (if not provided by environment variable)
+	//- a JWT Profile token source (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	//- id of the organisation where your calls will be executed
 	//(default is the resource owner / organisation of the calling user, can also be provided for every call separately)
 	client, err := management.NewClient(
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		//zitadel.WithKeyPath("key.json"),
+		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 		//zitadel.WithOrgID(*orgID),
 	)
 	if err != nil {
