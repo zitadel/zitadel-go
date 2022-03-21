@@ -30,6 +30,8 @@ go get github.com/caos/zitadel-go
 | 1.14    | :white_check_mark: |
 | 1.15    | :white_check_mark: |
 | 1.16    | :white_check_mark: |
+| 1.17    | :white_check_mark: |
+| 1.18    | :white_check_mark: |
 
 ## License
 
