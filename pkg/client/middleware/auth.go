@@ -22,17 +22,46 @@ type AuthInterceptor struct {
 	oauth2.TokenSource
 }
 
-//NewAuthInterceptor creates an interceptor which authenticates a service account with JWT Profile using a key.json.
+type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSource, error)
+
+func JWTProfileFromPath(keyPath string) JWTProfileTokenSource {
+	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+		return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
+	}
+}
+
+func JWTProfileFromFileData(fileData []byte) JWTProfileTokenSource {
+	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+		return profile.NewJWTProfileTokenSourceFromKeyFileData(issuer, fileData, scopes)
+	}
+}
+
+func JWTProfileFromKeyAndUserID(key []byte, keyID, userID string) JWTProfileTokenSource {
+	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+		return profile.NewJWTProfileTokenSource(issuer, userID, keyID, key, scopes)
+	}
+}
+
+//NewAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).
 //There returned token will be used for authorization in all calls
 //if expired, the token will be automatically refreshed
-func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {
-	ts, err := profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
+func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource, scopes ...string) (*AuthInterceptor, error) {
+	ts, err := jwtProfileTokenSource(issuer, scopes)
 	if err != nil {
 		return nil, err
 	}
 	return &AuthInterceptor{
 		TokenSource: oauth2.ReuseTokenSource(nil, ts),
 	}, nil
+}
+
+//NewAuthInterceptor creates an interceptor which authenticates a service account with JWT Profile using a key.json.
+//There returned token will be used for authorization in all calls
+//if expired, the token will be automatically refreshed
+//
+// Deprecated: use NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...) instead
+func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {
+	return NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...)
 }
 
 func (interceptor *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {

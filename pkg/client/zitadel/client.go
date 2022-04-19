@@ -4,6 +4,8 @@ import (
 	"crypto/x509"
 	"strings"
 
+	"github.com/caos/oidc/pkg/client/profile"
+	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
@@ -12,21 +14,21 @@ import (
 )
 
 type Connection struct {
-	issuer   string
-	api      string
-	keyPath  string
-	scopes   []string
-	orgID    string
-	insecure bool
+	issuer                string
+	api                   string
+	jwtProfileTokenSource middleware.JWTProfileTokenSource
+	scopes                []string
+	orgID                 string
+	insecure              bool
 	*grpc.ClientConn
 }
 
 func NewConnection(scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
-		issuer:  client.Issuer,
-		api:     client.API,
-		keyPath: middleware.OSKeyPath(),
-		scopes:  scopes,
+		issuer:                client.Issuer,
+		api:                   client.API,
+		jwtProfileTokenSource: middleware.JWTProfileFromPath(middleware.OSKeyPath()),
+		scopes:                scopes,
 	}
 
 	for _, option := range options {
@@ -35,7 +37,7 @@ func NewConnection(scopes []string, options ...Option) (*Connection, error) {
 		}
 	}
 
-	unaryInterceptors, streamInterceptors, err := interceptors(c.issuer, c.keyPath, c.orgID, c.scopes)
+	unaryInterceptors, streamInterceptors, err := interceptors(c.issuer, c.orgID, c.scopes, c.jwtProfileTokenSource)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +63,8 @@ func NewConnection(scopes []string, options ...Option) (*Connection, error) {
 	return c, nil
 }
 
-func interceptors(issuer, keyPath, orgID string, scopes []string) ([]grpc.UnaryClientInterceptor, []grpc.StreamClientInterceptor, error) {
-	auth, err := middleware.NewAuthInterceptor(issuer, keyPath, scopes...)
+func interceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) ([]grpc.UnaryClientInterceptor, []grpc.StreamClientInterceptor, error) {
+	auth, err := middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -111,11 +113,24 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 	}
 }
 
-//WithKeyPath sets the path to the key.json used for authentication
+//WithKeyPath sets the path to the key.json used for the authentication
 //if not set env var ZITADEL_KEY_PATH will be used
+//
+//Deprecated: use WithJWTProfileTokenSource(middleware.JWTProfileFromPath(keyPath)) instead
 func WithKeyPath(keyPath string) func(*Connection) error {
 	return func(client *Connection) error {
-		client.keyPath = keyPath
+		client.jwtProfileTokenSource = func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+			return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
+		}
+		return nil
+	}
+}
+
+//WithJWTProfileTokenSource sets the provider used for the authentication
+//if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
+func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
+	return func(client *Connection) error {
+		client.jwtProfileTokenSource = provider
 		return nil
 	}
 }
