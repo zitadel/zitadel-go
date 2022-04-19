@@ -116,7 +116,7 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 //WithKeyPath sets the path to the key.json used for the authentication
 //if not set env var ZITADEL_KEY_PATH will be used
 //
-//Deprecated: use WithJWTProfileTokenSource with middleware.JWTProfileFromPath instead
+//Deprecated: use WithJWTProfileTokenSource(middleware.JWTProfileFromPath(keyPath)) instead
 func WithKeyPath(keyPath string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = func(issuer string, scopes []string) (oauth2.TokenSource, error) {

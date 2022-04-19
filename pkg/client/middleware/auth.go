@@ -59,7 +59,7 @@ func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource
 //There returned token will be used for authorization in all calls
 //if expired, the token will be automatically refreshed
 //
-// Deprecated: use NewAuthenticator instead
+// Deprecated: use NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...) instead
 func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {
 	return NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...)
 }
