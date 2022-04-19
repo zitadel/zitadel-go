@@ -61,13 +61,7 @@ func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource
 //
 // Deprecated: use NewAuthenticator instead
 func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {
-	ts, err := profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
-	if err != nil {
-		return nil, err
-	}
-	return &AuthInterceptor{
-		TokenSource: oauth2.ReuseTokenSource(nil, ts),
-	}, nil
+	return NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...)
 }
 
 func (interceptor *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
