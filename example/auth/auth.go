@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/pkg/oidc"
 
-	"github.com/caos/zitadel-go/pkg/client/auth"
-	"github.com/caos/zitadel-go/pkg/client/zitadel"
-	pb "github.com/caos/zitadel-go/pkg/client/zitadel/auth"
+	"github.com/zitadel/zitadel-go/pkg/client/auth"
+	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/pkg/client/zitadel/auth"
 )
 
 func main() {

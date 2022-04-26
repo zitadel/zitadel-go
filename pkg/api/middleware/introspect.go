@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/caos/oidc/pkg/client/rs"
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/pkg/client/rs"
+	"github.com/zitadel/oidc/pkg/oidc"
 )
 
 var (

@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/caos/zitadel-go/pkg/client"
+	"github.com/zitadel/zitadel-go/pkg/client"
 )
 
 type OrgInterceptor struct {

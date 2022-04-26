@@ -7,14 +7,14 @@
 package auth
 
 import (
-	_ "github.com/caos/zitadel-go/pkg/client/zitadel/authoption"
-	change "github.com/caos/zitadel-go/pkg/client/zitadel/change"
-	idp "github.com/caos/zitadel-go/pkg/client/zitadel/idp"
-	metadata "github.com/caos/zitadel-go/pkg/client/zitadel/metadata"
-	object "github.com/caos/zitadel-go/pkg/client/zitadel/object"
-	org "github.com/caos/zitadel-go/pkg/client/zitadel/org"
-	policy "github.com/caos/zitadel-go/pkg/client/zitadel/policy"
-	user "github.com/caos/zitadel-go/pkg/client/zitadel/user"
+	_ "github.com/zitadel/zitadel-go/pkg/client/zitadel/authoption"
+	change "github.com/zitadel/zitadel-go/pkg/client/zitadel/change"
+	idp "github.com/zitadel/zitadel-go/pkg/client/zitadel/idp"
+	metadata "github.com/zitadel/zitadel-go/pkg/client/zitadel/metadata"
+	object "github.com/zitadel/zitadel-go/pkg/client/zitadel/object"
+	org "github.com/zitadel/zitadel-go/pkg/client/zitadel/org"
+	policy "github.com/zitadel/zitadel-go/pkg/client/zitadel/policy"
+	user "github.com/zitadel/zitadel-go/pkg/client/zitadel/user"
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"

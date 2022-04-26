@@ -11,7 +11,7 @@ fi
 protoc \
     -I=/proto/include \
     --go_opt=paths=source_relative \
-    --go_out /go/src/github.com/caos/zitadel/pkg/grpc \
+    --go_out /go/src/github.com/zitadel/zitadel/pkg/grpc \
     /proto/include/authoption/options.proto
 
 protoc \
