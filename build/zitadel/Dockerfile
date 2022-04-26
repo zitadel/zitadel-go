@@ -41,7 +41,7 @@ RUN curl https://raw.githubusercontent.com/envoyproxy/protoc-gen-validate/v${VAL
     && curl https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/field_behavior.proto --create-dirs -o include/google/api/field_behavior.proto
 
 WORKDIR /zitadel
-RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/caos/zitadel . \
+RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/zitadel/zitadel . \
     && cp -r proto/* /proto/include \
     && cp -r internal/protoc/protoc-gen-authoption/authoption /proto/include
 
@@ -52,7 +52,7 @@ RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/caos/zitadel . \
 FROM golang:${GO_VERSION} as go-dep
 COPY --from=base /proto/include /proto/include
 
-WORKDIR /go/src/github.com/caos/zitadel-go
+WORKDIR /go/src/github.com/zitadel/zitadel-go
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 
@@ -60,23 +60,23 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 ## Go base build
 #######################
 FROM go-dep as zitadel-client
-ARG PROJECT_PATH=github.com/caos/zitadel-go/pkg/client
+ARG PROJECT_PATH=github.com/zitadel/zitadel-go/pkg/client
 
 COPY --from=base /proto /proto
 COPY --from=base /usr/local/bin /usr/local/bin/.
 
 COPY build/zitadel/generate-grpc-client.sh build/zitadel/generate-grpc-client.sh
-RUN mkdir -p /go/src/github.com/caos/zitadel/pkg/grpc/authoption
+RUN mkdir -p /go/src/github.com/zitadel/zitadel/pkg/grpc/authoption
 ## generate all pb files and copy them to a new directory
 RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mkdir /zitadel-api \
-    && find /go/src/github.com/caos/zitadel-go/pkg/client/zitadel -iname '*.pb.go' -exec cp --parents \{\} /zitadel-api \; \
-    && mv /go/src/github.com/caos/zitadel/pkg/grpc/admin/admin_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/admin/ \
-    && mv /go/src/github.com/caos/zitadel/pkg/grpc/auth/auth_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/auth/ \
-    && mv /go/src/github.com/caos/zitadel/pkg/grpc/management/management_grpc.pb.go /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel/management/
+    && find /go/src/github.com/zitadel/zitadel-go/pkg/client/zitadel -iname '*.pb.go' -exec cp --parents \{\} /zitadel-api \; \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/admin/admin_grpc.pb.go /zitadel-api/go/src/github.com/zitadel/zitadel-go/pkg/client/zitadel/admin/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/auth/auth_grpc.pb.go /zitadel-api/go/src/github.com/zitadel/zitadel-go/pkg/client/zitadel/auth/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/management/management_grpc.pb.go /zitadel-api/go/src/github.com/zitadel/zitadel-go/pkg/client/zitadel/management/
 #######################
 ## prepare generated files for output
 #######################
 FROM scratch as zitadel-copy
 ARG PROJECT_PATH
-COPY --from=zitadel-client /zitadel-api/go/src/github.com/caos/zitadel-go/pkg/client/zitadel /zitadel
+COPY --from=zitadel-client /zitadel-api/go/src/github.com/zitadel/zitadel-go/pkg/client/zitadel /zitadel

@@ -5,11 +5,11 @@ import (
 	"flag"
 	"log"
 
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/pkg/oidc"
 
-	"github.com/caos/zitadel-go/pkg/client/admin"
-	"github.com/caos/zitadel-go/pkg/client/zitadel"
-	pb "github.com/caos/zitadel-go/pkg/client/zitadel/admin"
+	"github.com/zitadel/zitadel-go/pkg/client/admin"
+	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/pkg/client/zitadel/admin"
 )
 
 var (

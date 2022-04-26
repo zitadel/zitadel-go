@@ -30,7 +30,7 @@ jobs:
         id: latest-tag
         uses: oprypin/find-latest-tag@v1
         with:
-          repository: caos/zitadel
+          repository: zitadel/zitadel
           releases-only: true
       - name: set tag
         id: tag

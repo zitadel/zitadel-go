@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	http_mw "github.com/caos/zitadel-go/pkg/api/middleware/http"
-	"github.com/caos/zitadel-go/pkg/client"
-	"github.com/caos/zitadel-go/pkg/client/middleware"
+	http_mw "github.com/zitadel/zitadel-go/pkg/api/middleware/http"
+	"github.com/zitadel/zitadel-go/pkg/client"
+	"github.com/zitadel/zitadel-go/pkg/client/middleware"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/caos/oidc/pkg/client/profile"
+	"github.com/zitadel/oidc/pkg/client/profile"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

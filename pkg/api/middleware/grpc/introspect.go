@@ -3,13 +3,13 @@ package middleware
 import (
 	"context"
 
-	"github.com/caos/oidc/pkg/client/rs"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/zitadel/oidc/pkg/client/rs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/caos/zitadel-go/pkg/api/middleware"
+	"github.com/zitadel/zitadel-go/pkg/api/middleware"
 )
 
 type IntrospectionInterceptor struct {
