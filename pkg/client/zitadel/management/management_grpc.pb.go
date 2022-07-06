@@ -349,9 +349,11 @@ type ManagementServiceClient interface {
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
 	// remove a list of user grants in one request
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
-	GetFeatures(ctx context.Context, in *GetFeaturesRequest, opts ...grpc.CallOption) (*GetFeaturesResponse, error)
-	// Returns the org iam policy (this policy is managed by the iam administrator)
+	//deprecated: please use DomainPolicy instead
+	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
+	// Returns the domain policy (this policy is managed by the iam administrator)
+	GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error)
 	// Returns the login policy of the organisation
 	// With this policy the login gui can be configured
 	GetLoginPolicy(ctx context.Context, in *GetLoginPolicyRequest, opts ...grpc.CallOption) (*GetLoginPolicyResponse, error)
@@ -1790,18 +1792,18 @@ func (c *managementServiceClient) BulkRemoveUserGrant(ctx context.Context, in *B
 	return out, nil
 }
 
-func (c *managementServiceClient) GetFeatures(ctx context.Context, in *GetFeaturesRequest, opts ...grpc.CallOption) (*GetFeaturesResponse, error) {
-	out := new(GetFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetFeatures", in, out, opts...)
+func (c *managementServiceClient) GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error) {
+	out := new(GetOrgIAMPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetOrgIAMPolicy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementServiceClient) GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error) {
-	out := new(GetOrgIAMPolicyResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetOrgIAMPolicy", in, out, opts...)
+func (c *managementServiceClient) GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error) {
+	out := new(GetDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetDomainPolicy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2989,9 +2991,11 @@ type ManagementServiceServer interface {
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
 	// remove a list of user grants in one request
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)
-	GetFeatures(context.Context, *GetFeaturesRequest) (*GetFeaturesResponse, error)
-	// Returns the org iam policy (this policy is managed by the iam administrator)
+	//deprecated: please use DomainPolicy instead
+	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
+	// Returns the domain policy (this policy is managed by the iam administrator)
+	GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error)
 	// Returns the login policy of the organisation
 	// With this policy the login gui can be configured
 	GetLoginPolicy(context.Context, *GetLoginPolicyRequest) (*GetLoginPolicyResponse, error)
@@ -3623,11 +3627,11 @@ func (UnimplementedManagementServiceServer) RemoveUserGrant(context.Context, *Re
 func (UnimplementedManagementServiceServer) BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BulkRemoveUserGrant not implemented")
 }
-func (UnimplementedManagementServiceServer) GetFeatures(context.Context, *GetFeaturesRequest) (*GetFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeatures not implemented")
-}
 func (UnimplementedManagementServiceServer) GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrgIAMPolicy not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomainPolicy not implemented")
 }
 func (UnimplementedManagementServiceServer) GetLoginPolicy(context.Context, *GetLoginPolicyRequest) (*GetLoginPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLoginPolicy not implemented")
@@ -6336,24 +6340,6 @@ func _ManagementService_BulkRemoveUserGrant_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ManagementService_GetFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServiceServer).GetFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.management.v1.ManagementService/GetFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServiceServer).GetFeatures(ctx, req.(*GetFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ManagementService_GetOrgIAMPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetOrgIAMPolicyRequest)
 	if err := dec(in); err != nil {
@@ -6368,6 +6354,24 @@ func _ManagementService_GetOrgIAMPolicy_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).GetOrgIAMPolicy(ctx, req.(*GetOrgIAMPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDomainPolicy(ctx, req.(*GetDomainPolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8608,12 +8612,12 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_BulkRemoveUserGrant_Handler,
 		},
 		{
-			MethodName: "GetFeatures",
-			Handler:    _ManagementService_GetFeatures_Handler,
-		},
-		{
 			MethodName: "GetOrgIAMPolicy",
 			Handler:    _ManagementService_GetOrgIAMPolicy_Handler,
+		},
+		{
+			MethodName: "GetDomainPolicy",
+			Handler:    _ManagementService_GetDomainPolicy_Handler,
 		},
 		{
 			MethodName: "GetLoginPolicy",

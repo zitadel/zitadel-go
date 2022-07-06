@@ -23,23 +23,75 @@ type AdminServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	// Returns the default languages
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
+	// Set the default language
+	SetDefaultLanguage(ctx context.Context, in *SetDefaultLanguageRequest, opts ...grpc.CallOption) (*SetDefaultLanguageResponse, error)
+	// Set the default language
+	GetDefaultLanguage(ctx context.Context, in *GetDefaultLanguageRequest, opts ...grpc.CallOption) (*GetDefaultLanguageResponse, error)
+	// Returns the details of the instance
+	GetMyInstance(ctx context.Context, in *GetMyInstanceRequest, opts ...grpc.CallOption) (*GetMyInstanceResponse, error)
+	// Returns the domains of the instance
+	ListInstanceDomains(ctx context.Context, in *ListInstanceDomainsRequest, opts ...grpc.CallOption) (*ListInstanceDomainsResponse, error)
+	// Set the default language
+	ListSecretGenerators(ctx context.Context, in *ListSecretGeneratorsRequest, opts ...grpc.CallOption) (*ListSecretGeneratorsResponse, error)
+	// Get Secret Generator by type (e.g PasswordResetCode)
+	GetSecretGenerator(ctx context.Context, in *GetSecretGeneratorRequest, opts ...grpc.CallOption) (*GetSecretGeneratorResponse, error)
+	// Update secret generator configuration
+	UpdateSecretGenerator(ctx context.Context, in *UpdateSecretGeneratorRequest, opts ...grpc.CallOption) (*UpdateSecretGeneratorResponse, error)
+	// Get system smtp configuration
+	GetSMTPConfig(ctx context.Context, in *GetSMTPConfigRequest, opts ...grpc.CallOption) (*GetSMTPConfigResponse, error)
+	// Add system smtp configuration
+	AddSMTPConfig(ctx context.Context, in *AddSMTPConfigRequest, opts ...grpc.CallOption) (*AddSMTPConfigResponse, error)
+	// Update system smtp configuration
+	UpdateSMTPConfig(ctx context.Context, in *UpdateSMTPConfigRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigResponse, error)
+	// Update system smtp configuration password for host
+	UpdateSMTPConfigPassword(ctx context.Context, in *UpdateSMTPConfigPasswordRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigPasswordResponse, error)
+	// Remove system smtp configuration
+	RemoveSMTPConfig(ctx context.Context, in *RemoveSMTPConfigRequest, opts ...grpc.CallOption) (*RemoveSMTPConfigResponse, error)
+	// list sms provider configurations
+	ListSMSProviders(ctx context.Context, in *ListSMSProvidersRequest, opts ...grpc.CallOption) (*ListSMSProvidersResponse, error)
+	// Get sms provider
+	GetSMSProvider(ctx context.Context, in *GetSMSProviderRequest, opts ...grpc.CallOption) (*GetSMSProviderResponse, error)
+	// Add twilio sms provider
+	AddSMSProviderTwilio(ctx context.Context, in *AddSMSProviderTwilioRequest, opts ...grpc.CallOption) (*AddSMSProviderTwilioResponse, error)
+	// Update twilio sms provider
+	UpdateSMSProviderTwilio(ctx context.Context, in *UpdateSMSProviderTwilioRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioResponse, error)
+	// Update twilio sms provider token
+	UpdateSMSProviderTwilioToken(ctx context.Context, in *UpdateSMSProviderTwilioTokenRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioTokenResponse, error)
+	// Activate sms provider
+	ActivateSMSProvider(ctx context.Context, in *ActivateSMSProviderRequest, opts ...grpc.CallOption) (*ActivateSMSProviderResponse, error)
+	// Deactivate sms provider
+	DeactivateSMSProvider(ctx context.Context, in *DeactivateSMSProviderRequest, opts ...grpc.CallOption) (*DeactivateSMSProviderResponse, error)
+	// Remove sms provider token
+	RemoveSMSProvider(ctx context.Context, in *RemoveSMSProviderRequest, opts ...grpc.CallOption) (*RemoveSMSProviderResponse, error)
+	// Get OIDC settings (e.g token lifetimes, etc.)
+	GetOIDCSettings(ctx context.Context, in *GetOIDCSettingsRequest, opts ...grpc.CallOption) (*GetOIDCSettingsResponse, error)
+	// Update oidc settings (e.g token lifetimes, etc)
+	UpdateOIDCSettings(ctx context.Context, in *UpdateOIDCSettingsRequest, opts ...grpc.CallOption) (*UpdateOIDCSettingsResponse, error)
+	// Get file system notification provider
+	GetFileSystemNotificationProvider(ctx context.Context, in *GetFileSystemNotificationProviderRequest, opts ...grpc.CallOption) (*GetFileSystemNotificationProviderResponse, error)
+	// Get log notification provider
+	GetLogNotificationProvider(ctx context.Context, in *GetLogNotificationProviderRequest, opts ...grpc.CallOption) (*GetLogNotificationProviderResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error)
 	//Checks whether an organisation exists by the given parameters
 	IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error)
+	// Set the default org
+	SetDefaultOrg(ctx context.Context, in *SetDefaultOrgRequest, opts ...grpc.CallOption) (*SetDefaultOrgResponse, error)
+	// Set the default org
+	GetDefaultOrg(ctx context.Context, in *GetDefaultOrgRequest, opts ...grpc.CallOption) (*GetDefaultOrgResponse, error)
 	//Returns all organisations matching the request
 	// all queries need to match (AND)
 	ListOrgs(ctx context.Context, in *ListOrgsRequest, opts ...grpc.CallOption) (*ListOrgsResponse, error)
 	//Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
-	// Returns a identity provider configuration of the IAM
+	// Returns a identity provider configuration of the IAM instance
 	GetIDPByID(ctx context.Context, in *GetIDPByIDRequest, opts ...grpc.CallOption) (*GetIDPByIDResponse, error)
-	// Returns all identity provider configurations of the IAM
+	// Returns all identity provider configurations of the IAM instance
 	ListIDPs(ctx context.Context, in *ListIDPsRequest, opts ...grpc.CallOption) (*ListIDPsResponse, error)
-	// Adds a new oidc identity provider configuration the IAM
+	// Adds a new oidc identity provider configuration the IAM instance
 	AddOIDCIDP(ctx context.Context, in *AddOIDCIDPRequest, opts ...grpc.CallOption) (*AddOIDCIDPResponse, error)
-	// Adds a new jwt identity provider configuration the IAM
+	// Adds a new jwt identity provider configuration the IAM instance
 	AddJWTIDP(ctx context.Context, in *AddJWTIDPRequest, opts ...grpc.CallOption) (*AddJWTIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
@@ -58,25 +110,40 @@ type AdminServiceClient interface {
 	//Updates the jwt configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPJWTConfig(ctx context.Context, in *UpdateIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateIDPJWTConfigResponse, error)
-	GetDefaultFeatures(ctx context.Context, in *GetDefaultFeaturesRequest, opts ...grpc.CallOption) (*GetDefaultFeaturesResponse, error)
-	SetDefaultFeatures(ctx context.Context, in *SetDefaultFeaturesRequest, opts ...grpc.CallOption) (*SetDefaultFeaturesResponse, error)
-	GetOrgFeatures(ctx context.Context, in *GetOrgFeaturesRequest, opts ...grpc.CallOption) (*GetOrgFeaturesResponse, error)
-	SetOrgFeatures(ctx context.Context, in *SetOrgFeaturesRequest, opts ...grpc.CallOption) (*SetOrgFeaturesResponse, error)
-	ResetOrgFeatures(ctx context.Context, in *ResetOrgFeaturesRequest, opts ...grpc.CallOption) (*ResetOrgFeaturesResponse, error)
-	//Returns the IAM policy defined by the administrators of ZITADEL
+	//deprecated: please use DomainPolicy instead
+	//Returns the Org IAM policy defined by the administrators of ZITADEL
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
-	//Updates the default IAM policy.
+	//deprecated: please use DomainPolicy instead
+	//Updates the default OrgIAM policy.
 	// it impacts all organisations without a customised policy
 	UpdateOrgIAMPolicy(ctx context.Context, in *UpdateOrgIAMPolicyRequest, opts ...grpc.CallOption) (*UpdateOrgIAMPolicyResponse, error)
+	//deprecated: please use DomainPolicy instead
 	//Returns the customised policy or the default if not customised
 	GetCustomOrgIAMPolicy(ctx context.Context, in *GetCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetCustomOrgIAMPolicyResponse, error)
-	//Defines a custom ORGIAM policy as specified
+	//deprecated: please use DomainPolicy instead
+	//Defines a custom OrgIAM policy as specified
 	AddCustomOrgIAMPolicy(ctx context.Context, in *AddCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*AddCustomOrgIAMPolicyResponse, error)
-	//Updates a custom ORGIAM policy as specified
+	//deprecated: please use DomainPolicy instead
+	//Updates a custom OrgIAM policy as specified
 	UpdateCustomOrgIAMPolicy(ctx context.Context, in *UpdateCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomOrgIAMPolicyResponse, error)
+	//deprecated: please use DomainPolicy instead
 	//Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomOrgIAMPolicyToDefault(ctx context.Context, in *ResetCustomOrgIAMPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomOrgIAMPolicyToDefaultResponse, error)
+	//Returns the Domain policy defined by the administrators of ZITADEL
+	GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error)
+	//Updates the default Domain policy.
+	// it impacts all organisations without a customised policy
+	UpdateDomainPolicy(ctx context.Context, in *UpdateDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateDomainPolicyResponse, error)
+	//Returns the customised policy or the default if not customised
+	GetCustomDomainPolicy(ctx context.Context, in *GetCustomDomainPolicyRequest, opts ...grpc.CallOption) (*GetCustomDomainPolicyResponse, error)
+	//Defines a custom Domain policy as specified
+	AddCustomDomainPolicy(ctx context.Context, in *AddCustomDomainPolicyRequest, opts ...grpc.CallOption) (*AddCustomDomainPolicyResponse, error)
+	//Updates a custom Domain policy as specified
+	UpdateCustomDomainPolicy(ctx context.Context, in *UpdateCustomDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomDomainPolicyResponse, error)
+	//Resets the org iam policy of the organisation to default
+	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
+	ResetCustomDomainPolicyToDefault(ctx context.Context, in *ResetCustomDomainPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainPolicyToDefaultResponse, error)
 	//Returns the label policy defined by the administrators of ZITADEL
 	GetLabelPolicy(ctx context.Context, in *GetLabelPolicyRequest, opts ...grpc.CallOption) (*GetLabelPolicyResponse, error)
 	//Returns the preview label policy defined by the administrators of ZITADEL
@@ -247,11 +314,6 @@ type AdminServiceClient interface {
 	// views are used for search optimisation and optimise request latencies
 	// they represent the delta of the event happend on the objects
 	ListViews(ctx context.Context, in *ListViewsRequest, opts ...grpc.CallOption) (*ListViewsResponse, error)
-	//Truncates the delta of the change stream
-	// be carefull with this function because ZITADEL has to
-	// recompute the deltas after they got cleared.
-	// Search requests will return wrong results until all deltas are recomputed
-	ClearView(ctx context.Context, in *ClearViewRequest, opts ...grpc.CallOption) (*ClearViewResponse, error)
 	//Returns event descriptions which cannot be processed.
 	// It's possible that some events need some retries.
 	// For example if the SMTP-API wasn't able to send an email at the first time
@@ -290,6 +352,222 @@ func (c *adminServiceClient) GetSupportedLanguages(ctx context.Context, in *GetS
 	return out, nil
 }
 
+func (c *adminServiceClient) SetDefaultLanguage(ctx context.Context, in *SetDefaultLanguageRequest, opts ...grpc.CallOption) (*SetDefaultLanguageResponse, error) {
+	out := new(SetDefaultLanguageResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultLanguage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDefaultLanguage(ctx context.Context, in *GetDefaultLanguageRequest, opts ...grpc.CallOption) (*GetDefaultLanguageResponse, error) {
+	out := new(GetDefaultLanguageResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultLanguage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetMyInstance(ctx context.Context, in *GetMyInstanceRequest, opts ...grpc.CallOption) (*GetMyInstanceResponse, error) {
+	out := new(GetMyInstanceResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetMyInstance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListInstanceDomains(ctx context.Context, in *ListInstanceDomainsRequest, opts ...grpc.CallOption) (*ListInstanceDomainsResponse, error) {
+	out := new(ListInstanceDomainsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListInstanceDomains", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListSecretGenerators(ctx context.Context, in *ListSecretGeneratorsRequest, opts ...grpc.CallOption) (*ListSecretGeneratorsResponse, error) {
+	out := new(ListSecretGeneratorsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListSecretGenerators", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetSecretGenerator(ctx context.Context, in *GetSecretGeneratorRequest, opts ...grpc.CallOption) (*GetSecretGeneratorResponse, error) {
+	out := new(GetSecretGeneratorResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSecretGenerator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSecretGenerator(ctx context.Context, in *UpdateSecretGeneratorRequest, opts ...grpc.CallOption) (*UpdateSecretGeneratorResponse, error) {
+	out := new(UpdateSecretGeneratorResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSecretGenerator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetSMTPConfig(ctx context.Context, in *GetSMTPConfigRequest, opts ...grpc.CallOption) (*GetSMTPConfigResponse, error) {
+	out := new(GetSMTPConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSMTPConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddSMTPConfig(ctx context.Context, in *AddSMTPConfigRequest, opts ...grpc.CallOption) (*AddSMTPConfigResponse, error) {
+	out := new(AddSMTPConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddSMTPConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSMTPConfig(ctx context.Context, in *UpdateSMTPConfigRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigResponse, error) {
+	out := new(UpdateSMTPConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSMTPConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSMTPConfigPassword(ctx context.Context, in *UpdateSMTPConfigPasswordRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigPasswordResponse, error) {
+	out := new(UpdateSMTPConfigPasswordResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSMTPConfigPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RemoveSMTPConfig(ctx context.Context, in *RemoveSMTPConfigRequest, opts ...grpc.CallOption) (*RemoveSMTPConfigResponse, error) {
+	out := new(RemoveSMTPConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/RemoveSMTPConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListSMSProviders(ctx context.Context, in *ListSMSProvidersRequest, opts ...grpc.CallOption) (*ListSMSProvidersResponse, error) {
+	out := new(ListSMSProvidersResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListSMSProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetSMSProvider(ctx context.Context, in *GetSMSProviderRequest, opts ...grpc.CallOption) (*GetSMSProviderResponse, error) {
+	out := new(GetSMSProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSMSProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddSMSProviderTwilio(ctx context.Context, in *AddSMSProviderTwilioRequest, opts ...grpc.CallOption) (*AddSMSProviderTwilioResponse, error) {
+	out := new(AddSMSProviderTwilioResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddSMSProviderTwilio", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSMSProviderTwilio(ctx context.Context, in *UpdateSMSProviderTwilioRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioResponse, error) {
+	out := new(UpdateSMSProviderTwilioResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilio", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSMSProviderTwilioToken(ctx context.Context, in *UpdateSMSProviderTwilioTokenRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioTokenResponse, error) {
+	out := new(UpdateSMSProviderTwilioTokenResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilioToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ActivateSMSProvider(ctx context.Context, in *ActivateSMSProviderRequest, opts ...grpc.CallOption) (*ActivateSMSProviderResponse, error) {
+	out := new(ActivateSMSProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ActivateSMSProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeactivateSMSProvider(ctx context.Context, in *DeactivateSMSProviderRequest, opts ...grpc.CallOption) (*DeactivateSMSProviderResponse, error) {
+	out := new(DeactivateSMSProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/DeactivateSMSProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RemoveSMSProvider(ctx context.Context, in *RemoveSMSProviderRequest, opts ...grpc.CallOption) (*RemoveSMSProviderResponse, error) {
+	out := new(RemoveSMSProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/RemoveSMSProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetOIDCSettings(ctx context.Context, in *GetOIDCSettingsRequest, opts ...grpc.CallOption) (*GetOIDCSettingsResponse, error) {
+	out := new(GetOIDCSettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetOIDCSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateOIDCSettings(ctx context.Context, in *UpdateOIDCSettingsRequest, opts ...grpc.CallOption) (*UpdateOIDCSettingsResponse, error) {
+	out := new(UpdateOIDCSettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateOIDCSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetFileSystemNotificationProvider(ctx context.Context, in *GetFileSystemNotificationProviderRequest, opts ...grpc.CallOption) (*GetFileSystemNotificationProviderResponse, error) {
+	out := new(GetFileSystemNotificationProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetFileSystemNotificationProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetLogNotificationProvider(ctx context.Context, in *GetLogNotificationProviderRequest, opts ...grpc.CallOption) (*GetLogNotificationProviderResponse, error) {
+	out := new(GetLogNotificationProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetLogNotificationProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error) {
 	out := new(GetOrgByIDResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetOrgByID", in, out, opts...)
@@ -302,6 +580,24 @@ func (c *adminServiceClient) GetOrgByID(ctx context.Context, in *GetOrgByIDReque
 func (c *adminServiceClient) IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error) {
 	out := new(IsOrgUniqueResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/IsOrgUnique", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetDefaultOrg(ctx context.Context, in *SetDefaultOrgRequest, opts ...grpc.CallOption) (*SetDefaultOrgResponse, error) {
+	out := new(SetDefaultOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultOrg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDefaultOrg(ctx context.Context, in *GetDefaultOrgRequest, opts ...grpc.CallOption) (*GetDefaultOrgResponse, error) {
+	out := new(GetDefaultOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultOrg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -416,51 +712,6 @@ func (c *adminServiceClient) UpdateIDPJWTConfig(ctx context.Context, in *UpdateI
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDefaultFeatures(ctx context.Context, in *GetDefaultFeaturesRequest, opts ...grpc.CallOption) (*GetDefaultFeaturesResponse, error) {
-	out := new(GetDefaultFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminServiceClient) SetDefaultFeatures(ctx context.Context, in *SetDefaultFeaturesRequest, opts ...grpc.CallOption) (*SetDefaultFeaturesResponse, error) {
-	out := new(SetDefaultFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminServiceClient) GetOrgFeatures(ctx context.Context, in *GetOrgFeaturesRequest, opts ...grpc.CallOption) (*GetOrgFeaturesResponse, error) {
-	out := new(GetOrgFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetOrgFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminServiceClient) SetOrgFeatures(ctx context.Context, in *SetOrgFeaturesRequest, opts ...grpc.CallOption) (*SetOrgFeaturesResponse, error) {
-	out := new(SetOrgFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetOrgFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminServiceClient) ResetOrgFeatures(ctx context.Context, in *ResetOrgFeaturesRequest, opts ...grpc.CallOption) (*ResetOrgFeaturesResponse, error) {
-	out := new(ResetOrgFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetOrgFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *adminServiceClient) GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error) {
 	out := new(GetOrgIAMPolicyResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetOrgIAMPolicy", in, out, opts...)
@@ -509,6 +760,60 @@ func (c *adminServiceClient) UpdateCustomOrgIAMPolicy(ctx context.Context, in *U
 func (c *adminServiceClient) ResetCustomOrgIAMPolicyToDefault(ctx context.Context, in *ResetCustomOrgIAMPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomOrgIAMPolicyToDefaultResponse, error) {
 	out := new(ResetCustomOrgIAMPolicyToDefaultResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetCustomOrgIAMPolicyToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error) {
+	out := new(GetDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDomainPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateDomainPolicy(ctx context.Context, in *UpdateDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateDomainPolicyResponse, error) {
+	out := new(UpdateDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateDomainPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCustomDomainPolicy(ctx context.Context, in *GetCustomDomainPolicyRequest, opts ...grpc.CallOption) (*GetCustomDomainPolicyResponse, error) {
+	out := new(GetCustomDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetCustomDomainPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddCustomDomainPolicy(ctx context.Context, in *AddCustomDomainPolicyRequest, opts ...grpc.CallOption) (*AddCustomDomainPolicyResponse, error) {
+	out := new(AddCustomDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddCustomDomainPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateCustomDomainPolicy(ctx context.Context, in *UpdateCustomDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomDomainPolicyResponse, error) {
+	out := new(UpdateCustomDomainPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateCustomDomainPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResetCustomDomainPolicyToDefault(ctx context.Context, in *ResetCustomDomainPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainPolicyToDefaultResponse, error) {
+	out := new(ResetCustomDomainPolicyToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetCustomDomainPolicyToDefault", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1073,15 +1378,6 @@ func (c *adminServiceClient) ListViews(ctx context.Context, in *ListViewsRequest
 	return out, nil
 }
 
-func (c *adminServiceClient) ClearView(ctx context.Context, in *ClearViewRequest, opts ...grpc.CallOption) (*ClearViewResponse, error) {
-	out := new(ClearViewResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ClearView", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *adminServiceClient) ListFailedEvents(ctx context.Context, in *ListFailedEventsRequest, opts ...grpc.CallOption) (*ListFailedEventsResponse, error) {
 	out := new(ListFailedEventsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListFailedEvents", in, out, opts...)
@@ -1109,23 +1405,75 @@ type AdminServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	// Returns the default languages
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
+	// Set the default language
+	SetDefaultLanguage(context.Context, *SetDefaultLanguageRequest) (*SetDefaultLanguageResponse, error)
+	// Set the default language
+	GetDefaultLanguage(context.Context, *GetDefaultLanguageRequest) (*GetDefaultLanguageResponse, error)
+	// Returns the details of the instance
+	GetMyInstance(context.Context, *GetMyInstanceRequest) (*GetMyInstanceResponse, error)
+	// Returns the domains of the instance
+	ListInstanceDomains(context.Context, *ListInstanceDomainsRequest) (*ListInstanceDomainsResponse, error)
+	// Set the default language
+	ListSecretGenerators(context.Context, *ListSecretGeneratorsRequest) (*ListSecretGeneratorsResponse, error)
+	// Get Secret Generator by type (e.g PasswordResetCode)
+	GetSecretGenerator(context.Context, *GetSecretGeneratorRequest) (*GetSecretGeneratorResponse, error)
+	// Update secret generator configuration
+	UpdateSecretGenerator(context.Context, *UpdateSecretGeneratorRequest) (*UpdateSecretGeneratorResponse, error)
+	// Get system smtp configuration
+	GetSMTPConfig(context.Context, *GetSMTPConfigRequest) (*GetSMTPConfigResponse, error)
+	// Add system smtp configuration
+	AddSMTPConfig(context.Context, *AddSMTPConfigRequest) (*AddSMTPConfigResponse, error)
+	// Update system smtp configuration
+	UpdateSMTPConfig(context.Context, *UpdateSMTPConfigRequest) (*UpdateSMTPConfigResponse, error)
+	// Update system smtp configuration password for host
+	UpdateSMTPConfigPassword(context.Context, *UpdateSMTPConfigPasswordRequest) (*UpdateSMTPConfigPasswordResponse, error)
+	// Remove system smtp configuration
+	RemoveSMTPConfig(context.Context, *RemoveSMTPConfigRequest) (*RemoveSMTPConfigResponse, error)
+	// list sms provider configurations
+	ListSMSProviders(context.Context, *ListSMSProvidersRequest) (*ListSMSProvidersResponse, error)
+	// Get sms provider
+	GetSMSProvider(context.Context, *GetSMSProviderRequest) (*GetSMSProviderResponse, error)
+	// Add twilio sms provider
+	AddSMSProviderTwilio(context.Context, *AddSMSProviderTwilioRequest) (*AddSMSProviderTwilioResponse, error)
+	// Update twilio sms provider
+	UpdateSMSProviderTwilio(context.Context, *UpdateSMSProviderTwilioRequest) (*UpdateSMSProviderTwilioResponse, error)
+	// Update twilio sms provider token
+	UpdateSMSProviderTwilioToken(context.Context, *UpdateSMSProviderTwilioTokenRequest) (*UpdateSMSProviderTwilioTokenResponse, error)
+	// Activate sms provider
+	ActivateSMSProvider(context.Context, *ActivateSMSProviderRequest) (*ActivateSMSProviderResponse, error)
+	// Deactivate sms provider
+	DeactivateSMSProvider(context.Context, *DeactivateSMSProviderRequest) (*DeactivateSMSProviderResponse, error)
+	// Remove sms provider token
+	RemoveSMSProvider(context.Context, *RemoveSMSProviderRequest) (*RemoveSMSProviderResponse, error)
+	// Get OIDC settings (e.g token lifetimes, etc.)
+	GetOIDCSettings(context.Context, *GetOIDCSettingsRequest) (*GetOIDCSettingsResponse, error)
+	// Update oidc settings (e.g token lifetimes, etc)
+	UpdateOIDCSettings(context.Context, *UpdateOIDCSettingsRequest) (*UpdateOIDCSettingsResponse, error)
+	// Get file system notification provider
+	GetFileSystemNotificationProvider(context.Context, *GetFileSystemNotificationProviderRequest) (*GetFileSystemNotificationProviderResponse, error)
+	// Get log notification provider
+	GetLogNotificationProvider(context.Context, *GetLogNotificationProviderRequest) (*GetLogNotificationProviderResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error)
 	//Checks whether an organisation exists by the given parameters
 	IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error)
+	// Set the default org
+	SetDefaultOrg(context.Context, *SetDefaultOrgRequest) (*SetDefaultOrgResponse, error)
+	// Set the default org
+	GetDefaultOrg(context.Context, *GetDefaultOrgRequest) (*GetDefaultOrgResponse, error)
 	//Returns all organisations matching the request
 	// all queries need to match (AND)
 	ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error)
 	//Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
-	// Returns a identity provider configuration of the IAM
+	// Returns a identity provider configuration of the IAM instance
 	GetIDPByID(context.Context, *GetIDPByIDRequest) (*GetIDPByIDResponse, error)
-	// Returns all identity provider configurations of the IAM
+	// Returns all identity provider configurations of the IAM instance
 	ListIDPs(context.Context, *ListIDPsRequest) (*ListIDPsResponse, error)
-	// Adds a new oidc identity provider configuration the IAM
+	// Adds a new oidc identity provider configuration the IAM instance
 	AddOIDCIDP(context.Context, *AddOIDCIDPRequest) (*AddOIDCIDPResponse, error)
-	// Adds a new jwt identity provider configuration the IAM
+	// Adds a new jwt identity provider configuration the IAM instance
 	AddJWTIDP(context.Context, *AddJWTIDPRequest) (*AddJWTIDPResponse, error)
 	//Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
@@ -1144,25 +1492,40 @@ type AdminServiceServer interface {
 	//Updates the jwt configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPJWTConfig(context.Context, *UpdateIDPJWTConfigRequest) (*UpdateIDPJWTConfigResponse, error)
-	GetDefaultFeatures(context.Context, *GetDefaultFeaturesRequest) (*GetDefaultFeaturesResponse, error)
-	SetDefaultFeatures(context.Context, *SetDefaultFeaturesRequest) (*SetDefaultFeaturesResponse, error)
-	GetOrgFeatures(context.Context, *GetOrgFeaturesRequest) (*GetOrgFeaturesResponse, error)
-	SetOrgFeatures(context.Context, *SetOrgFeaturesRequest) (*SetOrgFeaturesResponse, error)
-	ResetOrgFeatures(context.Context, *ResetOrgFeaturesRequest) (*ResetOrgFeaturesResponse, error)
-	//Returns the IAM policy defined by the administrators of ZITADEL
+	//deprecated: please use DomainPolicy instead
+	//Returns the Org IAM policy defined by the administrators of ZITADEL
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
-	//Updates the default IAM policy.
+	//deprecated: please use DomainPolicy instead
+	//Updates the default OrgIAM policy.
 	// it impacts all organisations without a customised policy
 	UpdateOrgIAMPolicy(context.Context, *UpdateOrgIAMPolicyRequest) (*UpdateOrgIAMPolicyResponse, error)
+	//deprecated: please use DomainPolicy instead
 	//Returns the customised policy or the default if not customised
 	GetCustomOrgIAMPolicy(context.Context, *GetCustomOrgIAMPolicyRequest) (*GetCustomOrgIAMPolicyResponse, error)
-	//Defines a custom ORGIAM policy as specified
+	//deprecated: please use DomainPolicy instead
+	//Defines a custom OrgIAM policy as specified
 	AddCustomOrgIAMPolicy(context.Context, *AddCustomOrgIAMPolicyRequest) (*AddCustomOrgIAMPolicyResponse, error)
-	//Updates a custom ORGIAM policy as specified
+	//deprecated: please use DomainPolicy instead
+	//Updates a custom OrgIAM policy as specified
 	UpdateCustomOrgIAMPolicy(context.Context, *UpdateCustomOrgIAMPolicyRequest) (*UpdateCustomOrgIAMPolicyResponse, error)
+	//deprecated: please use DomainPolicy instead
 	//Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomOrgIAMPolicyToDefault(context.Context, *ResetCustomOrgIAMPolicyToDefaultRequest) (*ResetCustomOrgIAMPolicyToDefaultResponse, error)
+	//Returns the Domain policy defined by the administrators of ZITADEL
+	GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error)
+	//Updates the default Domain policy.
+	// it impacts all organisations without a customised policy
+	UpdateDomainPolicy(context.Context, *UpdateDomainPolicyRequest) (*UpdateDomainPolicyResponse, error)
+	//Returns the customised policy or the default if not customised
+	GetCustomDomainPolicy(context.Context, *GetCustomDomainPolicyRequest) (*GetCustomDomainPolicyResponse, error)
+	//Defines a custom Domain policy as specified
+	AddCustomDomainPolicy(context.Context, *AddCustomDomainPolicyRequest) (*AddCustomDomainPolicyResponse, error)
+	//Updates a custom Domain policy as specified
+	UpdateCustomDomainPolicy(context.Context, *UpdateCustomDomainPolicyRequest) (*UpdateCustomDomainPolicyResponse, error)
+	//Resets the org iam policy of the organisation to default
+	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
+	ResetCustomDomainPolicyToDefault(context.Context, *ResetCustomDomainPolicyToDefaultRequest) (*ResetCustomDomainPolicyToDefaultResponse, error)
 	//Returns the label policy defined by the administrators of ZITADEL
 	GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error)
 	//Returns the preview label policy defined by the administrators of ZITADEL
@@ -1333,11 +1696,6 @@ type AdminServiceServer interface {
 	// views are used for search optimisation and optimise request latencies
 	// they represent the delta of the event happend on the objects
 	ListViews(context.Context, *ListViewsRequest) (*ListViewsResponse, error)
-	//Truncates the delta of the change stream
-	// be carefull with this function because ZITADEL has to
-	// recompute the deltas after they got cleared.
-	// Search requests will return wrong results until all deltas are recomputed
-	ClearView(context.Context, *ClearViewRequest) (*ClearViewResponse, error)
 	//Returns event descriptions which cannot be processed.
 	// It's possible that some events need some retries.
 	// For example if the SMTP-API wasn't able to send an email at the first time
@@ -1361,11 +1719,89 @@ func (UnimplementedAdminServiceServer) Healthz(context.Context, *HealthzRequest)
 func (UnimplementedAdminServiceServer) GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSupportedLanguages not implemented")
 }
+func (UnimplementedAdminServiceServer) SetDefaultLanguage(context.Context, *SetDefaultLanguageRequest) (*SetDefaultLanguageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultLanguage not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDefaultLanguage(context.Context, *GetDefaultLanguageRequest) (*GetDefaultLanguageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultLanguage not implemented")
+}
+func (UnimplementedAdminServiceServer) GetMyInstance(context.Context, *GetMyInstanceRequest) (*GetMyInstanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyInstance not implemented")
+}
+func (UnimplementedAdminServiceServer) ListInstanceDomains(context.Context, *ListInstanceDomainsRequest) (*ListInstanceDomainsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListInstanceDomains not implemented")
+}
+func (UnimplementedAdminServiceServer) ListSecretGenerators(context.Context, *ListSecretGeneratorsRequest) (*ListSecretGeneratorsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSecretGenerators not implemented")
+}
+func (UnimplementedAdminServiceServer) GetSecretGenerator(context.Context, *GetSecretGeneratorRequest) (*GetSecretGeneratorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSecretGenerator not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSecretGenerator(context.Context, *UpdateSecretGeneratorRequest) (*UpdateSecretGeneratorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSecretGenerator not implemented")
+}
+func (UnimplementedAdminServiceServer) GetSMTPConfig(context.Context, *GetSMTPConfigRequest) (*GetSMTPConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSMTPConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) AddSMTPConfig(context.Context, *AddSMTPConfigRequest) (*AddSMTPConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSMTPConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSMTPConfig(context.Context, *UpdateSMTPConfigRequest) (*UpdateSMTPConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMTPConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSMTPConfigPassword(context.Context, *UpdateSMTPConfigPasswordRequest) (*UpdateSMTPConfigPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMTPConfigPassword not implemented")
+}
+func (UnimplementedAdminServiceServer) RemoveSMTPConfig(context.Context, *RemoveSMTPConfigRequest) (*RemoveSMTPConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveSMTPConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) ListSMSProviders(context.Context, *ListSMSProvidersRequest) (*ListSMSProvidersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSMSProviders not implemented")
+}
+func (UnimplementedAdminServiceServer) GetSMSProvider(context.Context, *GetSMSProviderRequest) (*GetSMSProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSMSProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddSMSProviderTwilio(context.Context, *AddSMSProviderTwilioRequest) (*AddSMSProviderTwilioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSMSProviderTwilio not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSMSProviderTwilio(context.Context, *UpdateSMSProviderTwilioRequest) (*UpdateSMSProviderTwilioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMSProviderTwilio not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSMSProviderTwilioToken(context.Context, *UpdateSMSProviderTwilioTokenRequest) (*UpdateSMSProviderTwilioTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMSProviderTwilioToken not implemented")
+}
+func (UnimplementedAdminServiceServer) ActivateSMSProvider(context.Context, *ActivateSMSProviderRequest) (*ActivateSMSProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateSMSProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) DeactivateSMSProvider(context.Context, *DeactivateSMSProviderRequest) (*DeactivateSMSProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivateSMSProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) RemoveSMSProvider(context.Context, *RemoveSMSProviderRequest) (*RemoveSMSProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveSMSProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) GetOIDCSettings(context.Context, *GetOIDCSettingsRequest) (*GetOIDCSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOIDCSettings not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateOIDCSettings(context.Context, *UpdateOIDCSettingsRequest) (*UpdateOIDCSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCSettings not implemented")
+}
+func (UnimplementedAdminServiceServer) GetFileSystemNotificationProvider(context.Context, *GetFileSystemNotificationProviderRequest) (*GetFileSystemNotificationProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFileSystemNotificationProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) GetLogNotificationProvider(context.Context, *GetLogNotificationProviderRequest) (*GetLogNotificationProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLogNotificationProvider not implemented")
+}
 func (UnimplementedAdminServiceServer) GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrgByID not implemented")
 }
 func (UnimplementedAdminServiceServer) IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsOrgUnique not implemented")
+}
+func (UnimplementedAdminServiceServer) SetDefaultOrg(context.Context, *SetDefaultOrgRequest) (*SetDefaultOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultOrg not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDefaultOrg(context.Context, *GetDefaultOrgRequest) (*GetDefaultOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultOrg not implemented")
 }
 func (UnimplementedAdminServiceServer) ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrgs not implemented")
@@ -1403,21 +1839,6 @@ func (UnimplementedAdminServiceServer) UpdateIDPOIDCConfig(context.Context, *Upd
 func (UnimplementedAdminServiceServer) UpdateIDPJWTConfig(context.Context, *UpdateIDPJWTConfigRequest) (*UpdateIDPJWTConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIDPJWTConfig not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDefaultFeatures(context.Context, *GetDefaultFeaturesRequest) (*GetDefaultFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultFeatures not implemented")
-}
-func (UnimplementedAdminServiceServer) SetDefaultFeatures(context.Context, *SetDefaultFeaturesRequest) (*SetDefaultFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultFeatures not implemented")
-}
-func (UnimplementedAdminServiceServer) GetOrgFeatures(context.Context, *GetOrgFeaturesRequest) (*GetOrgFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrgFeatures not implemented")
-}
-func (UnimplementedAdminServiceServer) SetOrgFeatures(context.Context, *SetOrgFeaturesRequest) (*SetOrgFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetOrgFeatures not implemented")
-}
-func (UnimplementedAdminServiceServer) ResetOrgFeatures(context.Context, *ResetOrgFeaturesRequest) (*ResetOrgFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResetOrgFeatures not implemented")
-}
 func (UnimplementedAdminServiceServer) GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrgIAMPolicy not implemented")
 }
@@ -1435,6 +1856,24 @@ func (UnimplementedAdminServiceServer) UpdateCustomOrgIAMPolicy(context.Context,
 }
 func (UnimplementedAdminServiceServer) ResetCustomOrgIAMPolicyToDefault(context.Context, *ResetCustomOrgIAMPolicyToDefaultRequest) (*ResetCustomOrgIAMPolicyToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomOrgIAMPolicyToDefault not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomainPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateDomainPolicy(context.Context, *UpdateDomainPolicyRequest) (*UpdateDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCustomDomainPolicy(context.Context, *GetCustomDomainPolicyRequest) (*GetCustomDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomDomainPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) AddCustomDomainPolicy(context.Context, *AddCustomDomainPolicyRequest) (*AddCustomDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCustomDomainPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateCustomDomainPolicy(context.Context, *UpdateCustomDomainPolicyRequest) (*UpdateCustomDomainPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustomDomainPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) ResetCustomDomainPolicyToDefault(context.Context, *ResetCustomDomainPolicyToDefaultRequest) (*ResetCustomDomainPolicyToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomDomainPolicyToDefault not implemented")
 }
 func (UnimplementedAdminServiceServer) GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLabelPolicy not implemented")
@@ -1622,9 +2061,6 @@ func (UnimplementedAdminServiceServer) RemoveIAMMember(context.Context, *RemoveI
 func (UnimplementedAdminServiceServer) ListViews(context.Context, *ListViewsRequest) (*ListViewsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListViews not implemented")
 }
-func (UnimplementedAdminServiceServer) ClearView(context.Context, *ClearViewRequest) (*ClearViewResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ClearView not implemented")
-}
 func (UnimplementedAdminServiceServer) ListFailedEvents(context.Context, *ListFailedEventsRequest) (*ListFailedEventsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFailedEvents not implemented")
 }
@@ -1680,6 +2116,438 @@ func _AdminService_GetSupportedLanguages_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_SetDefaultLanguage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultLanguageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultLanguage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultLanguage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultLanguage(ctx, req.(*SetDefaultLanguageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDefaultLanguage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultLanguageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultLanguage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultLanguage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultLanguage(ctx, req.(*GetDefaultLanguageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetMyInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetMyInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetMyInstance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetMyInstance(ctx, req.(*GetMyInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListInstanceDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListInstanceDomainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListInstanceDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListInstanceDomains",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListInstanceDomains(ctx, req.(*ListInstanceDomainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListSecretGenerators_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSecretGeneratorsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListSecretGenerators(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListSecretGenerators",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListSecretGenerators(ctx, req.(*ListSecretGeneratorsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetSecretGenerator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSecretGeneratorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetSecretGenerator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetSecretGenerator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetSecretGenerator(ctx, req.(*GetSecretGeneratorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSecretGenerator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSecretGeneratorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSecretGenerator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSecretGenerator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSecretGenerator(ctx, req.(*UpdateSecretGeneratorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetSMTPConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSMTPConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetSMTPConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetSMTPConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetSMTPConfig(ctx, req.(*GetSMTPConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddSMTPConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSMTPConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddSMTPConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddSMTPConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddSMTPConfig(ctx, req.(*AddSMTPConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSMTPConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSMTPConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSMTPConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSMTPConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSMTPConfig(ctx, req.(*UpdateSMTPConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSMTPConfigPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSMTPConfigPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSMTPConfigPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSMTPConfigPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSMTPConfigPassword(ctx, req.(*UpdateSMTPConfigPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RemoveSMTPConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveSMTPConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RemoveSMTPConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/RemoveSMTPConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RemoveSMTPConfig(ctx, req.(*RemoveSMTPConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListSMSProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSMSProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListSMSProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListSMSProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListSMSProviders(ctx, req.(*ListSMSProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetSMSProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSMSProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetSMSProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetSMSProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetSMSProvider(ctx, req.(*GetSMSProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddSMSProviderTwilio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSMSProviderTwilioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddSMSProviderTwilio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddSMSProviderTwilio",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddSMSProviderTwilio(ctx, req.(*AddSMSProviderTwilioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSMSProviderTwilio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSMSProviderTwilioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSMSProviderTwilio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilio",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSMSProviderTwilio(ctx, req.(*UpdateSMSProviderTwilioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSMSProviderTwilioToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSMSProviderTwilioTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSMSProviderTwilioToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilioToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSMSProviderTwilioToken(ctx, req.(*UpdateSMSProviderTwilioTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ActivateSMSProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateSMSProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ActivateSMSProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ActivateSMSProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ActivateSMSProvider(ctx, req.(*ActivateSMSProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeactivateSMSProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivateSMSProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeactivateSMSProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/DeactivateSMSProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeactivateSMSProvider(ctx, req.(*DeactivateSMSProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RemoveSMSProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveSMSProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RemoveSMSProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/RemoveSMSProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RemoveSMSProvider(ctx, req.(*RemoveSMSProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetOIDCSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOIDCSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetOIDCSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetOIDCSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetOIDCSettings(ctx, req.(*GetOIDCSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateOIDCSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOIDCSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateOIDCSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateOIDCSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateOIDCSettings(ctx, req.(*UpdateOIDCSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetFileSystemNotificationProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileSystemNotificationProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetFileSystemNotificationProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetFileSystemNotificationProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetFileSystemNotificationProvider(ctx, req.(*GetFileSystemNotificationProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetLogNotificationProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLogNotificationProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetLogNotificationProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetLogNotificationProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetLogNotificationProvider(ctx, req.(*GetLogNotificationProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetOrgByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetOrgByIDRequest)
 	if err := dec(in); err != nil {
@@ -1712,6 +2580,42 @@ func _AdminService_IsOrgUnique_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).IsOrgUnique(ctx, req.(*IsOrgUniqueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetDefaultOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultOrg(ctx, req.(*SetDefaultOrgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDefaultOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultOrg(ctx, req.(*GetDefaultOrgRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1932,96 +2836,6 @@ func _AdminService_UpdateIDPJWTConfig_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AdminService_GetDefaultFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDefaultFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).GetDefaultFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDefaultFeatures(ctx, req.(*GetDefaultFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdminService_SetDefaultFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetDefaultFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).SetDefaultFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).SetDefaultFeatures(ctx, req.(*SetDefaultFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdminService_GetOrgFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrgFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).GetOrgFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/GetOrgFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetOrgFeatures(ctx, req.(*GetOrgFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdminService_SetOrgFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetOrgFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).SetOrgFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/SetOrgFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).SetOrgFeatures(ctx, req.(*SetOrgFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdminService_ResetOrgFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetOrgFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).ResetOrgFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/ResetOrgFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ResetOrgFeatures(ctx, req.(*ResetOrgFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AdminService_GetOrgIAMPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetOrgIAMPolicyRequest)
 	if err := dec(in); err != nil {
@@ -2126,6 +2940,114 @@ func _AdminService_ResetCustomOrgIAMPolicyToDefault_Handler(srv interface{}, ctx
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ResetCustomOrgIAMPolicyToDefault(ctx, req.(*ResetCustomOrgIAMPolicyToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDomainPolicy(ctx, req.(*GetDomainPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateDomainPolicy(ctx, req.(*UpdateDomainPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCustomDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCustomDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetCustomDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCustomDomainPolicy(ctx, req.(*GetCustomDomainPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddCustomDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCustomDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddCustomDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddCustomDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddCustomDomainPolicy(ctx, req.(*AddCustomDomainPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateCustomDomainPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCustomDomainPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateCustomDomainPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateCustomDomainPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateCustomDomainPolicy(ctx, req.(*UpdateCustomDomainPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResetCustomDomainPolicyToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomDomainPolicyToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResetCustomDomainPolicyToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ResetCustomDomainPolicyToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResetCustomDomainPolicyToDefault(ctx, req.(*ResetCustomDomainPolicyToDefaultRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3246,24 +4168,6 @@ func _AdminService_ListViews_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AdminService_ClearView_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ClearViewRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).ClearView(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/ClearView",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ClearView(ctx, req.(*ClearViewRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AdminService_ListFailedEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListFailedEventsRequest)
 	if err := dec(in); err != nil {
@@ -3316,12 +4220,116 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_GetSupportedLanguages_Handler,
 		},
 		{
+			MethodName: "SetDefaultLanguage",
+			Handler:    _AdminService_SetDefaultLanguage_Handler,
+		},
+		{
+			MethodName: "GetDefaultLanguage",
+			Handler:    _AdminService_GetDefaultLanguage_Handler,
+		},
+		{
+			MethodName: "GetMyInstance",
+			Handler:    _AdminService_GetMyInstance_Handler,
+		},
+		{
+			MethodName: "ListInstanceDomains",
+			Handler:    _AdminService_ListInstanceDomains_Handler,
+		},
+		{
+			MethodName: "ListSecretGenerators",
+			Handler:    _AdminService_ListSecretGenerators_Handler,
+		},
+		{
+			MethodName: "GetSecretGenerator",
+			Handler:    _AdminService_GetSecretGenerator_Handler,
+		},
+		{
+			MethodName: "UpdateSecretGenerator",
+			Handler:    _AdminService_UpdateSecretGenerator_Handler,
+		},
+		{
+			MethodName: "GetSMTPConfig",
+			Handler:    _AdminService_GetSMTPConfig_Handler,
+		},
+		{
+			MethodName: "AddSMTPConfig",
+			Handler:    _AdminService_AddSMTPConfig_Handler,
+		},
+		{
+			MethodName: "UpdateSMTPConfig",
+			Handler:    _AdminService_UpdateSMTPConfig_Handler,
+		},
+		{
+			MethodName: "UpdateSMTPConfigPassword",
+			Handler:    _AdminService_UpdateSMTPConfigPassword_Handler,
+		},
+		{
+			MethodName: "RemoveSMTPConfig",
+			Handler:    _AdminService_RemoveSMTPConfig_Handler,
+		},
+		{
+			MethodName: "ListSMSProviders",
+			Handler:    _AdminService_ListSMSProviders_Handler,
+		},
+		{
+			MethodName: "GetSMSProvider",
+			Handler:    _AdminService_GetSMSProvider_Handler,
+		},
+		{
+			MethodName: "AddSMSProviderTwilio",
+			Handler:    _AdminService_AddSMSProviderTwilio_Handler,
+		},
+		{
+			MethodName: "UpdateSMSProviderTwilio",
+			Handler:    _AdminService_UpdateSMSProviderTwilio_Handler,
+		},
+		{
+			MethodName: "UpdateSMSProviderTwilioToken",
+			Handler:    _AdminService_UpdateSMSProviderTwilioToken_Handler,
+		},
+		{
+			MethodName: "ActivateSMSProvider",
+			Handler:    _AdminService_ActivateSMSProvider_Handler,
+		},
+		{
+			MethodName: "DeactivateSMSProvider",
+			Handler:    _AdminService_DeactivateSMSProvider_Handler,
+		},
+		{
+			MethodName: "RemoveSMSProvider",
+			Handler:    _AdminService_RemoveSMSProvider_Handler,
+		},
+		{
+			MethodName: "GetOIDCSettings",
+			Handler:    _AdminService_GetOIDCSettings_Handler,
+		},
+		{
+			MethodName: "UpdateOIDCSettings",
+			Handler:    _AdminService_UpdateOIDCSettings_Handler,
+		},
+		{
+			MethodName: "GetFileSystemNotificationProvider",
+			Handler:    _AdminService_GetFileSystemNotificationProvider_Handler,
+		},
+		{
+			MethodName: "GetLogNotificationProvider",
+			Handler:    _AdminService_GetLogNotificationProvider_Handler,
+		},
+		{
 			MethodName: "GetOrgByID",
 			Handler:    _AdminService_GetOrgByID_Handler,
 		},
 		{
 			MethodName: "IsOrgUnique",
 			Handler:    _AdminService_IsOrgUnique_Handler,
+		},
+		{
+			MethodName: "SetDefaultOrg",
+			Handler:    _AdminService_SetDefaultOrg_Handler,
+		},
+		{
+			MethodName: "GetDefaultOrg",
+			Handler:    _AdminService_GetDefaultOrg_Handler,
 		},
 		{
 			MethodName: "ListOrgs",
@@ -3372,26 +4380,6 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_UpdateIDPJWTConfig_Handler,
 		},
 		{
-			MethodName: "GetDefaultFeatures",
-			Handler:    _AdminService_GetDefaultFeatures_Handler,
-		},
-		{
-			MethodName: "SetDefaultFeatures",
-			Handler:    _AdminService_SetDefaultFeatures_Handler,
-		},
-		{
-			MethodName: "GetOrgFeatures",
-			Handler:    _AdminService_GetOrgFeatures_Handler,
-		},
-		{
-			MethodName: "SetOrgFeatures",
-			Handler:    _AdminService_SetOrgFeatures_Handler,
-		},
-		{
-			MethodName: "ResetOrgFeatures",
-			Handler:    _AdminService_ResetOrgFeatures_Handler,
-		},
-		{
 			MethodName: "GetOrgIAMPolicy",
 			Handler:    _AdminService_GetOrgIAMPolicy_Handler,
 		},
@@ -3414,6 +4402,30 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetCustomOrgIAMPolicyToDefault",
 			Handler:    _AdminService_ResetCustomOrgIAMPolicyToDefault_Handler,
+		},
+		{
+			MethodName: "GetDomainPolicy",
+			Handler:    _AdminService_GetDomainPolicy_Handler,
+		},
+		{
+			MethodName: "UpdateDomainPolicy",
+			Handler:    _AdminService_UpdateDomainPolicy_Handler,
+		},
+		{
+			MethodName: "GetCustomDomainPolicy",
+			Handler:    _AdminService_GetCustomDomainPolicy_Handler,
+		},
+		{
+			MethodName: "AddCustomDomainPolicy",
+			Handler:    _AdminService_AddCustomDomainPolicy_Handler,
+		},
+		{
+			MethodName: "UpdateCustomDomainPolicy",
+			Handler:    _AdminService_UpdateCustomDomainPolicy_Handler,
+		},
+		{
+			MethodName: "ResetCustomDomainPolicyToDefault",
+			Handler:    _AdminService_ResetCustomDomainPolicyToDefault_Handler,
 		},
 		{
 			MethodName: "GetLabelPolicy",
@@ -3662,10 +4674,6 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListViews",
 			Handler:    _AdminService_ListViews_Handler,
-		},
-		{
-			MethodName: "ClearView",
-			Handler:    _AdminService_ClearView_Handler,
 		},
 		{
 			MethodName: "ListFailedEvents",
