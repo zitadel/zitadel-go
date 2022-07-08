@@ -7,26 +7,33 @@ import (
 
 	"github.com/zitadel/oidc/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/pkg/client/management"
-	"github.com/zitadel/zitadel-go/pkg/client/middleware"
-	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/management"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/management"
 )
 
 var (
-	orgID = flag.String("orgID", "74161146763996133", "orgID to set for overwrite example (default is ACME on zitadel.ch)")
+	issuer    = flag.String("issuer", "", "issuer of your ZITADEL instance (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	api       = flag.String("api", "", "gRPC endpoint of your ZITADEL instance (in the form: <instance>.zitadel.cloud:443 or <yourdomain>:443)")
+	projectID = flag.String("projectID", "", "ZITADEL projectID in your instance")
+	orgID     = flag.String("orgID", "", "orgID to set for overwrite example")
 )
 
 func main() {
 	flag.Parse()
 
 	//create a client for the management api providing:
+	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
+	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- scopes (including the ZITADEL project ID),
 	//- a JWT Profile token source (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	//- id of the organisation where your calls will be executed
 	//(default is the resource owner / organisation of the calling user, can also be provided for every call separately)
 	client, err := management.NewClient(
-		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
+		*issuer,
+		*api,
+		[]string{oidc.ScopeOpenID, zitadel.ScopeProjectID(*projectID)},
 		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 		//zitadel.WithOrgID(*orgID),
 	)

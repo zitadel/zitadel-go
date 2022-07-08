@@ -7,7 +7,7 @@ import (
 
 	"github.com/zitadel/oidc/pkg/client/rs"
 
-	"github.com/zitadel/zitadel-go/pkg/api/middleware"
+	"github.com/zitadel/zitadel-go/v2/pkg/api/middleware"
 )
 
 type IntrospectionInterceptor struct {

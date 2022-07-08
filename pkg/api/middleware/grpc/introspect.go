@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/zitadel/zitadel-go/pkg/api/middleware"
+	"github.com/zitadel/zitadel-go/v2/pkg/api/middleware"
 )
 
 type IntrospectionInterceptor struct {

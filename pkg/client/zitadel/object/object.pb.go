@@ -86,6 +86,49 @@ func (TextQueryMethod) EnumDescriptor() ([]byte, []int) {
 	return file_zitadel_object_proto_rawDescGZIP(), []int{0}
 }
 
+type ListQueryMethod int32
+
+const (
+	ListQueryMethod_LIST_QUERY_METHOD_IN ListQueryMethod = 0
+)
+
+// Enum value maps for ListQueryMethod.
+var (
+	ListQueryMethod_name = map[int32]string{
+		0: "LIST_QUERY_METHOD_IN",
+	}
+	ListQueryMethod_value = map[string]int32{
+		"LIST_QUERY_METHOD_IN": 0,
+	}
+)
+
+func (x ListQueryMethod) Enum() *ListQueryMethod {
+	p := new(ListQueryMethod)
+	*p = x
+	return p
+}
+
+func (x ListQueryMethod) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ListQueryMethod) Descriptor() protoreflect.EnumDescriptor {
+	return file_zitadel_object_proto_enumTypes[1].Descriptor()
+}
+
+func (ListQueryMethod) Type() protoreflect.EnumType {
+	return &file_zitadel_object_proto_enumTypes[1]
+}
+
+func (x ListQueryMethod) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ListQueryMethod.Descriptor instead.
+func (ListQueryMethod) EnumDescriptor() ([]byte, []int) {
+	return file_zitadel_object_proto_rawDescGZIP(), []int{1}
+}
+
 type ObjectDetails struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -383,11 +426,13 @@ var file_zitadel_object_proto_rawDesc = []byte{
 	0x4f, 0x44, 0x5f, 0x45, 0x4e, 0x44, 0x53, 0x5f, 0x57, 0x49, 0x54, 0x48, 0x10, 0x06, 0x12, 0x2b,
 	0x0a, 0x27, 0x54, 0x45, 0x58, 0x54, 0x5f, 0x51, 0x55, 0x45, 0x52, 0x59, 0x5f, 0x4d, 0x45, 0x54,
 	0x48, 0x4f, 0x44, 0x5f, 0x45, 0x4e, 0x44, 0x53, 0x5f, 0x57, 0x49, 0x54, 0x48, 0x5f, 0x49, 0x47,
-	0x4e, 0x4f, 0x52, 0x45, 0x5f, 0x43, 0x41, 0x53, 0x45, 0x10, 0x07, 0x42, 0x2c, 0x5a, 0x2a, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
-	0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72,
-	0x70, 0x63, 0x2f, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x4e, 0x4f, 0x52, 0x45, 0x5f, 0x43, 0x41, 0x53, 0x45, 0x10, 0x07, 0x2a, 0x2b, 0x0a, 0x0f, 0x4c,
+	0x69, 0x73, 0x74, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x12, 0x18,
+	0x0a, 0x14, 0x4c, 0x49, 0x53, 0x54, 0x5f, 0x51, 0x55, 0x45, 0x52, 0x59, 0x5f, 0x4d, 0x45, 0x54,
+	0x48, 0x4f, 0x44, 0x5f, 0x49, 0x4e, 0x10, 0x00, 0x42, 0x2c, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a,
+	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f,
+	0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -402,19 +447,20 @@ func file_zitadel_object_proto_rawDescGZIP() []byte {
 	return file_zitadel_object_proto_rawDescData
 }
 
-var file_zitadel_object_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_zitadel_object_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_zitadel_object_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_zitadel_object_proto_goTypes = []interface{}{
 	(TextQueryMethod)(0),          // 0: zitadel.v1.TextQueryMethod
-	(*ObjectDetails)(nil),         // 1: zitadel.v1.ObjectDetails
-	(*ListQuery)(nil),             // 2: zitadel.v1.ListQuery
-	(*ListDetails)(nil),           // 3: zitadel.v1.ListDetails
-	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
+	(ListQueryMethod)(0),          // 1: zitadel.v1.ListQueryMethod
+	(*ObjectDetails)(nil),         // 2: zitadel.v1.ObjectDetails
+	(*ListQuery)(nil),             // 3: zitadel.v1.ListQuery
+	(*ListDetails)(nil),           // 4: zitadel.v1.ListDetails
+	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
 var file_zitadel_object_proto_depIdxs = []int32{
-	4, // 0: zitadel.v1.ObjectDetails.creation_date:type_name -> google.protobuf.Timestamp
-	4, // 1: zitadel.v1.ObjectDetails.change_date:type_name -> google.protobuf.Timestamp
-	4, // 2: zitadel.v1.ListDetails.view_timestamp:type_name -> google.protobuf.Timestamp
+	5, // 0: zitadel.v1.ObjectDetails.creation_date:type_name -> google.protobuf.Timestamp
+	5, // 1: zitadel.v1.ObjectDetails.change_date:type_name -> google.protobuf.Timestamp
+	5, // 2: zitadel.v1.ListDetails.view_timestamp:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -470,7 +516,7 @@ func file_zitadel_object_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_object_proto_rawDesc,
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,

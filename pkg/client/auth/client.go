@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/pkg/client/zitadel/auth"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/auth"
 )
 
 type Client struct {
@@ -10,8 +10,8 @@ type Client struct {
 	auth.AuthServiceClient
 }
 
-func NewClient(scopes []string, options ...zitadel.Option) (*Client, error) {
-	conn, err := zitadel.NewConnection(scopes, options...)
+func NewClient(issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
+	conn, err := zitadel.NewConnection(issuer, api, scopes, options...)
 	if err != nil {
 		return nil, err
 	}

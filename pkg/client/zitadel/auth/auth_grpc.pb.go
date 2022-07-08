@@ -113,8 +113,6 @@ type AuthServiceClient interface {
 	ListMyUserGrants(ctx context.Context, in *ListMyUserGrantsRequest, opts ...grpc.CallOption) (*ListMyUserGrantsResponse, error)
 	// Returns a list of organisations where the authorized user has a user grant (authorization) in the context of the requested project
 	ListMyProjectOrgs(ctx context.Context, in *ListMyProjectOrgsRequest, opts ...grpc.CallOption) (*ListMyProjectOrgsResponse, error)
-	// Returns a list of features, which are allowed on these organisation based on the subscription of the organisation
-	ListMyZitadelFeatures(ctx context.Context, in *ListMyZitadelFeaturesRequest, opts ...grpc.CallOption) (*ListMyZitadelFeaturesResponse, error)
 	// Returns the permissions the authorized user has in ZITADEL based on his manager roles (e.g ORG_OWNER)
 	ListMyZitadelPermissions(ctx context.Context, in *ListMyZitadelPermissionsRequest, opts ...grpc.CallOption) (*ListMyZitadelPermissionsResponse, error)
 	// Returns a list of roles for the authorized user and project
@@ -122,6 +120,10 @@ type AuthServiceClient interface {
 	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
 	// Limit should always be set, there is a default limit set by the service
 	ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error)
+	// Returns the label policy of the current organisation
+	GetMyLabelPolicy(ctx context.Context, in *GetMyLabelPolicyRequest, opts ...grpc.CallOption) (*GetMyLabelPolicyResponse, error)
+	// Returns the privacy policy of the current organisation
+	GetMyPrivacyPolicy(ctx context.Context, in *GetMyPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetMyPrivacyPolicyResponse, error)
 }
 
 type authServiceClient struct {
@@ -519,15 +521,6 @@ func (c *authServiceClient) ListMyProjectOrgs(ctx context.Context, in *ListMyPro
 	return out, nil
 }
 
-func (c *authServiceClient) ListMyZitadelFeatures(ctx context.Context, in *ListMyZitadelFeaturesRequest, opts ...grpc.CallOption) (*ListMyZitadelFeaturesResponse, error) {
-	out := new(ListMyZitadelFeaturesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyZitadelFeatures", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authServiceClient) ListMyZitadelPermissions(ctx context.Context, in *ListMyZitadelPermissionsRequest, opts ...grpc.CallOption) (*ListMyZitadelPermissionsResponse, error) {
 	out := new(ListMyZitadelPermissionsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyZitadelPermissions", in, out, opts...)
@@ -549,6 +542,24 @@ func (c *authServiceClient) ListMyProjectPermissions(ctx context.Context, in *Li
 func (c *authServiceClient) ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error) {
 	out := new(ListMyMembershipsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/ListMyMemberships", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetMyLabelPolicy(ctx context.Context, in *GetMyLabelPolicyRequest, opts ...grpc.CallOption) (*GetMyLabelPolicyResponse, error) {
+	out := new(GetMyLabelPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyLabelPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetMyPrivacyPolicy(ctx context.Context, in *GetMyPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetMyPrivacyPolicyResponse, error) {
+	out := new(GetMyPrivacyPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyPrivacyPolicy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -654,8 +665,6 @@ type AuthServiceServer interface {
 	ListMyUserGrants(context.Context, *ListMyUserGrantsRequest) (*ListMyUserGrantsResponse, error)
 	// Returns a list of organisations where the authorized user has a user grant (authorization) in the context of the requested project
 	ListMyProjectOrgs(context.Context, *ListMyProjectOrgsRequest) (*ListMyProjectOrgsResponse, error)
-	// Returns a list of features, which are allowed on these organisation based on the subscription of the organisation
-	ListMyZitadelFeatures(context.Context, *ListMyZitadelFeaturesRequest) (*ListMyZitadelFeaturesResponse, error)
 	// Returns the permissions the authorized user has in ZITADEL based on his manager roles (e.g ORG_OWNER)
 	ListMyZitadelPermissions(context.Context, *ListMyZitadelPermissionsRequest) (*ListMyZitadelPermissionsResponse, error)
 	// Returns a list of roles for the authorized user and project
@@ -663,6 +672,10 @@ type AuthServiceServer interface {
 	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
 	// Limit should always be set, there is a default limit set by the service
 	ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error)
+	// Returns the label policy of the current organisation
+	GetMyLabelPolicy(context.Context, *GetMyLabelPolicyRequest) (*GetMyLabelPolicyResponse, error)
+	// Returns the privacy policy of the current organisation
+	GetMyPrivacyPolicy(context.Context, *GetMyPrivacyPolicyRequest) (*GetMyPrivacyPolicyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -799,9 +812,6 @@ func (UnimplementedAuthServiceServer) ListMyUserGrants(context.Context, *ListMyU
 func (UnimplementedAuthServiceServer) ListMyProjectOrgs(context.Context, *ListMyProjectOrgsRequest) (*ListMyProjectOrgsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyProjectOrgs not implemented")
 }
-func (UnimplementedAuthServiceServer) ListMyZitadelFeatures(context.Context, *ListMyZitadelFeaturesRequest) (*ListMyZitadelFeaturesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListMyZitadelFeatures not implemented")
-}
 func (UnimplementedAuthServiceServer) ListMyZitadelPermissions(context.Context, *ListMyZitadelPermissionsRequest) (*ListMyZitadelPermissionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyZitadelPermissions not implemented")
 }
@@ -810,6 +820,12 @@ func (UnimplementedAuthServiceServer) ListMyProjectPermissions(context.Context, 
 }
 func (UnimplementedAuthServiceServer) ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMyMemberships not implemented")
+}
+func (UnimplementedAuthServiceServer) GetMyLabelPolicy(context.Context, *GetMyLabelPolicyRequest) (*GetMyLabelPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyLabelPolicy not implemented")
+}
+func (UnimplementedAuthServiceServer) GetMyPrivacyPolicy(context.Context, *GetMyPrivacyPolicyRequest) (*GetMyPrivacyPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyPrivacyPolicy not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -1598,24 +1614,6 @@ func _AuthService_ListMyProjectOrgs_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_ListMyZitadelFeatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMyZitadelFeaturesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).ListMyZitadelFeatures(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/zitadel.auth.v1.AuthService/ListMyZitadelFeatures",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ListMyZitadelFeatures(ctx, req.(*ListMyZitadelFeaturesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AuthService_ListMyZitadelPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMyZitadelPermissionsRequest)
 	if err := dec(in); err != nil {
@@ -1666,6 +1664,42 @@ func _AuthService_ListMyMemberships_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).ListMyMemberships(ctx, req.(*ListMyMembershipsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetMyLabelPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyLabelPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetMyLabelPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/GetMyLabelPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetMyLabelPolicy(ctx, req.(*GetMyLabelPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetMyPrivacyPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyPrivacyPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetMyPrivacyPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/GetMyPrivacyPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetMyPrivacyPolicy(ctx, req.(*GetMyPrivacyPolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1850,10 +1884,6 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_ListMyProjectOrgs_Handler,
 		},
 		{
-			MethodName: "ListMyZitadelFeatures",
-			Handler:    _AuthService_ListMyZitadelFeatures_Handler,
-		},
-		{
 			MethodName: "ListMyZitadelPermissions",
 			Handler:    _AuthService_ListMyZitadelPermissions_Handler,
 		},
@@ -1864,6 +1894,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMyMemberships",
 			Handler:    _AuthService_ListMyMemberships_Handler,
+		},
+		{
+			MethodName: "GetMyLabelPolicy",
+			Handler:    _AuthService_GetMyLabelPolicy_Handler,
+		},
+		{
+			MethodName: "GetMyPrivacyPolicy",
+			Handler:    _AuthService_GetMyPrivacyPolicy_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

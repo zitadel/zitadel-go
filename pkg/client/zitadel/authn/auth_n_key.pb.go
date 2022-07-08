@@ -8,7 +8,7 @@ package authn
 
 import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	object "github.com/zitadel/zitadel-go/pkg/client/zitadel/object"
+	object "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"

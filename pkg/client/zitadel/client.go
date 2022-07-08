@@ -9,8 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/zitadel/zitadel-go/pkg/client"
-	"github.com/zitadel/zitadel-go/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
 )
 
 type Connection struct {
@@ -25,10 +24,10 @@ type Connection struct {
 	*grpc.ClientConn
 }
 
-func NewConnection(scopes []string, options ...Option) (*Connection, error) {
+func NewConnection(issuer, api string, scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
-		issuer:                client.Issuer,
-		api:                   client.API,
+		issuer:                issuer,
+		api:                   api,
 		jwtProfileTokenSource: middleware.JWTProfileFromPath(middleware.OSKeyPath()),
 		scopes:                scopes,
 	}

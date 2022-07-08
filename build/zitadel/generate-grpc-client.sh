@@ -26,6 +26,7 @@ protoc \
     --go_opt=Mzitadel/change.proto=${ZITADEL_IMPORT}/change \
     --go_opt=Mzitadel/features.proto=${ZITADEL_IMPORT}/features \
     --go_opt=Mzitadel/idp.proto=${ZITADEL_IMPORT}/idp \
+    --go_opt=Mzitadel/instance.proto=${ZITADEL_IMPORT}/instance \
     --go_opt=Mzitadel/management.proto=${ZITADEL_IMPORT}/management \
     --go_opt=Mzitadel/member.proto=${ZITADEL_IMPORT}/member \
     --go_opt=Mzitadel/message.proto=${ZITADEL_IMPORT}/message \
@@ -35,9 +36,9 @@ protoc \
     --go_opt=Mzitadel/org.proto=${ZITADEL_IMPORT}/org \
     --go_opt=Mzitadel/policy.proto=${ZITADEL_IMPORT}/policy \
     --go_opt=Mzitadel/project.proto=${ZITADEL_IMPORT}/project \
+    --go_opt=Mzitadel/settings.proto=${ZITADEL_IMPORT}/settings \
     --go_opt=Mzitadel/text.proto=${ZITADEL_IMPORT}/text \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
-    --go_opt=Mzitadel/text.proto=${ZITADEL_IMPORT}/text \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)

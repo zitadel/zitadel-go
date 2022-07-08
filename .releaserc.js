@@ -1,8 +1,10 @@
 module.exports = {
-    branches: ["main"],
+    branches: [
+        {name: 'main'},
+        {name: '1.x.x', range: '1.x.x', channel: '1.x.x'},
+        {name: 'v2-alpha', prerelease: true},
+    ],
     plugins: [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        "@semantic-release/github"
+        "@semantic-release/commit-analyzer"
     ]
 };

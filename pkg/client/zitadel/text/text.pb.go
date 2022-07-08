@@ -9,7 +9,7 @@ package text
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	object "github.com/zitadel/zitadel-go/pkg/client/zitadel/object"
+	object "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

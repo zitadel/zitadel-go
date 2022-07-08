@@ -7,23 +7,30 @@ import (
 
 	"github.com/zitadel/oidc/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/pkg/client/admin"
-	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/pkg/client/zitadel/admin"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/admin"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/admin"
 )
 
 var (
-	orgID = flag.String("orgID", "74161146763996133", "orgID used in the example call (default is ACME on zitadel.ch)")
+	issuer    = flag.String("issuer", "", "issuer of your ZITADEL instance (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	api       = flag.String("api", "", "gRPC endpoint of your ZITADEL instance (in the form: <instance>.zitadel.cloud:443 or <yourdomain>:443)")
+	projectID = flag.String("projectID", "", "ZITADEL projectID in your instance")
+	orgID     = flag.String("orgID", "", "orgID used in the example call")
 )
 
 func main() {
 	flag.Parse()
 
 	//create a client for the admin api providing:
+	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
+	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- scopes (including the ZITADEL project ID),
 	//- a JWT Profile source token (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	client, err := admin.NewClient(
-		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
+		*issuer,
+		*api,
+		[]string{oidc.ScopeOpenID, zitadel.ScopeProjectID(*projectID)},
 		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 	)
 	if err != nil {

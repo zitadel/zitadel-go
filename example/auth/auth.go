@@ -2,21 +2,34 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 
 	"github.com/zitadel/oidc/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/pkg/client/auth"
-	"github.com/zitadel/zitadel-go/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/pkg/client/zitadel/auth"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/auth"
+	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/auth"
+)
+
+var (
+	issuer    = flag.String("issuer", "", "issuer of your ZITADEL instance (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	api       = flag.String("api", "", "gRPC endpoint of your ZITADEL instance (in the form: <instance>.zitadel.cloud:443 or <yourdomain>:443)")
+	projectID = flag.String("projectID", "", "ZITADEL projectID in your instance")
 )
 
 func main() {
+	flag.Parse()
+
 	//create a client for the auth api providing:
+	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
+	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- scopes (including the ZITADEL project ID),
 	//- a JWT Profile source token (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	client, err := auth.NewClient(
-		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
+		*issuer,
+		*api,
+		[]string{oidc.ScopeOpenID, zitadel.ScopeProjectID(*projectID)},
 		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 	)
 	if err != nil {
