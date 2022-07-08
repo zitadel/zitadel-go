@@ -4,10 +4,11 @@
 [![Release](https://github.com/zitadel/zitadel-go/workflows/Release/badge.svg)](https://github.com/zitadel/zitadel-go/actions)
 [![license](https://badgen.net/github/license/zitadel/zitadel-go/)](https://github.com/zitadel/zitadel-go/blob/main/LICENSE)
 [![release](https://badgen.net/github/release/zitadel/zitadel-go/stable)](https://github.com/zitadel/zitadel-go/releases)
+[![tag](https://badgen.net/github/tag/zitadel/zitadel-go)](https://github.com/zitadel/zitadel-go/tags)
 [![Go Report Card](https://goreportcard.com/badge/github.com/zitadel/zitadel-go)](https://goreportcard.com/report/github.com/zitadel/zitadel-go)
 [![codecov](https://codecov.io/gh/zitadel/zitadel-go/branch/main/graph/badge.svg)](https://codecov.io/gh/zitadel/zitadel-go)
 
-> This project is in alpha state. It can AND will continue breaking until version 1.0.0 is released
+> This project is in alpha state. It can AND will continue breaking until version 2.0.0 is released
 
 Go client library for the [ZITADEL](https://github.com/zitadel/zitadel) API.
 
@@ -16,11 +17,14 @@ Go client library for the [ZITADEL](https://github.com/zitadel/zitadel) API.
 Add the package to your go.mod by
 
 ```
-go get github.com/zitadel/zitadel-go
+go get github.com/zitadel/zitadel-go/v2
 ```
 
 ...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.ch/docs/quickstarts/introduction).
 
+### V1
+
+If you're looking for Version 1, please check out the [main branch](https://github.com/zitadel/zitadel-go/tree/main).
 
 ## Supported Go Versions
 
