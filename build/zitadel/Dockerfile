@@ -78,5 +78,5 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
 ## prepare generated files for output
 #######################
 FROM scratch as zitadel-copy
-ARG PROJECT_PATH
+ARG PROJECT_PATH=github.com/zitadel/zitadel-go/v2/pkg/client
 COPY --from=zitadel-client /zitadel-api/go/src/${PROJECT_PATH}/zitadel /zitadel
