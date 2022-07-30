@@ -296,6 +296,9 @@ type ManagementServiceClient interface {
 	AddAppKey(ctx context.Context, in *AddAppKeyRequest, opts ...grpc.CallOption) (*AddAppKeyResponse, error)
 	// Removes an app key
 	RemoveAppKey(ctx context.Context, in *RemoveAppKeyRequest, opts ...grpc.CallOption) (*RemoveAppKeyResponse, error)
+	// Returns the history of the project grant (each event)
+	// Limit should always be set, there is a default limit set by the service
+	ListProjectGrantChanges(ctx context.Context, in *ListProjectGrantChangesRequest, opts ...grpc.CallOption) (*ListProjectGrantChangesResponse, error)
 	// Returns a project grant (ProjectGrant = Grant another organisation for my project)
 	GetProjectGrantByID(ctx context.Context, in *GetProjectGrantByIDRequest, opts ...grpc.CallOption) (*GetProjectGrantByIDResponse, error)
 	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
@@ -1597,6 +1600,15 @@ func (c *managementServiceClient) AddAppKey(ctx context.Context, in *AddAppKeyRe
 func (c *managementServiceClient) RemoveAppKey(ctx context.Context, in *RemoveAppKeyRequest, opts ...grpc.CallOption) (*RemoveAppKeyResponse, error) {
 	out := new(RemoveAppKeyResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveAppKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ListProjectGrantChanges(ctx context.Context, in *ListProjectGrantChangesRequest, opts ...grpc.CallOption) (*ListProjectGrantChangesResponse, error) {
+	out := new(ListProjectGrantChangesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListProjectGrantChanges", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2938,6 +2950,9 @@ type ManagementServiceServer interface {
 	AddAppKey(context.Context, *AddAppKeyRequest) (*AddAppKeyResponse, error)
 	// Removes an app key
 	RemoveAppKey(context.Context, *RemoveAppKeyRequest) (*RemoveAppKeyResponse, error)
+	// Returns the history of the project grant (each event)
+	// Limit should always be set, there is a default limit set by the service
+	ListProjectGrantChanges(context.Context, *ListProjectGrantChangesRequest) (*ListProjectGrantChangesResponse, error)
 	// Returns a project grant (ProjectGrant = Grant another organisation for my project)
 	GetProjectGrantByID(context.Context, *GetProjectGrantByIDRequest) (*GetProjectGrantByIDResponse, error)
 	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
@@ -3563,6 +3578,9 @@ func (UnimplementedManagementServiceServer) AddAppKey(context.Context, *AddAppKe
 }
 func (UnimplementedManagementServiceServer) RemoveAppKey(context.Context, *RemoveAppKeyRequest) (*RemoveAppKeyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveAppKey not implemented")
+}
+func (UnimplementedManagementServiceServer) ListProjectGrantChanges(context.Context, *ListProjectGrantChangesRequest) (*ListProjectGrantChangesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProjectGrantChanges not implemented")
 }
 func (UnimplementedManagementServiceServer) GetProjectGrantByID(context.Context, *GetProjectGrantByIDRequest) (*GetProjectGrantByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProjectGrantByID not implemented")
@@ -5958,6 +5976,24 @@ func _ManagementService_RemoveAppKey_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).RemoveAppKey(ctx, req.(*RemoveAppKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListProjectGrantChanges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProjectGrantChangesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListProjectGrantChanges(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListProjectGrantChanges",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListProjectGrantChanges(ctx, req.(*ListProjectGrantChangesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8526,6 +8562,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveAppKey",
 			Handler:    _ManagementService_RemoveAppKey_Handler,
+		},
+		{
+			MethodName: "ListProjectGrantChanges",
+			Handler:    _ManagementService_ListProjectGrantChanges_Handler,
 		},
 		{
 			MethodName: "GetProjectGrantByID",

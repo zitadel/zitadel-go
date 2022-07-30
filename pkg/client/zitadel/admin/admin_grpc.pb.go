@@ -324,6 +324,10 @@ type AdminServiceClient interface {
 	// e.g. if the second try of sending an email was successful. the first try produced a
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(ctx context.Context, in *RemoveFailedEventRequest, opts ...grpc.CallOption) (*RemoveFailedEventResponse, error)
+	// Imports data into instance and creates different objects
+	ImportData(ctx context.Context, in *ImportDataRequest, opts ...grpc.CallOption) (*ImportDataResponse, error)
+	// Exports data from instance
+	ExportData(ctx context.Context, in *ExportDataRequest, opts ...grpc.CallOption) (*ExportDataResponse, error)
 }
 
 type adminServiceClient struct {
@@ -1396,6 +1400,24 @@ func (c *adminServiceClient) RemoveFailedEvent(ctx context.Context, in *RemoveFa
 	return out, nil
 }
 
+func (c *adminServiceClient) ImportData(ctx context.Context, in *ImportDataRequest, opts ...grpc.CallOption) (*ImportDataResponse, error) {
+	out := new(ImportDataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ImportData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ExportData(ctx context.Context, in *ExportDataRequest, opts ...grpc.CallOption) (*ExportDataResponse, error) {
+	out := new(ExportDataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ExportData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -1706,6 +1728,10 @@ type AdminServiceServer interface {
 	// e.g. if the second try of sending an email was successful. the first try produced a
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(context.Context, *RemoveFailedEventRequest) (*RemoveFailedEventResponse, error)
+	// Imports data into instance and creates different objects
+	ImportData(context.Context, *ImportDataRequest) (*ImportDataResponse, error)
+	// Exports data from instance
+	ExportData(context.Context, *ExportDataRequest) (*ExportDataResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -2066,6 +2092,12 @@ func (UnimplementedAdminServiceServer) ListFailedEvents(context.Context, *ListFa
 }
 func (UnimplementedAdminServiceServer) RemoveFailedEvent(context.Context, *RemoveFailedEventRequest) (*RemoveFailedEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveFailedEvent not implemented")
+}
+func (UnimplementedAdminServiceServer) ImportData(context.Context, *ImportDataRequest) (*ImportDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImportData not implemented")
+}
+func (UnimplementedAdminServiceServer) ExportData(context.Context, *ExportDataRequest) (*ExportDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExportData not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -4204,6 +4236,42 @@ func _AdminService_RemoveFailedEvent_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_ImportData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ImportData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ImportData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ImportData(ctx, req.(*ImportDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ExportData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExportDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ExportData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ExportData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ExportData(ctx, req.(*ExportDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminService_ServiceDesc is the grpc.ServiceDesc for AdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4682,6 +4750,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveFailedEvent",
 			Handler:    _AdminService_RemoveFailedEvent_Handler,
+		},
+		{
+			MethodName: "ImportData",
+			Handler:    _AdminService_ImportData_Handler,
+		},
+		{
+			MethodName: "ExportData",
+			Handler:    _AdminService_ExportData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
