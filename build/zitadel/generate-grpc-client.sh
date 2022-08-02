@@ -39,6 +39,7 @@ protoc \
     --go_opt=Mzitadel/settings.proto=${ZITADEL_IMPORT}/settings \
     --go_opt=Mzitadel/text.proto=${ZITADEL_IMPORT}/text \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
+    --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)

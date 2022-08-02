@@ -20,7 +20,7 @@ import (
 	settings "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/settings"
 	text "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/text"
 	user "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/user"
-	v1 "github.com/zitadel/zitadel/pkg/grpc/v1"
+	v1 "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
