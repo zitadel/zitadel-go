@@ -4,7 +4,7 @@ import "fmt"
 
 const (
 	scopeFormatProjectID  = "urn:zitadel:iam:org:project:id:%s:aud"
-	scopeZITADELProjectID = "ZITADEL"
+	scopeZITADELProjectID = "zitadel"
 )
 
 //ScopeProjectID will add the requested projectID to the audience of the access and id token
