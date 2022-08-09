@@ -13,9 +13,8 @@ import (
 )
 
 var (
-	issuer    = flag.String("issuer", "", "issuer of your ZITADEL instance (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
-	api       = flag.String("api", "", "gRPC endpoint of your ZITADEL instance (in the form: <instance>.zitadel.cloud:443 or <yourdomain>:443)")
-	projectID = flag.String("projectID", "", "ZITADEL projectID in your instance")
+	issuer = flag.String("issuer", "", "issuer of your ZITADEL instance (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	api    = flag.String("api", "", "gRPC endpoint of your ZITADEL instance (in the form: <instance>.zitadel.cloud:443 or <yourdomain>:443)")
 )
 
 func main() {
@@ -29,7 +28,7 @@ func main() {
 	client, err := auth.NewClient(
 		*issuer,
 		*api,
-		[]string{oidc.ScopeOpenID, zitadel.ScopeProjectID(*projectID)},
+		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
 		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 	)
 	if err != nil {

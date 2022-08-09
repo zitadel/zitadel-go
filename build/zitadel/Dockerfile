@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.17
+ARG GO_VERSION=1.19
 
 #######################
 ## These steps set platform / arch type specific variables
