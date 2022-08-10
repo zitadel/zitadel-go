@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminServiceClient interface {
-	//Indicates if ZITADEL is running.
+	// Indicates if ZITADEL is running.
 	// It respondes as soon as ZITADEL started
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	// Returns the default languages
@@ -73,16 +73,16 @@ type AdminServiceClient interface {
 	GetLogNotificationProvider(ctx context.Context, in *GetLogNotificationProviderRequest, opts ...grpc.CallOption) (*GetLogNotificationProviderResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error)
-	//Checks whether an organisation exists by the given parameters
+	// Checks whether an organisation exists by the given parameters
 	IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error)
 	// Set the default org
 	SetDefaultOrg(ctx context.Context, in *SetDefaultOrgRequest, opts ...grpc.CallOption) (*SetDefaultOrgResponse, error)
 	// Set the default org
 	GetDefaultOrg(ctx context.Context, in *GetDefaultOrgRequest, opts ...grpc.CallOption) (*GetDefaultOrgResponse, error)
-	//Returns all organisations matching the request
+	// Returns all organisations matching the request
 	// all queries need to match (AND)
 	ListOrgs(ctx context.Context, in *ListOrgsRequest, opts ...grpc.CallOption) (*ListOrgsResponse, error)
-	//Creates a new org and user
+	// Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
 	// Returns a identity provider configuration of the IAM instance
@@ -93,62 +93,62 @@ type AdminServiceClient interface {
 	AddOIDCIDP(ctx context.Context, in *AddOIDCIDPRequest, opts ...grpc.CallOption) (*AddOIDCIDPResponse, error)
 	// Adds a new jwt identity provider configuration the IAM instance
 	AddJWTIDP(ctx context.Context, in *AddJWTIDPRequest, opts ...grpc.CallOption) (*AddJWTIDPResponse, error)
-	//Updates the specified idp
+	// Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDP(ctx context.Context, in *UpdateIDPRequest, opts ...grpc.CallOption) (*UpdateIDPResponse, error)
-	//Sets the state of the idp to IDP_STATE_INACTIVE
+	// Sets the state of the idp to IDP_STATE_INACTIVE
 	// the state MUST be IDP_STATE_ACTIVE for this call
 	DeactivateIDP(ctx context.Context, in *DeactivateIDPRequest, opts ...grpc.CallOption) (*DeactivateIDPResponse, error)
-	//Sets the state of the idp to IDP_STATE_ACTIVE
+	// Sets the state of the idp to IDP_STATE_ACTIVE
 	// the state MUST be IDP_STATE_INACTIVE for this call
 	ReactivateIDP(ctx context.Context, in *ReactivateIDPRequest, opts ...grpc.CallOption) (*ReactivateIDPResponse, error)
-	//RemoveIDP deletes the IDP permanetly
+	// RemoveIDP deletes the IDP permanetly
 	RemoveIDP(ctx context.Context, in *RemoveIDPRequest, opts ...grpc.CallOption) (*RemoveIDPResponse, error)
-	//Updates the oidc configuration of the specified idp
+	// Updates the oidc configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPOIDCConfig(ctx context.Context, in *UpdateIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateIDPOIDCConfigResponse, error)
-	//Updates the jwt configuration of the specified idp
+	// Updates the jwt configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPJWTConfig(ctx context.Context, in *UpdateIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateIDPJWTConfigResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Returns the Org IAM policy defined by the administrators of ZITADEL
+	// deprecated: please use DomainPolicy instead
+	// Returns the Org IAM policy defined by the administrators of ZITADEL
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Updates the default OrgIAM policy.
+	// deprecated: please use DomainPolicy instead
+	// Updates the default OrgIAM policy.
 	// it impacts all organisations without a customised policy
 	UpdateOrgIAMPolicy(ctx context.Context, in *UpdateOrgIAMPolicyRequest, opts ...grpc.CallOption) (*UpdateOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Returns the customised policy or the default if not customised
+	// deprecated: please use DomainPolicy instead
+	// Returns the customised policy or the default if not customised
 	GetCustomOrgIAMPolicy(ctx context.Context, in *GetCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Defines a custom OrgIAM policy as specified
+	// deprecated: please use DomainPolicy instead
+	// Defines a custom OrgIAM policy as specified
 	AddCustomOrgIAMPolicy(ctx context.Context, in *AddCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*AddCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Updates a custom OrgIAM policy as specified
+	// deprecated: please use DomainPolicy instead
+	// Updates a custom OrgIAM policy as specified
 	UpdateCustomOrgIAMPolicy(ctx context.Context, in *UpdateCustomOrgIAMPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Resets the org iam policy of the organisation to default
+	// deprecated: please use DomainPolicy instead
+	// Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomOrgIAMPolicyToDefault(ctx context.Context, in *ResetCustomOrgIAMPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomOrgIAMPolicyToDefaultResponse, error)
-	//Returns the Domain policy defined by the administrators of ZITADEL
+	// Returns the Domain policy defined by the administrators of ZITADEL
 	GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error)
-	//Updates the default Domain policy.
+	// Updates the default Domain policy.
 	// it impacts all organisations without a customised policy
 	UpdateDomainPolicy(ctx context.Context, in *UpdateDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateDomainPolicyResponse, error)
-	//Returns the customised policy or the default if not customised
+	// Returns the customised policy or the default if not customised
 	GetCustomDomainPolicy(ctx context.Context, in *GetCustomDomainPolicyRequest, opts ...grpc.CallOption) (*GetCustomDomainPolicyResponse, error)
-	//Defines a custom Domain policy as specified
+	// Defines a custom Domain policy as specified
 	AddCustomDomainPolicy(ctx context.Context, in *AddCustomDomainPolicyRequest, opts ...grpc.CallOption) (*AddCustomDomainPolicyResponse, error)
-	//Updates a custom Domain policy as specified
+	// Updates a custom Domain policy as specified
 	UpdateCustomDomainPolicy(ctx context.Context, in *UpdateCustomDomainPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomDomainPolicyResponse, error)
-	//Resets the org iam policy of the organisation to default
+	// Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomDomainPolicyToDefault(ctx context.Context, in *ResetCustomDomainPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainPolicyToDefaultResponse, error)
-	//Returns the label policy defined by the administrators of ZITADEL
+	// Returns the label policy defined by the administrators of ZITADEL
 	GetLabelPolicy(ctx context.Context, in *GetLabelPolicyRequest, opts ...grpc.CallOption) (*GetLabelPolicyResponse, error)
-	//Returns the preview label policy defined by the administrators of ZITADEL
+	// Returns the preview label policy defined by the administrators of ZITADEL
 	GetPreviewLabelPolicy(ctx context.Context, in *GetPreviewLabelPolicyRequest, opts ...grpc.CallOption) (*GetPreviewLabelPolicyResponse, error)
-	//Updates the default label policy of ZITADEL
+	// Updates the default label policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLabelPolicy(ctx context.Context, in *UpdateLabelPolicyRequest, opts ...grpc.CallOption) (*UpdateLabelPolicyResponse, error)
 	// Activates all changes of the label policy
@@ -163,62 +163,62 @@ type AdminServiceClient interface {
 	RemoveLabelPolicyIconDark(ctx context.Context, in *RemoveLabelPolicyIconDarkRequest, opts ...grpc.CallOption) (*RemoveLabelPolicyIconDarkResponse, error)
 	// Removes the font of the label policy
 	RemoveLabelPolicyFont(ctx context.Context, in *RemoveLabelPolicyFontRequest, opts ...grpc.CallOption) (*RemoveLabelPolicyFontResponse, error)
-	//Returns the login policy defined by the administrators of ZITADEL
+	// Returns the login policy defined by the administrators of ZITADEL
 	GetLoginPolicy(ctx context.Context, in *GetLoginPolicyRequest, opts ...grpc.CallOption) (*GetLoginPolicyResponse, error)
-	//Updates the default login policy of ZITADEL
+	// Updates the default login policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLoginPolicy(ctx context.Context, in *UpdateLoginPolicyRequest, opts ...grpc.CallOption) (*UpdateLoginPolicyResponse, error)
-	//Returns the idps linked to the default login policy,
+	// Returns the idps linked to the default login policy,
 	// defined by the administrators of ZITADEL
 	ListLoginPolicyIDPs(ctx context.Context, in *ListLoginPolicyIDPsRequest, opts ...grpc.CallOption) (*ListLoginPolicyIDPsResponse, error)
-	//Adds the povided idp to the default login policy.
+	// Adds the povided idp to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddIDPToLoginPolicy(ctx context.Context, in *AddIDPToLoginPolicyRequest, opts ...grpc.CallOption) (*AddIDPToLoginPolicyResponse, error)
-	//Removes the povided idp from the default login policy.
+	// Removes the povided idp from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveIDPFromLoginPolicy(ctx context.Context, in *RemoveIDPFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveIDPFromLoginPolicyResponse, error)
-	//Returns the available second factors defined by the administrators of ZITADEL
+	// Returns the available second factors defined by the administrators of ZITADEL
 	ListLoginPolicySecondFactors(ctx context.Context, in *ListLoginPolicySecondFactorsRequest, opts ...grpc.CallOption) (*ListLoginPolicySecondFactorsResponse, error)
-	//Adds a second factor to the default login policy.
+	// Adds a second factor to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddSecondFactorToLoginPolicy(ctx context.Context, in *AddSecondFactorToLoginPolicyRequest, opts ...grpc.CallOption) (*AddSecondFactorToLoginPolicyResponse, error)
-	//Removes a second factor from the default login policy.
+	// Removes a second factor from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveSecondFactorFromLoginPolicy(ctx context.Context, in *RemoveSecondFactorFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveSecondFactorFromLoginPolicyResponse, error)
-	//Returns the available multi factors defined by the administrators of ZITADEL
+	// Returns the available multi factors defined by the administrators of ZITADEL
 	ListLoginPolicyMultiFactors(ctx context.Context, in *ListLoginPolicyMultiFactorsRequest, opts ...grpc.CallOption) (*ListLoginPolicyMultiFactorsResponse, error)
-	//Adds a multi factor to the default login policy.
+	// Adds a multi factor to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddMultiFactorToLoginPolicy(ctx context.Context, in *AddMultiFactorToLoginPolicyRequest, opts ...grpc.CallOption) (*AddMultiFactorToLoginPolicyResponse, error)
-	//Removes a multi factor from the default login policy.
+	// Removes a multi factor from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveMultiFactorFromLoginPolicy(ctx context.Context, in *RemoveMultiFactorFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveMultiFactorFromLoginPolicyResponse, error)
-	//Returns the password complexity policy defined by the administrators of ZITADEL
+	// Returns the password complexity policy defined by the administrators of ZITADEL
 	GetPasswordComplexityPolicy(ctx context.Context, in *GetPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*GetPasswordComplexityPolicyResponse, error)
-	//Updates the default password complexity policy of ZITADEL
+	// Updates the default password complexity policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdatePasswordComplexityPolicy(ctx context.Context, in *UpdatePasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*UpdatePasswordComplexityPolicyResponse, error)
-	//Returns the password age policy defined by the administrators of ZITADEL
+	// Returns the password age policy defined by the administrators of ZITADEL
 	GetPasswordAgePolicy(ctx context.Context, in *GetPasswordAgePolicyRequest, opts ...grpc.CallOption) (*GetPasswordAgePolicyResponse, error)
-	//Updates the default password age policy of ZITADEL
+	// Updates the default password age policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdatePasswordAgePolicy(ctx context.Context, in *UpdatePasswordAgePolicyRequest, opts ...grpc.CallOption) (*UpdatePasswordAgePolicyResponse, error)
-	//Returns the lockout policy defined by the administrators of ZITADEL
+	// Returns the lockout policy defined by the administrators of ZITADEL
 	GetLockoutPolicy(ctx context.Context, in *GetLockoutPolicyRequest, opts ...grpc.CallOption) (*GetLockoutPolicyResponse, error)
-	//Updates the default lockout policy of ZITADEL
+	// Updates the default lockout policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLockoutPolicy(ctx context.Context, in *UpdateLockoutPolicyRequest, opts ...grpc.CallOption) (*UpdateLockoutPolicyResponse, error)
-	//Returns the privacy policy defined by the administrators of ZITADEL
+	// Returns the privacy policy defined by the administrators of ZITADEL
 	GetPrivacyPolicy(ctx context.Context, in *GetPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetPrivacyPolicyResponse, error)
-	//Updates the default privacy policy of ZITADEL
+	// Updates the default privacy policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdatePrivacyPolicy(ctx context.Context, in *UpdatePrivacyPolicyRequest, opts ...grpc.CallOption) (*UpdatePrivacyPolicyResponse, error)
-	//Returns the default text for initial message (translation file)
+	// Returns the default text for initial message (translation file)
 	GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error)
-	//Returns the custom text for initial message (overwritten in eventstore)
+	// Returns the custom text for initial message (overwritten in eventstore)
 	GetCustomInitMessageText(ctx context.Context, in *GetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInitMessageTextResponse, error)
-	//Sets the default custom text for initial message
+	// Sets the default custom text for initial message
 	// it impacts all organisations without customized initial message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -226,11 +226,11 @@ type AdminServiceClient interface {
 	// Removes the custom init message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomInitMessageTextToDefault(ctx context.Context, in *ResetCustomInitMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	//Returns the default text for password reset message (translation file)
+	// Returns the default text for password reset message (translation file)
 	GetDefaultPasswordResetMessageText(ctx context.Context, in *GetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordResetMessageTextResponse, error)
-	//Returns the custom text for password reset message (overwritten in eventstore)
+	// Returns the custom text for password reset message (overwritten in eventstore)
 	GetCustomPasswordResetMessageText(ctx context.Context, in *GetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordResetMessageTextResponse, error)
-	//Sets the default custom text for password reset message
+	// Sets the default custom text for password reset message
 	// it impacts all organisations without customized password reset message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -238,11 +238,11 @@ type AdminServiceClient interface {
 	// Removes the custom password reset message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordResetMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	//Returns the default text for verify email message (translation files)
+	// Returns the default text for verify email message (translation files)
 	GetDefaultVerifyEmailMessageText(ctx context.Context, in *GetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailMessageTextResponse, error)
-	//Returns the custom text for verify email message (overwritten in eventstore)
+	// Returns the custom text for verify email message (overwritten in eventstore)
 	GetCustomVerifyEmailMessageText(ctx context.Context, in *GetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailMessageTextResponse, error)
-	//Sets the default custom text for verify email message
+	// Sets the default custom text for verify email message
 	// it impacts all organisations without customized verify email message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -250,11 +250,11 @@ type AdminServiceClient interface {
 	// Removes the custom verify email message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	//Returns the default text for verify phone message (translation file)
+	// Returns the default text for verify phone message (translation file)
 	GetDefaultVerifyPhoneMessageText(ctx context.Context, in *GetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyPhoneMessageTextResponse, error)
-	//Returns the custom text for verify phone message
+	// Returns the custom text for verify phone message
 	GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	//Sets the default custom text for verify phone message
+	// Sets the default custom text for verify phone message
 	// it impacts all organisations without customized verify phone message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -262,11 +262,11 @@ type AdminServiceClient interface {
 	// Removes the custom verify phone text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	//Returns the default text for domain claimed message (translation file)
+	// Returns the default text for domain claimed message (translation file)
 	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
-	//Returns the custom text for domain claimed message (overwritten in eventstore)
+	// Returns the custom text for domain claimed message (overwritten in eventstore)
 	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
-	//Sets the default custom text for domain claimed phone message
+	// Sets the default custom text for domain claimed phone message
 	// it impacts all organisations without customized domain claimed message text
 	// The Following Variables can be used:
 	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -274,11 +274,11 @@ type AdminServiceClient interface {
 	// Removes the custom domain claimed message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(ctx context.Context, in *ResetCustomDomainClaimedMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	//Returns the default text for passwordless registration message (translation file)
+	// Returns the default text for passwordless registration message (translation file)
 	GetDefaultPasswordlessRegistrationMessageText(ctx context.Context, in *GetDefaultPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
-	//Returns the custom text for passwordless registration message (overwritten in eventstore)
+	// Returns the custom text for passwordless registration message (overwritten in eventstore)
 	GetCustomPasswordlessRegistrationMessageText(ctx context.Context, in *GetCustomPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	//Sets the default custom text for passwordless registration message
+	// Sets the default custom text for passwordless registration message
 	// it impacts all organisations without customized passwordless registration message text
 	// The Following Variables can be used:
 	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -286,39 +286,39 @@ type AdminServiceClient interface {
 	// Removes the custom passwordless link message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	//Returns the default custom texts for login ui (translation file)
+	// Returns the default custom texts for login ui (translation file)
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error)
-	//Sets the custom text for login ui
-	//it impacts all organisations without customized login ui texts
+	// Sets the custom text for login ui
+	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(ctx context.Context, in *SetCustomLoginTextsRequest, opts ...grpc.CallOption) (*SetCustomLoginTextsResponse, error)
 	// Removes the custom texts for login ui
 	// it impacts all organisations without customized login ui texts
 	// The default text form translation file will trigger after
 	ResetCustomLoginTextToDefault(ctx context.Context, in *ResetCustomLoginTextsToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomLoginTextsToDefaultResponse, error)
-	//Returns the IAM roles visible for the requested user
+	// Returns the IAM roles visible for the requested user
 	ListIAMMemberRoles(ctx context.Context, in *ListIAMMemberRolesRequest, opts ...grpc.CallOption) (*ListIAMMemberRolesResponse, error)
-	//Returns all members matching the request
+	// Returns all members matching the request
 	// all queries need to match (ANDed)
 	ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error)
-	//Adds a user to the membership list of ZITADEL with the given roles
+	// Adds a user to the membership list of ZITADEL with the given roles
 	// undefined roles will be dropped
 	AddIAMMember(ctx context.Context, in *AddIAMMemberRequest, opts ...grpc.CallOption) (*AddIAMMemberResponse, error)
-	//Sets the given roles on a member.
+	// Sets the given roles on a member.
 	// The member has only roles provided by this call
 	UpdateIAMMember(ctx context.Context, in *UpdateIAMMemberRequest, opts ...grpc.CallOption) (*UpdateIAMMemberResponse, error)
-	//Removes the user from the membership list of ZITADEL
+	// Removes the user from the membership list of ZITADEL
 	RemoveIAMMember(ctx context.Context, in *RemoveIAMMemberRequest, opts ...grpc.CallOption) (*RemoveIAMMemberResponse, error)
-	//Returns all stored read models of ZITADEL
+	// Returns all stored read models of ZITADEL
 	// views are used for search optimisation and optimise request latencies
 	// they represent the delta of the event happend on the objects
 	ListViews(ctx context.Context, in *ListViewsRequest, opts ...grpc.CallOption) (*ListViewsResponse, error)
-	//Returns event descriptions which cannot be processed.
+	// Returns event descriptions which cannot be processed.
 	// It's possible that some events need some retries.
 	// For example if the SMTP-API wasn't able to send an email at the first time
 	ListFailedEvents(ctx context.Context, in *ListFailedEventsRequest, opts ...grpc.CallOption) (*ListFailedEventsResponse, error)
-	//Deletes the event from failed events view.
+	// Deletes the event from failed events view.
 	// the event is not removed from the change stream
 	// This call is usefull if the system was able to process the event later.
 	// e.g. if the second try of sending an email was successful. the first try produced a
@@ -1422,7 +1422,7 @@ func (c *adminServiceClient) ExportData(ctx context.Context, in *ExportDataReque
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
 type AdminServiceServer interface {
-	//Indicates if ZITADEL is running.
+	// Indicates if ZITADEL is running.
 	// It respondes as soon as ZITADEL started
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	// Returns the default languages
@@ -1477,16 +1477,16 @@ type AdminServiceServer interface {
 	GetLogNotificationProvider(context.Context, *GetLogNotificationProviderRequest) (*GetLogNotificationProviderResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error)
-	//Checks whether an organisation exists by the given parameters
+	// Checks whether an organisation exists by the given parameters
 	IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error)
 	// Set the default org
 	SetDefaultOrg(context.Context, *SetDefaultOrgRequest) (*SetDefaultOrgResponse, error)
 	// Set the default org
 	GetDefaultOrg(context.Context, *GetDefaultOrgRequest) (*GetDefaultOrgResponse, error)
-	//Returns all organisations matching the request
+	// Returns all organisations matching the request
 	// all queries need to match (AND)
 	ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error)
-	//Creates a new org and user
+	// Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
 	// Returns a identity provider configuration of the IAM instance
@@ -1497,62 +1497,62 @@ type AdminServiceServer interface {
 	AddOIDCIDP(context.Context, *AddOIDCIDPRequest) (*AddOIDCIDPResponse, error)
 	// Adds a new jwt identity provider configuration the IAM instance
 	AddJWTIDP(context.Context, *AddJWTIDPRequest) (*AddJWTIDPResponse, error)
-	//Updates the specified idp
+	// Updates the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDP(context.Context, *UpdateIDPRequest) (*UpdateIDPResponse, error)
-	//Sets the state of the idp to IDP_STATE_INACTIVE
+	// Sets the state of the idp to IDP_STATE_INACTIVE
 	// the state MUST be IDP_STATE_ACTIVE for this call
 	DeactivateIDP(context.Context, *DeactivateIDPRequest) (*DeactivateIDPResponse, error)
-	//Sets the state of the idp to IDP_STATE_ACTIVE
+	// Sets the state of the idp to IDP_STATE_ACTIVE
 	// the state MUST be IDP_STATE_INACTIVE for this call
 	ReactivateIDP(context.Context, *ReactivateIDPRequest) (*ReactivateIDPResponse, error)
-	//RemoveIDP deletes the IDP permanetly
+	// RemoveIDP deletes the IDP permanetly
 	RemoveIDP(context.Context, *RemoveIDPRequest) (*RemoveIDPResponse, error)
-	//Updates the oidc configuration of the specified idp
+	// Updates the oidc configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPOIDCConfig(context.Context, *UpdateIDPOIDCConfigRequest) (*UpdateIDPOIDCConfigResponse, error)
-	//Updates the jwt configuration of the specified idp
+	// Updates the jwt configuration of the specified idp
 	// all fields are updated. If no value is provided the field will be empty afterwards.
 	UpdateIDPJWTConfig(context.Context, *UpdateIDPJWTConfigRequest) (*UpdateIDPJWTConfigResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Returns the Org IAM policy defined by the administrators of ZITADEL
+	// deprecated: please use DomainPolicy instead
+	// Returns the Org IAM policy defined by the administrators of ZITADEL
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Updates the default OrgIAM policy.
+	// deprecated: please use DomainPolicy instead
+	// Updates the default OrgIAM policy.
 	// it impacts all organisations without a customised policy
 	UpdateOrgIAMPolicy(context.Context, *UpdateOrgIAMPolicyRequest) (*UpdateOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Returns the customised policy or the default if not customised
+	// deprecated: please use DomainPolicy instead
+	// Returns the customised policy or the default if not customised
 	GetCustomOrgIAMPolicy(context.Context, *GetCustomOrgIAMPolicyRequest) (*GetCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Defines a custom OrgIAM policy as specified
+	// deprecated: please use DomainPolicy instead
+	// Defines a custom OrgIAM policy as specified
 	AddCustomOrgIAMPolicy(context.Context, *AddCustomOrgIAMPolicyRequest) (*AddCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Updates a custom OrgIAM policy as specified
+	// deprecated: please use DomainPolicy instead
+	// Updates a custom OrgIAM policy as specified
 	UpdateCustomOrgIAMPolicy(context.Context, *UpdateCustomOrgIAMPolicyRequest) (*UpdateCustomOrgIAMPolicyResponse, error)
-	//deprecated: please use DomainPolicy instead
-	//Resets the org iam policy of the organisation to default
+	// deprecated: please use DomainPolicy instead
+	// Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomOrgIAMPolicyToDefault(context.Context, *ResetCustomOrgIAMPolicyToDefaultRequest) (*ResetCustomOrgIAMPolicyToDefaultResponse, error)
-	//Returns the Domain policy defined by the administrators of ZITADEL
+	// Returns the Domain policy defined by the administrators of ZITADEL
 	GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error)
-	//Updates the default Domain policy.
+	// Updates the default Domain policy.
 	// it impacts all organisations without a customised policy
 	UpdateDomainPolicy(context.Context, *UpdateDomainPolicyRequest) (*UpdateDomainPolicyResponse, error)
-	//Returns the customised policy or the default if not customised
+	// Returns the customised policy or the default if not customised
 	GetCustomDomainPolicy(context.Context, *GetCustomDomainPolicyRequest) (*GetCustomDomainPolicyResponse, error)
-	//Defines a custom Domain policy as specified
+	// Defines a custom Domain policy as specified
 	AddCustomDomainPolicy(context.Context, *AddCustomDomainPolicyRequest) (*AddCustomDomainPolicyResponse, error)
-	//Updates a custom Domain policy as specified
+	// Updates a custom Domain policy as specified
 	UpdateCustomDomainPolicy(context.Context, *UpdateCustomDomainPolicyRequest) (*UpdateCustomDomainPolicyResponse, error)
-	//Resets the org iam policy of the organisation to default
+	// Resets the org iam policy of the organisation to default
 	// ZITADEL will fallback to the default policy defined by the ZITADEL administrators
 	ResetCustomDomainPolicyToDefault(context.Context, *ResetCustomDomainPolicyToDefaultRequest) (*ResetCustomDomainPolicyToDefaultResponse, error)
-	//Returns the label policy defined by the administrators of ZITADEL
+	// Returns the label policy defined by the administrators of ZITADEL
 	GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error)
-	//Returns the preview label policy defined by the administrators of ZITADEL
+	// Returns the preview label policy defined by the administrators of ZITADEL
 	GetPreviewLabelPolicy(context.Context, *GetPreviewLabelPolicyRequest) (*GetPreviewLabelPolicyResponse, error)
-	//Updates the default label policy of ZITADEL
+	// Updates the default label policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLabelPolicy(context.Context, *UpdateLabelPolicyRequest) (*UpdateLabelPolicyResponse, error)
 	// Activates all changes of the label policy
@@ -1567,62 +1567,62 @@ type AdminServiceServer interface {
 	RemoveLabelPolicyIconDark(context.Context, *RemoveLabelPolicyIconDarkRequest) (*RemoveLabelPolicyIconDarkResponse, error)
 	// Removes the font of the label policy
 	RemoveLabelPolicyFont(context.Context, *RemoveLabelPolicyFontRequest) (*RemoveLabelPolicyFontResponse, error)
-	//Returns the login policy defined by the administrators of ZITADEL
+	// Returns the login policy defined by the administrators of ZITADEL
 	GetLoginPolicy(context.Context, *GetLoginPolicyRequest) (*GetLoginPolicyResponse, error)
-	//Updates the default login policy of ZITADEL
+	// Updates the default login policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLoginPolicy(context.Context, *UpdateLoginPolicyRequest) (*UpdateLoginPolicyResponse, error)
-	//Returns the idps linked to the default login policy,
+	// Returns the idps linked to the default login policy,
 	// defined by the administrators of ZITADEL
 	ListLoginPolicyIDPs(context.Context, *ListLoginPolicyIDPsRequest) (*ListLoginPolicyIDPsResponse, error)
-	//Adds the povided idp to the default login policy.
+	// Adds the povided idp to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddIDPToLoginPolicy(context.Context, *AddIDPToLoginPolicyRequest) (*AddIDPToLoginPolicyResponse, error)
-	//Removes the povided idp from the default login policy.
+	// Removes the povided idp from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveIDPFromLoginPolicy(context.Context, *RemoveIDPFromLoginPolicyRequest) (*RemoveIDPFromLoginPolicyResponse, error)
-	//Returns the available second factors defined by the administrators of ZITADEL
+	// Returns the available second factors defined by the administrators of ZITADEL
 	ListLoginPolicySecondFactors(context.Context, *ListLoginPolicySecondFactorsRequest) (*ListLoginPolicySecondFactorsResponse, error)
-	//Adds a second factor to the default login policy.
+	// Adds a second factor to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddSecondFactorToLoginPolicy(context.Context, *AddSecondFactorToLoginPolicyRequest) (*AddSecondFactorToLoginPolicyResponse, error)
-	//Removes a second factor from the default login policy.
+	// Removes a second factor from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveSecondFactorFromLoginPolicy(context.Context, *RemoveSecondFactorFromLoginPolicyRequest) (*RemoveSecondFactorFromLoginPolicyResponse, error)
-	//Returns the available multi factors defined by the administrators of ZITADEL
+	// Returns the available multi factors defined by the administrators of ZITADEL
 	ListLoginPolicyMultiFactors(context.Context, *ListLoginPolicyMultiFactorsRequest) (*ListLoginPolicyMultiFactorsResponse, error)
-	//Adds a multi factor to the default login policy.
+	// Adds a multi factor to the default login policy.
 	// It impacts all organisations without a customised policy
 	AddMultiFactorToLoginPolicy(context.Context, *AddMultiFactorToLoginPolicyRequest) (*AddMultiFactorToLoginPolicyResponse, error)
-	//Removes a multi factor from the default login policy.
+	// Removes a multi factor from the default login policy.
 	// It impacts all organisations without a customised policy
 	RemoveMultiFactorFromLoginPolicy(context.Context, *RemoveMultiFactorFromLoginPolicyRequest) (*RemoveMultiFactorFromLoginPolicyResponse, error)
-	//Returns the password complexity policy defined by the administrators of ZITADEL
+	// Returns the password complexity policy defined by the administrators of ZITADEL
 	GetPasswordComplexityPolicy(context.Context, *GetPasswordComplexityPolicyRequest) (*GetPasswordComplexityPolicyResponse, error)
-	//Updates the default password complexity policy of ZITADEL
+	// Updates the default password complexity policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdatePasswordComplexityPolicy(context.Context, *UpdatePasswordComplexityPolicyRequest) (*UpdatePasswordComplexityPolicyResponse, error)
-	//Returns the password age policy defined by the administrators of ZITADEL
+	// Returns the password age policy defined by the administrators of ZITADEL
 	GetPasswordAgePolicy(context.Context, *GetPasswordAgePolicyRequest) (*GetPasswordAgePolicyResponse, error)
-	//Updates the default password age policy of ZITADEL
+	// Updates the default password age policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdatePasswordAgePolicy(context.Context, *UpdatePasswordAgePolicyRequest) (*UpdatePasswordAgePolicyResponse, error)
-	//Returns the lockout policy defined by the administrators of ZITADEL
+	// Returns the lockout policy defined by the administrators of ZITADEL
 	GetLockoutPolicy(context.Context, *GetLockoutPolicyRequest) (*GetLockoutPolicyResponse, error)
-	//Updates the default lockout policy of ZITADEL
+	// Updates the default lockout policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	UpdateLockoutPolicy(context.Context, *UpdateLockoutPolicyRequest) (*UpdateLockoutPolicyResponse, error)
-	//Returns the privacy policy defined by the administrators of ZITADEL
+	// Returns the privacy policy defined by the administrators of ZITADEL
 	GetPrivacyPolicy(context.Context, *GetPrivacyPolicyRequest) (*GetPrivacyPolicyResponse, error)
-	//Updates the default privacy policy of ZITADEL
+	// Updates the default privacy policy of ZITADEL
 	// it impacts all organisations without a customised policy
 	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdatePrivacyPolicy(context.Context, *UpdatePrivacyPolicyRequest) (*UpdatePrivacyPolicyResponse, error)
-	//Returns the default text for initial message (translation file)
+	// Returns the default text for initial message (translation file)
 	GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error)
-	//Returns the custom text for initial message (overwritten in eventstore)
+	// Returns the custom text for initial message (overwritten in eventstore)
 	GetCustomInitMessageText(context.Context, *GetCustomInitMessageTextRequest) (*GetCustomInitMessageTextResponse, error)
-	//Sets the default custom text for initial message
+	// Sets the default custom text for initial message
 	// it impacts all organisations without customized initial message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1630,11 +1630,11 @@ type AdminServiceServer interface {
 	// Removes the custom init message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomInitMessageTextToDefault(context.Context, *ResetCustomInitMessageTextToDefaultRequest) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	//Returns the default text for password reset message (translation file)
+	// Returns the default text for password reset message (translation file)
 	GetDefaultPasswordResetMessageText(context.Context, *GetDefaultPasswordResetMessageTextRequest) (*GetDefaultPasswordResetMessageTextResponse, error)
-	//Returns the custom text for password reset message (overwritten in eventstore)
+	// Returns the custom text for password reset message (overwritten in eventstore)
 	GetCustomPasswordResetMessageText(context.Context, *GetCustomPasswordResetMessageTextRequest) (*GetCustomPasswordResetMessageTextResponse, error)
-	//Sets the default custom text for password reset message
+	// Sets the default custom text for password reset message
 	// it impacts all organisations without customized password reset message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1642,11 +1642,11 @@ type AdminServiceServer interface {
 	// Removes the custom password reset message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(context.Context, *ResetCustomPasswordResetMessageTextToDefaultRequest) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	//Returns the default text for verify email message (translation files)
+	// Returns the default text for verify email message (translation files)
 	GetDefaultVerifyEmailMessageText(context.Context, *GetDefaultVerifyEmailMessageTextRequest) (*GetDefaultVerifyEmailMessageTextResponse, error)
-	//Returns the custom text for verify email message (overwritten in eventstore)
+	// Returns the custom text for verify email message (overwritten in eventstore)
 	GetCustomVerifyEmailMessageText(context.Context, *GetCustomVerifyEmailMessageTextRequest) (*GetCustomVerifyEmailMessageTextResponse, error)
-	//Sets the default custom text for verify email message
+	// Sets the default custom text for verify email message
 	// it impacts all organisations without customized verify email message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1654,11 +1654,11 @@ type AdminServiceServer interface {
 	// Removes the custom verify email message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(context.Context, *ResetCustomVerifyEmailMessageTextToDefaultRequest) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	//Returns the default text for verify phone message (translation file)
+	// Returns the default text for verify phone message (translation file)
 	GetDefaultVerifyPhoneMessageText(context.Context, *GetDefaultVerifyPhoneMessageTextRequest) (*GetDefaultVerifyPhoneMessageTextResponse, error)
-	//Returns the custom text for verify phone message
+	// Returns the custom text for verify phone message
 	GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	//Sets the default custom text for verify phone message
+	// Sets the default custom text for verify phone message
 	// it impacts all organisations without customized verify phone message text
 	// The Following Variables can be used:
 	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1666,11 +1666,11 @@ type AdminServiceServer interface {
 	// Removes the custom verify phone text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	//Returns the default text for domain claimed message (translation file)
+	// Returns the default text for domain claimed message (translation file)
 	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
-	//Returns the custom text for domain claimed message (overwritten in eventstore)
+	// Returns the custom text for domain claimed message (overwritten in eventstore)
 	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
-	//Sets the default custom text for domain claimed phone message
+	// Sets the default custom text for domain claimed phone message
 	// it impacts all organisations without customized domain claimed message text
 	// The Following Variables can be used:
 	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1678,11 +1678,11 @@ type AdminServiceServer interface {
 	// Removes the custom domain claimed message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(context.Context, *ResetCustomDomainClaimedMessageTextToDefaultRequest) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	//Returns the default text for passwordless registration message (translation file)
+	// Returns the default text for passwordless registration message (translation file)
 	GetDefaultPasswordlessRegistrationMessageText(context.Context, *GetDefaultPasswordlessRegistrationMessageTextRequest) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
-	//Returns the custom text for passwordless registration message (overwritten in eventstore)
+	// Returns the custom text for passwordless registration message (overwritten in eventstore)
 	GetCustomPasswordlessRegistrationMessageText(context.Context, *GetCustomPasswordlessRegistrationMessageTextRequest) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	//Sets the default custom text for passwordless registration message
+	// Sets the default custom text for passwordless registration message
 	// it impacts all organisations without customized passwordless registration message text
 	// The Following Variables can be used:
 	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
@@ -1690,39 +1690,39 @@ type AdminServiceServer interface {
 	// Removes the custom passwordless link message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(context.Context, *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	//Returns the default custom texts for login ui (translation file)
+	// Returns the default custom texts for login ui (translation file)
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error)
-	//Sets the custom text for login ui
-	//it impacts all organisations without customized login ui texts
+	// Sets the custom text for login ui
+	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(context.Context, *SetCustomLoginTextsRequest) (*SetCustomLoginTextsResponse, error)
 	// Removes the custom texts for login ui
 	// it impacts all organisations without customized login ui texts
 	// The default text form translation file will trigger after
 	ResetCustomLoginTextToDefault(context.Context, *ResetCustomLoginTextsToDefaultRequest) (*ResetCustomLoginTextsToDefaultResponse, error)
-	//Returns the IAM roles visible for the requested user
+	// Returns the IAM roles visible for the requested user
 	ListIAMMemberRoles(context.Context, *ListIAMMemberRolesRequest) (*ListIAMMemberRolesResponse, error)
-	//Returns all members matching the request
+	// Returns all members matching the request
 	// all queries need to match (ANDed)
 	ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error)
-	//Adds a user to the membership list of ZITADEL with the given roles
+	// Adds a user to the membership list of ZITADEL with the given roles
 	// undefined roles will be dropped
 	AddIAMMember(context.Context, *AddIAMMemberRequest) (*AddIAMMemberResponse, error)
-	//Sets the given roles on a member.
+	// Sets the given roles on a member.
 	// The member has only roles provided by this call
 	UpdateIAMMember(context.Context, *UpdateIAMMemberRequest) (*UpdateIAMMemberResponse, error)
-	//Removes the user from the membership list of ZITADEL
+	// Removes the user from the membership list of ZITADEL
 	RemoveIAMMember(context.Context, *RemoveIAMMemberRequest) (*RemoveIAMMemberResponse, error)
-	//Returns all stored read models of ZITADEL
+	// Returns all stored read models of ZITADEL
 	// views are used for search optimisation and optimise request latencies
 	// they represent the delta of the event happend on the objects
 	ListViews(context.Context, *ListViewsRequest) (*ListViewsResponse, error)
-	//Returns event descriptions which cannot be processed.
+	// Returns event descriptions which cannot be processed.
 	// It's possible that some events need some retries.
 	// For example if the SMTP-API wasn't able to send an email at the first time
 	ListFailedEvents(context.Context, *ListFailedEventsRequest) (*ListFailedEventsResponse, error)
-	//Deletes the event from failed events view.
+	// Deletes the event from failed events view.
 	// the event is not removed from the change stream
 	// This call is usefull if the system was able to process the event later.
 	// e.g. if the second try of sending an email was successful. the first try produced a

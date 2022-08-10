@@ -33,7 +33,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//This is an empty request
+// This is an empty request
 type HealthzRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -72,7 +72,7 @@ func (*HealthzRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_auth_proto_rawDescGZIP(), []int{0}
 }
 
-//This is an empty response
+// This is an empty response
 type HealthzResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -111,7 +111,7 @@ func (*HealthzResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_auth_proto_rawDescGZIP(), []int{1}
 }
 
-//This is an empty request
+// This is an empty request
 type GetSupportedLanguagesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -150,7 +150,7 @@ func (*GetSupportedLanguagesRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_auth_proto_rawDescGZIP(), []int{2}
 }
 
-//This is an empty response
+// This is an empty response
 type GetSupportedLanguagesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -198,7 +198,7 @@ func (x *GetSupportedLanguagesResponse) GetLanguages() []string {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 // the request parameters are read from the token-header
 type GetMyUserRequest struct {
 	state         protoimpl.MessageState
@@ -293,7 +293,7 @@ func (x *GetMyUserResponse) GetLastLogin() *timestamppb.Timestamp {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 // the request parameters are read from the token-header
 type RemoveMyUserRequest struct {
 	state         protoimpl.MessageState
@@ -475,7 +475,7 @@ func (x *ListMyUserChangesResponse) GetResult() []*change.Change {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyUserSessionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1149,7 +1149,7 @@ func (x *BulkRemoveMyMetadataResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyRefreshTokensRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1337,7 +1337,7 @@ func (x *RevokeMyRefreshTokenResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RevokeAllMyRefreshTokensRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1376,7 +1376,7 @@ func (*RevokeAllMyRefreshTokensRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_auth_proto_rawDescGZIP(), []int{28}
 }
 
-//This is an empty response
+// This is an empty response
 type RevokeAllMyRefreshTokensResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1509,7 +1509,7 @@ func (x *UpdateMyUserNameResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyPasswordComplexityPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1697,7 +1697,7 @@ func (x *UpdateMyPasswordResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyProfileRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1925,7 +1925,7 @@ func (x *UpdateMyProfileResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyEmailRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2207,7 +2207,7 @@ func (x *VerifyMyEmailResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResendMyEmailVerificationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2293,7 +2293,7 @@ func (x *ResendMyEmailVerificationResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyPhoneRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2575,7 +2575,7 @@ func (x *VerifyMyPhoneResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResendMyPhoneVerificationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2661,7 +2661,7 @@ func (x *ResendMyPhoneVerificationResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveMyPhoneRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2747,7 +2747,7 @@ func (x *RemoveMyPhoneResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveMyAvatarRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2838,7 +2838,7 @@ type ListMyLinkedIDPsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -3038,7 +3038,7 @@ func (x *RemoveMyLinkedIDPResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyAuthFactorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3124,7 +3124,7 @@ func (x *ListMyAuthFactorsResponse) GetResult() []*user.AuthFactor {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type AddMyAuthFactorU2FRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3218,7 +3218,7 @@ func (x *AddMyAuthFactorU2FResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type AddMyAuthFactorOTPRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3508,7 +3508,7 @@ func (x *VerifyMyAuthFactorU2FResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveMyAuthFactorOTPRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3688,7 +3688,7 @@ func (x *RemoveMyAuthFactorU2FResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyPasswordlessRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3774,7 +3774,7 @@ func (x *ListMyPasswordlessResponse) GetResult() []*user.WebAuthNToken {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type AddMyPasswordlessRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3868,7 +3868,7 @@ func (x *AddMyPasswordlessResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type AddMyPasswordlessLinkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3970,7 +3970,7 @@ func (x *AddMyPasswordlessLinkResponse) GetExpiration() *durationpb.Duration {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type SendMyPasswordlessLinkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4249,7 +4249,7 @@ type ListMyUserGrantsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -4439,9 +4439,9 @@ type ListMyProjectOrgsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*org.OrgQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -4546,7 +4546,7 @@ func (x *ListMyProjectOrgsResponse) GetResult() []*org.Org {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyZitadelPermissionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4632,7 +4632,7 @@ func (x *ListMyZitadelPermissionsResponse) GetResult() []string {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListMyProjectPermissionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4723,9 +4723,9 @@ type ListMyMembershipsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//the field the result is sorted
+	// the field the result is sorted
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*user.MembershipQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -4830,7 +4830,7 @@ func (x *ListMyMembershipsResponse) GetResult() []*user.Membership {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4916,7 +4916,7 @@ func (x *GetMyLabelPolicyResponse) GetPolicy() *policy.LabelPolicy {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyPrivacyPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

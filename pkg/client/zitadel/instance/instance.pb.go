@@ -365,6 +365,7 @@ type Query struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*Query_IdQuery
 	Query isQuery_Query `protobuf_oneof:"query"`
 }
@@ -425,7 +426,7 @@ type Query_IdQuery struct {
 
 func (*Query_IdQuery) isQuery_Query() {}
 
-//IdQuery is always equals
+// IdQuery is always equals
 type IdsQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -550,6 +551,7 @@ type DomainSearchQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*DomainSearchQuery_DomainQuery
 	//	*DomainSearchQuery_GeneratedQuery
 	//	*DomainSearchQuery_PrimaryQuery
@@ -693,7 +695,7 @@ func (x *DomainQuery) GetMethod() object.TextQueryMethod {
 	return object.TextQueryMethod(0)
 }
 
-//DomainGeneratedQuery is always equals
+// DomainGeneratedQuery is always equals
 type DomainGeneratedQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -741,7 +743,7 @@ func (x *DomainGeneratedQuery) GetGenerated() bool {
 	return false
 }
 
-//DomainPrimaryQuery is always equals
+// DomainPrimaryQuery is always equals
 type DomainPrimaryQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

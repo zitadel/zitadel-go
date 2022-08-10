@@ -124,7 +124,7 @@ type IDPType int32
 const (
 	IDPType_IDP_TYPE_UNSPECIFIED IDPType = 0
 	IDPType_IDP_TYPE_OIDC        IDPType = 1
-	//PLANNED: IDP_TYPE_SAML
+	// PLANNED: IDP_TYPE_SAML
 	IDPType_IDP_TYPE_JWT IDPType = 3
 )
 
@@ -328,6 +328,7 @@ type IDP struct {
 	StylingType IDPStylingType        `protobuf:"varint,5,opt,name=styling_type,json=stylingType,proto3,enum=zitadel.idp.v1.IDPStylingType" json:"styling_type,omitempty"`
 	Owner       IDPOwnerType          `protobuf:"varint,6,opt,name=owner,proto3,enum=zitadel.idp.v1.IDPOwnerType" json:"owner,omitempty"`
 	// Types that are assignable to Config:
+	//
 	//	*IDP_OidcConfig
 	//	*IDP_JwtConfig
 	Config       isIDP_Config `protobuf_oneof:"config"`

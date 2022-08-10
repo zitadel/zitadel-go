@@ -339,6 +339,7 @@ type OrgQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*OrgQuery_NameQuery
 	//	*OrgQuery_DomainQuery
 	Query isOrgQuery_Query `protobuf_oneof:"query"`
@@ -529,6 +530,7 @@ type DomainSearchQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*DomainSearchQuery_DomainNameQuery
 	Query isDomainSearchQuery_Query `protobuf_oneof:"query"`
 }

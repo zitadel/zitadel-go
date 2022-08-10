@@ -518,7 +518,7 @@ func (x *ActionNameQuery) GetMethod() object.TextQueryMethod {
 	return object.TextQueryMethod(0)
 }
 
-//ActionStateQuery is always equals
+// ActionStateQuery is always equals
 type ActionStateQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -692,7 +692,7 @@ func (x *TriggerAction) GetActions() []*Action {
 	return nil
 }
 
-//FlowTypeQuery is always equals
+// FlowTypeQuery is always equals
 type FlowTypeQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -740,7 +740,7 @@ func (x *FlowTypeQuery) GetState() FlowType {
 	return FlowType_FLOW_TYPE_UNSPECIFIED
 }
 
-//FlowStateQuery is always equals
+// FlowStateQuery is always equals
 type FlowStateQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

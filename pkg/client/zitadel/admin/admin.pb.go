@@ -37,7 +37,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//This is an empty request
+// This is an empty request
 type HealthzRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -76,7 +76,7 @@ func (*HealthzRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_admin_proto_rawDescGZIP(), []int{0}
 }
 
-//This is an empty response
+// This is an empty response
 type HealthzResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -115,7 +115,7 @@ func (*HealthzResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_admin_proto_rawDescGZIP(), []int{1}
 }
 
-//This is an empty request
+// This is an empty request
 type GetSupportedLanguagesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -295,7 +295,7 @@ func (x *SetDefaultLanguageResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultLanguageRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -475,7 +475,7 @@ func (x *SetDefaultOrgResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -561,7 +561,7 @@ func (x *GetDefaultOrgResponse) GetOrg() *org.Org {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyInstanceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -655,7 +655,7 @@ type ListInstanceDomainsRequest struct {
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
 	SortingColumn instance.DomainFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.instance.v1.DomainFieldName" json:"sorting_column,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*instance.DomainSearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -780,9 +780,9 @@ type ListSecretGeneratorsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*settings.SecretGeneratorQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -1123,7 +1123,7 @@ func (x *UpdateSecretGeneratorResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetSMTPConfigRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1563,7 +1563,7 @@ func (x *UpdateSMTPConfigPasswordResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//this is en empty request
+// this is en empty request
 type RemoveSMTPConfigRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1654,7 +1654,7 @@ type ListSMSProvidersRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -2458,7 +2458,7 @@ func (x *RemoveSMSProviderResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetFileSystemNotificationProviderRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2544,7 +2544,7 @@ func (x *GetFileSystemNotificationProviderResponse) GetProvider() *settings.Debu
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLogNotificationProviderRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3037,11 +3037,11 @@ type ListOrgsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
 	SortingColumn org.OrgFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v1.OrgFieldName" json:"sorting_column,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*org.OrgQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -3168,6 +3168,7 @@ type SetUpOrgRequest struct {
 
 	Org *SetUpOrgRequest_Org `protobuf:"bytes,1,opt,name=org,proto3" json:"org,omitempty"`
 	// Types that are assignable to User:
+	//
 	//	*SetUpOrgRequest_Human_
 	User isSetUpOrgRequest_User `protobuf_oneof:"user"`
 	// specify Org Member Roles for the provided user (default is ORG_OWNER if roles are empty)
@@ -3407,11 +3408,11 @@ type ListIDPsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
 	SortingColumn idp.IDPFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.idp.v1.IDPFieldName" json:"sorting_column,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*IDPQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -3474,6 +3475,7 @@ type IDPQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*IDPQuery_IdpIdQuery
 	//	*IDPQuery_IdpNameQuery
 	Query isIDPQuery_Query `protobuf_oneof:"query"`
@@ -4827,7 +4829,7 @@ type GetCustomOrgIAMPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.OrgIAMPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.OrgIAMPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.OrgIAMPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -5423,7 +5425,7 @@ type GetCustomDomainPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.DomainPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.DomainPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.DomainPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -5803,7 +5805,7 @@ func (x *ResetCustomDomainPolicyToDefaultResponse) GetDetails() *object.ObjectDe
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5889,7 +5891,7 @@ func (x *GetLabelPolicyResponse) GetPolicy() *policy.LabelPolicy {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetPreviewLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6141,7 +6143,7 @@ func (x *UpdateLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ActivateLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6227,7 +6229,7 @@ func (x *ActivateLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveLabelPolicyLogoRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6313,7 +6315,7 @@ func (x *RemoveLabelPolicyLogoResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveLabelPolicyLogoDarkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6399,7 +6401,7 @@ func (x *RemoveLabelPolicyLogoDarkResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveLabelPolicyIconRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6485,7 +6487,7 @@ func (x *RemoveLabelPolicyIconResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveLabelPolicyIconDarkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6571,7 +6573,7 @@ func (x *RemoveLabelPolicyIconDarkResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveLabelPolicyFontRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6657,7 +6659,7 @@ func (x *RemoveLabelPolicyFontResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLoginPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6938,7 +6940,7 @@ type ListLoginPolicyIDPsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -7224,7 +7226,7 @@ func (x *RemoveIDPFromLoginPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListLoginPolicySecondFactorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7506,7 +7508,7 @@ func (x *RemoveSecondFactorFromLoginPolicyResponse) GetDetails() *object.ObjectD
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListLoginPolicyMultiFactorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7999,7 +8001,7 @@ func (x *UpdatePasswordComplexityPolicyResponse) GetDetails() *object.ObjectDeta
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8187,7 +8189,7 @@ func (x *UpdatePasswordAgePolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8368,7 +8370,7 @@ func (x *UpdateLockoutPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetPrivacyPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -11810,7 +11812,7 @@ type AddIAMMemberRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//if no roles provided the user won't have any rights
+	// if no roles provided the user won't have any rights
 	Roles []string `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
 }
 
@@ -11913,7 +11915,7 @@ type UpdateIAMMemberRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//if no roles provided the user won't have any rights
+	// if no roles provided the user won't have any rights
 	Roles []string `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
 }
 
@@ -12104,7 +12106,7 @@ func (x *RemoveIAMMemberResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListIAMMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12203,9 +12205,9 @@ type ListIAMMembersRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*member.SearchQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -12310,7 +12312,7 @@ func (x *ListIAMMembersResponse) GetResult() []*member.Member {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListViewsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12354,7 +12356,7 @@ type ListViewsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//TODO: list details
+	// TODO: list details
 	Result []*View `protobuf:"bytes,1,rep,name=result,proto3" json:"result,omitempty"`
 }
 
@@ -12397,7 +12399,7 @@ func (x *ListViewsResponse) GetResult() []*View {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListFailedEventsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12441,7 +12443,7 @@ type ListFailedEventsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//TODO: list details
+	// TODO: list details
 	Result []*FailedEvent `protobuf:"bytes,1,rep,name=result,proto3" json:"result,omitempty"`
 }
 
@@ -12547,7 +12549,7 @@ func (x *RemoveFailedEventRequest) GetFailedSequence() uint64 {
 	return 0
 }
 
-//This is an empty response
+// This is an empty response
 type RemoveFailedEventResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12750,6 +12752,7 @@ type ImportDataRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Data:
+	//
 	//	*ImportDataRequest_DataOrgs
 	//	*ImportDataRequest_DataOrgsv1
 	//	*ImportDataRequest_DataOrgsLocal

@@ -242,6 +242,7 @@ type SecretGeneratorQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*SecretGeneratorQuery_TypeQuery
 	Query isSecretGeneratorQuery_Query `protobuf_oneof:"query"`
 }
@@ -445,6 +446,7 @@ type SMSProvider struct {
 	Id      string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
 	State   SMSProviderConfigState `protobuf:"varint,3,opt,name=state,proto3,enum=zitadel.settings.v1.SMSProviderConfigState" json:"state,omitempty"`
 	// Types that are assignable to Config:
+	//
 	//	*SMSProvider_Twilio
 	Config isSMSProvider_Config `protobuf_oneof:"config"`
 }

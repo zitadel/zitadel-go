@@ -86,7 +86,7 @@ func (SendHumanResetPasswordNotificationRequest_Type) EnumDescriptor() ([]byte, 
 	return file_zitadel_management_proto_rawDescGZIP(), []int{74, 0}
 }
 
-//This is an empty request
+// This is an empty request
 type HealthzRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -125,7 +125,7 @@ func (*HealthzRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_management_proto_rawDescGZIP(), []int{0}
 }
 
-//This is an empty response
+// This is an empty response
 type HealthzResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -164,7 +164,7 @@ func (*HealthzResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_management_proto_rawDescGZIP(), []int{1}
 }
 
-//This is an empty request
+// This is an empty request
 type GetOIDCInformationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -258,7 +258,7 @@ func (x *GetOIDCInformationResponse) GetDiscoveryEndpoint() string {
 	return ""
 }
 
-//This is an empty request
+// This is an empty request
 type GetIAMRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -302,7 +302,7 @@ type GetIAMResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//deprecated: use default_org_id instead
+	// deprecated: use default_org_id instead
 	GlobalOrgId  string `protobuf:"bytes,1,opt,name=global_org_id,json=globalOrgId,proto3" json:"global_org_id,omitempty"`
 	IamProjectId string `protobuf:"bytes,2,opt,name=iam_project_id,json=iamProjectId,proto3" json:"iam_project_id,omitempty"`
 	DefaultOrgId string `protobuf:"bytes,3,opt,name=default_org_id,json=defaultOrgId,proto3" json:"default_org_id,omitempty"`
@@ -361,7 +361,7 @@ func (x *GetIAMResponse) GetDefaultOrgId() string {
 	return ""
 }
 
-//This is an empty request
+// This is an empty request
 type GetSupportedLanguagesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -640,11 +640,11 @@ type ListUsersRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
 	SortingColumn user.UserFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.user.v1.UserFieldName" json:"sorting_column,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*user.SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -769,7 +769,7 @@ type ListUserChangesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query  *change.ChangeQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	UserId string              `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 }
@@ -4980,7 +4980,7 @@ type ListMachineKeysRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -5421,7 +5421,7 @@ type ListPersonalAccessTokensRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -5752,7 +5752,7 @@ type ListHumanLinkedIDPsRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -5972,11 +5972,11 @@ type ListUserMembershipsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	//the field the result is sorted
+	// the field the result is sorted
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*user.MembershipQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -6088,7 +6088,7 @@ func (x *ListUserMembershipsResponse) GetResult() []*user.Membership {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetMyOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6226,7 +6226,7 @@ type ListOrgChangesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *change.ChangeQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 }
 
@@ -6560,7 +6560,7 @@ func (x *UpdateOrgResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type DeactivateOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6646,7 +6646,7 @@ func (x *DeactivateOrgResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ReactivateOrgRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6737,9 +6737,9 @@ type ListOrgDomainsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*org.DomainSearchQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -7330,7 +7330,7 @@ func (x *SetPrimaryOrgDomainResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListOrgMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7421,9 +7421,9 @@ type ListOrgMembersRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*member.SearchQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -7478,9 +7478,9 @@ type ListOrgMembersResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Details *object.ListDetails `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Result []*member.Member `protobuf:"bytes,2,rep,name=result,proto3" json:"result,omitempty"`
 }
 
@@ -8029,9 +8029,9 @@ type ListProjectsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.ProjectQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -8141,9 +8141,9 @@ type ListGrantedProjectsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.ProjectQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -8253,7 +8253,7 @@ type ListProjectChangesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query     *change.ChangeQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	ProjectId string              `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 }
@@ -8902,7 +8902,7 @@ func (x *RemoveProjectResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ListProjectMemberRolesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9442,9 +9442,9 @@ type ListProjectRolesRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.RoleQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -9563,9 +9563,9 @@ type ListGrantedProjectRolesRequest struct {
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	GrantId   string `protobuf:"bytes,2,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,3,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.RoleQuery `protobuf:"bytes,4,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -9690,9 +9690,9 @@ type ListProjectMembersRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*member.SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -10234,9 +10234,9 @@ type ListAppsRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*app.AppQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -10353,7 +10353,7 @@ type ListAppChangesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query     *change.ChangeQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	ProjectId string              `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	AppId     string              `protobuf:"bytes,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
@@ -11915,7 +11915,7 @@ type ListAppKeysRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query     *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	AppId     string            `protobuf:"bytes,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	ProjectId string            `protobuf:"bytes,3,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
@@ -12278,7 +12278,7 @@ type ListProjectGrantChangesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query     *change.ChangeQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	ProjectId string              `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	GrantId   string              `protobuf:"bytes,3,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"`
@@ -12493,9 +12493,9 @@ type ListProjectGrantsRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.ProjectGrantQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -12612,9 +12612,9 @@ type ListAllProjectGrantsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*project.AllProjectGrantQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -13370,9 +13370,9 @@ type ListProjectGrantMembersRequest struct {
 
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	GrantId   string `protobuf:"bytes,2,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"`
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,3,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*member.SearchQuery `protobuf:"bytes,4,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -13944,9 +13944,9 @@ type ListUserGrantRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*user.UserGrantQuery `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -14892,7 +14892,7 @@ type GetLoginPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.LoginPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.LoginPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.LoginPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -16420,7 +16420,7 @@ type GetPasswordComplexityPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.PasswordComplexityPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.PasswordComplexityPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.PasswordComplexityPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -16470,7 +16470,7 @@ func (x *GetPasswordComplexityPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultPasswordComplexityPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16808,7 +16808,7 @@ func (x *UpdateCustomPasswordComplexityPolicyResponse) GetDetails() *object.Obje
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetPasswordComplexityPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16894,7 +16894,7 @@ func (x *ResetPasswordComplexityPolicyToDefaultResponse) GetDetails() *object.Ob
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16939,7 +16939,7 @@ type GetPasswordAgePolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.PasswordAgePolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.PasswordAgePolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.PasswordAgePolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -16989,7 +16989,7 @@ func (x *GetPasswordAgePolicyResponse) GetIsDefault() bool {
 	return false
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultPasswordAgePolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17279,7 +17279,7 @@ func (x *UpdateCustomPasswordAgePolicyResponse) GetDetails() *object.ObjectDetai
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetPasswordAgePolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17365,7 +17365,7 @@ func (x *ResetPasswordAgePolicyToDefaultResponse) GetDetails() *object.ObjectDet
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17410,7 +17410,7 @@ type GetLockoutPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.LockoutPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.LockoutPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.LockoutPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -17460,7 +17460,7 @@ func (x *GetLockoutPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultLockoutPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17734,7 +17734,7 @@ func (x *UpdateCustomLockoutPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetLockoutPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17820,7 +17820,7 @@ func (x *ResetLockoutPolicyToDefaultResponse) GetDetails() *object.ObjectDetails
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetPrivacyPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -17906,7 +17906,7 @@ func (x *GetPrivacyPolicyResponse) GetPolicy() *policy.PrivacyPolicy {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultPrivacyPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18212,7 +18212,7 @@ func (x *UpdateCustomPrivacyPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetPrivacyPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18298,7 +18298,7 @@ func (x *ResetPrivacyPolicyToDefaultResponse) GetDetails() *object.ObjectDetails
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type GetLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18343,7 +18343,7 @@ type GetLabelPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -18393,7 +18393,7 @@ func (x *GetLabelPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
-//This is an empty request
+// This is an empty request
 type GetPreviewLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18438,7 +18438,7 @@ type GetPreviewLabelPolicyResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Policy *policy.LabelPolicy `protobuf:"bytes,1,opt,name=policy,proto3" json:"policy,omitempty"`
-	//deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
+	// deprecated: is_default is also defined in zitadel.policy.v1.LabelPolicy
 	IsDefault bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 }
 
@@ -18488,7 +18488,7 @@ func (x *GetPreviewLabelPolicyResponse) GetIsDefault() bool {
 	return false
 }
 
-//This is an empty request
+// This is an empty request
 type GetDefaultLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18907,7 +18907,7 @@ func (x *UpdateCustomLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ActivateCustomLabelPolicyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -18993,7 +18993,7 @@ func (x *ActivateCustomLabelPolicyResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveCustomLabelPolicyLogoRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -19079,7 +19079,7 @@ func (x *RemoveCustomLabelPolicyLogoResponse) GetDetails() *object.ObjectDetails
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveCustomLabelPolicyLogoDarkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -19165,7 +19165,7 @@ func (x *RemoveCustomLabelPolicyLogoDarkResponse) GetDetails() *object.ObjectDet
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveCustomLabelPolicyIconRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -19251,7 +19251,7 @@ func (x *RemoveCustomLabelPolicyIconResponse) GetDetails() *object.ObjectDetails
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveCustomLabelPolicyIconDarkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -19337,7 +19337,7 @@ func (x *RemoveCustomLabelPolicyIconDarkResponse) GetDetails() *object.ObjectDet
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type RemoveCustomLabelPolicyFontRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -19423,7 +19423,7 @@ func (x *RemoveCustomLabelPolicyFontResponse) GetDetails() *object.ObjectDetails
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetLabelPolicyToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -22223,7 +22223,7 @@ func (x *SetCustomDomainClaimedMessageTextResponse) GetDetails() *object.ObjectD
 	return nil
 }
 
-//This is an empty request
+// This is an empty request
 type ResetCustomDomainClaimedMessageTextToDefaultRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -22849,11 +22849,11 @@ type ListOrgIDPsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//the field the result is sorted
+	// the field the result is sorted
 	SortingColumn idp.IDPFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.idp.v1.IDPFieldName" json:"sorting_column,omitempty"`
-	//criterias the client is looking for
+	// criterias the client is looking for
 	Queries []*IDPQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -22916,6 +22916,7 @@ type IDPQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*IDPQuery_IdpIdQuery
 	//	*IDPQuery_IdpNameQuery
 	//	*IDPQuery_OwnerTypeQuery
@@ -23618,7 +23619,7 @@ func (x *RemoveOrgIDPRequest) GetIdpId() string {
 	return ""
 }
 
-//This is an empty response
+// This is an empty response
 type RemoveOrgIDPResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -24048,11 +24049,11 @@ type ListActionsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//list limitations and ordering
+	// list limitations and ordering
 	Query *object.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	//the field the result is sorted
+	// the field the result is sorted
 	SortingColumn action.ActionFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.action.v1.ActionFieldName" json:"sorting_column,omitempty"`
-	//criteria the client is looking for
+	// criteria the client is looking for
 	Queries []*ActionQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
@@ -24115,6 +24116,7 @@ type ActionQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*ActionQuery_ActionIdQuery
 	//	*ActionQuery_ActionNameQuery
 	//	*ActionQuery_ActionStateQuery
@@ -25640,7 +25642,7 @@ type ImportHumanUserResponse_PasswordlessRegistration struct {
 	unknownFields protoimpl.UnknownFields
 
 	Link string `protobuf:"bytes,1,opt,name=link,proto3" json:"link,omitempty"`
-	//deprecated: use expiration instead
+	// deprecated: use expiration instead
 	Lifetime   *durationpb.Duration `protobuf:"bytes,2,opt,name=lifetime,proto3" json:"lifetime,omitempty"`
 	Expiration *durationpb.Duration `protobuf:"bytes,3,opt,name=expiration,proto3" json:"expiration,omitempty"`
 }

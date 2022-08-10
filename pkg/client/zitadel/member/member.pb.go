@@ -140,6 +140,7 @@ type SearchQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*SearchQuery_FirstNameQuery
 	//	*SearchQuery_LastNameQuery
 	//	*SearchQuery_EmailQuery
