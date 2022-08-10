@@ -92,6 +92,7 @@ type MetadataQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*MetadataQuery_KeyQuery
 	Query isMetadataQuery_Query `protobuf_oneof:"query"`
 }

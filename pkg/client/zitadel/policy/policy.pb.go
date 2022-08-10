@@ -165,7 +165,7 @@ func (PasswordlessType) EnumDescriptor() ([]byte, []int) {
 	return file_zitadel_policy_proto_rawDescGZIP(), []int{2}
 }
 
-//deprecated: please use DomainPolicy instead
+// deprecated: please use DomainPolicy instead
 type OrgIAMPolicy struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

@@ -418,6 +418,7 @@ type App struct {
 	State   AppState              `protobuf:"varint,3,opt,name=state,proto3,enum=zitadel.app.v1.AppState" json:"state,omitempty"`
 	Name    string                `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// Types that are assignable to Config:
+	//
 	//	*App_OidcConfig
 	//	*App_ApiConfig
 	Config isApp_Config `protobuf_oneof:"config"`
@@ -526,6 +527,7 @@ type AppQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*AppQuery_NameQuery
 	Query isAppQuery_Query `protobuf_oneof:"query"`
 }

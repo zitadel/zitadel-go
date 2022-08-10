@@ -131,7 +131,7 @@ type ChangeQuery struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//sequence represents the order of events. It's always upcounting
+	// sequence represents the order of events. It's always upcounting
 	Sequence uint64 `protobuf:"varint,1,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	Limit    uint32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
 	Asc      bool   `protobuf:"varint,3,opt,name=asc,proto3" json:"asc,omitempty"`

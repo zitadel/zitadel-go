@@ -352,7 +352,7 @@ type ManagementServiceClient interface {
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
 	// remove a list of user grants in one request
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
-	//deprecated: please use DomainPolicy instead
+	// deprecated: please use DomainPolicy instead
 	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
 	// Returns the domain policy (this policy is managed by the iam administrator)
@@ -467,9 +467,9 @@ type ManagementServiceClient interface {
 	// Removes the custom label policy of the organisation
 	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(ctx context.Context, in *ResetLabelPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLabelPolicyToDefaultResponse, error)
-	//Returns the custom text for initial message
+	// Returns the custom text for initial message
 	GetCustomInitMessageText(ctx context.Context, in *GetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInitMessageTextResponse, error)
-	//Returns the default text for initial message
+	// Returns the default text for initial message
 	GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error)
 	// Sets the custom text for initial message
 	// The Following Variables can be used:
@@ -478,9 +478,9 @@ type ManagementServiceClient interface {
 	// Removes the custom init message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomInitMessageTextToDefault(ctx context.Context, in *ResetCustomInitMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	//Returns the custom text for password reset message
+	// Returns the custom text for password reset message
 	GetCustomPasswordResetMessageText(ctx context.Context, in *GetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordResetMessageTextResponse, error)
-	//Returns the default text for password reset message
+	// Returns the default text for password reset message
 	GetDefaultPasswordResetMessageText(ctx context.Context, in *GetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordResetMessageTextResponse, error)
 	// Sets the custom text for password reset message
 	// The Following Variables can be used:
@@ -489,9 +489,9 @@ type ManagementServiceClient interface {
 	// Removes the custom password reset message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordResetMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetCustomVerifyEmailMessageText(ctx context.Context, in *GetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailMessageTextResponse, error)
-	//Returns the default text for verify email message
+	// Returns the default text for verify email message
 	GetDefaultVerifyEmailMessageText(ctx context.Context, in *GetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailMessageTextResponse, error)
 	// Sets the custom text for verify email message
 	// The Following Variables can be used:
@@ -500,9 +500,9 @@ type ManagementServiceClient interface {
 	// Removes the custom verify email message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetDefaultVerifyPhoneMessageText(ctx context.Context, in *GetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyPhoneMessageTextResponse, error)
 	// Sets the default custom text for verify email message
 	// The Following Variables can be used:
@@ -511,9 +511,9 @@ type ManagementServiceClient interface {
 	// Removes the custom verify phone text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	//Returns the custom text for domain claimed message
+	// Returns the custom text for domain claimed message
 	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
-	//Returns the custom text for domain claimed message
+	// Returns the custom text for domain claimed message
 	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	// Sets the custom text for domain claimed message
 	// The Following Variables can be used:
@@ -522,9 +522,9 @@ type ManagementServiceClient interface {
 	// Removes the custom domain claimed message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(ctx context.Context, in *ResetCustomDomainClaimedMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	//Returns the custom text for passwordless link message
+	// Returns the custom text for passwordless link message
 	GetCustomPasswordlessRegistrationMessageText(ctx context.Context, in *GetCustomPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	//Returns the custom text for passwordless link message
+	// Returns the custom text for passwordless link message
 	GetDefaultPasswordlessRegistrationMessageText(ctx context.Context, in *GetDefaultPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
 	// Sets the custom text for passwordless link message
 	// The Following Variables can be used:
@@ -533,12 +533,12 @@ type ManagementServiceClient interface {
 	// Removes the custom passwordless link message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
-	//Sets the default custom text for login ui
-	//it impacts all organisations without customized login ui texts
+	// Sets the default custom text for login ui
+	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(ctx context.Context, in *SetCustomLoginTextsRequest, opts ...grpc.CallOption) (*SetCustomLoginTextsResponse, error)
 	// Removes the custom login text of the organisation
 	// The default text of the IAM will trigger after
@@ -3006,7 +3006,7 @@ type ManagementServiceServer interface {
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
 	// remove a list of user grants in one request
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)
-	//deprecated: please use DomainPolicy instead
+	// deprecated: please use DomainPolicy instead
 	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
 	// Returns the domain policy (this policy is managed by the iam administrator)
@@ -3121,9 +3121,9 @@ type ManagementServiceServer interface {
 	// Removes the custom label policy of the organisation
 	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(context.Context, *ResetLabelPolicyToDefaultRequest) (*ResetLabelPolicyToDefaultResponse, error)
-	//Returns the custom text for initial message
+	// Returns the custom text for initial message
 	GetCustomInitMessageText(context.Context, *GetCustomInitMessageTextRequest) (*GetCustomInitMessageTextResponse, error)
-	//Returns the default text for initial message
+	// Returns the default text for initial message
 	GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error)
 	// Sets the custom text for initial message
 	// The Following Variables can be used:
@@ -3132,9 +3132,9 @@ type ManagementServiceServer interface {
 	// Removes the custom init message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomInitMessageTextToDefault(context.Context, *ResetCustomInitMessageTextToDefaultRequest) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	//Returns the custom text for password reset message
+	// Returns the custom text for password reset message
 	GetCustomPasswordResetMessageText(context.Context, *GetCustomPasswordResetMessageTextRequest) (*GetCustomPasswordResetMessageTextResponse, error)
-	//Returns the default text for password reset message
+	// Returns the default text for password reset message
 	GetDefaultPasswordResetMessageText(context.Context, *GetDefaultPasswordResetMessageTextRequest) (*GetDefaultPasswordResetMessageTextResponse, error)
 	// Sets the custom text for password reset message
 	// The Following Variables can be used:
@@ -3143,9 +3143,9 @@ type ManagementServiceServer interface {
 	// Removes the custom password reset message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(context.Context, *ResetCustomPasswordResetMessageTextToDefaultRequest) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetCustomVerifyEmailMessageText(context.Context, *GetCustomVerifyEmailMessageTextRequest) (*GetCustomVerifyEmailMessageTextResponse, error)
-	//Returns the default text for verify email message
+	// Returns the default text for verify email message
 	GetDefaultVerifyEmailMessageText(context.Context, *GetDefaultVerifyEmailMessageTextRequest) (*GetDefaultVerifyEmailMessageTextResponse, error)
 	// Sets the custom text for verify email message
 	// The Following Variables can be used:
@@ -3154,9 +3154,9 @@ type ManagementServiceServer interface {
 	// Removes the custom verify email message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(context.Context, *ResetCustomVerifyEmailMessageTextToDefaultRequest) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	//Returns the custom text for verify email message
+	// Returns the custom text for verify email message
 	GetDefaultVerifyPhoneMessageText(context.Context, *GetDefaultVerifyPhoneMessageTextRequest) (*GetDefaultVerifyPhoneMessageTextResponse, error)
 	// Sets the default custom text for verify email message
 	// The Following Variables can be used:
@@ -3165,9 +3165,9 @@ type ManagementServiceServer interface {
 	// Removes the custom verify phone text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	//Returns the custom text for domain claimed message
+	// Returns the custom text for domain claimed message
 	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
-	//Returns the custom text for domain claimed message
+	// Returns the custom text for domain claimed message
 	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	// Sets the custom text for domain claimed message
 	// The Following Variables can be used:
@@ -3176,9 +3176,9 @@ type ManagementServiceServer interface {
 	// Removes the custom domain claimed message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(context.Context, *ResetCustomDomainClaimedMessageTextToDefaultRequest) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	//Returns the custom text for passwordless link message
+	// Returns the custom text for passwordless link message
 	GetCustomPasswordlessRegistrationMessageText(context.Context, *GetCustomPasswordlessRegistrationMessageTextRequest) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	//Returns the custom text for passwordless link message
+	// Returns the custom text for passwordless link message
 	GetDefaultPasswordlessRegistrationMessageText(context.Context, *GetDefaultPasswordlessRegistrationMessageTextRequest) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
 	// Sets the custom text for passwordless link message
 	// The Following Variables can be used:
@@ -3187,12 +3187,12 @@ type ManagementServiceServer interface {
 	// Removes the custom passwordless link message text of the organisation
 	// The default text of the IAM will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(context.Context, *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error)
-	//Returns the custom texts for login ui
+	// Returns the custom texts for login ui
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
-	//Sets the default custom text for login ui
-	//it impacts all organisations without customized login ui texts
+	// Sets the default custom text for login ui
+	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(context.Context, *SetCustomLoginTextsRequest) (*SetCustomLoginTextsResponse, error)
 	// Removes the custom login text of the organisation
 	// The default text of the IAM will trigger after

@@ -134,25 +134,25 @@ type ObjectDetails struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//sequence represents the order of events. It's always upcounting
+	// sequence represents the order of events. It's always upcounting
 	//
 	// on read: the sequence of the last event reduced by the projection
 	//
 	// on manipulation: the timestamp of the event(s) added by the manipulation
 	Sequence uint64 `protobuf:"varint,1,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	//creation_date is the timestamp where the first operation on the object was made
+	// creation_date is the timestamp where the first operation on the object was made
 	//
 	// on read: the timestamp of the first event of the object
 	//
 	// on create: the timestamp of the event(s) added by the manipulation
 	CreationDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
-	//change_date is the timestamp when the object was changed
+	// change_date is the timestamp when the object was changed
 	//
 	// on read: the timestamp of the last event reduced by the projection
 	//
 	// on manipulation: the
 	ChangeDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=change_date,json=changeDate,proto3" json:"change_date,omitempty"`
-	//resource_owner is the organisation an object belongs to
+	// resource_owner is the organisation an object belongs to
 	ResourceOwner string `protobuf:"bytes,4,opt,name=resource_owner,json=resourceOwner,proto3" json:"resource_owner,omitempty"`
 }
 

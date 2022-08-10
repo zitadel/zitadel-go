@@ -415,6 +415,7 @@ type User struct {
 	LoginNames         []string              `protobuf:"bytes,5,rep,name=login_names,json=loginNames,proto3" json:"login_names,omitempty"`
 	PreferredLoginName string                `protobuf:"bytes,6,opt,name=preferred_login_name,json=preferredLoginName,proto3" json:"preferred_login_name,omitempty"`
 	// Types that are assignable to Type:
+	//
 	//	*User_Human
 	//	*User_Machine
 	Type isUser_Type `protobuf_oneof:"type"`
@@ -860,6 +861,7 @@ type SearchQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*SearchQuery_UserNameQuery
 	//	*SearchQuery_FirstNameQuery
 	//	*SearchQuery_LastNameQuery
@@ -1348,7 +1350,7 @@ func (x *EmailQuery) GetMethod() object.TextQueryMethod {
 	return object.TextQueryMethod(0)
 }
 
-//UserStateQuery is always equals
+// UserStateQuery is always equals
 type StateQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1396,7 +1398,7 @@ func (x *StateQuery) GetState() UserState {
 	return UserState_USER_STATE_UNSPECIFIED
 }
 
-//UserTypeQuery is always equals
+// UserTypeQuery is always equals
 type TypeQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1451,6 +1453,7 @@ type AuthFactor struct {
 
 	State AuthFactorState `protobuf:"varint,1,opt,name=state,proto3,enum=zitadel.user.v1.AuthFactorState" json:"state,omitempty"`
 	// Types that are assignable to Type:
+	//
 	//	*AuthFactor_Otp
 	//	*AuthFactor_U2F
 	Type isAuthFactor_Type `protobuf_oneof:"type"`
@@ -1800,6 +1803,7 @@ type Membership struct {
 	Roles       []string              `protobuf:"bytes,3,rep,name=roles,proto3" json:"roles,omitempty"`
 	DisplayName string                `protobuf:"bytes,4,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	// Types that are assignable to Type:
+	//
 	//	*Membership_Iam
 	//	*Membership_OrgId
 	//	*Membership_ProjectId
@@ -1936,6 +1940,7 @@ type MembershipQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*MembershipQuery_OrgQuery
 	//	*MembershipQuery_ProjectQuery
 	//	*MembershipQuery_ProjectGrantQuery
@@ -2704,6 +2709,7 @@ type UserGrantQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*UserGrantQuery_ProjectIdQuery
 	//	*UserGrantQuery_UserIdQuery
 	//	*UserGrantQuery_WithGrantedQuery

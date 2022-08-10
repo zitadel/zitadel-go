@@ -402,6 +402,7 @@ type ProjectQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*ProjectQuery_NameQuery
 	//	*ProjectQuery_ProjectResourceOwnerQuery
 	Query isProjectQuery_Query `protobuf_oneof:"query"`
@@ -655,6 +656,7 @@ type RoleQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*RoleQuery_KeyQuery
 	//	*RoleQuery_DisplayNameQuery
 	Query isRoleQuery_Query `protobuf_oneof:"query"`
@@ -845,6 +847,7 @@ type ProjectGrantQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*ProjectGrantQuery_ProjectNameQuery
 	//	*ProjectGrantQuery_RoleKeyQuery
 	Query isProjectGrantQuery_Query `protobuf_oneof:"query"`
@@ -925,6 +928,7 @@ type AllProjectGrantQuery struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Query:
+	//
 	//	*AllProjectGrantQuery_ProjectNameQuery
 	//	*AllProjectGrantQuery_RoleKeyQuery
 	//	*AllProjectGrantQuery_ProjectIdQuery
