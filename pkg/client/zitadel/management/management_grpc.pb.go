@@ -263,6 +263,9 @@ type ManagementServiceClient interface {
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(ctx context.Context, in *AddOIDCAppRequest, opts ...grpc.CallOption) (*AddOIDCAppResponse, error)
+	// Adds a new saml service provider
+	// Returns a entityID
+	AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error)
 	// Adds a new api application
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
@@ -271,6 +274,8 @@ type ManagementServiceClient interface {
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
 	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error)
+	// Changes the configuration of the saml application
+	UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error)
 	// Changes the configuration of the api application
 	UpdateAPIAppConfig(ctx context.Context, in *UpdateAPIAppConfigRequest, opts ...grpc.CallOption) (*UpdateAPIAppConfigResponse, error)
 	// Set the state to deactivated
@@ -1489,6 +1494,15 @@ func (c *managementServiceClient) AddOIDCApp(ctx context.Context, in *AddOIDCApp
 	return out, nil
 }
 
+func (c *managementServiceClient) AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error) {
+	out := new(AddSAMLAppResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddSAMLApp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) AddAPIApp(ctx context.Context, in *AddAPIAppRequest, opts ...grpc.CallOption) (*AddAPIAppResponse, error) {
 	out := new(AddAPIAppResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddAPIApp", in, out, opts...)
@@ -1510,6 +1524,15 @@ func (c *managementServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRe
 func (c *managementServiceClient) UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error) {
 	out := new(UpdateOIDCAppConfigResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateOIDCAppConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error) {
+	out := new(UpdateSAMLAppConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateSAMLAppConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2917,6 +2940,9 @@ type ManagementServiceServer interface {
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error)
+	// Adds a new saml service provider
+	// Returns a entityID
+	AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error)
 	// Adds a new api application
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
@@ -2925,6 +2951,8 @@ type ManagementServiceServer interface {
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
 	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error)
+	// Changes the configuration of the saml application
+	UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error)
 	// Changes the configuration of the api application
 	UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error)
 	// Set the state to deactivated
@@ -3540,6 +3568,9 @@ func (UnimplementedManagementServiceServer) ListAppChanges(context.Context, *Lis
 func (UnimplementedManagementServiceServer) AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOIDCApp not implemented")
 }
+func (UnimplementedManagementServiceServer) AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSAMLApp not implemented")
+}
 func (UnimplementedManagementServiceServer) AddAPIApp(context.Context, *AddAPIAppRequest) (*AddAPIAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAPIApp not implemented")
 }
@@ -3548,6 +3579,9 @@ func (UnimplementedManagementServiceServer) UpdateApp(context.Context, *UpdateAp
 }
 func (UnimplementedManagementServiceServer) UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCAppConfig not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSAMLAppConfig not implemented")
 }
 func (UnimplementedManagementServiceServer) UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAPIAppConfig not implemented")
@@ -5746,6 +5780,24 @@ func _ManagementService_AddOIDCApp_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddSAMLApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSAMLAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddSAMLApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddSAMLApp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddSAMLApp(ctx, req.(*AddSAMLAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_AddAPIApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddAPIAppRequest)
 	if err := dec(in); err != nil {
@@ -5796,6 +5848,24 @@ func _ManagementService_UpdateOIDCAppConfig_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).UpdateOIDCAppConfig(ctx, req.(*UpdateOIDCAppConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateSAMLAppConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSAMLAppConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateSAMLAppConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateSAMLAppConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateSAMLAppConfig(ctx, req.(*UpdateSAMLAppConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8512,6 +8582,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_AddOIDCApp_Handler,
 		},
 		{
+			MethodName: "AddSAMLApp",
+			Handler:    _ManagementService_AddSAMLApp_Handler,
+		},
+		{
 			MethodName: "AddAPIApp",
 			Handler:    _ManagementService_AddAPIApp_Handler,
 		},
@@ -8522,6 +8596,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOIDCAppConfig",
 			Handler:    _ManagementService_UpdateOIDCAppConfig_Handler,
+		},
+		{
+			MethodName: "UpdateSAMLAppConfig",
+			Handler:    _ManagementService_UpdateSAMLAppConfig_Handler,
 		},
 		{
 			MethodName: "UpdateAPIAppConfig",
