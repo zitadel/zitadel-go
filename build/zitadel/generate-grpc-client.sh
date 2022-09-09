@@ -37,6 +37,7 @@ protoc \
     --go_opt=Mzitadel/policy.proto=${ZITADEL_IMPORT}/policy \
     --go_opt=Mzitadel/project.proto=${ZITADEL_IMPORT}/project \
     --go_opt=Mzitadel/settings.proto=${ZITADEL_IMPORT}/settings \
+    --go_opt=Mzitadel/system.proto=${ZITADEL_IMPORT}/system \
     --go_opt=Mzitadel/text.proto=${ZITADEL_IMPORT}/text \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
     --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
