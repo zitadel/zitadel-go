@@ -173,6 +173,18 @@ type ManagementServiceClient interface {
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
 	// Sets the state of my organisation to active
 	ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error)
+	// Sets a org metadata by key
+	SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error)
+	// Set a list of org metadata
+	BulkSetOrgMetadata(ctx context.Context, in *BulkSetOrgMetadataRequest, opts ...grpc.CallOption) (*BulkSetOrgMetadataResponse, error)
+	// Returns the org metadata
+	ListOrgMetadata(ctx context.Context, in *ListOrgMetadataRequest, opts ...grpc.CallOption) (*ListOrgMetadataResponse, error)
+	// Returns the org metadata by key
+	GetOrgMetadata(ctx context.Context, in *GetOrgMetadataRequest, opts ...grpc.CallOption) (*GetOrgMetadataResponse, error)
+	// Removes a org metadata by key
+	RemoveOrgMetadata(ctx context.Context, in *RemoveOrgMetadataRequest, opts ...grpc.CallOption) (*RemoveOrgMetadataResponse, error)
+	// Set a list of org metadata
+	BulkRemoveOrgMetadata(ctx context.Context, in *BulkRemoveOrgMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveOrgMetadataResponse, error)
 	// Returns all registered domains of my organisation
 	// Limit should always be set, there is a default limit set by the service
 	ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error)
@@ -263,6 +275,9 @@ type ManagementServiceClient interface {
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(ctx context.Context, in *AddOIDCAppRequest, opts ...grpc.CallOption) (*AddOIDCAppResponse, error)
+	// Adds a new saml service provider
+	// Returns a entityID
+	AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error)
 	// Adds a new api application
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
@@ -271,6 +286,8 @@ type ManagementServiceClient interface {
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
 	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error)
+	// Changes the configuration of the saml application
+	UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error)
 	// Changes the configuration of the api application
 	UpdateAPIAppConfig(ctx context.Context, in *UpdateAPIAppConfigRequest, opts ...grpc.CallOption) (*UpdateAPIAppConfigResponse, error)
 	// Set the state to deactivated
@@ -1165,6 +1182,60 @@ func (c *managementServiceClient) ReactivateOrg(ctx context.Context, in *Reactiv
 	return out, nil
 }
 
+func (c *managementServiceClient) SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error) {
+	out := new(SetOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/SetOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) BulkSetOrgMetadata(ctx context.Context, in *BulkSetOrgMetadataRequest, opts ...grpc.CallOption) (*BulkSetOrgMetadataResponse, error) {
+	out := new(BulkSetOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/BulkSetOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ListOrgMetadata(ctx context.Context, in *ListOrgMetadataRequest, opts ...grpc.CallOption) (*ListOrgMetadataResponse, error) {
+	out := new(ListOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetOrgMetadata(ctx context.Context, in *GetOrgMetadataRequest, opts ...grpc.CallOption) (*GetOrgMetadataResponse, error) {
+	out := new(GetOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveOrgMetadata(ctx context.Context, in *RemoveOrgMetadataRequest, opts ...grpc.CallOption) (*RemoveOrgMetadataResponse, error) {
+	out := new(RemoveOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) BulkRemoveOrgMetadata(ctx context.Context, in *BulkRemoveOrgMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveOrgMetadataResponse, error) {
+	out := new(BulkRemoveOrgMetadataResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/BulkRemoveOrgMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error) {
 	out := new(ListOrgDomainsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListOrgDomains", in, out, opts...)
@@ -1489,6 +1560,15 @@ func (c *managementServiceClient) AddOIDCApp(ctx context.Context, in *AddOIDCApp
 	return out, nil
 }
 
+func (c *managementServiceClient) AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error) {
+	out := new(AddSAMLAppResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddSAMLApp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) AddAPIApp(ctx context.Context, in *AddAPIAppRequest, opts ...grpc.CallOption) (*AddAPIAppResponse, error) {
 	out := new(AddAPIAppResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddAPIApp", in, out, opts...)
@@ -1510,6 +1590,15 @@ func (c *managementServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRe
 func (c *managementServiceClient) UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error) {
 	out := new(UpdateOIDCAppConfigResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateOIDCAppConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error) {
+	out := new(UpdateSAMLAppConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateSAMLAppConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2827,6 +2916,18 @@ type ManagementServiceServer interface {
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
 	// Sets the state of my organisation to active
 	ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error)
+	// Sets a org metadata by key
+	SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error)
+	// Set a list of org metadata
+	BulkSetOrgMetadata(context.Context, *BulkSetOrgMetadataRequest) (*BulkSetOrgMetadataResponse, error)
+	// Returns the org metadata
+	ListOrgMetadata(context.Context, *ListOrgMetadataRequest) (*ListOrgMetadataResponse, error)
+	// Returns the org metadata by key
+	GetOrgMetadata(context.Context, *GetOrgMetadataRequest) (*GetOrgMetadataResponse, error)
+	// Removes a org metadata by key
+	RemoveOrgMetadata(context.Context, *RemoveOrgMetadataRequest) (*RemoveOrgMetadataResponse, error)
+	// Set a list of org metadata
+	BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error)
 	// Returns all registered domains of my organisation
 	// Limit should always be set, there is a default limit set by the service
 	ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error)
@@ -2917,6 +3018,9 @@ type ManagementServiceServer interface {
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error)
+	// Adds a new saml service provider
+	// Returns a entityID
+	AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error)
 	// Adds a new api application
 	// Returns a client id
 	// Returns a new generated secret if needed (Depending on the configuration)
@@ -2925,6 +3029,8 @@ type ManagementServiceServer interface {
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
 	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error)
+	// Changes the configuration of the saml application
+	UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error)
 	// Changes the configuration of the api application
 	UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error)
 	// Set the state to deactivated
@@ -3432,6 +3538,24 @@ func (UnimplementedManagementServiceServer) DeactivateOrg(context.Context, *Deac
 func (UnimplementedManagementServiceServer) ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReactivateOrg not implemented")
 }
+func (UnimplementedManagementServiceServer) SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetOrgMetadata not implemented")
+}
+func (UnimplementedManagementServiceServer) BulkSetOrgMetadata(context.Context, *BulkSetOrgMetadataRequest) (*BulkSetOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BulkSetOrgMetadata not implemented")
+}
+func (UnimplementedManagementServiceServer) ListOrgMetadata(context.Context, *ListOrgMetadataRequest) (*ListOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrgMetadata not implemented")
+}
+func (UnimplementedManagementServiceServer) GetOrgMetadata(context.Context, *GetOrgMetadataRequest) (*GetOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrgMetadata not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveOrgMetadata(context.Context, *RemoveOrgMetadataRequest) (*RemoveOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveOrgMetadata not implemented")
+}
+func (UnimplementedManagementServiceServer) BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BulkRemoveOrgMetadata not implemented")
+}
 func (UnimplementedManagementServiceServer) ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrgDomains not implemented")
 }
@@ -3540,6 +3664,9 @@ func (UnimplementedManagementServiceServer) ListAppChanges(context.Context, *Lis
 func (UnimplementedManagementServiceServer) AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOIDCApp not implemented")
 }
+func (UnimplementedManagementServiceServer) AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSAMLApp not implemented")
+}
 func (UnimplementedManagementServiceServer) AddAPIApp(context.Context, *AddAPIAppRequest) (*AddAPIAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAPIApp not implemented")
 }
@@ -3548,6 +3675,9 @@ func (UnimplementedManagementServiceServer) UpdateApp(context.Context, *UpdateAp
 }
 func (UnimplementedManagementServiceServer) UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCAppConfig not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSAMLAppConfig not implemented")
 }
 func (UnimplementedManagementServiceServer) UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAPIAppConfig not implemented")
@@ -5098,6 +5228,114 @@ func _ManagementService_ReactivateOrg_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_SetOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/SetOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetOrgMetadata(ctx, req.(*SetOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_BulkSetOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BulkSetOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).BulkSetOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/BulkSetOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).BulkSetOrgMetadata(ctx, req.(*BulkSetOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListOrgMetadata(ctx, req.(*ListOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetOrgMetadata(ctx, req.(*GetOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveOrgMetadata(ctx, req.(*RemoveOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_BulkRemoveOrgMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BulkRemoveOrgMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).BulkRemoveOrgMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/BulkRemoveOrgMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).BulkRemoveOrgMetadata(ctx, req.(*BulkRemoveOrgMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_ListOrgDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOrgDomainsRequest)
 	if err := dec(in); err != nil {
@@ -5746,6 +5984,24 @@ func _ManagementService_AddOIDCApp_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddSAMLApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSAMLAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddSAMLApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddSAMLApp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddSAMLApp(ctx, req.(*AddSAMLAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_AddAPIApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddAPIAppRequest)
 	if err := dec(in); err != nil {
@@ -5796,6 +6052,24 @@ func _ManagementService_UpdateOIDCAppConfig_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).UpdateOIDCAppConfig(ctx, req.(*UpdateOIDCAppConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateSAMLAppConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSAMLAppConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateSAMLAppConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateSAMLAppConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateSAMLAppConfig(ctx, req.(*UpdateSAMLAppConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8368,6 +8642,30 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_ReactivateOrg_Handler,
 		},
 		{
+			MethodName: "SetOrgMetadata",
+			Handler:    _ManagementService_SetOrgMetadata_Handler,
+		},
+		{
+			MethodName: "BulkSetOrgMetadata",
+			Handler:    _ManagementService_BulkSetOrgMetadata_Handler,
+		},
+		{
+			MethodName: "ListOrgMetadata",
+			Handler:    _ManagementService_ListOrgMetadata_Handler,
+		},
+		{
+			MethodName: "GetOrgMetadata",
+			Handler:    _ManagementService_GetOrgMetadata_Handler,
+		},
+		{
+			MethodName: "RemoveOrgMetadata",
+			Handler:    _ManagementService_RemoveOrgMetadata_Handler,
+		},
+		{
+			MethodName: "BulkRemoveOrgMetadata",
+			Handler:    _ManagementService_BulkRemoveOrgMetadata_Handler,
+		},
+		{
 			MethodName: "ListOrgDomains",
 			Handler:    _ManagementService_ListOrgDomains_Handler,
 		},
@@ -8512,6 +8810,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_AddOIDCApp_Handler,
 		},
 		{
+			MethodName: "AddSAMLApp",
+			Handler:    _ManagementService_AddSAMLApp_Handler,
+		},
+		{
 			MethodName: "AddAPIApp",
 			Handler:    _ManagementService_AddAPIApp_Handler,
 		},
@@ -8522,6 +8824,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOIDCAppConfig",
 			Handler:    _ManagementService_UpdateOIDCAppConfig_Handler,
+		},
+		{
+			MethodName: "UpdateSAMLAppConfig",
+			Handler:    _ManagementService_UpdateSAMLAppConfig_Handler,
 		},
 		{
 			MethodName: "UpdateAPIAppConfig",
