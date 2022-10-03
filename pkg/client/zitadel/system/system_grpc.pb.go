@@ -28,6 +28,8 @@ type SystemServiceClient interface {
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	AddInstance(ctx context.Context, in *AddInstanceRequest, opts ...grpc.CallOption) (*AddInstanceResponse, error)
+	// Updates name of an existing instance
+	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceResponse, error)
 	// Removes a instances
 	// This might take some time
 	RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error)
@@ -100,6 +102,15 @@ func (c *systemServiceClient) GetInstance(ctx context.Context, in *GetInstanceRe
 func (c *systemServiceClient) AddInstance(ctx context.Context, in *AddInstanceRequest, opts ...grpc.CallOption) (*AddInstanceResponse, error) {
 	out := new(AddInstanceResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/AddInstance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *systemServiceClient) UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceResponse, error) {
+	out := new(UpdateInstanceResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/UpdateInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -210,6 +221,8 @@ type SystemServiceServer interface {
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	AddInstance(context.Context, *AddInstanceRequest) (*AddInstanceResponse, error)
+	// Updates name of an existing instance
+	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceResponse, error)
 	// Removes a instances
 	// This might take some time
 	RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error)
@@ -260,6 +273,9 @@ func (UnimplementedSystemServiceServer) GetInstance(context.Context, *GetInstanc
 }
 func (UnimplementedSystemServiceServer) AddInstance(context.Context, *AddInstanceRequest) (*AddInstanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddInstance not implemented")
+}
+func (UnimplementedSystemServiceServer) UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateInstance not implemented")
 }
 func (UnimplementedSystemServiceServer) RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveInstance not implemented")
@@ -372,6 +388,24 @@ func _SystemService_AddInstance_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SystemServiceServer).AddInstance(ctx, req.(*AddInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SystemService_UpdateInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateInstanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).UpdateInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/UpdateInstance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).UpdateInstance(ctx, req.(*UpdateInstanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -578,6 +612,10 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddInstance",
 			Handler:    _SystemService_AddInstance_Handler,
+		},
+		{
+			MethodName: "UpdateInstance",
+			Handler:    _SystemService_UpdateInstance_Handler,
 		},
 		{
 			MethodName: "RemoveInstance",

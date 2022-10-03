@@ -65,6 +65,8 @@ type AdminServiceClient interface {
 	RemoveSMSProvider(ctx context.Context, in *RemoveSMSProviderRequest, opts ...grpc.CallOption) (*RemoveSMSProviderResponse, error)
 	// Get OIDC settings (e.g token lifetimes, etc.)
 	GetOIDCSettings(ctx context.Context, in *GetOIDCSettingsRequest, opts ...grpc.CallOption) (*GetOIDCSettingsResponse, error)
+	// Add oidc settings (e.g token lifetimes, etc)
+	AddOIDCSettings(ctx context.Context, in *AddOIDCSettingsRequest, opts ...grpc.CallOption) (*AddOIDCSettingsResponse, error)
 	// Update oidc settings (e.g token lifetimes, etc)
 	UpdateOIDCSettings(ctx context.Context, in *UpdateOIDCSettingsRequest, opts ...grpc.CallOption) (*UpdateOIDCSettingsResponse, error)
 	// Get file system notification provider
@@ -539,6 +541,15 @@ func (c *adminServiceClient) RemoveSMSProvider(ctx context.Context, in *RemoveSM
 func (c *adminServiceClient) GetOIDCSettings(ctx context.Context, in *GetOIDCSettingsRequest, opts ...grpc.CallOption) (*GetOIDCSettingsResponse, error) {
 	out := new(GetOIDCSettingsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetOIDCSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddOIDCSettings(ctx context.Context, in *AddOIDCSettingsRequest, opts ...grpc.CallOption) (*AddOIDCSettingsResponse, error) {
+	out := new(AddOIDCSettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddOIDCSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1469,6 +1480,8 @@ type AdminServiceServer interface {
 	RemoveSMSProvider(context.Context, *RemoveSMSProviderRequest) (*RemoveSMSProviderResponse, error)
 	// Get OIDC settings (e.g token lifetimes, etc.)
 	GetOIDCSettings(context.Context, *GetOIDCSettingsRequest) (*GetOIDCSettingsResponse, error)
+	// Add oidc settings (e.g token lifetimes, etc)
+	AddOIDCSettings(context.Context, *AddOIDCSettingsRequest) (*AddOIDCSettingsResponse, error)
 	// Update oidc settings (e.g token lifetimes, etc)
 	UpdateOIDCSettings(context.Context, *UpdateOIDCSettingsRequest) (*UpdateOIDCSettingsResponse, error)
 	// Get file system notification provider
@@ -1807,6 +1820,9 @@ func (UnimplementedAdminServiceServer) RemoveSMSProvider(context.Context, *Remov
 }
 func (UnimplementedAdminServiceServer) GetOIDCSettings(context.Context, *GetOIDCSettingsRequest) (*GetOIDCSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOIDCSettings not implemented")
+}
+func (UnimplementedAdminServiceServer) AddOIDCSettings(context.Context, *AddOIDCSettingsRequest) (*AddOIDCSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOIDCSettings not implemented")
 }
 func (UnimplementedAdminServiceServer) UpdateOIDCSettings(context.Context, *UpdateOIDCSettingsRequest) (*UpdateOIDCSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCSettings not implemented")
@@ -2522,6 +2538,24 @@ func _AdminService_GetOIDCSettings_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetOIDCSettings(ctx, req.(*GetOIDCSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddOIDCSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddOIDCSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddOIDCSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddOIDCSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddOIDCSettings(ctx, req.(*AddOIDCSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4370,6 +4404,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOIDCSettings",
 			Handler:    _AdminService_GetOIDCSettings_Handler,
+		},
+		{
+			MethodName: "AddOIDCSettings",
+			Handler:    _AdminService_AddOIDCSettings_Handler,
 		},
 		{
 			MethodName: "UpdateOIDCSettings",
