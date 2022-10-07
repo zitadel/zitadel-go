@@ -593,6 +593,8 @@ type ManagementServiceClient interface {
 	DeactivateAction(ctx context.Context, in *DeactivateActionRequest, opts ...grpc.CallOption) (*DeactivateActionResponse, error)
 	ReactivateAction(ctx context.Context, in *ReactivateActionRequest, opts ...grpc.CallOption) (*ReactivateActionResponse, error)
 	DeleteAction(ctx context.Context, in *DeleteActionRequest, opts ...grpc.CallOption) (*DeleteActionResponse, error)
+	ListFlowTypes(ctx context.Context, in *ListFlowTypesRequest, opts ...grpc.CallOption) (*ListFlowTypesResponse, error)
+	ListFlowTriggerTypes(ctx context.Context, in *ListFlowTriggerTypesRequest, opts ...grpc.CallOption) (*ListFlowTriggerTypesResponse, error)
 	GetFlow(ctx context.Context, in *GetFlowRequest, opts ...grpc.CallOption) (*GetFlowResponse, error)
 	ClearFlow(ctx context.Context, in *ClearFlowRequest, opts ...grpc.CallOption) (*ClearFlowResponse, error)
 	SetTriggerActions(ctx context.Context, in *SetTriggerActionsRequest, opts ...grpc.CallOption) (*SetTriggerActionsResponse, error)
@@ -2730,6 +2732,24 @@ func (c *managementServiceClient) DeleteAction(ctx context.Context, in *DeleteAc
 	return out, nil
 }
 
+func (c *managementServiceClient) ListFlowTypes(ctx context.Context, in *ListFlowTypesRequest, opts ...grpc.CallOption) (*ListFlowTypesResponse, error) {
+	out := new(ListFlowTypesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListFlowTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ListFlowTriggerTypes(ctx context.Context, in *ListFlowTriggerTypesRequest, opts ...grpc.CallOption) (*ListFlowTriggerTypesResponse, error) {
+	out := new(ListFlowTriggerTypesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListFlowTriggerTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) GetFlow(ctx context.Context, in *GetFlowRequest, opts ...grpc.CallOption) (*GetFlowResponse, error) {
 	out := new(GetFlowResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetFlow", in, out, opts...)
@@ -3336,6 +3356,8 @@ type ManagementServiceServer interface {
 	DeactivateAction(context.Context, *DeactivateActionRequest) (*DeactivateActionResponse, error)
 	ReactivateAction(context.Context, *ReactivateActionRequest) (*ReactivateActionResponse, error)
 	DeleteAction(context.Context, *DeleteActionRequest) (*DeleteActionResponse, error)
+	ListFlowTypes(context.Context, *ListFlowTypesRequest) (*ListFlowTypesResponse, error)
+	ListFlowTriggerTypes(context.Context, *ListFlowTriggerTypesRequest) (*ListFlowTriggerTypesResponse, error)
 	GetFlow(context.Context, *GetFlowRequest) (*GetFlowResponse, error)
 	ClearFlow(context.Context, *ClearFlowRequest) (*ClearFlowResponse, error)
 	SetTriggerActions(context.Context, *SetTriggerActionsRequest) (*SetTriggerActionsResponse, error)
@@ -4053,6 +4075,12 @@ func (UnimplementedManagementServiceServer) ReactivateAction(context.Context, *R
 }
 func (UnimplementedManagementServiceServer) DeleteAction(context.Context, *DeleteActionRequest) (*DeleteActionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAction not implemented")
+}
+func (UnimplementedManagementServiceServer) ListFlowTypes(context.Context, *ListFlowTypesRequest) (*ListFlowTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFlowTypes not implemented")
+}
+func (UnimplementedManagementServiceServer) ListFlowTriggerTypes(context.Context, *ListFlowTriggerTypesRequest) (*ListFlowTriggerTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFlowTriggerTypes not implemented")
 }
 func (UnimplementedManagementServiceServer) GetFlow(context.Context, *GetFlowRequest) (*GetFlowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFlow not implemented")
@@ -8324,6 +8352,42 @@ func _ManagementService_DeleteAction_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_ListFlowTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFlowTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListFlowTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListFlowTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListFlowTypes(ctx, req.(*ListFlowTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListFlowTriggerTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFlowTriggerTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListFlowTriggerTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListFlowTriggerTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListFlowTriggerTypes(ctx, req.(*ListFlowTriggerTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_GetFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetFlowRequest)
 	if err := dec(in); err != nil {
@@ -9328,6 +9392,14 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAction",
 			Handler:    _ManagementService_DeleteAction_Handler,
+		},
+		{
+			MethodName: "ListFlowTypes",
+			Handler:    _ManagementService_ListFlowTypes_Handler,
+		},
+		{
+			MethodName: "ListFlowTriggerTypes",
+			Handler:    _ManagementService_ListFlowTriggerTypes_Handler,
 		},
 		{
 			MethodName: "GetFlow",
