@@ -6,11 +6,11 @@ At ZITADEL we are extremely grateful for security aware people that disclose vul
 
 After the initial Release the following version support will apply
 
-| Version | Supported                               |
-| ------- | ------------------                      |
-| 0.x.x   | :white_check_mark:  |
-| 1.x.x   | :white_check_mark:  |
-| 2.x.x   | :white_check_mark:  |
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.x.x   | :white_check_mark: |
+| 1.x.x   | :white_check_mark: |
+| 2.x.x   | :white_check_mark: |
 
 ## Reporting a vulnerability
 
