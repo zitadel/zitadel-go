@@ -8,7 +8,9 @@ After the initial Release the following version support will apply
 
 | Version | Supported                               |
 | ------- | ------------------                      |
-| 0.x.x   | :white_check_mark:                      |
+| 0.x.x   | :white_check_mark:  |
+| 1.x.x   | :white_check_mark:  |
+| 2.x.x   | :white_check_mark:  |
 
 ## Reporting a vulnerability
 
