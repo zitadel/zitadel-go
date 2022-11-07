@@ -20,7 +20,7 @@ Add the package to your go.mod by
 go get github.com/zitadel/zitadel-go/v2
 ```
 
-...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.ch/docs/quickstarts/introduction).
+...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.com/docs/quickstarts/introduction).
 
 ### V1
 
@@ -33,15 +33,14 @@ Versions that also build are marked with :warning:.
 
 | Version | Supported          |
 |---------|--------------------|
-| <1.16   | :x:                |
-| 1.16    | :warning:          |
+| <1.17   | :x:                |
 | 1.17    | :warning:          |
 | 1.18    | :white_check_mark: |
 | 1.19    | :white_check_mark: |
 
 ## License
 
-The full functionality of this library is and stays open source and free to use for everyone. Visit our [website](https://zitadel.ch) and get in touch.
+The full functionality of this library is and stays open source and free to use for everyone. Visit our [website](https://zitadel.com) and get in touch.
 
 See the exact licensing terms [here](./LICENSE)
 
