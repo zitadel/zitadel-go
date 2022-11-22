@@ -3,7 +3,7 @@ module github.com/zitadel/zitadel-go/v2
 go 1.17
 
 require (
-	github.com/envoyproxy/protoc-gen-validate v0.8.0
+	github.com/envoyproxy/protoc-gen-validate v0.9.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.13.0
 	github.com/zitadel/oidc v1.9.1
