@@ -173,6 +173,9 @@ type ManagementServiceClient interface {
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
 	// Sets the state of my organisation to active
 	ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error)
+	// Sets the state of my organisation and all its resource (Users, Projects, Grants to and from the org) to removed
+	// Users of this organisation will not be able login
+	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
 	// Sets a org metadata by key
 	SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error)
 	// Set a list of org metadata
@@ -1178,6 +1181,15 @@ func (c *managementServiceClient) DeactivateOrg(ctx context.Context, in *Deactiv
 func (c *managementServiceClient) ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error) {
 	out := new(ReactivateOrgResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ReactivateOrg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error) {
+	out := new(RemoveOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveOrg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2936,6 +2948,9 @@ type ManagementServiceServer interface {
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
 	// Sets the state of my organisation to active
 	ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error)
+	// Sets the state of my organisation and all its resource (Users, Projects, Grants to and from the org) to removed
+	// Users of this organisation will not be able login
+	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
 	// Sets a org metadata by key
 	SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error)
 	// Set a list of org metadata
@@ -3559,6 +3574,9 @@ func (UnimplementedManagementServiceServer) DeactivateOrg(context.Context, *Deac
 }
 func (UnimplementedManagementServiceServer) ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReactivateOrg not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveOrg not implemented")
 }
 func (UnimplementedManagementServiceServer) SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetOrgMetadata not implemented")
@@ -5252,6 +5270,24 @@ func _ManagementService_ReactivateOrg_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).ReactivateOrg(ctx, req.(*ReactivateOrgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveOrg(ctx, req.(*RemoveOrgRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8704,6 +8740,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReactivateOrg",
 			Handler:    _ManagementService_ReactivateOrg_Handler,
+		},
+		{
+			MethodName: "RemoveOrg",
+			Handler:    _ManagementService_RemoveOrg_Handler,
 		},
 		{
 			MethodName: "SetOrgMetadata",
