@@ -73,6 +73,10 @@ type AdminServiceClient interface {
 	GetFileSystemNotificationProvider(ctx context.Context, in *GetFileSystemNotificationProviderRequest, opts ...grpc.CallOption) (*GetFileSystemNotificationProviderResponse, error)
 	// Get log notification provider
 	GetLogNotificationProvider(ctx context.Context, in *GetLogNotificationProviderRequest, opts ...grpc.CallOption) (*GetLogNotificationProviderResponse, error)
+	// Get the security policy
+	GetSecurityPolicy(ctx context.Context, in *GetSecurityPolicyRequest, opts ...grpc.CallOption) (*GetSecurityPolicyResponse, error)
+	// set the security policy
+	SetSecurityPolicy(ctx context.Context, in *SetSecurityPolicyRequest, opts ...grpc.CallOption) (*SetSecurityPolicyResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error)
 	// Checks whether an organisation exists by the given parameters
@@ -577,6 +581,24 @@ func (c *adminServiceClient) GetFileSystemNotificationProvider(ctx context.Conte
 func (c *adminServiceClient) GetLogNotificationProvider(ctx context.Context, in *GetLogNotificationProviderRequest, opts ...grpc.CallOption) (*GetLogNotificationProviderResponse, error) {
 	out := new(GetLogNotificationProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetLogNotificationProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetSecurityPolicy(ctx context.Context, in *GetSecurityPolicyRequest, opts ...grpc.CallOption) (*GetSecurityPolicyResponse, error) {
+	out := new(GetSecurityPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSecurityPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetSecurityPolicy(ctx context.Context, in *SetSecurityPolicyRequest, opts ...grpc.CallOption) (*SetSecurityPolicyResponse, error) {
+	out := new(SetSecurityPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetSecurityPolicy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1488,6 +1510,10 @@ type AdminServiceServer interface {
 	GetFileSystemNotificationProvider(context.Context, *GetFileSystemNotificationProviderRequest) (*GetFileSystemNotificationProviderResponse, error)
 	// Get log notification provider
 	GetLogNotificationProvider(context.Context, *GetLogNotificationProviderRequest) (*GetLogNotificationProviderResponse, error)
+	// Get the security policy
+	GetSecurityPolicy(context.Context, *GetSecurityPolicyRequest) (*GetSecurityPolicyResponse, error)
+	// set the security policy
+	SetSecurityPolicy(context.Context, *SetSecurityPolicyRequest) (*SetSecurityPolicyResponse, error)
 	// Returns an organisation by id
 	GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error)
 	// Checks whether an organisation exists by the given parameters
@@ -1832,6 +1858,12 @@ func (UnimplementedAdminServiceServer) GetFileSystemNotificationProvider(context
 }
 func (UnimplementedAdminServiceServer) GetLogNotificationProvider(context.Context, *GetLogNotificationProviderRequest) (*GetLogNotificationProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLogNotificationProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) GetSecurityPolicy(context.Context, *GetSecurityPolicyRequest) (*GetSecurityPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSecurityPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) SetSecurityPolicy(context.Context, *SetSecurityPolicyRequest) (*SetSecurityPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetSecurityPolicy not implemented")
 }
 func (UnimplementedAdminServiceServer) GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrgByID not implemented")
@@ -2610,6 +2642,42 @@ func _AdminService_GetLogNotificationProvider_Handler(srv interface{}, ctx conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetLogNotificationProvider(ctx, req.(*GetLogNotificationProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetSecurityPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSecurityPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetSecurityPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetSecurityPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetSecurityPolicy(ctx, req.(*GetSecurityPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetSecurityPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetSecurityPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetSecurityPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetSecurityPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetSecurityPolicy(ctx, req.(*SetSecurityPolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4420,6 +4488,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLogNotificationProvider",
 			Handler:    _AdminService_GetLogNotificationProvider_Handler,
+		},
+		{
+			MethodName: "GetSecurityPolicy",
+			Handler:    _AdminService_GetSecurityPolicy_Handler,
+		},
+		{
+			MethodName: "SetSecurityPolicy",
+			Handler:    _AdminService_SetSecurityPolicy_Handler,
 		},
 		{
 			MethodName: "GetOrgByID",
