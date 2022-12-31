@@ -91,6 +91,9 @@ type AdminServiceClient interface {
 	// Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
+	// Sets the state of the organisation and all its resource (Users, Projects, Grants to and from the org) to removed
+	// Users of this organisation will not be able login
+	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
 	// Returns a identity provider configuration of the IAM instance
 	GetIDPByID(ctx context.Context, in *GetIDPByIDRequest, opts ...grpc.CallOption) (*GetIDPByIDResponse, error)
 	// Returns all identity provider configurations of the IAM instance
@@ -653,6 +656,15 @@ func (c *adminServiceClient) ListOrgs(ctx context.Context, in *ListOrgsRequest, 
 func (c *adminServiceClient) SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error) {
 	out := new(SetUpOrgResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetUpOrg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error) {
+	out := new(RemoveOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/RemoveOrg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1528,6 +1540,9 @@ type AdminServiceServer interface {
 	// Creates a new org and user
 	// and adds the user to the orgs members as ORG_OWNER
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
+	// Sets the state of the organisation and all its resource (Users, Projects, Grants to and from the org) to removed
+	// Users of this organisation will not be able login
+	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
 	// Returns a identity provider configuration of the IAM instance
 	GetIDPByID(context.Context, *GetIDPByIDRequest) (*GetIDPByIDResponse, error)
 	// Returns all identity provider configurations of the IAM instance
@@ -1882,6 +1897,9 @@ func (UnimplementedAdminServiceServer) ListOrgs(context.Context, *ListOrgsReques
 }
 func (UnimplementedAdminServiceServer) SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetUpOrg not implemented")
+}
+func (UnimplementedAdminServiceServer) RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveOrg not implemented")
 }
 func (UnimplementedAdminServiceServer) GetIDPByID(context.Context, *GetIDPByIDRequest) (*GetIDPByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIDPByID not implemented")
@@ -2786,6 +2804,24 @@ func _AdminService_SetUpOrg_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).SetUpOrg(ctx, req.(*SetUpOrgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RemoveOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RemoveOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/RemoveOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RemoveOrg(ctx, req.(*RemoveOrgRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4520,6 +4556,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetUpOrg",
 			Handler:    _AdminService_SetUpOrg_Handler,
+		},
+		{
+			MethodName: "RemoveOrg",
+			Handler:    _AdminService_RemoveOrg_Handler,
 		},
 		{
 			MethodName: "GetIDPByID",
