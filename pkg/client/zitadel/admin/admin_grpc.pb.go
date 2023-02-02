@@ -223,6 +223,14 @@ type AdminServiceClient interface {
 	// it impacts all organisations without a customised policy
 	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdatePrivacyPolicy(ctx context.Context, in *UpdatePrivacyPolicyRequest, opts ...grpc.CallOption) (*UpdatePrivacyPolicyResponse, error)
+	// Add a default notification policy for ZITADEL
+	// it impacts all organisations without a customised policy
+	AddNotificationPolicy(ctx context.Context, in *AddNotificationPolicyRequest, opts ...grpc.CallOption) (*AddNotificationPolicyResponse, error)
+	// Returns the notification policy defined by the administrators of ZITADEL
+	GetNotificationPolicy(ctx context.Context, in *GetNotificationPolicyRequest, opts ...grpc.CallOption) (*GetNotificationPolicyResponse, error)
+	// Updates the default notification policy of ZITADEL
+	// it impacts all organisations without a customised policy
+	UpdateNotificationPolicy(ctx context.Context, in *UpdateNotificationPolicyRequest, opts ...grpc.CallOption) (*UpdateNotificationPolicyResponse, error)
 	// Returns the default text for initial message (translation file)
 	GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error)
 	// Returns the custom text for initial message (overwritten in eventstore)
@@ -230,7 +238,7 @@ type AdminServiceClient interface {
 	// Sets the default custom text for initial message
 	// it impacts all organisations without customized initial message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultInitMessageText(ctx context.Context, in *SetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultInitMessageTextResponse, error)
 	// Removes the custom init message text of the system
 	// The default text from the translation file will trigger after
@@ -242,7 +250,7 @@ type AdminServiceClient interface {
 	// Sets the default custom text for password reset message
 	// it impacts all organisations without customized password reset message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultPasswordResetMessageText(ctx context.Context, in *SetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultPasswordResetMessageTextResponse, error)
 	// Removes the custom password reset message text of the system
 	// The default text from the translation file will trigger after
@@ -254,7 +262,7 @@ type AdminServiceClient interface {
 	// Sets the default custom text for verify email message
 	// it impacts all organisations without customized verify email message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultVerifyEmailMessageText(ctx context.Context, in *SetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifyEmailMessageTextResponse, error)
 	// Removes the custom verify email message text of the system
 	// The default text from the translation file will trigger after
@@ -266,7 +274,7 @@ type AdminServiceClient interface {
 	// Sets the default custom text for verify phone message
 	// it impacts all organisations without customized verify phone message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultVerifyPhoneMessageText(ctx context.Context, in *SetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifyPhoneMessageTextResponse, error)
 	// Removes the custom verify phone text of the system
 	// The default text from the translation file will trigger after
@@ -275,10 +283,10 @@ type AdminServiceClient interface {
 	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	// Returns the custom text for domain claimed message (overwritten in eventstore)
 	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
-	// Sets the default custom text for domain claimed phone message
+	// Sets the default custom text for domain claimed message
 	// it impacts all organisations without customized domain claimed message text
 	// The Following Variables can be used:
-	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultDomainClaimedMessageText(ctx context.Context, in *SetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultDomainClaimedMessageTextResponse, error)
 	// Removes the custom domain claimed message text of the system
 	// The default text from the translation file will trigger after
@@ -290,11 +298,23 @@ type AdminServiceClient interface {
 	// Sets the default custom text for passwordless registration message
 	// it impacts all organisations without customized passwordless registration message text
 	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultPasswordlessRegistrationMessageText(ctx context.Context, in *SetDefaultPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultPasswordlessRegistrationMessageTextResponse, error)
 	// Removes the custom passwordless link message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
+	// Returns the default text for password change message (translation file)
+	GetDefaultPasswordChangeMessageText(ctx context.Context, in *GetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordChangeMessageTextResponse, error)
+	// Returns the custom text for password change message (overwritten in eventstore)
+	GetCustomPasswordChangeMessageText(ctx context.Context, in *GetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordChangeMessageTextResponse, error)
+	// Sets the default custom text for password change message
+	// it impacts all organisations without customized password change message text
+	// The Following Variables can be used:
+	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
+	SetDefaultPasswordChangeMessageText(ctx context.Context, in *SetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultPasswordChangeMessageTextResponse, error)
+	// Removes the custom password change message text of the system
+	// The default text from the translation file will trigger after
+	ResetCustomPasswordChangeMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordChangeMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
 	// Returns the default custom texts for login ui (translation file)
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
 	// Returns the custom texts for login ui
@@ -337,6 +357,9 @@ type AdminServiceClient interface {
 	ImportData(ctx context.Context, in *ImportDataRequest, opts ...grpc.CallOption) (*ImportDataResponse, error)
 	// Exports data from instance
 	ExportData(ctx context.Context, in *ExportDataRequest, opts ...grpc.CallOption) (*ExportDataResponse, error)
+	ListEventTypes(ctx context.Context, in *ListEventTypesRequest, opts ...grpc.CallOption) (*ListEventTypesResponse, error)
+	ListEvents(ctx context.Context, in *ListEventsRequest, opts ...grpc.CallOption) (*ListEventsResponse, error)
+	ListAggregateTypes(ctx context.Context, in *ListAggregateTypesRequest, opts ...grpc.CallOption) (*ListAggregateTypesResponse, error)
 }
 
 type adminServiceClient struct {
@@ -1121,6 +1144,33 @@ func (c *adminServiceClient) UpdatePrivacyPolicy(ctx context.Context, in *Update
 	return out, nil
 }
 
+func (c *adminServiceClient) AddNotificationPolicy(ctx context.Context, in *AddNotificationPolicyRequest, opts ...grpc.CallOption) (*AddNotificationPolicyResponse, error) {
+	out := new(AddNotificationPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddNotificationPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetNotificationPolicy(ctx context.Context, in *GetNotificationPolicyRequest, opts ...grpc.CallOption) (*GetNotificationPolicyResponse, error) {
+	out := new(GetNotificationPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetNotificationPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateNotificationPolicy(ctx context.Context, in *UpdateNotificationPolicyRequest, opts ...grpc.CallOption) (*UpdateNotificationPolicyResponse, error) {
+	out := new(UpdateNotificationPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateNotificationPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error) {
 	out := new(GetDefaultInitMessageTextResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultInitMessageText", in, out, opts...)
@@ -1337,6 +1387,42 @@ func (c *adminServiceClient) ResetCustomPasswordlessRegistrationMessageTextToDef
 	return out, nil
 }
 
+func (c *adminServiceClient) GetDefaultPasswordChangeMessageText(ctx context.Context, in *GetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordChangeMessageTextResponse, error) {
+	out := new(GetDefaultPasswordChangeMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultPasswordChangeMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCustomPasswordChangeMessageText(ctx context.Context, in *GetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordChangeMessageTextResponse, error) {
+	out := new(GetCustomPasswordChangeMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetCustomPasswordChangeMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetDefaultPasswordChangeMessageText(ctx context.Context, in *SetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultPasswordChangeMessageTextResponse, error) {
+	out := new(SetDefaultPasswordChangeMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultPasswordChangeMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResetCustomPasswordChangeMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordChangeMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomPasswordChangeMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetCustomPasswordChangeMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error) {
 	out := new(GetDefaultLoginTextsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultLoginTexts", in, out, opts...)
@@ -1457,6 +1543,33 @@ func (c *adminServiceClient) ImportData(ctx context.Context, in *ImportDataReque
 func (c *adminServiceClient) ExportData(ctx context.Context, in *ExportDataRequest, opts ...grpc.CallOption) (*ExportDataResponse, error) {
 	out := new(ExportDataResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ExportData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListEventTypes(ctx context.Context, in *ListEventTypesRequest, opts ...grpc.CallOption) (*ListEventTypesResponse, error) {
+	out := new(ListEventTypesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListEventTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListEvents(ctx context.Context, in *ListEventsRequest, opts ...grpc.CallOption) (*ListEventsResponse, error) {
+	out := new(ListEventsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListEvents", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListAggregateTypes(ctx context.Context, in *ListAggregateTypesRequest, opts ...grpc.CallOption) (*ListAggregateTypesResponse, error) {
+	out := new(ListAggregateTypesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListAggregateTypes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1672,6 +1785,14 @@ type AdminServiceServer interface {
 	// it impacts all organisations without a customised policy
 	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdatePrivacyPolicy(context.Context, *UpdatePrivacyPolicyRequest) (*UpdatePrivacyPolicyResponse, error)
+	// Add a default notification policy for ZITADEL
+	// it impacts all organisations without a customised policy
+	AddNotificationPolicy(context.Context, *AddNotificationPolicyRequest) (*AddNotificationPolicyResponse, error)
+	// Returns the notification policy defined by the administrators of ZITADEL
+	GetNotificationPolicy(context.Context, *GetNotificationPolicyRequest) (*GetNotificationPolicyResponse, error)
+	// Updates the default notification policy of ZITADEL
+	// it impacts all organisations without a customised policy
+	UpdateNotificationPolicy(context.Context, *UpdateNotificationPolicyRequest) (*UpdateNotificationPolicyResponse, error)
 	// Returns the default text for initial message (translation file)
 	GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error)
 	// Returns the custom text for initial message (overwritten in eventstore)
@@ -1679,7 +1800,7 @@ type AdminServiceServer interface {
 	// Sets the default custom text for initial message
 	// it impacts all organisations without customized initial message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultInitMessageText(context.Context, *SetDefaultInitMessageTextRequest) (*SetDefaultInitMessageTextResponse, error)
 	// Removes the custom init message text of the system
 	// The default text from the translation file will trigger after
@@ -1691,7 +1812,7 @@ type AdminServiceServer interface {
 	// Sets the default custom text for password reset message
 	// it impacts all organisations without customized password reset message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultPasswordResetMessageText(context.Context, *SetDefaultPasswordResetMessageTextRequest) (*SetDefaultPasswordResetMessageTextResponse, error)
 	// Removes the custom password reset message text of the system
 	// The default text from the translation file will trigger after
@@ -1703,7 +1824,7 @@ type AdminServiceServer interface {
 	// Sets the default custom text for verify email message
 	// it impacts all organisations without customized verify email message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultVerifyEmailMessageText(context.Context, *SetDefaultVerifyEmailMessageTextRequest) (*SetDefaultVerifyEmailMessageTextResponse, error)
 	// Removes the custom verify email message text of the system
 	// The default text from the translation file will trigger after
@@ -1715,7 +1836,7 @@ type AdminServiceServer interface {
 	// Sets the default custom text for verify phone message
 	// it impacts all organisations without customized verify phone message text
 	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultVerifyPhoneMessageText(context.Context, *SetDefaultVerifyPhoneMessageTextRequest) (*SetDefaultVerifyPhoneMessageTextResponse, error)
 	// Removes the custom verify phone text of the system
 	// The default text from the translation file will trigger after
@@ -1724,10 +1845,10 @@ type AdminServiceServer interface {
 	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	// Returns the custom text for domain claimed message (overwritten in eventstore)
 	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
-	// Sets the default custom text for domain claimed phone message
+	// Sets the default custom text for domain claimed message
 	// it impacts all organisations without customized domain claimed message text
 	// The Following Variables can be used:
-	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultDomainClaimedMessageText(context.Context, *SetDefaultDomainClaimedMessageTextRequest) (*SetDefaultDomainClaimedMessageTextResponse, error)
 	// Removes the custom domain claimed message text of the system
 	// The default text from the translation file will trigger after
@@ -1739,11 +1860,23 @@ type AdminServiceServer interface {
 	// Sets the default custom text for passwordless registration message
 	// it impacts all organisations without customized passwordless registration message text
 	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
+	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetDefaultPasswordlessRegistrationMessageText(context.Context, *SetDefaultPasswordlessRegistrationMessageTextRequest) (*SetDefaultPasswordlessRegistrationMessageTextResponse, error)
 	// Removes the custom passwordless link message text of the system
 	// The default text from the translation file will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(context.Context, *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
+	// Returns the default text for password change message (translation file)
+	GetDefaultPasswordChangeMessageText(context.Context, *GetDefaultPasswordChangeMessageTextRequest) (*GetDefaultPasswordChangeMessageTextResponse, error)
+	// Returns the custom text for password change message (overwritten in eventstore)
+	GetCustomPasswordChangeMessageText(context.Context, *GetCustomPasswordChangeMessageTextRequest) (*GetCustomPasswordChangeMessageTextResponse, error)
+	// Sets the default custom text for password change message
+	// it impacts all organisations without customized password change message text
+	// The Following Variables can be used:
+	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
+	SetDefaultPasswordChangeMessageText(context.Context, *SetDefaultPasswordChangeMessageTextRequest) (*SetDefaultPasswordChangeMessageTextResponse, error)
+	// Removes the custom password change message text of the system
+	// The default text from the translation file will trigger after
+	ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
 	// Returns the default custom texts for login ui (translation file)
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
 	// Returns the custom texts for login ui
@@ -1786,6 +1919,9 @@ type AdminServiceServer interface {
 	ImportData(context.Context, *ImportDataRequest) (*ImportDataResponse, error)
 	// Exports data from instance
 	ExportData(context.Context, *ExportDataRequest) (*ExportDataResponse, error)
+	ListEventTypes(context.Context, *ListEventTypesRequest) (*ListEventTypesResponse, error)
+	ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error)
+	ListAggregateTypes(context.Context, *ListAggregateTypesRequest) (*ListAggregateTypesResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -2051,6 +2187,15 @@ func (UnimplementedAdminServiceServer) GetPrivacyPolicy(context.Context, *GetPri
 func (UnimplementedAdminServiceServer) UpdatePrivacyPolicy(context.Context, *UpdatePrivacyPolicyRequest) (*UpdatePrivacyPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePrivacyPolicy not implemented")
 }
+func (UnimplementedAdminServiceServer) AddNotificationPolicy(context.Context, *AddNotificationPolicyRequest) (*AddNotificationPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddNotificationPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) GetNotificationPolicy(context.Context, *GetNotificationPolicyRequest) (*GetNotificationPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNotificationPolicy not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateNotificationPolicy(context.Context, *UpdateNotificationPolicyRequest) (*UpdateNotificationPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateNotificationPolicy not implemented")
+}
 func (UnimplementedAdminServiceServer) GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultInitMessageText not implemented")
 }
@@ -2123,6 +2268,18 @@ func (UnimplementedAdminServiceServer) SetDefaultPasswordlessRegistrationMessage
 func (UnimplementedAdminServiceServer) ResetCustomPasswordlessRegistrationMessageTextToDefault(context.Context, *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomPasswordlessRegistrationMessageTextToDefault not implemented")
 }
+func (UnimplementedAdminServiceServer) GetDefaultPasswordChangeMessageText(context.Context, *GetDefaultPasswordChangeMessageTextRequest) (*GetDefaultPasswordChangeMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultPasswordChangeMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCustomPasswordChangeMessageText(context.Context, *GetCustomPasswordChangeMessageTextRequest) (*GetCustomPasswordChangeMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomPasswordChangeMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) SetDefaultPasswordChangeMessageText(context.Context, *SetDefaultPasswordChangeMessageTextRequest) (*SetDefaultPasswordChangeMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultPasswordChangeMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomPasswordChangeMessageTextToDefault not implemented")
+}
 func (UnimplementedAdminServiceServer) GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultLoginTexts not implemented")
 }
@@ -2164,6 +2321,15 @@ func (UnimplementedAdminServiceServer) ImportData(context.Context, *ImportDataRe
 }
 func (UnimplementedAdminServiceServer) ExportData(context.Context, *ExportDataRequest) (*ExportDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExportData not implemented")
+}
+func (UnimplementedAdminServiceServer) ListEventTypes(context.Context, *ListEventTypesRequest) (*ListEventTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEventTypes not implemented")
+}
+func (UnimplementedAdminServiceServer) ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEvents not implemented")
+}
+func (UnimplementedAdminServiceServer) ListAggregateTypes(context.Context, *ListAggregateTypesRequest) (*ListAggregateTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAggregateTypes not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -3726,6 +3892,60 @@ func _AdminService_UpdatePrivacyPolicy_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_AddNotificationPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNotificationPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddNotificationPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddNotificationPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddNotificationPolicy(ctx, req.(*AddNotificationPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetNotificationPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNotificationPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetNotificationPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetNotificationPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetNotificationPolicy(ctx, req.(*GetNotificationPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateNotificationPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateNotificationPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateNotificationPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateNotificationPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateNotificationPolicy(ctx, req.(*UpdateNotificationPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetDefaultInitMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDefaultInitMessageTextRequest)
 	if err := dec(in); err != nil {
@@ -4158,6 +4378,78 @@ func _AdminService_ResetCustomPasswordlessRegistrationMessageTextToDefault_Handl
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_GetDefaultPasswordChangeMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultPasswordChangeMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultPasswordChangeMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultPasswordChangeMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultPasswordChangeMessageText(ctx, req.(*GetDefaultPasswordChangeMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCustomPasswordChangeMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomPasswordChangeMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCustomPasswordChangeMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetCustomPasswordChangeMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCustomPasswordChangeMessageText(ctx, req.(*GetCustomPasswordChangeMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetDefaultPasswordChangeMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultPasswordChangeMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultPasswordChangeMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultPasswordChangeMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultPasswordChangeMessageText(ctx, req.(*SetDefaultPasswordChangeMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResetCustomPasswordChangeMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomPasswordChangeMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResetCustomPasswordChangeMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ResetCustomPasswordChangeMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResetCustomPasswordChangeMessageTextToDefault(ctx, req.(*ResetCustomPasswordChangeMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetDefaultLoginTexts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDefaultLoginTextsRequest)
 	if err := dec(in); err != nil {
@@ -4406,6 +4698,60 @@ func _AdminService_ExportData_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ExportData(ctx, req.(*ExportDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListEventTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEventTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListEventTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListEventTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListEventTypes(ctx, req.(*ListEventTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListEvents",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListEvents(ctx, req.(*ListEventsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListAggregateTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAggregateTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListAggregateTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListAggregateTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListAggregateTypes(ctx, req.(*ListAggregateTypesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4762,6 +5108,18 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_UpdatePrivacyPolicy_Handler,
 		},
 		{
+			MethodName: "AddNotificationPolicy",
+			Handler:    _AdminService_AddNotificationPolicy_Handler,
+		},
+		{
+			MethodName: "GetNotificationPolicy",
+			Handler:    _AdminService_GetNotificationPolicy_Handler,
+		},
+		{
+			MethodName: "UpdateNotificationPolicy",
+			Handler:    _AdminService_UpdateNotificationPolicy_Handler,
+		},
+		{
 			MethodName: "GetDefaultInitMessageText",
 			Handler:    _AdminService_GetDefaultInitMessageText_Handler,
 		},
@@ -4858,6 +5216,22 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_ResetCustomPasswordlessRegistrationMessageTextToDefault_Handler,
 		},
 		{
+			MethodName: "GetDefaultPasswordChangeMessageText",
+			Handler:    _AdminService_GetDefaultPasswordChangeMessageText_Handler,
+		},
+		{
+			MethodName: "GetCustomPasswordChangeMessageText",
+			Handler:    _AdminService_GetCustomPasswordChangeMessageText_Handler,
+		},
+		{
+			MethodName: "SetDefaultPasswordChangeMessageText",
+			Handler:    _AdminService_SetDefaultPasswordChangeMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomPasswordChangeMessageTextToDefault",
+			Handler:    _AdminService_ResetCustomPasswordChangeMessageTextToDefault_Handler,
+		},
+		{
 			MethodName: "GetDefaultLoginTexts",
 			Handler:    _AdminService_GetDefaultLoginTexts_Handler,
 		},
@@ -4912,6 +5286,18 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExportData",
 			Handler:    _AdminService_ExportData_Handler,
+		},
+		{
+			MethodName: "ListEventTypes",
+			Handler:    _AdminService_ListEventTypes_Handler,
+		},
+		{
+			MethodName: "ListEvents",
+			Handler:    _AdminService_ListEvents_Handler,
+		},
+		{
+			MethodName: "ListAggregateTypes",
+			Handler:    _AdminService_ListAggregateTypes_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -37,6 +37,9 @@ type SystemServiceClient interface {
 	// Removes a instances
 	// This might take some time
 	RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error)
+	// Returns all instance members matching the request
+	// all queries need to match (ANDed)
+	ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
 	ExistsDomain(ctx context.Context, in *ExistsDomainRequest, opts ...grpc.CallOption) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
@@ -133,6 +136,15 @@ func (c *systemServiceClient) CreateInstance(ctx context.Context, in *CreateInst
 func (c *systemServiceClient) RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error) {
 	out := new(RemoveInstanceResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/RemoveInstance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *systemServiceClient) ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error) {
+	out := new(ListIAMMembersResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/ListIAMMembers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -243,6 +255,9 @@ type SystemServiceServer interface {
 	// Removes a instances
 	// This might take some time
 	RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error)
+	// Returns all instance members matching the request
+	// all queries need to match (ANDed)
+	ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
 	ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
@@ -299,6 +314,9 @@ func (UnimplementedSystemServiceServer) CreateInstance(context.Context, *CreateI
 }
 func (UnimplementedSystemServiceServer) RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveInstance not implemented")
+}
+func (UnimplementedSystemServiceServer) ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIAMMembers not implemented")
 }
 func (UnimplementedSystemServiceServer) ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExistsDomain not implemented")
@@ -462,6 +480,24 @@ func _SystemService_RemoveInstance_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SystemServiceServer).RemoveInstance(ctx, req.(*RemoveInstanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SystemService_ListIAMMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIAMMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).ListIAMMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/ListIAMMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).ListIAMMembers(ctx, req.(*ListIAMMembersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -662,6 +698,10 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveInstance",
 			Handler:    _SystemService_RemoveInstance_Handler,
+		},
+		{
+			MethodName: "ListIAMMembers",
+			Handler:    _SystemService_ListIAMMembers_Handler,
 		},
 		{
 			MethodName: "ExistsDomain",
