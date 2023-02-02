@@ -124,6 +124,8 @@ type AuthServiceClient interface {
 	GetMyLabelPolicy(ctx context.Context, in *GetMyLabelPolicyRequest, opts ...grpc.CallOption) (*GetMyLabelPolicyResponse, error)
 	// Returns the privacy policy of the current organisation
 	GetMyPrivacyPolicy(ctx context.Context, in *GetMyPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetMyPrivacyPolicyResponse, error)
+	// Returns the login policy of the current organisation
+	GetMyLoginPolicy(ctx context.Context, in *GetMyLoginPolicyRequest, opts ...grpc.CallOption) (*GetMyLoginPolicyResponse, error)
 }
 
 type authServiceClient struct {
@@ -566,6 +568,15 @@ func (c *authServiceClient) GetMyPrivacyPolicy(ctx context.Context, in *GetMyPri
 	return out, nil
 }
 
+func (c *authServiceClient) GetMyLoginPolicy(ctx context.Context, in *GetMyLoginPolicyRequest, opts ...grpc.CallOption) (*GetMyLoginPolicyResponse, error) {
+	out := new(GetMyLoginPolicyResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/GetMyLoginPolicy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -676,6 +687,8 @@ type AuthServiceServer interface {
 	GetMyLabelPolicy(context.Context, *GetMyLabelPolicyRequest) (*GetMyLabelPolicyResponse, error)
 	// Returns the privacy policy of the current organisation
 	GetMyPrivacyPolicy(context.Context, *GetMyPrivacyPolicyRequest) (*GetMyPrivacyPolicyResponse, error)
+	// Returns the login policy of the current organisation
+	GetMyLoginPolicy(context.Context, *GetMyLoginPolicyRequest) (*GetMyLoginPolicyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -826,6 +839,9 @@ func (UnimplementedAuthServiceServer) GetMyLabelPolicy(context.Context, *GetMyLa
 }
 func (UnimplementedAuthServiceServer) GetMyPrivacyPolicy(context.Context, *GetMyPrivacyPolicyRequest) (*GetMyPrivacyPolicyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMyPrivacyPolicy not implemented")
+}
+func (UnimplementedAuthServiceServer) GetMyLoginPolicy(context.Context, *GetMyLoginPolicyRequest) (*GetMyLoginPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyLoginPolicy not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -1704,6 +1720,24 @@ func _AuthService_GetMyPrivacyPolicy_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GetMyLoginPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyLoginPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetMyLoginPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/GetMyLoginPolicy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetMyLoginPolicy(ctx, req.(*GetMyLoginPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1902,6 +1936,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMyPrivacyPolicy",
 			Handler:    _AuthService_GetMyPrivacyPolicy_Handler,
+		},
+		{
+			MethodName: "GetMyLoginPolicy",
+			Handler:    _AuthService_GetMyLoginPolicy_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
