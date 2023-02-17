@@ -14,7 +14,7 @@ import (
 	instance "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/instance"
 	member "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/member"
 	object "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object"
-	quota "github.com/zitadel/zitadel/pkg/grpc/quota"
+	quota "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/quota"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
