@@ -619,6 +619,18 @@ type ManagementServiceClient interface {
 	UpdateOrgIDPOIDCConfig(ctx context.Context, in *UpdateOrgIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPOIDCConfigResponse, error)
 	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(ctx context.Context, in *UpdateOrgIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPJWTConfigResponse, error)
+	// Returns all identity providers, which match the query
+	// Limit should always be set, there is a default limit set by the service
+	ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error)
+	// Returns an identity provider of the organisation
+	GetProviderByID(ctx context.Context, in *GetProviderByIDRequest, opts ...grpc.CallOption) (*GetProviderByIDResponse, error)
+	// Add a new ldap identity provider in the organisation
+	AddLDAPProvider(ctx context.Context, in *AddLDAPProviderRequest, opts ...grpc.CallOption) (*AddLDAPProviderResponse, error)
+	// Change an existing ldap identity provider in the organisation
+	UpdateLDAPProvider(ctx context.Context, in *UpdateLDAPProviderRequest, opts ...grpc.CallOption) (*UpdateLDAPProviderResponse, error)
+	// Remove an identity provider
+	// Will remove all linked providers of this configuration on the users
+	DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error)
 	ListActions(ctx context.Context, in *ListActionsRequest, opts ...grpc.CallOption) (*ListActionsResponse, error)
 	GetAction(ctx context.Context, in *GetActionRequest, opts ...grpc.CallOption) (*GetActionResponse, error)
 	CreateAction(ctx context.Context, in *CreateActionRequest, opts ...grpc.CallOption) (*CreateActionResponse, error)
@@ -2810,6 +2822,51 @@ func (c *managementServiceClient) UpdateOrgIDPJWTConfig(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *managementServiceClient) ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error) {
+	out := new(ListProvidersResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetProviderByID(ctx context.Context, in *GetProviderByIDRequest, opts ...grpc.CallOption) (*GetProviderByIDResponse, error) {
+	out := new(GetProviderByIDResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/GetProviderByID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) AddLDAPProvider(ctx context.Context, in *AddLDAPProviderRequest, opts ...grpc.CallOption) (*AddLDAPProviderResponse, error) {
+	out := new(AddLDAPProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddLDAPProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateLDAPProvider(ctx context.Context, in *UpdateLDAPProviderRequest, opts ...grpc.CallOption) (*UpdateLDAPProviderResponse, error) {
+	out := new(UpdateLDAPProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateLDAPProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error) {
+	out := new(DeleteProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeleteProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) ListActions(ctx context.Context, in *ListActionsRequest, opts ...grpc.CallOption) (*ListActionsResponse, error) {
 	out := new(ListActionsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/ListActions", in, out, opts...)
@@ -3523,6 +3580,18 @@ type ManagementServiceServer interface {
 	UpdateOrgIDPOIDCConfig(context.Context, *UpdateOrgIDPOIDCConfigRequest) (*UpdateOrgIDPOIDCConfigResponse, error)
 	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error)
+	// Returns all identity providers, which match the query
+	// Limit should always be set, there is a default limit set by the service
+	ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error)
+	// Returns an identity provider of the organisation
+	GetProviderByID(context.Context, *GetProviderByIDRequest) (*GetProviderByIDResponse, error)
+	// Add a new ldap identity provider in the organisation
+	AddLDAPProvider(context.Context, *AddLDAPProviderRequest) (*AddLDAPProviderResponse, error)
+	// Change an existing ldap identity provider in the organisation
+	UpdateLDAPProvider(context.Context, *UpdateLDAPProviderRequest) (*UpdateLDAPProviderResponse, error)
+	// Remove an identity provider
+	// Will remove all linked providers of this configuration on the users
+	DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error)
 	ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error)
 	GetAction(context.Context, *GetActionRequest) (*GetActionResponse, error)
 	CreateAction(context.Context, *CreateActionRequest) (*CreateActionResponse, error)
@@ -4264,6 +4333,21 @@ func (UnimplementedManagementServiceServer) UpdateOrgIDPOIDCConfig(context.Conte
 }
 func (UnimplementedManagementServiceServer) UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrgIDPJWTConfig not implemented")
+}
+func (UnimplementedManagementServiceServer) ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProviders not implemented")
+}
+func (UnimplementedManagementServiceServer) GetProviderByID(context.Context, *GetProviderByIDRequest) (*GetProviderByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProviderByID not implemented")
+}
+func (UnimplementedManagementServiceServer) AddLDAPProvider(context.Context, *AddLDAPProviderRequest) (*AddLDAPProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddLDAPProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateLDAPProvider(context.Context, *UpdateLDAPProviderRequest) (*UpdateLDAPProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLDAPProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProvider not implemented")
 }
 func (UnimplementedManagementServiceServer) ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListActions not implemented")
@@ -8652,6 +8736,96 @@ func _ManagementService_UpdateOrgIDPJWTConfig_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_ListProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/ListProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListProviders(ctx, req.(*ListProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetProviderByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProviderByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetProviderByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/GetProviderByID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetProviderByID(ctx, req.(*GetProviderByIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_AddLDAPProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddLDAPProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddLDAPProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddLDAPProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddLDAPProvider(ctx, req.(*AddLDAPProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateLDAPProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateLDAPProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateLDAPProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateLDAPProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateLDAPProvider(ctx, req.(*UpdateLDAPProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_DeleteProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).DeleteProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/DeleteProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).DeleteProvider(ctx, req.(*DeleteProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_ListActions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListActionsRequest)
 	if err := dec(in); err != nil {
@@ -9838,6 +10012,26 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOrgIDPJWTConfig",
 			Handler:    _ManagementService_UpdateOrgIDPJWTConfig_Handler,
+		},
+		{
+			MethodName: "ListProviders",
+			Handler:    _ManagementService_ListProviders_Handler,
+		},
+		{
+			MethodName: "GetProviderByID",
+			Handler:    _ManagementService_GetProviderByID_Handler,
+		},
+		{
+			MethodName: "AddLDAPProvider",
+			Handler:    _ManagementService_AddLDAPProvider_Handler,
+		},
+		{
+			MethodName: "UpdateLDAPProvider",
+			Handler:    _ManagementService_UpdateLDAPProvider_Handler,
+		},
+		{
+			MethodName: "DeleteProvider",
+			Handler:    _ManagementService_DeleteProvider_Handler,
 		},
 		{
 			MethodName: "ListActions",

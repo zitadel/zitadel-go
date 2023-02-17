@@ -34,7 +34,7 @@ type SystemServiceClient interface {
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...grpc.CallOption) (*CreateInstanceResponse, error)
-	// Removes a instances
+	// Removes an instance
 	// This might take some time
 	RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
@@ -69,6 +69,10 @@ type SystemServiceClient interface {
 	// e.g. if the second try of sending an email was successful. the first try produced a
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(ctx context.Context, in *RemoveFailedEventRequest, opts ...grpc.CallOption) (*RemoveFailedEventResponse, error)
+	// Creates a new quota
+	AddQuota(ctx context.Context, in *AddQuotaRequest, opts ...grpc.CallOption) (*AddQuotaResponse, error)
+	// Removes a quota
+	RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error)
 }
 
 type systemServiceClient struct {
@@ -232,6 +236,24 @@ func (c *systemServiceClient) RemoveFailedEvent(ctx context.Context, in *RemoveF
 	return out, nil
 }
 
+func (c *systemServiceClient) AddQuota(ctx context.Context, in *AddQuotaRequest, opts ...grpc.CallOption) (*AddQuotaResponse, error) {
+	out := new(AddQuotaResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/AddQuota", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *systemServiceClient) RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error) {
+	out := new(RemoveQuotaResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/RemoveQuota", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SystemServiceServer is the server API for SystemService service.
 // All implementations must embed UnimplementedSystemServiceServer
 // for forward compatibility
@@ -252,7 +274,7 @@ type SystemServiceServer interface {
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceResponse, error)
-	// Removes a instances
+	// Removes an instance
 	// This might take some time
 	RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
@@ -287,6 +309,10 @@ type SystemServiceServer interface {
 	// e.g. if the second try of sending an email was successful. the first try produced a
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(context.Context, *RemoveFailedEventRequest) (*RemoveFailedEventResponse, error)
+	// Creates a new quota
+	AddQuota(context.Context, *AddQuotaRequest) (*AddQuotaResponse, error)
+	// Removes a quota
+	RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error)
 	mustEmbedUnimplementedSystemServiceServer()
 }
 
@@ -344,6 +370,12 @@ func (UnimplementedSystemServiceServer) ListFailedEvents(context.Context, *ListF
 }
 func (UnimplementedSystemServiceServer) RemoveFailedEvent(context.Context, *RemoveFailedEventRequest) (*RemoveFailedEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveFailedEvent not implemented")
+}
+func (UnimplementedSystemServiceServer) AddQuota(context.Context, *AddQuotaRequest) (*AddQuotaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddQuota not implemented")
+}
+func (UnimplementedSystemServiceServer) RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveQuota not implemented")
 }
 func (UnimplementedSystemServiceServer) mustEmbedUnimplementedSystemServiceServer() {}
 
@@ -664,6 +696,42 @@ func _SystemService_RemoveFailedEvent_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SystemService_AddQuota_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddQuotaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).AddQuota(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/AddQuota",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).AddQuota(ctx, req.(*AddQuotaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SystemService_RemoveQuota_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveQuotaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).RemoveQuota(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/RemoveQuota",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).RemoveQuota(ctx, req.(*RemoveQuotaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SystemService_ServiceDesc is the grpc.ServiceDesc for SystemService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -738,6 +806,14 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveFailedEvent",
 			Handler:    _SystemService_RemoveFailedEvent_Handler,
+		},
+		{
+			MethodName: "AddQuota",
+			Handler:    _SystemService_AddQuota_Handler,
+		},
+		{
+			MethodName: "RemoveQuota",
+			Handler:    _SystemService_RemoveQuota_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
