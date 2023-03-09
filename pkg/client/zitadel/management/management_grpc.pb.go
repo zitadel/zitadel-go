@@ -20,414 +20,174 @@ const _ = grpc.SupportPackageIsVersion7
 type ManagementServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	GetOIDCInformation(ctx context.Context, in *GetOIDCInformationRequest, opts ...grpc.CallOption) (*GetOIDCInformationResponse, error)
-	// Returns some needed settings of the IAM (Global Organisation ID, Zitadel Project ID)
 	GetIAM(ctx context.Context, in *GetIAMRequest, opts ...grpc.CallOption) (*GetIAMResponse, error)
-	// Returns the default languages
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
-	// Returns the requested full blown user (human or machine)
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
-	// Searches a user over all organisations
-	// the login name has to match exactly
 	GetUserByLoginNameGlobal(ctx context.Context, in *GetUserByLoginNameGlobalRequest, opts ...grpc.CallOption) (*GetUserByLoginNameGlobalResponse, error)
-	// Return the users matching the query
-	// Limit should always be set, there is a default limit set by the service
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
-	// Returns the history of the user (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserChanges(ctx context.Context, in *ListUserChangesRequest, opts ...grpc.CallOption) (*ListUserChangesResponse, error)
-	// Returns if a user with the searched email or username is unique
 	IsUserUnique(ctx context.Context, in *IsUserUniqueRequest, opts ...grpc.CallOption) (*IsUserUniqueResponse, error)
-	// Create a user of the type human
-	// A email will be sent to the user if email is not verified or no password is set
-	// If a password is given, the user has to change on the next login
+	// deprecated: use ImportHumanUser
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
-	// Create a user of the type human
-	// A email will be sent to the user if email is not verified or no password is set
-	// If a password is given, the user doesn't have to change on the next login
 	ImportHumanUser(ctx context.Context, in *ImportHumanUserRequest, opts ...grpc.CallOption) (*ImportHumanUserResponse, error)
-	// Create a user of the type machine
 	AddMachineUser(ctx context.Context, in *AddMachineUserRequest, opts ...grpc.CallOption) (*AddMachineUserResponse, error)
-	// Changes the user state to deactivated
-	// The user will not be able to login
-	// returns an error if user state is already deactivated
 	DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*DeactivateUserResponse, error)
-	// Changes the user state to active
-	// returns an error if user state is not deactivated
 	ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*ReactivateUserResponse, error)
-	// Changes the user state to deactivated
-	// The user will not be able to login
-	// returns an error if user state is already locked
 	LockUser(ctx context.Context, in *LockUserRequest, opts ...grpc.CallOption) (*LockUserResponse, error)
-	// Changes the user state to active
-	// returns an error if user state is not locked
 	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error)
-	// Changes the user state to deleted
 	RemoveUser(ctx context.Context, in *RemoveUserRequest, opts ...grpc.CallOption) (*RemoveUserResponse, error)
-	// Changes the username
 	UpdateUserName(ctx context.Context, in *UpdateUserNameRequest, opts ...grpc.CallOption) (*UpdateUserNameResponse, error)
-	// Sets a user metadata by key
 	SetUserMetadata(ctx context.Context, in *SetUserMetadataRequest, opts ...grpc.CallOption) (*SetUserMetadataResponse, error)
-	// Set a list of user metadata
 	BulkSetUserMetadata(ctx context.Context, in *BulkSetUserMetadataRequest, opts ...grpc.CallOption) (*BulkSetUserMetadataResponse, error)
-	// Returns the user metadata
 	ListUserMetadata(ctx context.Context, in *ListUserMetadataRequest, opts ...grpc.CallOption) (*ListUserMetadataResponse, error)
-	// Returns the user metadata by key
 	GetUserMetadata(ctx context.Context, in *GetUserMetadataRequest, opts ...grpc.CallOption) (*GetUserMetadataResponse, error)
-	// Removes a user metadata by key
 	RemoveUserMetadata(ctx context.Context, in *RemoveUserMetadataRequest, opts ...grpc.CallOption) (*RemoveUserMetadataResponse, error)
-	// Set a list of user metadata
 	BulkRemoveUserMetadata(ctx context.Context, in *BulkRemoveUserMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveUserMetadataResponse, error)
-	// Returns the profile of the human
 	GetHumanProfile(ctx context.Context, in *GetHumanProfileRequest, opts ...grpc.CallOption) (*GetHumanProfileResponse, error)
-	// Changes the profile of the human
 	UpdateHumanProfile(ctx context.Context, in *UpdateHumanProfileRequest, opts ...grpc.CallOption) (*UpdateHumanProfileResponse, error)
-	// GetHumanEmail returns the email and verified state of the human
 	GetHumanEmail(ctx context.Context, in *GetHumanEmailRequest, opts ...grpc.CallOption) (*GetHumanEmailResponse, error)
-	// Changes the email of the human
-	// If state is not verified, the user will get a verification email
 	UpdateHumanEmail(ctx context.Context, in *UpdateHumanEmailRequest, opts ...grpc.CallOption) (*UpdateHumanEmailResponse, error)
-	// Resends an email to the given email address to finish the initialization process of the user
-	// Changes the email address of the user if it is provided
 	ResendHumanInitialization(ctx context.Context, in *ResendHumanInitializationRequest, opts ...grpc.CallOption) (*ResendHumanInitializationResponse, error)
-	// Resends an email to the given email address to finish the email verification process of the user
 	ResendHumanEmailVerification(ctx context.Context, in *ResendHumanEmailVerificationRequest, opts ...grpc.CallOption) (*ResendHumanEmailVerificationResponse, error)
-	// Returns the phone and verified state of the human phone
 	GetHumanPhone(ctx context.Context, in *GetHumanPhoneRequest, opts ...grpc.CallOption) (*GetHumanPhoneResponse, error)
-	// Changes the phone number
-	// If verified is not set, the user will get an sms to verify the number
 	UpdateHumanPhone(ctx context.Context, in *UpdateHumanPhoneRequest, opts ...grpc.CallOption) (*UpdateHumanPhoneResponse, error)
-	// Removes the phone number of the human
 	RemoveHumanPhone(ctx context.Context, in *RemoveHumanPhoneRequest, opts ...grpc.CallOption) (*RemoveHumanPhoneResponse, error)
-	// An sms will be sent to the given phone number to finish the phone verification process of the user
 	ResendHumanPhoneVerification(ctx context.Context, in *ResendHumanPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendHumanPhoneVerificationResponse, error)
-	// Removes the avatar number of the human
 	RemoveHumanAvatar(ctx context.Context, in *RemoveHumanAvatarRequest, opts ...grpc.CallOption) (*RemoveHumanAvatarResponse, error)
 	// deprecated: use SetHumanPassword
 	SetHumanInitialPassword(ctx context.Context, in *SetHumanInitialPasswordRequest, opts ...grpc.CallOption) (*SetHumanInitialPasswordResponse, error)
-	// Set a new password for a user, on default the user has to change the password on the next login
-	// Set no_change_required to true if the user does not have to change the password on the next login
 	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
-	// An email will be sent to the given address to reset the password of the user
 	SendHumanResetPasswordNotification(ctx context.Context, in *SendHumanResetPasswordNotificationRequest, opts ...grpc.CallOption) (*SendHumanResetPasswordNotificationResponse, error)
-	// Returns a list of all factors (second and multi) which are configured on the user
 	ListHumanAuthFactors(ctx context.Context, in *ListHumanAuthFactorsRequest, opts ...grpc.CallOption) (*ListHumanAuthFactorsResponse, error)
-	// The otp second factor will be removed from the user
-	// Because only one otp can be configured per user, the configured one will be removed
 	RemoveHumanAuthFactorOTP(ctx context.Context, in *RemoveHumanAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPResponse, error)
-	// The u2f (universial second factor) will be removed from the user
 	RemoveHumanAuthFactorU2F(ctx context.Context, in *RemoveHumanAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authenticators
 	ListHumanPasswordless(ctx context.Context, in *ListHumanPasswordlessRequest, opts ...grpc.CallOption) (*ListHumanPasswordlessResponse, error)
-	// Adds a new passwordless authenticator link to the user and returns it directly
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error)
-	// Adds a new passwordless authenticator link to the user and sends it to the registered email address
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error)
-	// Removed a configured passwordless authenticator
 	RemoveHumanPasswordless(ctx context.Context, in *RemoveHumanPasswordlessRequest, opts ...grpc.CallOption) (*RemoveHumanPasswordlessResponse, error)
-	// Changes a machine user
 	UpdateMachine(ctx context.Context, in *UpdateMachineRequest, opts ...grpc.CallOption) (*UpdateMachineResponse, error)
-	// Generates and sets a new machine secret
 	GenerateMachineSecret(ctx context.Context, in *GenerateMachineSecretRequest, opts ...grpc.CallOption) (*GenerateMachineSecretResponse, error)
-	// Removes the machine secret
 	RemoveMachineSecret(ctx context.Context, in *RemoveMachineSecretRequest, opts ...grpc.CallOption) (*RemoveMachineSecretResponse, error)
-	// Returns a machine key of a (machine) user
 	GetMachineKeyByIDs(ctx context.Context, in *GetMachineKeyByIDsRequest, opts ...grpc.CallOption) (*GetMachineKeyByIDsResponse, error)
-	// Returns all machine keys of a (machine) user which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListMachineKeys(ctx context.Context, in *ListMachineKeysRequest, opts ...grpc.CallOption) (*ListMachineKeysResponse, error)
-	// Generates a new machine key, details should be stored after return
 	AddMachineKey(ctx context.Context, in *AddMachineKeyRequest, opts ...grpc.CallOption) (*AddMachineKeyResponse, error)
-	// Removes a machine key
 	RemoveMachineKey(ctx context.Context, in *RemoveMachineKeyRequest, opts ...grpc.CallOption) (*RemoveMachineKeyResponse, error)
-	// Returns a personal access token of a (machine) user
 	GetPersonalAccessTokenByIDs(ctx context.Context, in *GetPersonalAccessTokenByIDsRequest, opts ...grpc.CallOption) (*GetPersonalAccessTokenByIDsResponse, error)
-	// Returns all personal access tokens of a (machine) user which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
-	// Generates a new personal access token for a machine user, details should be stored after return
 	AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error)
-	// Removes a personal access token
 	RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error)
-	// Lists all identity providers (social logins) which a human has configured (e.g Google, Microsoft, AD, etc..)
-	// Limit should always be set, there is a default limit set by the service
 	ListHumanLinkedIDPs(ctx context.Context, in *ListHumanLinkedIDPsRequest, opts ...grpc.CallOption) (*ListHumanLinkedIDPsResponse, error)
-	// Removed a configured identity provider (social login) of a human
 	RemoveHumanLinkedIDP(ctx context.Context, in *RemoveHumanLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveHumanLinkedIDPResponse, error)
-	// Show all the permissions a user has iin ZITADEL (ZITADEL Manager)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserMemberships(ctx context.Context, in *ListUserMembershipsRequest, opts ...grpc.CallOption) (*ListUserMembershipsResponse, error)
-	// Returns the org given in the header
 	GetMyOrg(ctx context.Context, in *GetMyOrgRequest, opts ...grpc.CallOption) (*GetMyOrgResponse, error)
-	// Search a org over all organisations
-	// Domain must match exactly
 	GetOrgByDomainGlobal(ctx context.Context, in *GetOrgByDomainGlobalRequest, opts ...grpc.CallOption) (*GetOrgByDomainGlobalResponse, error)
-	// Returns the history of my organisation (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgChanges(ctx context.Context, in *ListOrgChangesRequest, opts ...grpc.CallOption) (*ListOrgChangesResponse, error)
-	// Creates a new organisation
 	AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error)
-	// Changes my organisation
 	UpdateOrg(ctx context.Context, in *UpdateOrgRequest, opts ...grpc.CallOption) (*UpdateOrgResponse, error)
-	// Sets the state of my organisation to deactivated
-	// Users of this organisation will not be able login
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
-	// Sets the state of my organisation to active
 	ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error)
-	// Sets the state of my organisation and all its resource (Users, Projects, Grants to and from the org) to removed
-	// Users of this organisation will not be able login
 	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
-	// Sets a org metadata by key
 	SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error)
-	// Set a list of org metadata
 	BulkSetOrgMetadata(ctx context.Context, in *BulkSetOrgMetadataRequest, opts ...grpc.CallOption) (*BulkSetOrgMetadataResponse, error)
-	// Returns the org metadata
 	ListOrgMetadata(ctx context.Context, in *ListOrgMetadataRequest, opts ...grpc.CallOption) (*ListOrgMetadataResponse, error)
-	// Returns the org metadata by key
 	GetOrgMetadata(ctx context.Context, in *GetOrgMetadataRequest, opts ...grpc.CallOption) (*GetOrgMetadataResponse, error)
-	// Removes a org metadata by key
 	RemoveOrgMetadata(ctx context.Context, in *RemoveOrgMetadataRequest, opts ...grpc.CallOption) (*RemoveOrgMetadataResponse, error)
-	// Set a list of org metadata
 	BulkRemoveOrgMetadata(ctx context.Context, in *BulkRemoveOrgMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveOrgMetadataResponse, error)
-	// Returns all registered domains of my organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error)
-	// Adds a new domain to my organisation
 	AddOrgDomain(ctx context.Context, in *AddOrgDomainRequest, opts ...grpc.CallOption) (*AddOrgDomainResponse, error)
-	// Removed the domain from my organisation
 	RemoveOrgDomain(ctx context.Context, in *RemoveOrgDomainRequest, opts ...grpc.CallOption) (*RemoveOrgDomainResponse, error)
-	// Generates a new file to validate you domain
 	GenerateOrgDomainValidation(ctx context.Context, in *GenerateOrgDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrgDomainValidationResponse, error)
-	// Validates your domain with the choosen method
-	// Validated domains must be unique
 	ValidateOrgDomain(ctx context.Context, in *ValidateOrgDomainRequest, opts ...grpc.CallOption) (*ValidateOrgDomainResponse, error)
-	// Sets the domain as primary
-	// Primary domain is shown as suffix on the preferred username on the users of the organisation
 	SetPrimaryOrgDomain(ctx context.Context, in *SetPrimaryOrgDomainRequest, opts ...grpc.CallOption) (*SetPrimaryOrgDomainResponse, error)
-	// Returns all ZITADEL roles which are for organisation managers
 	ListOrgMemberRoles(ctx context.Context, in *ListOrgMemberRolesRequest, opts ...grpc.CallOption) (*ListOrgMemberRolesResponse, error)
-	// Returns all ZITADEL managers of this organisation (Project and Project Grant managers not included)
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgMembers(ctx context.Context, in *ListOrgMembersRequest, opts ...grpc.CallOption) (*ListOrgMembersResponse, error)
-	// Adds a new organisation manager, which is allowed to administrate ZITADEL
 	AddOrgMember(ctx context.Context, in *AddOrgMemberRequest, opts ...grpc.CallOption) (*AddOrgMemberResponse, error)
-	// Changes the organisation manager
 	UpdateOrgMember(ctx context.Context, in *UpdateOrgMemberRequest, opts ...grpc.CallOption) (*UpdateOrgMemberResponse, error)
-	// Removes an organisation manager
 	RemoveOrgMember(ctx context.Context, in *RemoveOrgMemberRequest, opts ...grpc.CallOption) (*RemoveOrgMemberResponse, error)
-	// Returns a project from my organisation (no granted projects)
 	GetProjectByID(ctx context.Context, in *GetProjectByIDRequest, opts ...grpc.CallOption) (*GetProjectByIDResponse, error)
-	// returns a project my organisation got granted from another organisation
 	GetGrantedProjectByID(ctx context.Context, in *GetGrantedProjectByIDRequest, opts ...grpc.CallOption) (*GetGrantedProjectByIDResponse, error)
-	// Returns all projects my organisation is the owner (no granted projects)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
-	// returns all projects my organisation got granted from another organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListGrantedProjects(ctx context.Context, in *ListGrantedProjectsRequest, opts ...grpc.CallOption) (*ListGrantedProjectsResponse, error)
-	// returns all roles of a project grant
-	// Limit should always be set, there is a default limit set by the service
 	ListGrantedProjectRoles(ctx context.Context, in *ListGrantedProjectRolesRequest, opts ...grpc.CallOption) (*ListGrantedProjectRolesResponse, error)
-	// Returns the history of the project (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectChanges(ctx context.Context, in *ListProjectChangesRequest, opts ...grpc.CallOption) (*ListProjectChangesResponse, error)
-	// Adds an new project to the organisation
 	AddProject(ctx context.Context, in *AddProjectRequest, opts ...grpc.CallOption) (*AddProjectResponse, error)
-	// Changes a project
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
-	// Sets the state of a project to deactivated
-	// Returns an error if project is already deactivated
 	DeactivateProject(ctx context.Context, in *DeactivateProjectRequest, opts ...grpc.CallOption) (*DeactivateProjectResponse, error)
-	// Sets the state of a project to active
-	// Returns an error if project is not deactivated
 	ReactivateProject(ctx context.Context, in *ReactivateProjectRequest, opts ...grpc.CallOption) (*ReactivateProjectResponse, error)
-	// Removes a project
-	// All project grants, applications and user grants for this project will be removed
 	RemoveProject(ctx context.Context, in *RemoveProjectRequest, opts ...grpc.CallOption) (*RemoveProjectResponse, error)
-	// Returns all roles of a project matching the search query
-	// If no limit is requested, default limit will be set, if the limit is higher then the default an error will be returned
 	ListProjectRoles(ctx context.Context, in *ListProjectRolesRequest, opts ...grpc.CallOption) (*ListProjectRolesResponse, error)
-	// Adds a role to a project, key must be unique in the project
 	AddProjectRole(ctx context.Context, in *AddProjectRoleRequest, opts ...grpc.CallOption) (*AddProjectRoleResponse, error)
-	// add a list of project roles in one request
 	BulkAddProjectRoles(ctx context.Context, in *BulkAddProjectRolesRequest, opts ...grpc.CallOption) (*BulkAddProjectRolesResponse, error)
-	// Changes a project role, key is not editable
-	// If a key should change, remove the role and create a new
 	UpdateProjectRole(ctx context.Context, in *UpdateProjectRoleRequest, opts ...grpc.CallOption) (*UpdateProjectRoleResponse, error)
-	// Removes role from UserGrants, ProjectGrants and from Project
 	RemoveProjectRole(ctx context.Context, in *RemoveProjectRoleRequest, opts ...grpc.CallOption) (*RemoveProjectRoleResponse, error)
-	// Returns all ZITADEL roles which are for project managers
 	ListProjectMemberRoles(ctx context.Context, in *ListProjectMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectMemberRolesResponse, error)
-	// Returns all ZITADEL managers of a projects
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectMembers(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ListProjectMembersResponse, error)
-	// Adds a new project manager, which is allowed to administrate in ZITADEL
 	AddProjectMember(ctx context.Context, in *AddProjectMemberRequest, opts ...grpc.CallOption) (*AddProjectMemberResponse, error)
-	// Change project manager, which is allowed to administrate in ZITADEL
 	UpdateProjectMember(ctx context.Context, in *UpdateProjectMemberRequest, opts ...grpc.CallOption) (*UpdateProjectMemberResponse, error)
-	// Remove project manager, which is allowed to administrate in ZITADEL
 	RemoveProjectMember(ctx context.Context, in *RemoveProjectMemberRequest, opts ...grpc.CallOption) (*RemoveProjectMemberResponse, error)
-	// Returns an application (oidc or api)
 	GetAppByID(ctx context.Context, in *GetAppByIDRequest, opts ...grpc.CallOption) (*GetAppByIDResponse, error)
-	// Returns all applications of a project matching the query
-	// Limit should always be set, there is a default limit set by the service
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
-	// Returns the history of the application (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListAppChanges(ctx context.Context, in *ListAppChangesRequest, opts ...grpc.CallOption) (*ListAppChangesResponse, error)
-	// Adds a new oidc client
-	// Returns a client id
-	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(ctx context.Context, in *AddOIDCAppRequest, opts ...grpc.CallOption) (*AddOIDCAppResponse, error)
-	// Adds a new saml service provider
-	// Returns a entityID
 	AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error)
-	// Adds a new api application
-	// Returns a client id
-	// Returns a new generated secret if needed (Depending on the configuration)
 	AddAPIApp(ctx context.Context, in *AddAPIAppRequest, opts ...grpc.CallOption) (*AddAPIAppResponse, error)
 	// Changes application
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
-	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error)
-	// Changes the configuration of the saml application
 	UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error)
-	// Changes the configuration of the api application
 	UpdateAPIAppConfig(ctx context.Context, in *UpdateAPIAppConfigRequest, opts ...grpc.CallOption) (*UpdateAPIAppConfigResponse, error)
-	// Set the state to deactivated
-	// Its not possible to request tokens for deactivated apps
-	// Returns an error if already deactivated
 	DeactivateApp(ctx context.Context, in *DeactivateAppRequest, opts ...grpc.CallOption) (*DeactivateAppResponse, error)
-	// Set the state to active
-	// Returns an error if not deactivated
 	ReactivateApp(ctx context.Context, in *ReactivateAppRequest, opts ...grpc.CallOption) (*ReactivateAppResponse, error)
-	// Removed the application
 	RemoveApp(ctx context.Context, in *RemoveAppRequest, opts ...grpc.CallOption) (*RemoveAppResponse, error)
-	// Generates a new client secret for the oidc client, make sure to save the response
 	RegenerateOIDCClientSecret(ctx context.Context, in *RegenerateOIDCClientSecretRequest, opts ...grpc.CallOption) (*RegenerateOIDCClientSecretResponse, error)
-	// Generates a new client secret for the api application, make sure to save the response
 	RegenerateAPIClientSecret(ctx context.Context, in *RegenerateAPIClientSecretRequest, opts ...grpc.CallOption) (*RegenerateAPIClientSecretResponse, error)
-	// Returns an application key
 	GetAppKey(ctx context.Context, in *GetAppKeyRequest, opts ...grpc.CallOption) (*GetAppKeyResponse, error)
-	// Returns all application keys matching the result
-	// Limit should always be set, there is a default limit set by the service
 	ListAppKeys(ctx context.Context, in *ListAppKeysRequest, opts ...grpc.CallOption) (*ListAppKeysResponse, error)
-	// Creates a new app key
-	// Will return key details in result, make sure to save it
 	AddAppKey(ctx context.Context, in *AddAppKeyRequest, opts ...grpc.CallOption) (*AddAppKeyResponse, error)
-	// Removes an app key
 	RemoveAppKey(ctx context.Context, in *RemoveAppKeyRequest, opts ...grpc.CallOption) (*RemoveAppKeyResponse, error)
-	// Returns the history of the project grant (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrantChanges(ctx context.Context, in *ListProjectGrantChangesRequest, opts ...grpc.CallOption) (*ListProjectGrantChangesResponse, error)
-	// Returns a project grant (ProjectGrant = Grant another organisation for my project)
 	GetProjectGrantByID(ctx context.Context, in *GetProjectGrantByIDRequest, opts ...grpc.CallOption) (*GetProjectGrantByIDResponse, error)
-	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrants(ctx context.Context, in *ListProjectGrantsRequest, opts ...grpc.CallOption) (*ListProjectGrantsResponse, error)
-	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
-	// Limit should always be set, there is a default limit set by the service
 	ListAllProjectGrants(ctx context.Context, in *ListAllProjectGrantsRequest, opts ...grpc.CallOption) (*ListAllProjectGrantsResponse, error)
-	// Add a new project grant (ProjectGrant = Grant another organisation for my project)
-	// Project Grant will be listed in granted project of the other organisation
 	AddProjectGrant(ctx context.Context, in *AddProjectGrantRequest, opts ...grpc.CallOption) (*AddProjectGrantResponse, error)
-	// Change project grant (ProjectGrant = Grant another organisation for my project)
-	// Project Grant will be listed in granted project of the other organisation
 	UpdateProjectGrant(ctx context.Context, in *UpdateProjectGrantRequest, opts ...grpc.CallOption) (*UpdateProjectGrantResponse, error)
-	// Set state of project grant to deactivated (ProjectGrant = Grant another organisation for my project)
-	// Returns error if project not active
 	DeactivateProjectGrant(ctx context.Context, in *DeactivateProjectGrantRequest, opts ...grpc.CallOption) (*DeactivateProjectGrantResponse, error)
-	// Set state of project grant to active (ProjectGrant = Grant another organisation for my project)
-	// Returns error if project not deactivated
 	ReactivateProjectGrant(ctx context.Context, in *ReactivateProjectGrantRequest, opts ...grpc.CallOption) (*ReactivateProjectGrantResponse, error)
-	// Removes project grant and all user grants for this project grant
 	RemoveProjectGrant(ctx context.Context, in *RemoveProjectGrantRequest, opts ...grpc.CallOption) (*RemoveProjectGrantResponse, error)
-	// Returns all ZITADEL roles which are for project grant managers
 	ListProjectGrantMemberRoles(ctx context.Context, in *ListProjectGrantMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectGrantMemberRolesResponse, error)
-	// Returns all ZITADEL managers of this project grant
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrantMembers(ctx context.Context, in *ListProjectGrantMembersRequest, opts ...grpc.CallOption) (*ListProjectGrantMembersResponse, error)
-	// Adds a new project grant manager, which is allowed to administrate in ZITADEL
 	AddProjectGrantMember(ctx context.Context, in *AddProjectGrantMemberRequest, opts ...grpc.CallOption) (*AddProjectGrantMemberResponse, error)
-	// Changes project grant manager, which is allowed to administrate in ZITADEL
 	UpdateProjectGrantMember(ctx context.Context, in *UpdateProjectGrantMemberRequest, opts ...grpc.CallOption) (*UpdateProjectGrantMemberResponse, error)
-	// Removed project grant manager
 	RemoveProjectGrantMember(ctx context.Context, in *RemoveProjectGrantMemberRequest, opts ...grpc.CallOption) (*RemoveProjectGrantMemberResponse, error)
-	// Returns a user grant (authorization of a user for a project)
 	GetUserGrantByID(ctx context.Context, in *GetUserGrantByIDRequest, opts ...grpc.CallOption) (*GetUserGrantByIDResponse, error)
-	// Returns al user grant matching the query (authorizations of user for projects)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserGrants(ctx context.Context, in *ListUserGrantRequest, opts ...grpc.CallOption) (*ListUserGrantResponse, error)
-	// Creates a new user grant (authorization of a user for a project with specified roles)
 	AddUserGrant(ctx context.Context, in *AddUserGrantRequest, opts ...grpc.CallOption) (*AddUserGrantResponse, error)
-	// Changes a user grant (authorization of a user for a project with specified roles)
 	UpdateUserGrant(ctx context.Context, in *UpdateUserGrantRequest, opts ...grpc.CallOption) (*UpdateUserGrantResponse, error)
-	// Sets the state of a user grant to deactivated
-	// User will not be able to use the granted project anymore
-	// Returns an error if user grant is already deactivated
 	DeactivateUserGrant(ctx context.Context, in *DeactivateUserGrantRequest, opts ...grpc.CallOption) (*DeactivateUserGrantResponse, error)
-	// Sets the state of a user grant to active
-	// Returns an error if user grant is not deactivated
 	ReactivateUserGrant(ctx context.Context, in *ReactivateUserGrantRequest, opts ...grpc.CallOption) (*ReactivateUserGrantResponse, error)
-	// Removes a user grant
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
-	// remove a list of user grants in one request
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
-	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
-	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetDomainPolicy(ctx context.Context, in *GetDomainPolicyRequest, opts ...grpc.CallOption) (*GetDomainPolicyResponse, error)
-	// Returns the login policy of the organisation
-	// With this policy the login gui can be configured
 	GetLoginPolicy(ctx context.Context, in *GetLoginPolicyRequest, opts ...grpc.CallOption) (*GetLoginPolicyResponse, error)
-	// Returns the default login policy configured in the IAM
 	GetDefaultLoginPolicy(ctx context.Context, in *GetDefaultLoginPolicyRequest, opts ...grpc.CallOption) (*GetDefaultLoginPolicyResponse, error)
-	// Add a custom login policy for the organisation
-	// With this policy the login gui can be configured
 	AddCustomLoginPolicy(ctx context.Context, in *AddCustomLoginPolicyRequest, opts ...grpc.CallOption) (*AddCustomLoginPolicyResponse, error)
-	// Change the custom login policy for the organisation
-	// With this policy the login gui can be configured
 	UpdateCustomLoginPolicy(ctx context.Context, in *UpdateCustomLoginPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomLoginPolicyResponse, error)
-	// Removes the custom login policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetLoginPolicyToDefault(ctx context.Context, in *ResetLoginPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLoginPolicyToDefaultResponse, error)
-	// Lists all possible identity providers configured on the organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListLoginPolicyIDPs(ctx context.Context, in *ListLoginPolicyIDPsRequest, opts ...grpc.CallOption) (*ListLoginPolicyIDPsResponse, error)
-	// Add a (preconfigured) identity provider to the custom login policy
 	AddIDPToLoginPolicy(ctx context.Context, in *AddIDPToLoginPolicyRequest, opts ...grpc.CallOption) (*AddIDPToLoginPolicyResponse, error)
-	// Remove a identity provider from the custom login policy
 	RemoveIDPFromLoginPolicy(ctx context.Context, in *RemoveIDPFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveIDPFromLoginPolicyResponse, error)
-	// Returns all configured second factors of the custom login policy
 	ListLoginPolicySecondFactors(ctx context.Context, in *ListLoginPolicySecondFactorsRequest, opts ...grpc.CallOption) (*ListLoginPolicySecondFactorsResponse, error)
-	// Adds a new second factor to the custom login policy
 	AddSecondFactorToLoginPolicy(ctx context.Context, in *AddSecondFactorToLoginPolicyRequest, opts ...grpc.CallOption) (*AddSecondFactorToLoginPolicyResponse, error)
-	// Remove a second factor from the custom login policy
 	RemoveSecondFactorFromLoginPolicy(ctx context.Context, in *RemoveSecondFactorFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveSecondFactorFromLoginPolicyResponse, error)
-	// Returns all configured multi factors of the custom login policy
 	ListLoginPolicyMultiFactors(ctx context.Context, in *ListLoginPolicyMultiFactorsRequest, opts ...grpc.CallOption) (*ListLoginPolicyMultiFactorsResponse, error)
-	// Adds a new multi factor to the custom login policy
 	AddMultiFactorToLoginPolicy(ctx context.Context, in *AddMultiFactorToLoginPolicyRequest, opts ...grpc.CallOption) (*AddMultiFactorToLoginPolicyResponse, error)
-	// Remove a multi factor from the custom login policy
 	RemoveMultiFactorFromLoginPolicy(ctx context.Context, in *RemoveMultiFactorFromLoginPolicyRequest, opts ...grpc.CallOption) (*RemoveMultiFactorFromLoginPolicyResponse, error)
-	// Returns the password complexity policy of the organisation
-	// With this policy the password strength can be configured
 	GetPasswordComplexityPolicy(ctx context.Context, in *GetPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*GetPasswordComplexityPolicyResponse, error)
-	// Returns the default password complexity policy of the IAM
-	// With this policy the password strength can be configured
 	GetDefaultPasswordComplexityPolicy(ctx context.Context, in *GetDefaultPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*GetDefaultPasswordComplexityPolicyResponse, error)
-	// Add a custom password complexity policy for the organisation
-	// With this policy the password strength can be configured
 	AddCustomPasswordComplexityPolicy(ctx context.Context, in *AddCustomPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*AddCustomPasswordComplexityPolicyResponse, error)
-	// Update the custom password complexity policy for the organisation
-	// With this policy the password strength can be configured
 	UpdateCustomPasswordComplexityPolicy(ctx context.Context, in *UpdateCustomPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPasswordComplexityPolicyResponse, error)
-	// Removes the custom password complexity policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetPasswordComplexityPolicyToDefault(ctx context.Context, in *ResetPasswordComplexityPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetPasswordComplexityPolicyToDefaultResponse, error)
 	// The password age policy is not used at the moment
 	GetPasswordAgePolicy(ctx context.Context, in *GetPasswordAgePolicyRequest, opts ...grpc.CallOption) (*GetPasswordAgePolicyResponse, error)
@@ -444,189 +204,94 @@ type ManagementServiceClient interface {
 	AddCustomLockoutPolicy(ctx context.Context, in *AddCustomLockoutPolicyRequest, opts ...grpc.CallOption) (*AddCustomLockoutPolicyResponse, error)
 	UpdateCustomLockoutPolicy(ctx context.Context, in *UpdateCustomLockoutPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomLockoutPolicyResponse, error)
 	ResetLockoutPolicyToDefault(ctx context.Context, in *ResetLockoutPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLockoutPolicyToDefaultResponse, error)
-	// Returns the privacy policy of the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
 	GetPrivacyPolicy(ctx context.Context, in *GetPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetPrivacyPolicyResponse, error)
-	// Returns the default privacy policy of the IAM
-	// With this policy the privacy relevant things can be configured (e.g tos link)
 	GetDefaultPrivacyPolicy(ctx context.Context, in *GetDefaultPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetDefaultPrivacyPolicyResponse, error)
-	// Add a custom privacy policy for the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
-	// Variable {{.Lang}} can be set to have different links based on the language
 	AddCustomPrivacyPolicy(ctx context.Context, in *AddCustomPrivacyPolicyRequest, opts ...grpc.CallOption) (*AddCustomPrivacyPolicyResponse, error)
-	// Update the privacy policy for the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
-	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdateCustomPrivacyPolicy(ctx context.Context, in *UpdateCustomPrivacyPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPrivacyPolicyResponse, error)
-	// Removes the privacy policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetPrivacyPolicyToDefault(ctx context.Context, in *ResetPrivacyPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetPrivacyPolicyToDefaultResponse, error)
-	// Returns the notification policy of the organisation
-	// With this notification policy it can be configured how users should be notified
 	GetNotificationPolicy(ctx context.Context, in *GetNotificationPolicyRequest, opts ...grpc.CallOption) (*GetNotificationPolicyResponse, error)
-	// Returns the default notification policy of the IAM
-	// With this notification privacy it can be configured how users should be notified
 	GetDefaultNotificationPolicy(ctx context.Context, in *GetDefaultNotificationPolicyRequest, opts ...grpc.CallOption) (*GetDefaultNotificationPolicyResponse, error)
-	// Add a custom notification policy for the organisation
-	// With this notification privacy it can be configured how users should be notified
 	AddCustomNotificationPolicy(ctx context.Context, in *AddCustomNotificationPolicyRequest, opts ...grpc.CallOption) (*AddCustomNotificationPolicyResponse, error)
-	// Update the notification policy for the organisation
-	// With this notification privacy it can be configured how users should be notified
 	UpdateCustomNotificationPolicy(ctx context.Context, in *UpdateCustomNotificationPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomNotificationPolicyResponse, error)
-	// Removes the notification policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetNotificationPolicyToDefault(ctx context.Context, in *ResetNotificationPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetNotificationPolicyToDefaultResponse, error)
-	// Returns the active label policy of the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetLabelPolicy(ctx context.Context, in *GetLabelPolicyRequest, opts ...grpc.CallOption) (*GetLabelPolicyResponse, error)
-	// Returns the preview label policy of the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetPreviewLabelPolicy(ctx context.Context, in *GetPreviewLabelPolicyRequest, opts ...grpc.CallOption) (*GetPreviewLabelPolicyResponse, error)
-	// Returns the default label policy of the IAM
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetDefaultLabelPolicy(ctx context.Context, in *GetDefaultLabelPolicyRequest, opts ...grpc.CallOption) (*GetDefaultLabelPolicyResponse, error)
-	// Add a custom label policy for the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	AddCustomLabelPolicy(ctx context.Context, in *AddCustomLabelPolicyRequest, opts ...grpc.CallOption) (*AddCustomLabelPolicyResponse, error)
-	// Changes the custom label policy for the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	UpdateCustomLabelPolicy(ctx context.Context, in *UpdateCustomLabelPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomLabelPolicyResponse, error)
-	// Activates all changes of the label policy
 	ActivateCustomLabelPolicy(ctx context.Context, in *ActivateCustomLabelPolicyRequest, opts ...grpc.CallOption) (*ActivateCustomLabelPolicyResponse, error)
-	// Removes the logo of the label policy
 	RemoveCustomLabelPolicyLogo(ctx context.Context, in *RemoveCustomLabelPolicyLogoRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoResponse, error)
-	// Removes the logo dark of the label policy
 	RemoveCustomLabelPolicyLogoDark(ctx context.Context, in *RemoveCustomLabelPolicyLogoDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyLogoDarkResponse, error)
-	// Removes the icon of the label policy
 	RemoveCustomLabelPolicyIcon(ctx context.Context, in *RemoveCustomLabelPolicyIconRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconResponse, error)
-	// Removes the logo dark of the label policy
 	RemoveCustomLabelPolicyIconDark(ctx context.Context, in *RemoveCustomLabelPolicyIconDarkRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyIconDarkResponse, error)
-	// Removes the font of the label policy
 	RemoveCustomLabelPolicyFont(ctx context.Context, in *RemoveCustomLabelPolicyFontRequest, opts ...grpc.CallOption) (*RemoveCustomLabelPolicyFontResponse, error)
-	// Removes the custom label policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(ctx context.Context, in *ResetLabelPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetLabelPolicyToDefaultResponse, error)
-	// Returns the custom text for initial message
 	GetCustomInitMessageText(ctx context.Context, in *GetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInitMessageTextResponse, error)
-	// Returns the default text for initial message
 	GetDefaultInitMessageText(ctx context.Context, in *GetDefaultInitMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInitMessageTextResponse, error)
-	// Sets the custom text for initial message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
 	SetCustomInitMessageText(ctx context.Context, in *SetCustomInitMessageTextRequest, opts ...grpc.CallOption) (*SetCustomInitMessageTextResponse, error)
-	// Removes the custom init message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomInitMessageTextToDefault(ctx context.Context, in *ResetCustomInitMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	// Returns the custom text for password reset message
 	GetCustomPasswordResetMessageText(ctx context.Context, in *GetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordResetMessageTextResponse, error)
-	// Returns the default text for password reset message
 	GetDefaultPasswordResetMessageText(ctx context.Context, in *GetDefaultPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordResetMessageTextResponse, error)
-	// Sets the custom text for password reset message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordResetMessageText(ctx context.Context, in *SetCustomPasswordResetMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordResetMessageTextResponse, error)
-	// Removes the custom password reset message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordResetMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	// Returns the custom text for verify email message
 	GetCustomVerifyEmailMessageText(ctx context.Context, in *GetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailMessageTextResponse, error)
-	// Returns the default text for verify email message
 	GetDefaultVerifyEmailMessageText(ctx context.Context, in *GetDefaultVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailMessageTextResponse, error)
-	// Sets the custom text for verify email message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomVerifyEmailMessageText(ctx context.Context, in *SetCustomVerifyEmailMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyEmailMessageTextResponse, error)
-	// Removes the custom verify email message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	// Returns the custom text for verify email message
 	GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	// Returns the custom text for verify email message
 	GetDefaultVerifyPhoneMessageText(ctx context.Context, in *GetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyPhoneMessageTextResponse, error)
-	// Sets the default custom text for verify email message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomVerifyPhoneMessageText(ctx context.Context, in *SetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*SetCustomVerifyPhoneMessageTextResponse, error)
-	// Removes the custom verify phone text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	// Returns the custom text for domain claimed message
 	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
-	// Returns the custom text for domain claimed message
 	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
-	// Sets the custom text for domain claimed message
-	// The Following Variables can be used:
-	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomDomainClaimedMessageCustomText(ctx context.Context, in *SetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*SetCustomDomainClaimedMessageTextResponse, error)
-	// Removes the custom domain claimed message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(ctx context.Context, in *ResetCustomDomainClaimedMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	// Returns the custom text for passwordless link message
 	GetCustomPasswordlessRegistrationMessageText(ctx context.Context, in *GetCustomPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	// Returns the custom text for passwordless link message
 	GetDefaultPasswordlessRegistrationMessageText(ctx context.Context, in *GetDefaultPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
-	// Sets the custom text for passwordless link message
-	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordlessRegistrationMessageCustomText(ctx context.Context, in *SetCustomPasswordlessRegistrationMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordlessRegistrationMessageTextResponse, error)
-	// Removes the custom passwordless link message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	// Returns the custom text for password change message
 	GetCustomPasswordChangeMessageText(ctx context.Context, in *GetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordChangeMessageTextResponse, error)
-	// Returns the custom text for password change link message
 	GetDefaultPasswordChangeMessageText(ctx context.Context, in *GetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordChangeMessageTextResponse, error)
-	// Sets the custom text for password change message
-	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordChangeMessageCustomText(ctx context.Context, in *SetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordChangeMessageTextResponse, error)
-	// Removes the custom password change message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordChangeMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordChangeMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
-	// Returns the custom texts for login ui
 	GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error)
-	// Returns the custom texts for login ui
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
-	// Sets the default custom text for login ui
-	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(ctx context.Context, in *SetCustomLoginTextsRequest, opts ...grpc.CallOption) (*SetCustomLoginTextsResponse, error)
-	// Removes the custom login text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomLoginTextToDefault(ctx context.Context, in *ResetCustomLoginTextsToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomLoginTextsToDefaultResponse, error)
-	// Returns a identity provider configuration of the organisation
 	GetOrgIDPByID(ctx context.Context, in *GetOrgIDPByIDRequest, opts ...grpc.CallOption) (*GetOrgIDPByIDResponse, error)
-	// Returns all identity provider configuration in the organisation, which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgIDPs(ctx context.Context, in *ListOrgIDPsRequest, opts ...grpc.CallOption) (*ListOrgIDPsResponse, error)
-	// Add a new identity provider configuration in the organisation
-	// Provider must be OIDC compliant
 	AddOrgOIDCIDP(ctx context.Context, in *AddOrgOIDCIDPRequest, opts ...grpc.CallOption) (*AddOrgOIDCIDPResponse, error)
-	// Add a new jwt identity provider configuration in the organisation
 	AddOrgJWTIDP(ctx context.Context, in *AddOrgJWTIDPRequest, opts ...grpc.CallOption) (*AddOrgJWTIDPResponse, error)
-	// Deactivate identity provider configuration
-	// Users will not be able to use this provider for login (e.g Google, Microsoft, AD, etc)
-	// Returns error if already deactivated
 	DeactivateOrgIDP(ctx context.Context, in *DeactivateOrgIDPRequest, opts ...grpc.CallOption) (*DeactivateOrgIDPResponse, error)
-	// Activate identity provider configuration
-	// Returns error if not deactivated
 	ReactivateOrgIDP(ctx context.Context, in *ReactivateOrgIDPRequest, opts ...grpc.CallOption) (*ReactivateOrgIDPResponse, error)
-	// Removes identity provider configuration
-	// Will remove all linked providers of this configuration on the users
 	RemoveOrgIDP(ctx context.Context, in *RemoveOrgIDPRequest, opts ...grpc.CallOption) (*RemoveOrgIDPResponse, error)
-	// Change identity provider configuration of the organisation
 	UpdateOrgIDP(ctx context.Context, in *UpdateOrgIDPRequest, opts ...grpc.CallOption) (*UpdateOrgIDPResponse, error)
-	// Change OIDC identity provider configuration of the organisation
 	UpdateOrgIDPOIDCConfig(ctx context.Context, in *UpdateOrgIDPOIDCConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPOIDCConfigResponse, error)
-	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(ctx context.Context, in *UpdateOrgIDPJWTConfigRequest, opts ...grpc.CallOption) (*UpdateOrgIDPJWTConfigResponse, error)
 	// Returns all identity providers, which match the query
 	// Limit should always be set, there is a default limit set by the service
 	ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error)
-	// Returns an identity provider of the organisation
+	// Returns an identity provider of the organization
 	GetProviderByID(ctx context.Context, in *GetProviderByIDRequest, opts ...grpc.CallOption) (*GetProviderByIDResponse, error)
-	// Add a new ldap identity provider in the organisation
+	// Add a new OAuth2 identity provider in the organization
+	AddGenericOAuthProvider(ctx context.Context, in *AddGenericOAuthProviderRequest, opts ...grpc.CallOption) (*AddGenericOAuthProviderResponse, error)
+	// Change an existing OAuth2 identity provider in the organization
+	UpdateGenericOAuthProvider(ctx context.Context, in *UpdateGenericOAuthProviderRequest, opts ...grpc.CallOption) (*UpdateGenericOAuthProviderResponse, error)
+	// Add a new OIDC identity provider in the organisation
+	AddGenericOIDCProvider(ctx context.Context, in *AddGenericOIDCProviderRequest, opts ...grpc.CallOption) (*AddGenericOIDCProviderResponse, error)
+	// Change an existing OIDC identity provider in the organisation
+	UpdateGenericOIDCProvider(ctx context.Context, in *UpdateGenericOIDCProviderRequest, opts ...grpc.CallOption) (*UpdateGenericOIDCProviderResponse, error)
+	// Add a new JWT identity provider in the organisation
+	AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error)
+	// Change an existing JWT identity provider in the organisation
+	UpdateJWTProvider(ctx context.Context, in *UpdateJWTProviderRequest, opts ...grpc.CallOption) (*UpdateJWTProviderResponse, error)
+	// Add a new Google identity provider in the organisation
+	AddGoogleProvider(ctx context.Context, in *AddGoogleProviderRequest, opts ...grpc.CallOption) (*AddGoogleProviderResponse, error)
+	// Change an existing Google identity provider in the organization
+	UpdateGoogleProvider(ctx context.Context, in *UpdateGoogleProviderRequest, opts ...grpc.CallOption) (*UpdateGoogleProviderResponse, error)
+	// Add a new LDAP identity provider in the organization
 	AddLDAPProvider(ctx context.Context, in *AddLDAPProviderRequest, opts ...grpc.CallOption) (*AddLDAPProviderResponse, error)
-	// Change an existing ldap identity provider in the organisation
+	// Change an existing LDAP identity provider in the organization
 	UpdateLDAPProvider(ctx context.Context, in *UpdateLDAPProviderRequest, opts ...grpc.CallOption) (*UpdateLDAPProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
@@ -2840,6 +2505,78 @@ func (c *managementServiceClient) GetProviderByID(ctx context.Context, in *GetPr
 	return out, nil
 }
 
+func (c *managementServiceClient) AddGenericOAuthProvider(ctx context.Context, in *AddGenericOAuthProviderRequest, opts ...grpc.CallOption) (*AddGenericOAuthProviderResponse, error) {
+	out := new(AddGenericOAuthProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddGenericOAuthProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateGenericOAuthProvider(ctx context.Context, in *UpdateGenericOAuthProviderRequest, opts ...grpc.CallOption) (*UpdateGenericOAuthProviderResponse, error) {
+	out := new(UpdateGenericOAuthProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateGenericOAuthProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) AddGenericOIDCProvider(ctx context.Context, in *AddGenericOIDCProviderRequest, opts ...grpc.CallOption) (*AddGenericOIDCProviderResponse, error) {
+	out := new(AddGenericOIDCProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddGenericOIDCProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateGenericOIDCProvider(ctx context.Context, in *UpdateGenericOIDCProviderRequest, opts ...grpc.CallOption) (*UpdateGenericOIDCProviderResponse, error) {
+	out := new(UpdateGenericOIDCProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateGenericOIDCProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error) {
+	out := new(AddJWTProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddJWTProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateJWTProvider(ctx context.Context, in *UpdateJWTProviderRequest, opts ...grpc.CallOption) (*UpdateJWTProviderResponse, error) {
+	out := new(UpdateJWTProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateJWTProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) AddGoogleProvider(ctx context.Context, in *AddGoogleProviderRequest, opts ...grpc.CallOption) (*AddGoogleProviderResponse, error) {
+	out := new(AddGoogleProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddGoogleProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateGoogleProvider(ctx context.Context, in *UpdateGoogleProviderRequest, opts ...grpc.CallOption) (*UpdateGoogleProviderResponse, error) {
+	out := new(UpdateGoogleProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateGoogleProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) AddLDAPProvider(ctx context.Context, in *AddLDAPProviderRequest, opts ...grpc.CallOption) (*AddLDAPProviderResponse, error) {
 	out := new(AddLDAPProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddLDAPProvider", in, out, opts...)
@@ -2981,414 +2718,174 @@ func (c *managementServiceClient) SetTriggerActions(ctx context.Context, in *Set
 type ManagementServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	GetOIDCInformation(context.Context, *GetOIDCInformationRequest) (*GetOIDCInformationResponse, error)
-	// Returns some needed settings of the IAM (Global Organisation ID, Zitadel Project ID)
 	GetIAM(context.Context, *GetIAMRequest) (*GetIAMResponse, error)
-	// Returns the default languages
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
-	// Returns the requested full blown user (human or machine)
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
-	// Searches a user over all organisations
-	// the login name has to match exactly
 	GetUserByLoginNameGlobal(context.Context, *GetUserByLoginNameGlobalRequest) (*GetUserByLoginNameGlobalResponse, error)
-	// Return the users matching the query
-	// Limit should always be set, there is a default limit set by the service
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// Returns the history of the user (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserChanges(context.Context, *ListUserChangesRequest) (*ListUserChangesResponse, error)
-	// Returns if a user with the searched email or username is unique
 	IsUserUnique(context.Context, *IsUserUniqueRequest) (*IsUserUniqueResponse, error)
-	// Create a user of the type human
-	// A email will be sent to the user if email is not verified or no password is set
-	// If a password is given, the user has to change on the next login
+	// deprecated: use ImportHumanUser
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
-	// Create a user of the type human
-	// A email will be sent to the user if email is not verified or no password is set
-	// If a password is given, the user doesn't have to change on the next login
 	ImportHumanUser(context.Context, *ImportHumanUserRequest) (*ImportHumanUserResponse, error)
-	// Create a user of the type machine
 	AddMachineUser(context.Context, *AddMachineUserRequest) (*AddMachineUserResponse, error)
-	// Changes the user state to deactivated
-	// The user will not be able to login
-	// returns an error if user state is already deactivated
 	DeactivateUser(context.Context, *DeactivateUserRequest) (*DeactivateUserResponse, error)
-	// Changes the user state to active
-	// returns an error if user state is not deactivated
 	ReactivateUser(context.Context, *ReactivateUserRequest) (*ReactivateUserResponse, error)
-	// Changes the user state to deactivated
-	// The user will not be able to login
-	// returns an error if user state is already locked
 	LockUser(context.Context, *LockUserRequest) (*LockUserResponse, error)
-	// Changes the user state to active
-	// returns an error if user state is not locked
 	UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error)
-	// Changes the user state to deleted
 	RemoveUser(context.Context, *RemoveUserRequest) (*RemoveUserResponse, error)
-	// Changes the username
 	UpdateUserName(context.Context, *UpdateUserNameRequest) (*UpdateUserNameResponse, error)
-	// Sets a user metadata by key
 	SetUserMetadata(context.Context, *SetUserMetadataRequest) (*SetUserMetadataResponse, error)
-	// Set a list of user metadata
 	BulkSetUserMetadata(context.Context, *BulkSetUserMetadataRequest) (*BulkSetUserMetadataResponse, error)
-	// Returns the user metadata
 	ListUserMetadata(context.Context, *ListUserMetadataRequest) (*ListUserMetadataResponse, error)
-	// Returns the user metadata by key
 	GetUserMetadata(context.Context, *GetUserMetadataRequest) (*GetUserMetadataResponse, error)
-	// Removes a user metadata by key
 	RemoveUserMetadata(context.Context, *RemoveUserMetadataRequest) (*RemoveUserMetadataResponse, error)
-	// Set a list of user metadata
 	BulkRemoveUserMetadata(context.Context, *BulkRemoveUserMetadataRequest) (*BulkRemoveUserMetadataResponse, error)
-	// Returns the profile of the human
 	GetHumanProfile(context.Context, *GetHumanProfileRequest) (*GetHumanProfileResponse, error)
-	// Changes the profile of the human
 	UpdateHumanProfile(context.Context, *UpdateHumanProfileRequest) (*UpdateHumanProfileResponse, error)
-	// GetHumanEmail returns the email and verified state of the human
 	GetHumanEmail(context.Context, *GetHumanEmailRequest) (*GetHumanEmailResponse, error)
-	// Changes the email of the human
-	// If state is not verified, the user will get a verification email
 	UpdateHumanEmail(context.Context, *UpdateHumanEmailRequest) (*UpdateHumanEmailResponse, error)
-	// Resends an email to the given email address to finish the initialization process of the user
-	// Changes the email address of the user if it is provided
 	ResendHumanInitialization(context.Context, *ResendHumanInitializationRequest) (*ResendHumanInitializationResponse, error)
-	// Resends an email to the given email address to finish the email verification process of the user
 	ResendHumanEmailVerification(context.Context, *ResendHumanEmailVerificationRequest) (*ResendHumanEmailVerificationResponse, error)
-	// Returns the phone and verified state of the human phone
 	GetHumanPhone(context.Context, *GetHumanPhoneRequest) (*GetHumanPhoneResponse, error)
-	// Changes the phone number
-	// If verified is not set, the user will get an sms to verify the number
 	UpdateHumanPhone(context.Context, *UpdateHumanPhoneRequest) (*UpdateHumanPhoneResponse, error)
-	// Removes the phone number of the human
 	RemoveHumanPhone(context.Context, *RemoveHumanPhoneRequest) (*RemoveHumanPhoneResponse, error)
-	// An sms will be sent to the given phone number to finish the phone verification process of the user
 	ResendHumanPhoneVerification(context.Context, *ResendHumanPhoneVerificationRequest) (*ResendHumanPhoneVerificationResponse, error)
-	// Removes the avatar number of the human
 	RemoveHumanAvatar(context.Context, *RemoveHumanAvatarRequest) (*RemoveHumanAvatarResponse, error)
 	// deprecated: use SetHumanPassword
 	SetHumanInitialPassword(context.Context, *SetHumanInitialPasswordRequest) (*SetHumanInitialPasswordResponse, error)
-	// Set a new password for a user, on default the user has to change the password on the next login
-	// Set no_change_required to true if the user does not have to change the password on the next login
 	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
-	// An email will be sent to the given address to reset the password of the user
 	SendHumanResetPasswordNotification(context.Context, *SendHumanResetPasswordNotificationRequest) (*SendHumanResetPasswordNotificationResponse, error)
-	// Returns a list of all factors (second and multi) which are configured on the user
 	ListHumanAuthFactors(context.Context, *ListHumanAuthFactorsRequest) (*ListHumanAuthFactorsResponse, error)
-	// The otp second factor will be removed from the user
-	// Because only one otp can be configured per user, the configured one will be removed
 	RemoveHumanAuthFactorOTP(context.Context, *RemoveHumanAuthFactorOTPRequest) (*RemoveHumanAuthFactorOTPResponse, error)
-	// The u2f (universial second factor) will be removed from the user
 	RemoveHumanAuthFactorU2F(context.Context, *RemoveHumanAuthFactorU2FRequest) (*RemoveHumanAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authenticators
 	ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error)
-	// Adds a new passwordless authenticator link to the user and returns it directly
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error)
-	// Adds a new passwordless authenticator link to the user and sends it to the registered email address
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error)
-	// Removed a configured passwordless authenticator
 	RemoveHumanPasswordless(context.Context, *RemoveHumanPasswordlessRequest) (*RemoveHumanPasswordlessResponse, error)
-	// Changes a machine user
 	UpdateMachine(context.Context, *UpdateMachineRequest) (*UpdateMachineResponse, error)
-	// Generates and sets a new machine secret
 	GenerateMachineSecret(context.Context, *GenerateMachineSecretRequest) (*GenerateMachineSecretResponse, error)
-	// Removes the machine secret
 	RemoveMachineSecret(context.Context, *RemoveMachineSecretRequest) (*RemoveMachineSecretResponse, error)
-	// Returns a machine key of a (machine) user
 	GetMachineKeyByIDs(context.Context, *GetMachineKeyByIDsRequest) (*GetMachineKeyByIDsResponse, error)
-	// Returns all machine keys of a (machine) user which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListMachineKeys(context.Context, *ListMachineKeysRequest) (*ListMachineKeysResponse, error)
-	// Generates a new machine key, details should be stored after return
 	AddMachineKey(context.Context, *AddMachineKeyRequest) (*AddMachineKeyResponse, error)
-	// Removes a machine key
 	RemoveMachineKey(context.Context, *RemoveMachineKeyRequest) (*RemoveMachineKeyResponse, error)
-	// Returns a personal access token of a (machine) user
 	GetPersonalAccessTokenByIDs(context.Context, *GetPersonalAccessTokenByIDsRequest) (*GetPersonalAccessTokenByIDsResponse, error)
-	// Returns all personal access tokens of a (machine) user which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
-	// Generates a new personal access token for a machine user, details should be stored after return
 	AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error)
-	// Removes a personal access token
 	RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error)
-	// Lists all identity providers (social logins) which a human has configured (e.g Google, Microsoft, AD, etc..)
-	// Limit should always be set, there is a default limit set by the service
 	ListHumanLinkedIDPs(context.Context, *ListHumanLinkedIDPsRequest) (*ListHumanLinkedIDPsResponse, error)
-	// Removed a configured identity provider (social login) of a human
 	RemoveHumanLinkedIDP(context.Context, *RemoveHumanLinkedIDPRequest) (*RemoveHumanLinkedIDPResponse, error)
-	// Show all the permissions a user has iin ZITADEL (ZITADEL Manager)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserMemberships(context.Context, *ListUserMembershipsRequest) (*ListUserMembershipsResponse, error)
-	// Returns the org given in the header
 	GetMyOrg(context.Context, *GetMyOrgRequest) (*GetMyOrgResponse, error)
-	// Search a org over all organisations
-	// Domain must match exactly
 	GetOrgByDomainGlobal(context.Context, *GetOrgByDomainGlobalRequest) (*GetOrgByDomainGlobalResponse, error)
-	// Returns the history of my organisation (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgChanges(context.Context, *ListOrgChangesRequest) (*ListOrgChangesResponse, error)
-	// Creates a new organisation
 	AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error)
-	// Changes my organisation
 	UpdateOrg(context.Context, *UpdateOrgRequest) (*UpdateOrgResponse, error)
-	// Sets the state of my organisation to deactivated
-	// Users of this organisation will not be able login
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
-	// Sets the state of my organisation to active
 	ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error)
-	// Sets the state of my organisation and all its resource (Users, Projects, Grants to and from the org) to removed
-	// Users of this organisation will not be able login
 	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
-	// Sets a org metadata by key
 	SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error)
-	// Set a list of org metadata
 	BulkSetOrgMetadata(context.Context, *BulkSetOrgMetadataRequest) (*BulkSetOrgMetadataResponse, error)
-	// Returns the org metadata
 	ListOrgMetadata(context.Context, *ListOrgMetadataRequest) (*ListOrgMetadataResponse, error)
-	// Returns the org metadata by key
 	GetOrgMetadata(context.Context, *GetOrgMetadataRequest) (*GetOrgMetadataResponse, error)
-	// Removes a org metadata by key
 	RemoveOrgMetadata(context.Context, *RemoveOrgMetadataRequest) (*RemoveOrgMetadataResponse, error)
-	// Set a list of org metadata
 	BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error)
-	// Returns all registered domains of my organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error)
-	// Adds a new domain to my organisation
 	AddOrgDomain(context.Context, *AddOrgDomainRequest) (*AddOrgDomainResponse, error)
-	// Removed the domain from my organisation
 	RemoveOrgDomain(context.Context, *RemoveOrgDomainRequest) (*RemoveOrgDomainResponse, error)
-	// Generates a new file to validate you domain
 	GenerateOrgDomainValidation(context.Context, *GenerateOrgDomainValidationRequest) (*GenerateOrgDomainValidationResponse, error)
-	// Validates your domain with the choosen method
-	// Validated domains must be unique
 	ValidateOrgDomain(context.Context, *ValidateOrgDomainRequest) (*ValidateOrgDomainResponse, error)
-	// Sets the domain as primary
-	// Primary domain is shown as suffix on the preferred username on the users of the organisation
 	SetPrimaryOrgDomain(context.Context, *SetPrimaryOrgDomainRequest) (*SetPrimaryOrgDomainResponse, error)
-	// Returns all ZITADEL roles which are for organisation managers
 	ListOrgMemberRoles(context.Context, *ListOrgMemberRolesRequest) (*ListOrgMemberRolesResponse, error)
-	// Returns all ZITADEL managers of this organisation (Project and Project Grant managers not included)
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgMembers(context.Context, *ListOrgMembersRequest) (*ListOrgMembersResponse, error)
-	// Adds a new organisation manager, which is allowed to administrate ZITADEL
 	AddOrgMember(context.Context, *AddOrgMemberRequest) (*AddOrgMemberResponse, error)
-	// Changes the organisation manager
 	UpdateOrgMember(context.Context, *UpdateOrgMemberRequest) (*UpdateOrgMemberResponse, error)
-	// Removes an organisation manager
 	RemoveOrgMember(context.Context, *RemoveOrgMemberRequest) (*RemoveOrgMemberResponse, error)
-	// Returns a project from my organisation (no granted projects)
 	GetProjectByID(context.Context, *GetProjectByIDRequest) (*GetProjectByIDResponse, error)
-	// returns a project my organisation got granted from another organisation
 	GetGrantedProjectByID(context.Context, *GetGrantedProjectByIDRequest) (*GetGrantedProjectByIDResponse, error)
-	// Returns all projects my organisation is the owner (no granted projects)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
-	// returns all projects my organisation got granted from another organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListGrantedProjects(context.Context, *ListGrantedProjectsRequest) (*ListGrantedProjectsResponse, error)
-	// returns all roles of a project grant
-	// Limit should always be set, there is a default limit set by the service
 	ListGrantedProjectRoles(context.Context, *ListGrantedProjectRolesRequest) (*ListGrantedProjectRolesResponse, error)
-	// Returns the history of the project (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectChanges(context.Context, *ListProjectChangesRequest) (*ListProjectChangesResponse, error)
-	// Adds an new project to the organisation
 	AddProject(context.Context, *AddProjectRequest) (*AddProjectResponse, error)
-	// Changes a project
 	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
-	// Sets the state of a project to deactivated
-	// Returns an error if project is already deactivated
 	DeactivateProject(context.Context, *DeactivateProjectRequest) (*DeactivateProjectResponse, error)
-	// Sets the state of a project to active
-	// Returns an error if project is not deactivated
 	ReactivateProject(context.Context, *ReactivateProjectRequest) (*ReactivateProjectResponse, error)
-	// Removes a project
-	// All project grants, applications and user grants for this project will be removed
 	RemoveProject(context.Context, *RemoveProjectRequest) (*RemoveProjectResponse, error)
-	// Returns all roles of a project matching the search query
-	// If no limit is requested, default limit will be set, if the limit is higher then the default an error will be returned
 	ListProjectRoles(context.Context, *ListProjectRolesRequest) (*ListProjectRolesResponse, error)
-	// Adds a role to a project, key must be unique in the project
 	AddProjectRole(context.Context, *AddProjectRoleRequest) (*AddProjectRoleResponse, error)
-	// add a list of project roles in one request
 	BulkAddProjectRoles(context.Context, *BulkAddProjectRolesRequest) (*BulkAddProjectRolesResponse, error)
-	// Changes a project role, key is not editable
-	// If a key should change, remove the role and create a new
 	UpdateProjectRole(context.Context, *UpdateProjectRoleRequest) (*UpdateProjectRoleResponse, error)
-	// Removes role from UserGrants, ProjectGrants and from Project
 	RemoveProjectRole(context.Context, *RemoveProjectRoleRequest) (*RemoveProjectRoleResponse, error)
-	// Returns all ZITADEL roles which are for project managers
 	ListProjectMemberRoles(context.Context, *ListProjectMemberRolesRequest) (*ListProjectMemberRolesResponse, error)
-	// Returns all ZITADEL managers of a projects
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error)
-	// Adds a new project manager, which is allowed to administrate in ZITADEL
 	AddProjectMember(context.Context, *AddProjectMemberRequest) (*AddProjectMemberResponse, error)
-	// Change project manager, which is allowed to administrate in ZITADEL
 	UpdateProjectMember(context.Context, *UpdateProjectMemberRequest) (*UpdateProjectMemberResponse, error)
-	// Remove project manager, which is allowed to administrate in ZITADEL
 	RemoveProjectMember(context.Context, *RemoveProjectMemberRequest) (*RemoveProjectMemberResponse, error)
-	// Returns an application (oidc or api)
 	GetAppByID(context.Context, *GetAppByIDRequest) (*GetAppByIDResponse, error)
-	// Returns all applications of a project matching the query
-	// Limit should always be set, there is a default limit set by the service
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
-	// Returns the history of the application (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListAppChanges(context.Context, *ListAppChangesRequest) (*ListAppChangesResponse, error)
-	// Adds a new oidc client
-	// Returns a client id
-	// Returns a new generated secret if needed (Depending on the configuration)
 	AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error)
-	// Adds a new saml service provider
-	// Returns a entityID
 	AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error)
-	// Adds a new api application
-	// Returns a client id
-	// Returns a new generated secret if needed (Depending on the configuration)
 	AddAPIApp(context.Context, *AddAPIAppRequest) (*AddAPIAppResponse, error)
 	// Changes application
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
-	// Changes the configuration of the oidc client
 	UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error)
-	// Changes the configuration of the saml application
 	UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error)
-	// Changes the configuration of the api application
 	UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error)
-	// Set the state to deactivated
-	// Its not possible to request tokens for deactivated apps
-	// Returns an error if already deactivated
 	DeactivateApp(context.Context, *DeactivateAppRequest) (*DeactivateAppResponse, error)
-	// Set the state to active
-	// Returns an error if not deactivated
 	ReactivateApp(context.Context, *ReactivateAppRequest) (*ReactivateAppResponse, error)
-	// Removed the application
 	RemoveApp(context.Context, *RemoveAppRequest) (*RemoveAppResponse, error)
-	// Generates a new client secret for the oidc client, make sure to save the response
 	RegenerateOIDCClientSecret(context.Context, *RegenerateOIDCClientSecretRequest) (*RegenerateOIDCClientSecretResponse, error)
-	// Generates a new client secret for the api application, make sure to save the response
 	RegenerateAPIClientSecret(context.Context, *RegenerateAPIClientSecretRequest) (*RegenerateAPIClientSecretResponse, error)
-	// Returns an application key
 	GetAppKey(context.Context, *GetAppKeyRequest) (*GetAppKeyResponse, error)
-	// Returns all application keys matching the result
-	// Limit should always be set, there is a default limit set by the service
 	ListAppKeys(context.Context, *ListAppKeysRequest) (*ListAppKeysResponse, error)
-	// Creates a new app key
-	// Will return key details in result, make sure to save it
 	AddAppKey(context.Context, *AddAppKeyRequest) (*AddAppKeyResponse, error)
-	// Removes an app key
 	RemoveAppKey(context.Context, *RemoveAppKeyRequest) (*RemoveAppKeyResponse, error)
-	// Returns the history of the project grant (each event)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrantChanges(context.Context, *ListProjectGrantChangesRequest) (*ListProjectGrantChangesResponse, error)
-	// Returns a project grant (ProjectGrant = Grant another organisation for my project)
 	GetProjectGrantByID(context.Context, *GetProjectGrantByIDRequest) (*GetProjectGrantByIDResponse, error)
-	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrants(context.Context, *ListProjectGrantsRequest) (*ListProjectGrantsResponse, error)
-	// Returns all project grants matching the query, (ProjectGrant = Grant another organisation for my project)
-	// Limit should always be set, there is a default limit set by the service
 	ListAllProjectGrants(context.Context, *ListAllProjectGrantsRequest) (*ListAllProjectGrantsResponse, error)
-	// Add a new project grant (ProjectGrant = Grant another organisation for my project)
-	// Project Grant will be listed in granted project of the other organisation
 	AddProjectGrant(context.Context, *AddProjectGrantRequest) (*AddProjectGrantResponse, error)
-	// Change project grant (ProjectGrant = Grant another organisation for my project)
-	// Project Grant will be listed in granted project of the other organisation
 	UpdateProjectGrant(context.Context, *UpdateProjectGrantRequest) (*UpdateProjectGrantResponse, error)
-	// Set state of project grant to deactivated (ProjectGrant = Grant another organisation for my project)
-	// Returns error if project not active
 	DeactivateProjectGrant(context.Context, *DeactivateProjectGrantRequest) (*DeactivateProjectGrantResponse, error)
-	// Set state of project grant to active (ProjectGrant = Grant another organisation for my project)
-	// Returns error if project not deactivated
 	ReactivateProjectGrant(context.Context, *ReactivateProjectGrantRequest) (*ReactivateProjectGrantResponse, error)
-	// Removes project grant and all user grants for this project grant
 	RemoveProjectGrant(context.Context, *RemoveProjectGrantRequest) (*RemoveProjectGrantResponse, error)
-	// Returns all ZITADEL roles which are for project grant managers
 	ListProjectGrantMemberRoles(context.Context, *ListProjectGrantMemberRolesRequest) (*ListProjectGrantMemberRolesResponse, error)
-	// Returns all ZITADEL managers of this project grant
-	// Limit should always be set, there is a default limit set by the service
 	ListProjectGrantMembers(context.Context, *ListProjectGrantMembersRequest) (*ListProjectGrantMembersResponse, error)
-	// Adds a new project grant manager, which is allowed to administrate in ZITADEL
 	AddProjectGrantMember(context.Context, *AddProjectGrantMemberRequest) (*AddProjectGrantMemberResponse, error)
-	// Changes project grant manager, which is allowed to administrate in ZITADEL
 	UpdateProjectGrantMember(context.Context, *UpdateProjectGrantMemberRequest) (*UpdateProjectGrantMemberResponse, error)
-	// Removed project grant manager
 	RemoveProjectGrantMember(context.Context, *RemoveProjectGrantMemberRequest) (*RemoveProjectGrantMemberResponse, error)
-	// Returns a user grant (authorization of a user for a project)
 	GetUserGrantByID(context.Context, *GetUserGrantByIDRequest) (*GetUserGrantByIDResponse, error)
-	// Returns al user grant matching the query (authorizations of user for projects)
-	// Limit should always be set, there is a default limit set by the service
 	ListUserGrants(context.Context, *ListUserGrantRequest) (*ListUserGrantResponse, error)
-	// Creates a new user grant (authorization of a user for a project with specified roles)
 	AddUserGrant(context.Context, *AddUserGrantRequest) (*AddUserGrantResponse, error)
-	// Changes a user grant (authorization of a user for a project with specified roles)
 	UpdateUserGrant(context.Context, *UpdateUserGrantRequest) (*UpdateUserGrantResponse, error)
-	// Sets the state of a user grant to deactivated
-	// User will not be able to use the granted project anymore
-	// Returns an error if user grant is already deactivated
 	DeactivateUserGrant(context.Context, *DeactivateUserGrantRequest) (*DeactivateUserGrantResponse, error)
-	// Sets the state of a user grant to active
-	// Returns an error if user grant is not deactivated
 	ReactivateUserGrant(context.Context, *ReactivateUserGrantRequest) (*ReactivateUserGrantResponse, error)
-	// Removes a user grant
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
-	// remove a list of user grants in one request
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
-	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
-	// Returns the domain policy (this policy is managed by the iam administrator)
 	GetDomainPolicy(context.Context, *GetDomainPolicyRequest) (*GetDomainPolicyResponse, error)
-	// Returns the login policy of the organisation
-	// With this policy the login gui can be configured
 	GetLoginPolicy(context.Context, *GetLoginPolicyRequest) (*GetLoginPolicyResponse, error)
-	// Returns the default login policy configured in the IAM
 	GetDefaultLoginPolicy(context.Context, *GetDefaultLoginPolicyRequest) (*GetDefaultLoginPolicyResponse, error)
-	// Add a custom login policy for the organisation
-	// With this policy the login gui can be configured
 	AddCustomLoginPolicy(context.Context, *AddCustomLoginPolicyRequest) (*AddCustomLoginPolicyResponse, error)
-	// Change the custom login policy for the organisation
-	// With this policy the login gui can be configured
 	UpdateCustomLoginPolicy(context.Context, *UpdateCustomLoginPolicyRequest) (*UpdateCustomLoginPolicyResponse, error)
-	// Removes the custom login policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetLoginPolicyToDefault(context.Context, *ResetLoginPolicyToDefaultRequest) (*ResetLoginPolicyToDefaultResponse, error)
-	// Lists all possible identity providers configured on the organisation
-	// Limit should always be set, there is a default limit set by the service
 	ListLoginPolicyIDPs(context.Context, *ListLoginPolicyIDPsRequest) (*ListLoginPolicyIDPsResponse, error)
-	// Add a (preconfigured) identity provider to the custom login policy
 	AddIDPToLoginPolicy(context.Context, *AddIDPToLoginPolicyRequest) (*AddIDPToLoginPolicyResponse, error)
-	// Remove a identity provider from the custom login policy
 	RemoveIDPFromLoginPolicy(context.Context, *RemoveIDPFromLoginPolicyRequest) (*RemoveIDPFromLoginPolicyResponse, error)
-	// Returns all configured second factors of the custom login policy
 	ListLoginPolicySecondFactors(context.Context, *ListLoginPolicySecondFactorsRequest) (*ListLoginPolicySecondFactorsResponse, error)
-	// Adds a new second factor to the custom login policy
 	AddSecondFactorToLoginPolicy(context.Context, *AddSecondFactorToLoginPolicyRequest) (*AddSecondFactorToLoginPolicyResponse, error)
-	// Remove a second factor from the custom login policy
 	RemoveSecondFactorFromLoginPolicy(context.Context, *RemoveSecondFactorFromLoginPolicyRequest) (*RemoveSecondFactorFromLoginPolicyResponse, error)
-	// Returns all configured multi factors of the custom login policy
 	ListLoginPolicyMultiFactors(context.Context, *ListLoginPolicyMultiFactorsRequest) (*ListLoginPolicyMultiFactorsResponse, error)
-	// Adds a new multi factor to the custom login policy
 	AddMultiFactorToLoginPolicy(context.Context, *AddMultiFactorToLoginPolicyRequest) (*AddMultiFactorToLoginPolicyResponse, error)
-	// Remove a multi factor from the custom login policy
 	RemoveMultiFactorFromLoginPolicy(context.Context, *RemoveMultiFactorFromLoginPolicyRequest) (*RemoveMultiFactorFromLoginPolicyResponse, error)
-	// Returns the password complexity policy of the organisation
-	// With this policy the password strength can be configured
 	GetPasswordComplexityPolicy(context.Context, *GetPasswordComplexityPolicyRequest) (*GetPasswordComplexityPolicyResponse, error)
-	// Returns the default password complexity policy of the IAM
-	// With this policy the password strength can be configured
 	GetDefaultPasswordComplexityPolicy(context.Context, *GetDefaultPasswordComplexityPolicyRequest) (*GetDefaultPasswordComplexityPolicyResponse, error)
-	// Add a custom password complexity policy for the organisation
-	// With this policy the password strength can be configured
 	AddCustomPasswordComplexityPolicy(context.Context, *AddCustomPasswordComplexityPolicyRequest) (*AddCustomPasswordComplexityPolicyResponse, error)
-	// Update the custom password complexity policy for the organisation
-	// With this policy the password strength can be configured
 	UpdateCustomPasswordComplexityPolicy(context.Context, *UpdateCustomPasswordComplexityPolicyRequest) (*UpdateCustomPasswordComplexityPolicyResponse, error)
-	// Removes the custom password complexity policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetPasswordComplexityPolicyToDefault(context.Context, *ResetPasswordComplexityPolicyToDefaultRequest) (*ResetPasswordComplexityPolicyToDefaultResponse, error)
 	// The password age policy is not used at the moment
 	GetPasswordAgePolicy(context.Context, *GetPasswordAgePolicyRequest) (*GetPasswordAgePolicyResponse, error)
@@ -3405,189 +2902,94 @@ type ManagementServiceServer interface {
 	AddCustomLockoutPolicy(context.Context, *AddCustomLockoutPolicyRequest) (*AddCustomLockoutPolicyResponse, error)
 	UpdateCustomLockoutPolicy(context.Context, *UpdateCustomLockoutPolicyRequest) (*UpdateCustomLockoutPolicyResponse, error)
 	ResetLockoutPolicyToDefault(context.Context, *ResetLockoutPolicyToDefaultRequest) (*ResetLockoutPolicyToDefaultResponse, error)
-	// Returns the privacy policy of the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
 	GetPrivacyPolicy(context.Context, *GetPrivacyPolicyRequest) (*GetPrivacyPolicyResponse, error)
-	// Returns the default privacy policy of the IAM
-	// With this policy the privacy relevant things can be configured (e.g tos link)
 	GetDefaultPrivacyPolicy(context.Context, *GetDefaultPrivacyPolicyRequest) (*GetDefaultPrivacyPolicyResponse, error)
-	// Add a custom privacy policy for the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
-	// Variable {{.Lang}} can be set to have different links based on the language
 	AddCustomPrivacyPolicy(context.Context, *AddCustomPrivacyPolicyRequest) (*AddCustomPrivacyPolicyResponse, error)
-	// Update the privacy policy for the organisation
-	// With this policy privacy relevant things can be configured (e.g. tos link)
-	// Variable {{.Lang}} can be set to have different links based on the language
 	UpdateCustomPrivacyPolicy(context.Context, *UpdateCustomPrivacyPolicyRequest) (*UpdateCustomPrivacyPolicyResponse, error)
-	// Removes the privacy policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetPrivacyPolicyToDefault(context.Context, *ResetPrivacyPolicyToDefaultRequest) (*ResetPrivacyPolicyToDefaultResponse, error)
-	// Returns the notification policy of the organisation
-	// With this notification policy it can be configured how users should be notified
 	GetNotificationPolicy(context.Context, *GetNotificationPolicyRequest) (*GetNotificationPolicyResponse, error)
-	// Returns the default notification policy of the IAM
-	// With this notification privacy it can be configured how users should be notified
 	GetDefaultNotificationPolicy(context.Context, *GetDefaultNotificationPolicyRequest) (*GetDefaultNotificationPolicyResponse, error)
-	// Add a custom notification policy for the organisation
-	// With this notification privacy it can be configured how users should be notified
 	AddCustomNotificationPolicy(context.Context, *AddCustomNotificationPolicyRequest) (*AddCustomNotificationPolicyResponse, error)
-	// Update the notification policy for the organisation
-	// With this notification privacy it can be configured how users should be notified
 	UpdateCustomNotificationPolicy(context.Context, *UpdateCustomNotificationPolicyRequest) (*UpdateCustomNotificationPolicyResponse, error)
-	// Removes the notification policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetNotificationPolicyToDefault(context.Context, *ResetNotificationPolicyToDefaultRequest) (*ResetNotificationPolicyToDefaultResponse, error)
-	// Returns the active label policy of the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetLabelPolicy(context.Context, *GetLabelPolicyRequest) (*GetLabelPolicyResponse, error)
-	// Returns the preview label policy of the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetPreviewLabelPolicy(context.Context, *GetPreviewLabelPolicyRequest) (*GetPreviewLabelPolicyResponse, error)
-	// Returns the default label policy of the IAM
-	// With this policy the private labeling can be configured (colors, etc.)
 	GetDefaultLabelPolicy(context.Context, *GetDefaultLabelPolicyRequest) (*GetDefaultLabelPolicyResponse, error)
-	// Add a custom label policy for the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	AddCustomLabelPolicy(context.Context, *AddCustomLabelPolicyRequest) (*AddCustomLabelPolicyResponse, error)
-	// Changes the custom label policy for the organisation
-	// With this policy the private labeling can be configured (colors, etc.)
 	UpdateCustomLabelPolicy(context.Context, *UpdateCustomLabelPolicyRequest) (*UpdateCustomLabelPolicyResponse, error)
-	// Activates all changes of the label policy
 	ActivateCustomLabelPolicy(context.Context, *ActivateCustomLabelPolicyRequest) (*ActivateCustomLabelPolicyResponse, error)
-	// Removes the logo of the label policy
 	RemoveCustomLabelPolicyLogo(context.Context, *RemoveCustomLabelPolicyLogoRequest) (*RemoveCustomLabelPolicyLogoResponse, error)
-	// Removes the logo dark of the label policy
 	RemoveCustomLabelPolicyLogoDark(context.Context, *RemoveCustomLabelPolicyLogoDarkRequest) (*RemoveCustomLabelPolicyLogoDarkResponse, error)
-	// Removes the icon of the label policy
 	RemoveCustomLabelPolicyIcon(context.Context, *RemoveCustomLabelPolicyIconRequest) (*RemoveCustomLabelPolicyIconResponse, error)
-	// Removes the logo dark of the label policy
 	RemoveCustomLabelPolicyIconDark(context.Context, *RemoveCustomLabelPolicyIconDarkRequest) (*RemoveCustomLabelPolicyIconDarkResponse, error)
-	// Removes the font of the label policy
 	RemoveCustomLabelPolicyFont(context.Context, *RemoveCustomLabelPolicyFontRequest) (*RemoveCustomLabelPolicyFontResponse, error)
-	// Removes the custom label policy of the organisation
-	// The default policy of the IAM will trigger after
 	ResetLabelPolicyToDefault(context.Context, *ResetLabelPolicyToDefaultRequest) (*ResetLabelPolicyToDefaultResponse, error)
-	// Returns the custom text for initial message
 	GetCustomInitMessageText(context.Context, *GetCustomInitMessageTextRequest) (*GetCustomInitMessageTextResponse, error)
-	// Returns the default text for initial message
 	GetDefaultInitMessageText(context.Context, *GetDefaultInitMessageTextRequest) (*GetDefaultInitMessageTextResponse, error)
-	// Sets the custom text for initial message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}}
 	SetCustomInitMessageText(context.Context, *SetCustomInitMessageTextRequest) (*SetCustomInitMessageTextResponse, error)
-	// Removes the custom init message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomInitMessageTextToDefault(context.Context, *ResetCustomInitMessageTextToDefaultRequest) (*ResetCustomInitMessageTextToDefaultResponse, error)
-	// Returns the custom text for password reset message
 	GetCustomPasswordResetMessageText(context.Context, *GetCustomPasswordResetMessageTextRequest) (*GetCustomPasswordResetMessageTextResponse, error)
-	// Returns the default text for password reset message
 	GetDefaultPasswordResetMessageText(context.Context, *GetDefaultPasswordResetMessageTextRequest) (*GetDefaultPasswordResetMessageTextResponse, error)
-	// Sets the custom text for password reset message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordResetMessageText(context.Context, *SetCustomPasswordResetMessageTextRequest) (*SetCustomPasswordResetMessageTextResponse, error)
-	// Removes the custom password reset message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordResetMessageTextToDefault(context.Context, *ResetCustomPasswordResetMessageTextToDefaultRequest) (*ResetCustomPasswordResetMessageTextToDefaultResponse, error)
-	// Returns the custom text for verify email message
 	GetCustomVerifyEmailMessageText(context.Context, *GetCustomVerifyEmailMessageTextRequest) (*GetCustomVerifyEmailMessageTextResponse, error)
-	// Returns the default text for verify email message
 	GetDefaultVerifyEmailMessageText(context.Context, *GetDefaultVerifyEmailMessageTextRequest) (*GetDefaultVerifyEmailMessageTextResponse, error)
-	// Sets the custom text for verify email message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomVerifyEmailMessageText(context.Context, *SetCustomVerifyEmailMessageTextRequest) (*SetCustomVerifyEmailMessageTextResponse, error)
-	// Removes the custom verify email message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomVerifyEmailMessageTextToDefault(context.Context, *ResetCustomVerifyEmailMessageTextToDefaultRequest) (*ResetCustomVerifyEmailMessageTextToDefaultResponse, error)
-	// Returns the custom text for verify email message
 	GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error)
-	// Returns the custom text for verify email message
 	GetDefaultVerifyPhoneMessageText(context.Context, *GetDefaultVerifyPhoneMessageTextRequest) (*GetDefaultVerifyPhoneMessageTextResponse, error)
-	// Sets the default custom text for verify email message
-	// The Following Variables can be used:
-	// {{.Code}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomVerifyPhoneMessageText(context.Context, *SetCustomVerifyPhoneMessageTextRequest) (*SetCustomVerifyPhoneMessageTextResponse, error)
-	// Removes the custom verify phone text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
-	// Returns the custom text for domain claimed message
 	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
-	// Returns the custom text for domain claimed message
 	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
-	// Sets the custom text for domain claimed message
-	// The Following Variables can be used:
-	// {{.Domain}} {{.TempUsername}} {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomDomainClaimedMessageCustomText(context.Context, *SetCustomDomainClaimedMessageTextRequest) (*SetCustomDomainClaimedMessageTextResponse, error)
-	// Removes the custom domain claimed message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomDomainClaimedMessageTextToDefault(context.Context, *ResetCustomDomainClaimedMessageTextToDefaultRequest) (*ResetCustomDomainClaimedMessageTextToDefaultResponse, error)
-	// Returns the custom text for passwordless link message
 	GetCustomPasswordlessRegistrationMessageText(context.Context, *GetCustomPasswordlessRegistrationMessageTextRequest) (*GetCustomPasswordlessRegistrationMessageTextResponse, error)
-	// Returns the custom text for passwordless link message
 	GetDefaultPasswordlessRegistrationMessageText(context.Context, *GetDefaultPasswordlessRegistrationMessageTextRequest) (*GetDefaultPasswordlessRegistrationMessageTextResponse, error)
-	// Sets the custom text for passwordless link message
-	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordlessRegistrationMessageCustomText(context.Context, *SetCustomPasswordlessRegistrationMessageTextRequest) (*SetCustomPasswordlessRegistrationMessageTextResponse, error)
-	// Removes the custom passwordless link message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordlessRegistrationMessageTextToDefault(context.Context, *ResetCustomPasswordlessRegistrationMessageTextToDefaultRequest) (*ResetCustomPasswordlessRegistrationMessageTextToDefaultResponse, error)
-	// Returns the custom text for password change message
 	GetCustomPasswordChangeMessageText(context.Context, *GetCustomPasswordChangeMessageTextRequest) (*GetCustomPasswordChangeMessageTextResponse, error)
-	// Returns the custom text for password change link message
 	GetDefaultPasswordChangeMessageText(context.Context, *GetDefaultPasswordChangeMessageTextRequest) (*GetDefaultPasswordChangeMessageTextResponse, error)
-	// Sets the custom text for password change message
-	// The Following Variables can be used:
-	// {{.UserName}} {{.FirstName}} {{.LastName}} {{.NickName}} {{.DisplayName}} {{.LastEmail}} {{.VerifiedEmail}} {{.LastPhone}} {{.VerifiedPhone}} {{.PreferredLoginName}} {{.LoginNames}} {{.ChangeDate}} {{.CreationDate}}
 	SetCustomPasswordChangeMessageCustomText(context.Context, *SetCustomPasswordChangeMessageTextRequest) (*SetCustomPasswordChangeMessageTextResponse, error)
-	// Removes the custom password change message text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
-	// Returns the custom texts for login ui
 	GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error)
-	// Returns the custom texts for login ui
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
-	// Sets the default custom text for login ui
-	// it impacts all organisations without customized login ui texts
 	SetCustomLoginText(context.Context, *SetCustomLoginTextsRequest) (*SetCustomLoginTextsResponse, error)
-	// Removes the custom login text of the organisation
-	// The default text of the IAM will trigger after
 	ResetCustomLoginTextToDefault(context.Context, *ResetCustomLoginTextsToDefaultRequest) (*ResetCustomLoginTextsToDefaultResponse, error)
-	// Returns a identity provider configuration of the organisation
 	GetOrgIDPByID(context.Context, *GetOrgIDPByIDRequest) (*GetOrgIDPByIDResponse, error)
-	// Returns all identity provider configuration in the organisation, which match the query
-	// Limit should always be set, there is a default limit set by the service
 	ListOrgIDPs(context.Context, *ListOrgIDPsRequest) (*ListOrgIDPsResponse, error)
-	// Add a new identity provider configuration in the organisation
-	// Provider must be OIDC compliant
 	AddOrgOIDCIDP(context.Context, *AddOrgOIDCIDPRequest) (*AddOrgOIDCIDPResponse, error)
-	// Add a new jwt identity provider configuration in the organisation
 	AddOrgJWTIDP(context.Context, *AddOrgJWTIDPRequest) (*AddOrgJWTIDPResponse, error)
-	// Deactivate identity provider configuration
-	// Users will not be able to use this provider for login (e.g Google, Microsoft, AD, etc)
-	// Returns error if already deactivated
 	DeactivateOrgIDP(context.Context, *DeactivateOrgIDPRequest) (*DeactivateOrgIDPResponse, error)
-	// Activate identity provider configuration
-	// Returns error if not deactivated
 	ReactivateOrgIDP(context.Context, *ReactivateOrgIDPRequest) (*ReactivateOrgIDPResponse, error)
-	// Removes identity provider configuration
-	// Will remove all linked providers of this configuration on the users
 	RemoveOrgIDP(context.Context, *RemoveOrgIDPRequest) (*RemoveOrgIDPResponse, error)
-	// Change identity provider configuration of the organisation
 	UpdateOrgIDP(context.Context, *UpdateOrgIDPRequest) (*UpdateOrgIDPResponse, error)
-	// Change OIDC identity provider configuration of the organisation
 	UpdateOrgIDPOIDCConfig(context.Context, *UpdateOrgIDPOIDCConfigRequest) (*UpdateOrgIDPOIDCConfigResponse, error)
-	// Change JWT identity provider configuration of the organisation
 	UpdateOrgIDPJWTConfig(context.Context, *UpdateOrgIDPJWTConfigRequest) (*UpdateOrgIDPJWTConfigResponse, error)
 	// Returns all identity providers, which match the query
 	// Limit should always be set, there is a default limit set by the service
 	ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error)
-	// Returns an identity provider of the organisation
+	// Returns an identity provider of the organization
 	GetProviderByID(context.Context, *GetProviderByIDRequest) (*GetProviderByIDResponse, error)
-	// Add a new ldap identity provider in the organisation
+	// Add a new OAuth2 identity provider in the organization
+	AddGenericOAuthProvider(context.Context, *AddGenericOAuthProviderRequest) (*AddGenericOAuthProviderResponse, error)
+	// Change an existing OAuth2 identity provider in the organization
+	UpdateGenericOAuthProvider(context.Context, *UpdateGenericOAuthProviderRequest) (*UpdateGenericOAuthProviderResponse, error)
+	// Add a new OIDC identity provider in the organisation
+	AddGenericOIDCProvider(context.Context, *AddGenericOIDCProviderRequest) (*AddGenericOIDCProviderResponse, error)
+	// Change an existing OIDC identity provider in the organisation
+	UpdateGenericOIDCProvider(context.Context, *UpdateGenericOIDCProviderRequest) (*UpdateGenericOIDCProviderResponse, error)
+	// Add a new JWT identity provider in the organisation
+	AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error)
+	// Change an existing JWT identity provider in the organisation
+	UpdateJWTProvider(context.Context, *UpdateJWTProviderRequest) (*UpdateJWTProviderResponse, error)
+	// Add a new Google identity provider in the organisation
+	AddGoogleProvider(context.Context, *AddGoogleProviderRequest) (*AddGoogleProviderResponse, error)
+	// Change an existing Google identity provider in the organization
+	UpdateGoogleProvider(context.Context, *UpdateGoogleProviderRequest) (*UpdateGoogleProviderResponse, error)
+	// Add a new LDAP identity provider in the organization
 	AddLDAPProvider(context.Context, *AddLDAPProviderRequest) (*AddLDAPProviderResponse, error)
-	// Change an existing ldap identity provider in the organisation
+	// Change an existing LDAP identity provider in the organization
 	UpdateLDAPProvider(context.Context, *UpdateLDAPProviderRequest) (*UpdateLDAPProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
@@ -4339,6 +3741,30 @@ func (UnimplementedManagementServiceServer) ListProviders(context.Context, *List
 }
 func (UnimplementedManagementServiceServer) GetProviderByID(context.Context, *GetProviderByIDRequest) (*GetProviderByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProviderByID not implemented")
+}
+func (UnimplementedManagementServiceServer) AddGenericOAuthProvider(context.Context, *AddGenericOAuthProviderRequest) (*AddGenericOAuthProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGenericOAuthProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateGenericOAuthProvider(context.Context, *UpdateGenericOAuthProviderRequest) (*UpdateGenericOAuthProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGenericOAuthProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) AddGenericOIDCProvider(context.Context, *AddGenericOIDCProviderRequest) (*AddGenericOIDCProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGenericOIDCProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateGenericOIDCProvider(context.Context, *UpdateGenericOIDCProviderRequest) (*UpdateGenericOIDCProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGenericOIDCProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddJWTProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateJWTProvider(context.Context, *UpdateJWTProviderRequest) (*UpdateJWTProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateJWTProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) AddGoogleProvider(context.Context, *AddGoogleProviderRequest) (*AddGoogleProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGoogleProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateGoogleProvider(context.Context, *UpdateGoogleProviderRequest) (*UpdateGoogleProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGoogleProvider not implemented")
 }
 func (UnimplementedManagementServiceServer) AddLDAPProvider(context.Context, *AddLDAPProviderRequest) (*AddLDAPProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddLDAPProvider not implemented")
@@ -8772,6 +8198,150 @@ func _ManagementService_GetProviderByID_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddGenericOAuthProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGenericOAuthProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddGenericOAuthProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddGenericOAuthProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddGenericOAuthProvider(ctx, req.(*AddGenericOAuthProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateGenericOAuthProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGenericOAuthProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateGenericOAuthProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateGenericOAuthProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateGenericOAuthProvider(ctx, req.(*UpdateGenericOAuthProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_AddGenericOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGenericOIDCProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddGenericOIDCProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddGenericOIDCProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddGenericOIDCProvider(ctx, req.(*AddGenericOIDCProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateGenericOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGenericOIDCProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateGenericOIDCProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateGenericOIDCProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateGenericOIDCProvider(ctx, req.(*UpdateGenericOIDCProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_AddJWTProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddJWTProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddJWTProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddJWTProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddJWTProvider(ctx, req.(*AddJWTProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateJWTProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateJWTProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateJWTProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateJWTProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateJWTProvider(ctx, req.(*UpdateJWTProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_AddGoogleProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGoogleProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddGoogleProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddGoogleProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddGoogleProvider(ctx, req.(*AddGoogleProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateGoogleProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGoogleProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateGoogleProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateGoogleProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateGoogleProvider(ctx, req.(*UpdateGoogleProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_AddLDAPProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddLDAPProviderRequest)
 	if err := dec(in); err != nil {
@@ -10020,6 +9590,38 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProviderByID",
 			Handler:    _ManagementService_GetProviderByID_Handler,
+		},
+		{
+			MethodName: "AddGenericOAuthProvider",
+			Handler:    _ManagementService_AddGenericOAuthProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGenericOAuthProvider",
+			Handler:    _ManagementService_UpdateGenericOAuthProvider_Handler,
+		},
+		{
+			MethodName: "AddGenericOIDCProvider",
+			Handler:    _ManagementService_AddGenericOIDCProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGenericOIDCProvider",
+			Handler:    _ManagementService_UpdateGenericOIDCProvider_Handler,
+		},
+		{
+			MethodName: "AddJWTProvider",
+			Handler:    _ManagementService_AddJWTProvider_Handler,
+		},
+		{
+			MethodName: "UpdateJWTProvider",
+			Handler:    _ManagementService_UpdateJWTProvider_Handler,
+		},
+		{
+			MethodName: "AddGoogleProvider",
+			Handler:    _ManagementService_AddGoogleProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGoogleProvider",
+			Handler:    _ManagementService_UpdateGoogleProvider_Handler,
 		},
 		{
 			MethodName: "AddLDAPProvider",

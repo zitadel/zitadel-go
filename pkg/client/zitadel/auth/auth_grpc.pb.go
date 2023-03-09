@@ -19,112 +19,54 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
-	// Returns the default languages
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
-	// Returns my full blown user
 	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
-	// Changes the user state to deleted
 	RemoveMyUser(ctx context.Context, in *RemoveMyUserRequest, opts ...grpc.CallOption) (*RemoveMyUserResponse, error)
-	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(ctx context.Context, in *ListMyUserChangesRequest, opts ...grpc.CallOption) (*ListMyUserChangesResponse, error)
-	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(ctx context.Context, in *ListMyUserSessionsRequest, opts ...grpc.CallOption) (*ListMyUserSessionsResponse, error)
-	// Returns the user metadata of the authorized user
 	ListMyMetadata(ctx context.Context, in *ListMyMetadataRequest, opts ...grpc.CallOption) (*ListMyMetadataResponse, error)
-	// Returns the user metadata by key of the authorized user
 	GetMyMetadata(ctx context.Context, in *GetMyMetadataRequest, opts ...grpc.CallOption) (*GetMyMetadataResponse, error)
-	// Returns the refresh tokens of the authorized user
 	ListMyRefreshTokens(ctx context.Context, in *ListMyRefreshTokensRequest, opts ...grpc.CallOption) (*ListMyRefreshTokensResponse, error)
-	// Revokes a single refresh token of the authorized user by its (token) id
 	RevokeMyRefreshToken(ctx context.Context, in *RevokeMyRefreshTokenRequest, opts ...grpc.CallOption) (*RevokeMyRefreshTokenResponse, error)
-	// Revokes all refresh tokens of the authorized user
 	RevokeAllMyRefreshTokens(ctx context.Context, in *RevokeAllMyRefreshTokensRequest, opts ...grpc.CallOption) (*RevokeAllMyRefreshTokensResponse, error)
-	// Change the user name of the authorize user
 	UpdateMyUserName(ctx context.Context, in *UpdateMyUserNameRequest, opts ...grpc.CallOption) (*UpdateMyUserNameResponse, error)
-	// Returns the password complexity policy of my organisation
-	// This policy defines how the password should look
 	GetMyPasswordComplexityPolicy(ctx context.Context, in *GetMyPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*GetMyPasswordComplexityPolicyResponse, error)
-	// Change the password of the authorized user
 	UpdateMyPassword(ctx context.Context, in *UpdateMyPasswordRequest, opts ...grpc.CallOption) (*UpdateMyPasswordResponse, error)
-	// Returns the profile information of the authorized user
 	GetMyProfile(ctx context.Context, in *GetMyProfileRequest, opts ...grpc.CallOption) (*GetMyProfileResponse, error)
-	// Changes the profile information of the authorized user
 	UpdateMyProfile(ctx context.Context, in *UpdateMyProfileRequest, opts ...grpc.CallOption) (*UpdateMyProfileResponse, error)
-	// Returns the email address of the authorized user
 	GetMyEmail(ctx context.Context, in *GetMyEmailRequest, opts ...grpc.CallOption) (*GetMyEmailResponse, error)
-	// Changes the email address of the authorized user
-	// An email is sent to the given address, to verify it
 	SetMyEmail(ctx context.Context, in *SetMyEmailRequest, opts ...grpc.CallOption) (*SetMyEmailResponse, error)
-	// Sets the email address to verified
 	VerifyMyEmail(ctx context.Context, in *VerifyMyEmailRequest, opts ...grpc.CallOption) (*VerifyMyEmailResponse, error)
-	// Sends a new email to the last given address to verify it
 	ResendMyEmailVerification(ctx context.Context, in *ResendMyEmailVerificationRequest, opts ...grpc.CallOption) (*ResendMyEmailVerificationResponse, error)
-	// Returns the phone number of the authorized user
 	GetMyPhone(ctx context.Context, in *GetMyPhoneRequest, opts ...grpc.CallOption) (*GetMyPhoneResponse, error)
-	// Sets the phone number of the authorized user
-	// An sms is sent to the number with a verification code
 	SetMyPhone(ctx context.Context, in *SetMyPhoneRequest, opts ...grpc.CallOption) (*SetMyPhoneResponse, error)
-	// Sets the phone number to verified
 	VerifyMyPhone(ctx context.Context, in *VerifyMyPhoneRequest, opts ...grpc.CallOption) (*VerifyMyPhoneResponse, error)
-	// Resends a sms to the last given phone number, to verify it
+	// Resends an sms to the last given phone number, to verify it
 	ResendMyPhoneVerification(ctx context.Context, in *ResendMyPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendMyPhoneVerificationResponse, error)
-	// Removed the phone number of the authorized user
 	RemoveMyPhone(ctx context.Context, in *RemoveMyPhoneRequest, opts ...grpc.CallOption) (*RemoveMyPhoneResponse, error)
-	// Remove my avatar
 	RemoveMyAvatar(ctx context.Context, in *RemoveMyAvatarRequest, opts ...grpc.CallOption) (*RemoveMyAvatarResponse, error)
-	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(ctx context.Context, in *ListMyLinkedIDPsRequest, opts ...grpc.CallOption) (*ListMyLinkedIDPsResponse, error)
-	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
 	RemoveMyLinkedIDP(ctx context.Context, in *RemoveMyLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveMyLinkedIDPResponse, error)
-	// Returns all configured authentication factors (second and multi)
 	ListMyAuthFactors(ctx context.Context, in *ListMyAuthFactorsRequest, opts ...grpc.CallOption) (*ListMyAuthFactorsResponse, error)
-	// Adds a new OTP (One Time Password) Second Factor to the authorized user
-	// Only one OTP can be configured per user
 	AddMyAuthFactorOTP(ctx context.Context, in *AddMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPResponse, error)
-	// Verify the last added OTP (One Time Password)
 	VerifyMyAuthFactorOTP(ctx context.Context, in *VerifyMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*VerifyMyAuthFactorOTPResponse, error)
-	// Removed the configured OTP (One Time Password) Factor
 	RemoveMyAuthFactorOTP(ctx context.Context, in *RemoveMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPResponse, error)
-	// Adds a new U2F (Universal Second Factor) to the authorized user
-	// Multiple U2Fs can be configured
 	AddMyAuthFactorU2F(ctx context.Context, in *AddMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*AddMyAuthFactorU2FResponse, error)
-	// Verifies the last added U2F (Universal Second Factor) of the authorized user
 	VerifyMyAuthFactorU2F(ctx context.Context, in *VerifyMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*VerifyMyAuthFactorU2FResponse, error)
-	// Removes the U2F Authentication from the authorized user
 	RemoveMyAuthFactorU2F(ctx context.Context, in *RemoveMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authenticators of the authorized user
 	ListMyPasswordless(ctx context.Context, in *ListMyPasswordlessRequest, opts ...grpc.CallOption) (*ListMyPasswordlessResponse, error)
-	// Adds a new passwordless authenticator to the authorized user
-	// Multiple passwordless authentications can be configured
 	AddMyPasswordless(ctx context.Context, in *AddMyPasswordlessRequest, opts ...grpc.CallOption) (*AddMyPasswordlessResponse, error)
-	// Adds a new passwordless authenticator link to the authorized user and returns it directly
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	AddMyPasswordlessLink(ctx context.Context, in *AddMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*AddMyPasswordlessLinkResponse, error)
-	// Adds a new passwordless authenticator link to the authorized user and sends it to the registered email address
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	SendMyPasswordlessLink(ctx context.Context, in *SendMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*SendMyPasswordlessLinkResponse, error)
-	// Verifies the last added passwordless configuration
 	VerifyMyPasswordless(ctx context.Context, in *VerifyMyPasswordlessRequest, opts ...grpc.CallOption) (*VerifyMyPasswordlessResponse, error)
-	// Removes the passwordless configuration from the authorized user
 	RemoveMyPasswordless(ctx context.Context, in *RemoveMyPasswordlessRequest, opts ...grpc.CallOption) (*RemoveMyPasswordlessResponse, error)
-	// Returns all user grants (authorizations) of the authorized user
 	ListMyUserGrants(ctx context.Context, in *ListMyUserGrantsRequest, opts ...grpc.CallOption) (*ListMyUserGrantsResponse, error)
-	// Returns a list of organisations where the authorized user has a user grant (authorization) in the context of the requested project
 	ListMyProjectOrgs(ctx context.Context, in *ListMyProjectOrgsRequest, opts ...grpc.CallOption) (*ListMyProjectOrgsResponse, error)
-	// Returns the permissions the authorized user has in ZITADEL based on his manager roles (e.g ORG_OWNER)
 	ListMyZitadelPermissions(ctx context.Context, in *ListMyZitadelPermissionsRequest, opts ...grpc.CallOption) (*ListMyZitadelPermissionsResponse, error)
-	// Returns a list of roles for the authorized user and project
 	ListMyProjectPermissions(ctx context.Context, in *ListMyProjectPermissionsRequest, opts ...grpc.CallOption) (*ListMyProjectPermissionsResponse, error)
-	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
-	// Limit should always be set, there is a default limit set by the service
 	ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error)
-	// Returns the label policy of the current organisation
 	GetMyLabelPolicy(ctx context.Context, in *GetMyLabelPolicyRequest, opts ...grpc.CallOption) (*GetMyLabelPolicyResponse, error)
-	// Returns the privacy policy of the current organisation
 	GetMyPrivacyPolicy(ctx context.Context, in *GetMyPrivacyPolicyRequest, opts ...grpc.CallOption) (*GetMyPrivacyPolicyResponse, error)
-	// Returns the login policy of the current organisation
 	GetMyLoginPolicy(ctx context.Context, in *GetMyLoginPolicyRequest, opts ...grpc.CallOption) (*GetMyLoginPolicyResponse, error)
 }
 
@@ -582,112 +524,54 @@ func (c *authServiceClient) GetMyLoginPolicy(ctx context.Context, in *GetMyLogin
 // for forward compatibility
 type AuthServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
-	// Returns the default languages
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
-	// Returns my full blown user
 	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
-	// Changes the user state to deleted
 	RemoveMyUser(context.Context, *RemoveMyUserRequest) (*RemoveMyUserResponse, error)
-	// Returns the history of the authorized user (each event)
 	ListMyUserChanges(context.Context, *ListMyUserChangesRequest) (*ListMyUserChangesResponse, error)
-	// Returns the user sessions of the authorized user of the current useragent
 	ListMyUserSessions(context.Context, *ListMyUserSessionsRequest) (*ListMyUserSessionsResponse, error)
-	// Returns the user metadata of the authorized user
 	ListMyMetadata(context.Context, *ListMyMetadataRequest) (*ListMyMetadataResponse, error)
-	// Returns the user metadata by key of the authorized user
 	GetMyMetadata(context.Context, *GetMyMetadataRequest) (*GetMyMetadataResponse, error)
-	// Returns the refresh tokens of the authorized user
 	ListMyRefreshTokens(context.Context, *ListMyRefreshTokensRequest) (*ListMyRefreshTokensResponse, error)
-	// Revokes a single refresh token of the authorized user by its (token) id
 	RevokeMyRefreshToken(context.Context, *RevokeMyRefreshTokenRequest) (*RevokeMyRefreshTokenResponse, error)
-	// Revokes all refresh tokens of the authorized user
 	RevokeAllMyRefreshTokens(context.Context, *RevokeAllMyRefreshTokensRequest) (*RevokeAllMyRefreshTokensResponse, error)
-	// Change the user name of the authorize user
 	UpdateMyUserName(context.Context, *UpdateMyUserNameRequest) (*UpdateMyUserNameResponse, error)
-	// Returns the password complexity policy of my organisation
-	// This policy defines how the password should look
 	GetMyPasswordComplexityPolicy(context.Context, *GetMyPasswordComplexityPolicyRequest) (*GetMyPasswordComplexityPolicyResponse, error)
-	// Change the password of the authorized user
 	UpdateMyPassword(context.Context, *UpdateMyPasswordRequest) (*UpdateMyPasswordResponse, error)
-	// Returns the profile information of the authorized user
 	GetMyProfile(context.Context, *GetMyProfileRequest) (*GetMyProfileResponse, error)
-	// Changes the profile information of the authorized user
 	UpdateMyProfile(context.Context, *UpdateMyProfileRequest) (*UpdateMyProfileResponse, error)
-	// Returns the email address of the authorized user
 	GetMyEmail(context.Context, *GetMyEmailRequest) (*GetMyEmailResponse, error)
-	// Changes the email address of the authorized user
-	// An email is sent to the given address, to verify it
 	SetMyEmail(context.Context, *SetMyEmailRequest) (*SetMyEmailResponse, error)
-	// Sets the email address to verified
 	VerifyMyEmail(context.Context, *VerifyMyEmailRequest) (*VerifyMyEmailResponse, error)
-	// Sends a new email to the last given address to verify it
 	ResendMyEmailVerification(context.Context, *ResendMyEmailVerificationRequest) (*ResendMyEmailVerificationResponse, error)
-	// Returns the phone number of the authorized user
 	GetMyPhone(context.Context, *GetMyPhoneRequest) (*GetMyPhoneResponse, error)
-	// Sets the phone number of the authorized user
-	// An sms is sent to the number with a verification code
 	SetMyPhone(context.Context, *SetMyPhoneRequest) (*SetMyPhoneResponse, error)
-	// Sets the phone number to verified
 	VerifyMyPhone(context.Context, *VerifyMyPhoneRequest) (*VerifyMyPhoneResponse, error)
-	// Resends a sms to the last given phone number, to verify it
+	// Resends an sms to the last given phone number, to verify it
 	ResendMyPhoneVerification(context.Context, *ResendMyPhoneVerificationRequest) (*ResendMyPhoneVerificationResponse, error)
-	// Removed the phone number of the authorized user
 	RemoveMyPhone(context.Context, *RemoveMyPhoneRequest) (*RemoveMyPhoneResponse, error)
-	// Remove my avatar
 	RemoveMyAvatar(context.Context, *RemoveMyAvatarRequest) (*RemoveMyAvatarResponse, error)
-	// Returns a list of all linked identity providers (social logins, eg. Google, Microsoft, AD, etc.)
 	ListMyLinkedIDPs(context.Context, *ListMyLinkedIDPsRequest) (*ListMyLinkedIDPsResponse, error)
-	// Removes a linked identity provider (social logins, eg. Google, Microsoft, AD, etc.)
 	RemoveMyLinkedIDP(context.Context, *RemoveMyLinkedIDPRequest) (*RemoveMyLinkedIDPResponse, error)
-	// Returns all configured authentication factors (second and multi)
 	ListMyAuthFactors(context.Context, *ListMyAuthFactorsRequest) (*ListMyAuthFactorsResponse, error)
-	// Adds a new OTP (One Time Password) Second Factor to the authorized user
-	// Only one OTP can be configured per user
 	AddMyAuthFactorOTP(context.Context, *AddMyAuthFactorOTPRequest) (*AddMyAuthFactorOTPResponse, error)
-	// Verify the last added OTP (One Time Password)
 	VerifyMyAuthFactorOTP(context.Context, *VerifyMyAuthFactorOTPRequest) (*VerifyMyAuthFactorOTPResponse, error)
-	// Removed the configured OTP (One Time Password) Factor
 	RemoveMyAuthFactorOTP(context.Context, *RemoveMyAuthFactorOTPRequest) (*RemoveMyAuthFactorOTPResponse, error)
-	// Adds a new U2F (Universal Second Factor) to the authorized user
-	// Multiple U2Fs can be configured
 	AddMyAuthFactorU2F(context.Context, *AddMyAuthFactorU2FRequest) (*AddMyAuthFactorU2FResponse, error)
-	// Verifies the last added U2F (Universal Second Factor) of the authorized user
 	VerifyMyAuthFactorU2F(context.Context, *VerifyMyAuthFactorU2FRequest) (*VerifyMyAuthFactorU2FResponse, error)
-	// Removes the U2F Authentication from the authorized user
 	RemoveMyAuthFactorU2F(context.Context, *RemoveMyAuthFactorU2FRequest) (*RemoveMyAuthFactorU2FResponse, error)
-	// Returns all configured passwordless authenticators of the authorized user
 	ListMyPasswordless(context.Context, *ListMyPasswordlessRequest) (*ListMyPasswordlessResponse, error)
-	// Adds a new passwordless authenticator to the authorized user
-	// Multiple passwordless authentications can be configured
 	AddMyPasswordless(context.Context, *AddMyPasswordlessRequest) (*AddMyPasswordlessResponse, error)
-	// Adds a new passwordless authenticator link to the authorized user and returns it directly
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	AddMyPasswordlessLink(context.Context, *AddMyPasswordlessLinkRequest) (*AddMyPasswordlessLinkResponse, error)
-	// Adds a new passwordless authenticator link to the authorized user and sends it to the registered email address
-	// This link enables the user to register a new device if current passwordless devices are all platform authenticators
-	// e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone
 	SendMyPasswordlessLink(context.Context, *SendMyPasswordlessLinkRequest) (*SendMyPasswordlessLinkResponse, error)
-	// Verifies the last added passwordless configuration
 	VerifyMyPasswordless(context.Context, *VerifyMyPasswordlessRequest) (*VerifyMyPasswordlessResponse, error)
-	// Removes the passwordless configuration from the authorized user
 	RemoveMyPasswordless(context.Context, *RemoveMyPasswordlessRequest) (*RemoveMyPasswordlessResponse, error)
-	// Returns all user grants (authorizations) of the authorized user
 	ListMyUserGrants(context.Context, *ListMyUserGrantsRequest) (*ListMyUserGrantsResponse, error)
-	// Returns a list of organisations where the authorized user has a user grant (authorization) in the context of the requested project
 	ListMyProjectOrgs(context.Context, *ListMyProjectOrgsRequest) (*ListMyProjectOrgsResponse, error)
-	// Returns the permissions the authorized user has in ZITADEL based on his manager roles (e.g ORG_OWNER)
 	ListMyZitadelPermissions(context.Context, *ListMyZitadelPermissionsRequest) (*ListMyZitadelPermissionsResponse, error)
-	// Returns a list of roles for the authorized user and project
 	ListMyProjectPermissions(context.Context, *ListMyProjectPermissionsRequest) (*ListMyProjectPermissionsResponse, error)
-	// Show all the permissions my user has in ZITADEL (ZITADEL Manager)
-	// Limit should always be set, there is a default limit set by the service
 	ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error)
-	// Returns the label policy of the current organisation
 	GetMyLabelPolicy(context.Context, *GetMyLabelPolicyRequest) (*GetMyLabelPolicyResponse, error)
-	// Returns the privacy policy of the current organisation
 	GetMyPrivacyPolicy(context.Context, *GetMyPrivacyPolicyRequest) (*GetMyPrivacyPolicyResponse, error)
-	// Returns the login policy of the current organisation
 	GetMyLoginPolicy(context.Context, *GetMyLoginPolicyRequest) (*GetMyLoginPolicyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
