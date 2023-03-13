@@ -372,7 +372,7 @@ func (x *ActionNameQuery) GetMethod() object.TextQueryMethod {
 	return object.TextQueryMethod(0)
 }
 
-// ActionStateQuery is always equals
+// ActionStateQuery always equals
 type ActionStateQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
