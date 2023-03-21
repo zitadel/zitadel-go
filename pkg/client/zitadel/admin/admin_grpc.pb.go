@@ -81,6 +81,26 @@ type AdminServiceClient interface {
 	AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider on the instance
 	UpdateJWTProvider(ctx context.Context, in *UpdateJWTProviderRequest, opts ...grpc.CallOption) (*UpdateJWTProviderResponse, error)
+	// Add a new Azure AD identity provider on the instance
+	AddAzureADProvider(ctx context.Context, in *AddAzureADProviderRequest, opts ...grpc.CallOption) (*AddAzureADProviderResponse, error)
+	// Change an existing Azure AD identity provider on the instance
+	UpdateAzureADProvider(ctx context.Context, in *UpdateAzureADProviderRequest, opts ...grpc.CallOption) (*UpdateAzureADProviderResponse, error)
+	// Add a new GitHub identity provider on the instance
+	AddGitHubProvider(ctx context.Context, in *AddGitHubProviderRequest, opts ...grpc.CallOption) (*AddGitHubProviderResponse, error)
+	// Change an existing GitHub identity provider on the instance
+	UpdateGitHubProvider(ctx context.Context, in *UpdateGitHubProviderRequest, opts ...grpc.CallOption) (*UpdateGitHubProviderResponse, error)
+	// Add a new GitHub Enterprise Server identity provider on the instance
+	AddGitHubEnterpriseServerProvider(ctx context.Context, in *AddGitHubEnterpriseServerProviderRequest, opts ...grpc.CallOption) (*AddGitHubEnterpriseServerProviderResponse, error)
+	// Change an existing GitHub Enterprise Server identity provider on the instance
+	UpdateGitHubEnterpriseServerProvider(ctx context.Context, in *UpdateGitHubEnterpriseServerProviderRequest, opts ...grpc.CallOption) (*UpdateGitHubEnterpriseServerProviderResponse, error)
+	// Add a new GitLab identity provider on the instance
+	AddGitLabProvider(ctx context.Context, in *AddGitLabProviderRequest, opts ...grpc.CallOption) (*AddGitLabProviderResponse, error)
+	// Change an existing GitLab identity provider on the instance
+	UpdateGitLabProvider(ctx context.Context, in *UpdateGitLabProviderRequest, opts ...grpc.CallOption) (*UpdateGitLabProviderResponse, error)
+	// Add a new self hosted GitLab identity provider on the instance
+	AddGitLabSelfHostedProvider(ctx context.Context, in *AddGitLabSelfHostedProviderRequest, opts ...grpc.CallOption) (*AddGitLabSelfHostedProviderResponse, error)
+	// Change an existing self hosted GitLab identity provider on the instance
+	UpdateGitLabSelfHostedProvider(ctx context.Context, in *UpdateGitLabSelfHostedProviderRequest, opts ...grpc.CallOption) (*UpdateGitLabSelfHostedProviderResponse, error)
 	// Add a new Google identity provider on the instance
 	AddGoogleProvider(ctx context.Context, in *AddGoogleProviderRequest, opts ...grpc.CallOption) (*AddGoogleProviderResponse, error)
 	// Change an existing Google identity provider on the instance
@@ -673,6 +693,96 @@ func (c *adminServiceClient) AddJWTProvider(ctx context.Context, in *AddJWTProvi
 func (c *adminServiceClient) UpdateJWTProvider(ctx context.Context, in *UpdateJWTProviderRequest, opts ...grpc.CallOption) (*UpdateJWTProviderResponse, error) {
 	out := new(UpdateJWTProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateJWTProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddAzureADProvider(ctx context.Context, in *AddAzureADProviderRequest, opts ...grpc.CallOption) (*AddAzureADProviderResponse, error) {
+	out := new(AddAzureADProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddAzureADProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateAzureADProvider(ctx context.Context, in *UpdateAzureADProviderRequest, opts ...grpc.CallOption) (*UpdateAzureADProviderResponse, error) {
+	out := new(UpdateAzureADProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateAzureADProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddGitHubProvider(ctx context.Context, in *AddGitHubProviderRequest, opts ...grpc.CallOption) (*AddGitHubProviderResponse, error) {
+	out := new(AddGitHubProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddGitHubProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateGitHubProvider(ctx context.Context, in *UpdateGitHubProviderRequest, opts ...grpc.CallOption) (*UpdateGitHubProviderResponse, error) {
+	out := new(UpdateGitHubProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateGitHubProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddGitHubEnterpriseServerProvider(ctx context.Context, in *AddGitHubEnterpriseServerProviderRequest, opts ...grpc.CallOption) (*AddGitHubEnterpriseServerProviderResponse, error) {
+	out := new(AddGitHubEnterpriseServerProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddGitHubEnterpriseServerProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateGitHubEnterpriseServerProvider(ctx context.Context, in *UpdateGitHubEnterpriseServerProviderRequest, opts ...grpc.CallOption) (*UpdateGitHubEnterpriseServerProviderResponse, error) {
+	out := new(UpdateGitHubEnterpriseServerProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateGitHubEnterpriseServerProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddGitLabProvider(ctx context.Context, in *AddGitLabProviderRequest, opts ...grpc.CallOption) (*AddGitLabProviderResponse, error) {
+	out := new(AddGitLabProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddGitLabProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateGitLabProvider(ctx context.Context, in *UpdateGitLabProviderRequest, opts ...grpc.CallOption) (*UpdateGitLabProviderResponse, error) {
+	out := new(UpdateGitLabProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateGitLabProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddGitLabSelfHostedProvider(ctx context.Context, in *AddGitLabSelfHostedProviderRequest, opts ...grpc.CallOption) (*AddGitLabSelfHostedProviderResponse, error) {
+	out := new(AddGitLabSelfHostedProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddGitLabSelfHostedProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateGitLabSelfHostedProvider(ctx context.Context, in *UpdateGitLabSelfHostedProviderRequest, opts ...grpc.CallOption) (*UpdateGitLabSelfHostedProviderResponse, error) {
+	out := new(UpdateGitLabSelfHostedProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateGitLabSelfHostedProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1583,6 +1693,26 @@ type AdminServiceServer interface {
 	AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider on the instance
 	UpdateJWTProvider(context.Context, *UpdateJWTProviderRequest) (*UpdateJWTProviderResponse, error)
+	// Add a new Azure AD identity provider on the instance
+	AddAzureADProvider(context.Context, *AddAzureADProviderRequest) (*AddAzureADProviderResponse, error)
+	// Change an existing Azure AD identity provider on the instance
+	UpdateAzureADProvider(context.Context, *UpdateAzureADProviderRequest) (*UpdateAzureADProviderResponse, error)
+	// Add a new GitHub identity provider on the instance
+	AddGitHubProvider(context.Context, *AddGitHubProviderRequest) (*AddGitHubProviderResponse, error)
+	// Change an existing GitHub identity provider on the instance
+	UpdateGitHubProvider(context.Context, *UpdateGitHubProviderRequest) (*UpdateGitHubProviderResponse, error)
+	// Add a new GitHub Enterprise Server identity provider on the instance
+	AddGitHubEnterpriseServerProvider(context.Context, *AddGitHubEnterpriseServerProviderRequest) (*AddGitHubEnterpriseServerProviderResponse, error)
+	// Change an existing GitHub Enterprise Server identity provider on the instance
+	UpdateGitHubEnterpriseServerProvider(context.Context, *UpdateGitHubEnterpriseServerProviderRequest) (*UpdateGitHubEnterpriseServerProviderResponse, error)
+	// Add a new GitLab identity provider on the instance
+	AddGitLabProvider(context.Context, *AddGitLabProviderRequest) (*AddGitLabProviderResponse, error)
+	// Change an existing GitLab identity provider on the instance
+	UpdateGitLabProvider(context.Context, *UpdateGitLabProviderRequest) (*UpdateGitLabProviderResponse, error)
+	// Add a new self hosted GitLab identity provider on the instance
+	AddGitLabSelfHostedProvider(context.Context, *AddGitLabSelfHostedProviderRequest) (*AddGitLabSelfHostedProviderResponse, error)
+	// Change an existing self hosted GitLab identity provider on the instance
+	UpdateGitLabSelfHostedProvider(context.Context, *UpdateGitLabSelfHostedProviderRequest) (*UpdateGitLabSelfHostedProviderResponse, error)
 	// Add a new Google identity provider on the instance
 	AddGoogleProvider(context.Context, *AddGoogleProviderRequest) (*AddGoogleProviderResponse, error)
 	// Change an existing Google identity provider on the instance
@@ -1853,6 +1983,36 @@ func (UnimplementedAdminServiceServer) AddJWTProvider(context.Context, *AddJWTPr
 }
 func (UnimplementedAdminServiceServer) UpdateJWTProvider(context.Context, *UpdateJWTProviderRequest) (*UpdateJWTProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateJWTProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddAzureADProvider(context.Context, *AddAzureADProviderRequest) (*AddAzureADProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAzureADProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateAzureADProvider(context.Context, *UpdateAzureADProviderRequest) (*UpdateAzureADProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAzureADProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddGitHubProvider(context.Context, *AddGitHubProviderRequest) (*AddGitHubProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGitHubProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateGitHubProvider(context.Context, *UpdateGitHubProviderRequest) (*UpdateGitHubProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGitHubProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddGitHubEnterpriseServerProvider(context.Context, *AddGitHubEnterpriseServerProviderRequest) (*AddGitHubEnterpriseServerProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGitHubEnterpriseServerProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateGitHubEnterpriseServerProvider(context.Context, *UpdateGitHubEnterpriseServerProviderRequest) (*UpdateGitHubEnterpriseServerProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGitHubEnterpriseServerProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddGitLabProvider(context.Context, *AddGitLabProviderRequest) (*AddGitLabProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGitLabProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateGitLabProvider(context.Context, *UpdateGitLabProviderRequest) (*UpdateGitLabProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGitLabProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddGitLabSelfHostedProvider(context.Context, *AddGitLabSelfHostedProviderRequest) (*AddGitLabSelfHostedProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGitLabSelfHostedProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateGitLabSelfHostedProvider(context.Context, *UpdateGitLabSelfHostedProviderRequest) (*UpdateGitLabSelfHostedProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGitLabSelfHostedProvider not implemented")
 }
 func (UnimplementedAdminServiceServer) AddGoogleProvider(context.Context, *AddGoogleProviderRequest) (*AddGoogleProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoogleProvider not implemented")
@@ -3114,6 +3274,186 @@ func _AdminService_UpdateJWTProvider_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).UpdateJWTProvider(ctx, req.(*UpdateJWTProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddAzureADProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAzureADProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddAzureADProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddAzureADProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddAzureADProvider(ctx, req.(*AddAzureADProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateAzureADProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAzureADProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateAzureADProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateAzureADProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateAzureADProvider(ctx, req.(*UpdateAzureADProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddGitHubProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGitHubProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddGitHubProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddGitHubProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddGitHubProvider(ctx, req.(*AddGitHubProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateGitHubProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGitHubProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateGitHubProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateGitHubProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateGitHubProvider(ctx, req.(*UpdateGitHubProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddGitHubEnterpriseServerProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGitHubEnterpriseServerProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddGitHubEnterpriseServerProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddGitHubEnterpriseServerProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddGitHubEnterpriseServerProvider(ctx, req.(*AddGitHubEnterpriseServerProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateGitHubEnterpriseServerProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGitHubEnterpriseServerProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateGitHubEnterpriseServerProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateGitHubEnterpriseServerProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateGitHubEnterpriseServerProvider(ctx, req.(*UpdateGitHubEnterpriseServerProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddGitLabProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGitLabProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddGitLabProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddGitLabProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddGitLabProvider(ctx, req.(*AddGitLabProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateGitLabProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGitLabProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateGitLabProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateGitLabProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateGitLabProvider(ctx, req.(*UpdateGitLabProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddGitLabSelfHostedProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGitLabSelfHostedProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddGitLabSelfHostedProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddGitLabSelfHostedProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddGitLabSelfHostedProvider(ctx, req.(*AddGitLabSelfHostedProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateGitLabSelfHostedProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGitLabSelfHostedProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateGitLabSelfHostedProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateGitLabSelfHostedProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateGitLabSelfHostedProvider(ctx, req.(*UpdateGitLabSelfHostedProviderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5014,6 +5354,46 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateJWTProvider",
 			Handler:    _AdminService_UpdateJWTProvider_Handler,
+		},
+		{
+			MethodName: "AddAzureADProvider",
+			Handler:    _AdminService_AddAzureADProvider_Handler,
+		},
+		{
+			MethodName: "UpdateAzureADProvider",
+			Handler:    _AdminService_UpdateAzureADProvider_Handler,
+		},
+		{
+			MethodName: "AddGitHubProvider",
+			Handler:    _AdminService_AddGitHubProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGitHubProvider",
+			Handler:    _AdminService_UpdateGitHubProvider_Handler,
+		},
+		{
+			MethodName: "AddGitHubEnterpriseServerProvider",
+			Handler:    _AdminService_AddGitHubEnterpriseServerProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGitHubEnterpriseServerProvider",
+			Handler:    _AdminService_UpdateGitHubEnterpriseServerProvider_Handler,
+		},
+		{
+			MethodName: "AddGitLabProvider",
+			Handler:    _AdminService_AddGitLabProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGitLabProvider",
+			Handler:    _AdminService_UpdateGitLabProvider_Handler,
+		},
+		{
+			MethodName: "AddGitLabSelfHostedProvider",
+			Handler:    _AdminService_AddGitLabSelfHostedProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGitLabSelfHostedProvider",
+			Handler:    _AdminService_UpdateGitLabSelfHostedProvider_Handler,
 		},
 		{
 			MethodName: "AddGoogleProvider",
