@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.9.1
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	github.com/zitadel/oidc v1.13.2
 	golang.org/x/oauth2 v0.6.0
