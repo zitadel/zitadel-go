@@ -426,7 +426,7 @@ type Query_IdQuery struct {
 
 func (*Query_IdQuery) isQuery_Query() {}
 
-// IdQuery always equals
+// IdQuery is always equals
 type IdsQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
