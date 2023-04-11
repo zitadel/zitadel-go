@@ -9,7 +9,7 @@ require (
 	github.com/zitadel/oidc v1.13.2
 	golang.org/x/oauth2 v0.7.0
 	google.golang.org/genproto v0.0.0-20230223222841-637eb2293923
-	google.golang.org/grpc v1.53.0
+	google.golang.org/grpc v1.54.0
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/square/go-jose.v2 v2.6.0
 )
