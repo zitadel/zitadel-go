@@ -73,3 +73,4 @@ jobs:
 
             [1]: https://github.com/peter-evans/create-pull-request
           draft: false
+          reviewers: 'livio-a,stebenz,eliobischof'
