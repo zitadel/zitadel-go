@@ -46,9 +46,9 @@ type SystemServiceClient interface {
 	ListDomains(ctx context.Context, in *ListDomainsRequest, opts ...grpc.CallOption) (*ListDomainsResponse, error)
 	// Returns the domain of an instance
 	AddDomain(ctx context.Context, in *AddDomainRequest, opts ...grpc.CallOption) (*AddDomainResponse, error)
-	// Returns the domain of an instance
+	// Removes the domain of an instance
 	RemoveDomain(ctx context.Context, in *RemoveDomainRequest, opts ...grpc.CallOption) (*RemoveDomainResponse, error)
-	// Returns the domain of an instance
+	// Sets the primary domain of an instance
 	SetPrimaryDomain(ctx context.Context, in *SetPrimaryDomainRequest, opts ...grpc.CallOption) (*SetPrimaryDomainResponse, error)
 	// Returns all stored read models of ZITADEL
 	// views are used for search optimisation and optimise request latencies
@@ -286,9 +286,9 @@ type SystemServiceServer interface {
 	ListDomains(context.Context, *ListDomainsRequest) (*ListDomainsResponse, error)
 	// Returns the domain of an instance
 	AddDomain(context.Context, *AddDomainRequest) (*AddDomainResponse, error)
-	// Returns the domain of an instance
+	// Removes the domain of an instance
 	RemoveDomain(context.Context, *RemoveDomainRequest) (*RemoveDomainResponse, error)
-	// Returns the domain of an instance
+	// Sets the primary domain of an instance
 	SetPrimaryDomain(context.Context, *SetPrimaryDomainRequest) (*SetPrimaryDomainResponse, error)
 	// Returns all stored read models of ZITADEL
 	// views are used for search optimisation and optimise request latencies
