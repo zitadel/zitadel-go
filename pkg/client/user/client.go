@@ -1,4 +1,4 @@
-package settings
+package user
 
 import (
 	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
@@ -15,6 +15,7 @@ func NewClient(issuer, api string, scopes []string, options ...zitadel.Option) (
 	if err != nil {
 		return nil, err
 	}
+
 	return &Client{
 		Connection:        conn,
 		UserServiceClient: user.NewUserServiceClient(conn.ClientConn),

@@ -15,6 +15,7 @@ func NewClient(issuer, api string, scopes []string, options ...zitadel.Option) (
 	if err != nil {
 		return nil, err
 	}
+
 	return &Client{
 		Connection:           conn,
 		SessionServiceClient: session.NewSessionServiceClient(conn.ClientConn),
