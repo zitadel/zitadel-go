@@ -75,6 +75,14 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/auth/auth_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/auth/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/management/management_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/management/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/system/system_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/system/
+
+## generate v2alpha pb files and copy them to a new directory
+RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
+    && find /go/src/${PROJECT_PATH}/zitadel -iname '*.pb.go' -exec cp --parents \{\} /zitadel-api \; \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2alpha/session_service_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2alpha \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2alpha/user_service_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2alpha \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2alpha/settings_service_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2alpha
+
 #######################
 ## prepare generated files for output
 #######################
