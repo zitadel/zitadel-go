@@ -281,6 +281,8 @@ type ManagementServiceClient interface {
 	AddGenericOIDCProvider(ctx context.Context, in *AddGenericOIDCProviderRequest, opts ...grpc.CallOption) (*AddGenericOIDCProviderResponse, error)
 	// Change an existing OIDC identity provider in the organization
 	UpdateGenericOIDCProvider(ctx context.Context, in *UpdateGenericOIDCProviderRequest, opts ...grpc.CallOption) (*UpdateGenericOIDCProviderResponse, error)
+	// Migrate an existing OIDC identity provider in the organization
+	MigrateGenericOIDCProvider(ctx context.Context, in *MigrateGenericOIDCProviderRequest, opts ...grpc.CallOption) (*MigrateGenericOIDCProviderResponse, error)
 	// Add a new JWT identity provider in the organization
 	AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider in the organization
@@ -2561,6 +2563,15 @@ func (c *managementServiceClient) UpdateGenericOIDCProvider(ctx context.Context,
 	return out, nil
 }
 
+func (c *managementServiceClient) MigrateGenericOIDCProvider(ctx context.Context, in *MigrateGenericOIDCProviderRequest, opts ...grpc.CallOption) (*MigrateGenericOIDCProviderResponse, error) {
+	out := new(MigrateGenericOIDCProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/MigrateGenericOIDCProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error) {
 	out := new(AddJWTProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddJWTProvider", in, out, opts...)
@@ -3089,6 +3100,8 @@ type ManagementServiceServer interface {
 	AddGenericOIDCProvider(context.Context, *AddGenericOIDCProviderRequest) (*AddGenericOIDCProviderResponse, error)
 	// Change an existing OIDC identity provider in the organization
 	UpdateGenericOIDCProvider(context.Context, *UpdateGenericOIDCProviderRequest) (*UpdateGenericOIDCProviderResponse, error)
+	// Migrate an existing OIDC identity provider in the organization
+	MigrateGenericOIDCProvider(context.Context, *MigrateGenericOIDCProviderRequest) (*MigrateGenericOIDCProviderResponse, error)
 	// Add a new JWT identity provider in the organization
 	AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider in the organization
@@ -3883,6 +3896,9 @@ func (UnimplementedManagementServiceServer) AddGenericOIDCProvider(context.Conte
 }
 func (UnimplementedManagementServiceServer) UpdateGenericOIDCProvider(context.Context, *UpdateGenericOIDCProviderRequest) (*UpdateGenericOIDCProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateGenericOIDCProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) MigrateGenericOIDCProvider(context.Context, *MigrateGenericOIDCProviderRequest) (*MigrateGenericOIDCProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MigrateGenericOIDCProvider not implemented")
 }
 func (UnimplementedManagementServiceServer) AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddJWTProvider not implemented")
@@ -8430,6 +8446,24 @@ func _ManagementService_UpdateGenericOIDCProvider_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_MigrateGenericOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MigrateGenericOIDCProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).MigrateGenericOIDCProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/MigrateGenericOIDCProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).MigrateGenericOIDCProvider(ctx, req.(*MigrateGenericOIDCProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_AddJWTProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddJWTProviderRequest)
 	if err := dec(in); err != nil {
@@ -9946,6 +9980,10 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateGenericOIDCProvider",
 			Handler:    _ManagementService_UpdateGenericOIDCProvider_Handler,
+		},
+		{
+			MethodName: "MigrateGenericOIDCProvider",
+			Handler:    _ManagementService_MigrateGenericOIDCProvider_Handler,
 		},
 		{
 			MethodName: "AddJWTProvider",
