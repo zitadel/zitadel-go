@@ -51,6 +51,10 @@ type AuthServiceClient interface {
 	AddMyAuthFactorOTP(ctx context.Context, in *AddMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPResponse, error)
 	VerifyMyAuthFactorOTP(ctx context.Context, in *VerifyMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*VerifyMyAuthFactorOTPResponse, error)
 	RemoveMyAuthFactorOTP(ctx context.Context, in *RemoveMyAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPResponse, error)
+	AddMyAuthFactorOTPSMS(ctx context.Context, in *AddMyAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPSMSResponse, error)
+	RemoveMyAuthFactorOTPSMS(ctx context.Context, in *RemoveMyAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPSMSResponse, error)
+	AddMyAuthFactorOTPEmail(ctx context.Context, in *AddMyAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPEmailResponse, error)
+	RemoveMyAuthFactorOTPEmail(ctx context.Context, in *RemoveMyAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPEmailResponse, error)
 	AddMyAuthFactorU2F(ctx context.Context, in *AddMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*AddMyAuthFactorU2FResponse, error)
 	VerifyMyAuthFactorU2F(ctx context.Context, in *VerifyMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*VerifyMyAuthFactorU2FResponse, error)
 	RemoveMyAuthFactorU2F(ctx context.Context, in *RemoveMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorU2FResponse, error)
@@ -366,6 +370,42 @@ func (c *authServiceClient) RemoveMyAuthFactorOTP(ctx context.Context, in *Remov
 	return out, nil
 }
 
+func (c *authServiceClient) AddMyAuthFactorOTPSMS(ctx context.Context, in *AddMyAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPSMSResponse, error) {
+	out := new(AddMyAuthFactorOTPSMSResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/AddMyAuthFactorOTPSMS", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMyAuthFactorOTPSMS(ctx context.Context, in *RemoveMyAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPSMSResponse, error) {
+	out := new(RemoveMyAuthFactorOTPSMSResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyAuthFactorOTPSMS", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) AddMyAuthFactorOTPEmail(ctx context.Context, in *AddMyAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*AddMyAuthFactorOTPEmailResponse, error) {
+	out := new(AddMyAuthFactorOTPEmailResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/AddMyAuthFactorOTPEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMyAuthFactorOTPEmail(ctx context.Context, in *RemoveMyAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveMyAuthFactorOTPEmailResponse, error) {
+	out := new(RemoveMyAuthFactorOTPEmailResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/RemoveMyAuthFactorOTPEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) AddMyAuthFactorU2F(ctx context.Context, in *AddMyAuthFactorU2FRequest, opts ...grpc.CallOption) (*AddMyAuthFactorU2FResponse, error) {
 	out := new(AddMyAuthFactorU2FResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.auth.v1.AuthService/AddMyAuthFactorU2F", in, out, opts...)
@@ -556,6 +596,10 @@ type AuthServiceServer interface {
 	AddMyAuthFactorOTP(context.Context, *AddMyAuthFactorOTPRequest) (*AddMyAuthFactorOTPResponse, error)
 	VerifyMyAuthFactorOTP(context.Context, *VerifyMyAuthFactorOTPRequest) (*VerifyMyAuthFactorOTPResponse, error)
 	RemoveMyAuthFactorOTP(context.Context, *RemoveMyAuthFactorOTPRequest) (*RemoveMyAuthFactorOTPResponse, error)
+	AddMyAuthFactorOTPSMS(context.Context, *AddMyAuthFactorOTPSMSRequest) (*AddMyAuthFactorOTPSMSResponse, error)
+	RemoveMyAuthFactorOTPSMS(context.Context, *RemoveMyAuthFactorOTPSMSRequest) (*RemoveMyAuthFactorOTPSMSResponse, error)
+	AddMyAuthFactorOTPEmail(context.Context, *AddMyAuthFactorOTPEmailRequest) (*AddMyAuthFactorOTPEmailResponse, error)
+	RemoveMyAuthFactorOTPEmail(context.Context, *RemoveMyAuthFactorOTPEmailRequest) (*RemoveMyAuthFactorOTPEmailResponse, error)
 	AddMyAuthFactorU2F(context.Context, *AddMyAuthFactorU2FRequest) (*AddMyAuthFactorU2FResponse, error)
 	VerifyMyAuthFactorU2F(context.Context, *VerifyMyAuthFactorU2FRequest) (*VerifyMyAuthFactorU2FResponse, error)
 	RemoveMyAuthFactorU2F(context.Context, *RemoveMyAuthFactorU2FRequest) (*RemoveMyAuthFactorU2FResponse, error)
@@ -675,6 +719,18 @@ func (UnimplementedAuthServiceServer) VerifyMyAuthFactorOTP(context.Context, *Ve
 }
 func (UnimplementedAuthServiceServer) RemoveMyAuthFactorOTP(context.Context, *RemoveMyAuthFactorOTPRequest) (*RemoveMyAuthFactorOTPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAuthFactorOTP not implemented")
+}
+func (UnimplementedAuthServiceServer) AddMyAuthFactorOTPSMS(context.Context, *AddMyAuthFactorOTPSMSRequest) (*AddMyAuthFactorOTPSMSResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMyAuthFactorOTPSMS not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMyAuthFactorOTPSMS(context.Context, *RemoveMyAuthFactorOTPSMSRequest) (*RemoveMyAuthFactorOTPSMSResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAuthFactorOTPSMS not implemented")
+}
+func (UnimplementedAuthServiceServer) AddMyAuthFactorOTPEmail(context.Context, *AddMyAuthFactorOTPEmailRequest) (*AddMyAuthFactorOTPEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMyAuthFactorOTPEmail not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMyAuthFactorOTPEmail(context.Context, *RemoveMyAuthFactorOTPEmailRequest) (*RemoveMyAuthFactorOTPEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMyAuthFactorOTPEmail not implemented")
 }
 func (UnimplementedAuthServiceServer) AddMyAuthFactorU2F(context.Context, *AddMyAuthFactorU2FRequest) (*AddMyAuthFactorU2FResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddMyAuthFactorU2F not implemented")
@@ -1316,6 +1372,78 @@ func _AuthService_RemoveMyAuthFactorOTP_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_AddMyAuthFactorOTPSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMyAuthFactorOTPSMSRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AddMyAuthFactorOTPSMS(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/AddMyAuthFactorOTPSMS",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AddMyAuthFactorOTPSMS(ctx, req.(*AddMyAuthFactorOTPSMSRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMyAuthFactorOTPSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyAuthFactorOTPSMSRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyAuthFactorOTPSMS(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyAuthFactorOTPSMS",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyAuthFactorOTPSMS(ctx, req.(*RemoveMyAuthFactorOTPSMSRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_AddMyAuthFactorOTPEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMyAuthFactorOTPEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AddMyAuthFactorOTPEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/AddMyAuthFactorOTPEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AddMyAuthFactorOTPEmail(ctx, req.(*AddMyAuthFactorOTPEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMyAuthFactorOTPEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMyAuthFactorOTPEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMyAuthFactorOTPEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.auth.v1.AuthService/RemoveMyAuthFactorOTPEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMyAuthFactorOTPEmail(ctx, req.(*RemoveMyAuthFactorOTPEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_AddMyAuthFactorU2F_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddMyAuthFactorU2FRequest)
 	if err := dec(in); err != nil {
@@ -1756,6 +1884,22 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveMyAuthFactorOTP",
 			Handler:    _AuthService_RemoveMyAuthFactorOTP_Handler,
+		},
+		{
+			MethodName: "AddMyAuthFactorOTPSMS",
+			Handler:    _AuthService_AddMyAuthFactorOTPSMS_Handler,
+		},
+		{
+			MethodName: "RemoveMyAuthFactorOTPSMS",
+			Handler:    _AuthService_RemoveMyAuthFactorOTPSMS_Handler,
+		},
+		{
+			MethodName: "AddMyAuthFactorOTPEmail",
+			Handler:    _AuthService_AddMyAuthFactorOTPEmail_Handler,
+		},
+		{
+			MethodName: "RemoveMyAuthFactorOTPEmail",
+			Handler:    _AuthService_RemoveMyAuthFactorOTPEmail_Handler,
 		},
 		{
 			MethodName: "AddMyAuthFactorU2F",
