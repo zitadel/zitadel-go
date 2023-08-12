@@ -173,6 +173,14 @@ type AdminServiceClient interface {
 	GetCustomVerifyPhoneMessageText(ctx context.Context, in *GetCustomVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyPhoneMessageTextResponse, error)
 	SetDefaultVerifyPhoneMessageText(ctx context.Context, in *SetDefaultVerifyPhoneMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifyPhoneMessageTextResponse, error)
 	ResetCustomVerifyPhoneMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyPhoneMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
+	GetDefaultVerifySMSOTPMessageText(ctx context.Context, in *GetDefaultVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifySMSOTPMessageTextResponse, error)
+	GetCustomVerifySMSOTPMessageText(ctx context.Context, in *GetCustomVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifySMSOTPMessageTextResponse, error)
+	SetDefaultVerifySMSOTPMessageText(ctx context.Context, in *SetDefaultVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifySMSOTPMessageTextResponse, error)
+	ResetCustomVerifySMSOTPMessageTextToDefault(ctx context.Context, in *ResetCustomVerifySMSOTPMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifySMSOTPMessageTextToDefaultResponse, error)
+	GetDefaultVerifyEmailOTPMessageText(ctx context.Context, in *GetDefaultVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailOTPMessageTextResponse, error)
+	GetCustomVerifyEmailOTPMessageText(ctx context.Context, in *GetCustomVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailOTPMessageTextResponse, error)
+	SetDefaultVerifyEmailOTPMessageText(ctx context.Context, in *SetDefaultVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifyEmailOTPMessageTextResponse, error)
+	ResetCustomVerifyEmailOTPMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailOTPMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailOTPMessageTextToDefaultResponse, error)
 	GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	GetCustomDomainClaimedMessageText(ctx context.Context, in *GetCustomDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetCustomDomainClaimedMessageTextResponse, error)
 	SetDefaultDomainClaimedMessageText(ctx context.Context, in *SetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultDomainClaimedMessageTextResponse, error)
@@ -1376,6 +1384,78 @@ func (c *adminServiceClient) ResetCustomVerifyPhoneMessageTextToDefault(ctx cont
 	return out, nil
 }
 
+func (c *adminServiceClient) GetDefaultVerifySMSOTPMessageText(ctx context.Context, in *GetDefaultVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifySMSOTPMessageTextResponse, error) {
+	out := new(GetDefaultVerifySMSOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultVerifySMSOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCustomVerifySMSOTPMessageText(ctx context.Context, in *GetCustomVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifySMSOTPMessageTextResponse, error) {
+	out := new(GetCustomVerifySMSOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetCustomVerifySMSOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetDefaultVerifySMSOTPMessageText(ctx context.Context, in *SetDefaultVerifySMSOTPMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifySMSOTPMessageTextResponse, error) {
+	out := new(SetDefaultVerifySMSOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultVerifySMSOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResetCustomVerifySMSOTPMessageTextToDefault(ctx context.Context, in *ResetCustomVerifySMSOTPMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifySMSOTPMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomVerifySMSOTPMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetCustomVerifySMSOTPMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDefaultVerifyEmailOTPMessageText(ctx context.Context, in *GetDefaultVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultVerifyEmailOTPMessageTextResponse, error) {
+	out := new(GetDefaultVerifyEmailOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultVerifyEmailOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCustomVerifyEmailOTPMessageText(ctx context.Context, in *GetCustomVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*GetCustomVerifyEmailOTPMessageTextResponse, error) {
+	out := new(GetCustomVerifyEmailOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetCustomVerifyEmailOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetDefaultVerifyEmailOTPMessageText(ctx context.Context, in *SetDefaultVerifyEmailOTPMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultVerifyEmailOTPMessageTextResponse, error) {
+	out := new(SetDefaultVerifyEmailOTPMessageTextResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetDefaultVerifyEmailOTPMessageText", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResetCustomVerifyEmailOTPMessageTextToDefault(ctx context.Context, in *ResetCustomVerifyEmailOTPMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomVerifyEmailOTPMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomVerifyEmailOTPMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ResetCustomVerifyEmailOTPMessageTextToDefault", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetDefaultDomainClaimedMessageText(ctx context.Context, in *GetDefaultDomainClaimedMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultDomainClaimedMessageTextResponse, error) {
 	out := new(GetDefaultDomainClaimedMessageTextResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetDefaultDomainClaimedMessageText", in, out, opts...)
@@ -1796,6 +1876,14 @@ type AdminServiceServer interface {
 	GetCustomVerifyPhoneMessageText(context.Context, *GetCustomVerifyPhoneMessageTextRequest) (*GetCustomVerifyPhoneMessageTextResponse, error)
 	SetDefaultVerifyPhoneMessageText(context.Context, *SetDefaultVerifyPhoneMessageTextRequest) (*SetDefaultVerifyPhoneMessageTextResponse, error)
 	ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error)
+	GetDefaultVerifySMSOTPMessageText(context.Context, *GetDefaultVerifySMSOTPMessageTextRequest) (*GetDefaultVerifySMSOTPMessageTextResponse, error)
+	GetCustomVerifySMSOTPMessageText(context.Context, *GetCustomVerifySMSOTPMessageTextRequest) (*GetCustomVerifySMSOTPMessageTextResponse, error)
+	SetDefaultVerifySMSOTPMessageText(context.Context, *SetDefaultVerifySMSOTPMessageTextRequest) (*SetDefaultVerifySMSOTPMessageTextResponse, error)
+	ResetCustomVerifySMSOTPMessageTextToDefault(context.Context, *ResetCustomVerifySMSOTPMessageTextToDefaultRequest) (*ResetCustomVerifySMSOTPMessageTextToDefaultResponse, error)
+	GetDefaultVerifyEmailOTPMessageText(context.Context, *GetDefaultVerifyEmailOTPMessageTextRequest) (*GetDefaultVerifyEmailOTPMessageTextResponse, error)
+	GetCustomVerifyEmailOTPMessageText(context.Context, *GetCustomVerifyEmailOTPMessageTextRequest) (*GetCustomVerifyEmailOTPMessageTextResponse, error)
+	SetDefaultVerifyEmailOTPMessageText(context.Context, *SetDefaultVerifyEmailOTPMessageTextRequest) (*SetDefaultVerifyEmailOTPMessageTextResponse, error)
+	ResetCustomVerifyEmailOTPMessageTextToDefault(context.Context, *ResetCustomVerifyEmailOTPMessageTextToDefaultRequest) (*ResetCustomVerifyEmailOTPMessageTextToDefaultResponse, error)
 	GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error)
 	GetCustomDomainClaimedMessageText(context.Context, *GetCustomDomainClaimedMessageTextRequest) (*GetCustomDomainClaimedMessageTextResponse, error)
 	SetDefaultDomainClaimedMessageText(context.Context, *SetDefaultDomainClaimedMessageTextRequest) (*SetDefaultDomainClaimedMessageTextResponse, error)
@@ -2221,6 +2309,30 @@ func (UnimplementedAdminServiceServer) SetDefaultVerifyPhoneMessageText(context.
 }
 func (UnimplementedAdminServiceServer) ResetCustomVerifyPhoneMessageTextToDefault(context.Context, *ResetCustomVerifyPhoneMessageTextToDefaultRequest) (*ResetCustomVerifyPhoneMessageTextToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomVerifyPhoneMessageTextToDefault not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDefaultVerifySMSOTPMessageText(context.Context, *GetDefaultVerifySMSOTPMessageTextRequest) (*GetDefaultVerifySMSOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultVerifySMSOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCustomVerifySMSOTPMessageText(context.Context, *GetCustomVerifySMSOTPMessageTextRequest) (*GetCustomVerifySMSOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomVerifySMSOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) SetDefaultVerifySMSOTPMessageText(context.Context, *SetDefaultVerifySMSOTPMessageTextRequest) (*SetDefaultVerifySMSOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultVerifySMSOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) ResetCustomVerifySMSOTPMessageTextToDefault(context.Context, *ResetCustomVerifySMSOTPMessageTextToDefaultRequest) (*ResetCustomVerifySMSOTPMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomVerifySMSOTPMessageTextToDefault not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDefaultVerifyEmailOTPMessageText(context.Context, *GetDefaultVerifyEmailOTPMessageTextRequest) (*GetDefaultVerifyEmailOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultVerifyEmailOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCustomVerifyEmailOTPMessageText(context.Context, *GetCustomVerifyEmailOTPMessageTextRequest) (*GetCustomVerifyEmailOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomVerifyEmailOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) SetDefaultVerifyEmailOTPMessageText(context.Context, *SetDefaultVerifyEmailOTPMessageTextRequest) (*SetDefaultVerifyEmailOTPMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultVerifyEmailOTPMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) ResetCustomVerifyEmailOTPMessageTextToDefault(context.Context, *ResetCustomVerifyEmailOTPMessageTextToDefaultRequest) (*ResetCustomVerifyEmailOTPMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomVerifyEmailOTPMessageTextToDefault not implemented")
 }
 func (UnimplementedAdminServiceServer) GetDefaultDomainClaimedMessageText(context.Context, *GetDefaultDomainClaimedMessageTextRequest) (*GetDefaultDomainClaimedMessageTextResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultDomainClaimedMessageText not implemented")
@@ -4644,6 +4756,150 @@ func _AdminService_ResetCustomVerifyPhoneMessageTextToDefault_Handler(srv interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_GetDefaultVerifySMSOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultVerifySMSOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultVerifySMSOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultVerifySMSOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultVerifySMSOTPMessageText(ctx, req.(*GetDefaultVerifySMSOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCustomVerifySMSOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomVerifySMSOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCustomVerifySMSOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetCustomVerifySMSOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCustomVerifySMSOTPMessageText(ctx, req.(*GetCustomVerifySMSOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetDefaultVerifySMSOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultVerifySMSOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultVerifySMSOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultVerifySMSOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultVerifySMSOTPMessageText(ctx, req.(*SetDefaultVerifySMSOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResetCustomVerifySMSOTPMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomVerifySMSOTPMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResetCustomVerifySMSOTPMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ResetCustomVerifySMSOTPMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResetCustomVerifySMSOTPMessageTextToDefault(ctx, req.(*ResetCustomVerifySMSOTPMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDefaultVerifyEmailOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultVerifyEmailOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultVerifyEmailOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetDefaultVerifyEmailOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultVerifyEmailOTPMessageText(ctx, req.(*GetDefaultVerifyEmailOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCustomVerifyEmailOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomVerifyEmailOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCustomVerifyEmailOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetCustomVerifyEmailOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCustomVerifyEmailOTPMessageText(ctx, req.(*GetCustomVerifyEmailOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetDefaultVerifyEmailOTPMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultVerifyEmailOTPMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultVerifyEmailOTPMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetDefaultVerifyEmailOTPMessageText",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultVerifyEmailOTPMessageText(ctx, req.(*SetDefaultVerifyEmailOTPMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResetCustomVerifyEmailOTPMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomVerifyEmailOTPMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResetCustomVerifyEmailOTPMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ResetCustomVerifyEmailOTPMessageTextToDefault",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResetCustomVerifyEmailOTPMessageTextToDefault(ctx, req.(*ResetCustomVerifyEmailOTPMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetDefaultDomainClaimedMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDefaultDomainClaimedMessageTextRequest)
 	if err := dec(in); err != nil {
@@ -5688,6 +5944,38 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetCustomVerifyPhoneMessageTextToDefault",
 			Handler:    _AdminService_ResetCustomVerifyPhoneMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetDefaultVerifySMSOTPMessageText",
+			Handler:    _AdminService_GetDefaultVerifySMSOTPMessageText_Handler,
+		},
+		{
+			MethodName: "GetCustomVerifySMSOTPMessageText",
+			Handler:    _AdminService_GetCustomVerifySMSOTPMessageText_Handler,
+		},
+		{
+			MethodName: "SetDefaultVerifySMSOTPMessageText",
+			Handler:    _AdminService_SetDefaultVerifySMSOTPMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomVerifySMSOTPMessageTextToDefault",
+			Handler:    _AdminService_ResetCustomVerifySMSOTPMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetDefaultVerifyEmailOTPMessageText",
+			Handler:    _AdminService_GetDefaultVerifyEmailOTPMessageText_Handler,
+		},
+		{
+			MethodName: "GetCustomVerifyEmailOTPMessageText",
+			Handler:    _AdminService_GetCustomVerifyEmailOTPMessageText_Handler,
+		},
+		{
+			MethodName: "SetDefaultVerifyEmailOTPMessageText",
+			Handler:    _AdminService_SetDefaultVerifyEmailOTPMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomVerifyEmailOTPMessageTextToDefault",
+			Handler:    _AdminService_ResetCustomVerifyEmailOTPMessageTextToDefault_Handler,
 		},
 		{
 			MethodName: "GetDefaultDomainClaimedMessageText",
