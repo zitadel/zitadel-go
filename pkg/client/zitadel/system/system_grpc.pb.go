@@ -44,7 +44,7 @@ type SystemServiceClient interface {
 	ExistsDomain(ctx context.Context, in *ExistsDomainRequest, opts ...grpc.CallOption) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
 	ListDomains(ctx context.Context, in *ListDomainsRequest, opts ...grpc.CallOption) (*ListDomainsResponse, error)
-	// Returns the domain of an instance
+	// Adds a domain to an instance
 	AddDomain(ctx context.Context, in *AddDomainRequest, opts ...grpc.CallOption) (*AddDomainResponse, error)
 	// Removes the domain of an instance
 	RemoveDomain(ctx context.Context, in *RemoveDomainRequest, opts ...grpc.CallOption) (*RemoveDomainResponse, error)
@@ -284,7 +284,7 @@ type SystemServiceServer interface {
 	ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
 	ListDomains(context.Context, *ListDomainsRequest) (*ListDomainsResponse, error)
-	// Returns the domain of an instance
+	// Adds a domain to an instance
 	AddDomain(context.Context, *AddDomainRequest) (*AddDomainResponse, error)
 	// Removes the domain of an instance
 	RemoveDomain(context.Context, *RemoveDomainRequest) (*RemoveDomainResponse, error)
