@@ -323,6 +323,10 @@ type ManagementServiceClient interface {
 	AddLDAPProvider(ctx context.Context, in *AddLDAPProviderRequest, opts ...grpc.CallOption) (*AddLDAPProviderResponse, error)
 	// Change an existing LDAP identity provider in the organization
 	UpdateLDAPProvider(ctx context.Context, in *UpdateLDAPProviderRequest, opts ...grpc.CallOption) (*UpdateLDAPProviderResponse, error)
+	// Add a new Apple identity provider in the organization
+	AddAppleProvider(ctx context.Context, in *AddAppleProviderRequest, opts ...grpc.CallOption) (*AddAppleProviderResponse, error)
+	// Change an existing Apple identity provider in the organization
+	UpdateAppleProvider(ctx context.Context, in *UpdateAppleProviderRequest, opts ...grpc.CallOption) (*UpdateAppleProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error)
@@ -2796,6 +2800,24 @@ func (c *managementServiceClient) UpdateLDAPProvider(ctx context.Context, in *Up
 	return out, nil
 }
 
+func (c *managementServiceClient) AddAppleProvider(ctx context.Context, in *AddAppleProviderRequest, opts ...grpc.CallOption) (*AddAppleProviderResponse, error) {
+	out := new(AddAppleProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddAppleProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateAppleProvider(ctx context.Context, in *UpdateAppleProviderRequest, opts ...grpc.CallOption) (*UpdateAppleProviderResponse, error) {
+	out := new(UpdateAppleProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateAppleProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error) {
 	out := new(DeleteProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeleteProvider", in, out, opts...)
@@ -3222,6 +3244,10 @@ type ManagementServiceServer interface {
 	AddLDAPProvider(context.Context, *AddLDAPProviderRequest) (*AddLDAPProviderResponse, error)
 	// Change an existing LDAP identity provider in the organization
 	UpdateLDAPProvider(context.Context, *UpdateLDAPProviderRequest) (*UpdateLDAPProviderResponse, error)
+	// Add a new Apple identity provider in the organization
+	AddAppleProvider(context.Context, *AddAppleProviderRequest) (*AddAppleProviderResponse, error)
+	// Change an existing Apple identity provider in the organization
+	UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error)
@@ -4059,6 +4085,12 @@ func (UnimplementedManagementServiceServer) AddLDAPProvider(context.Context, *Ad
 }
 func (UnimplementedManagementServiceServer) UpdateLDAPProvider(context.Context, *UpdateLDAPProviderRequest) (*UpdateLDAPProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateLDAPProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) AddAppleProvider(context.Context, *AddAppleProviderRequest) (*AddAppleProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAppleProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAppleProvider not implemented")
 }
 func (UnimplementedManagementServiceServer) DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProvider not implemented")
@@ -9008,6 +9040,42 @@ func _ManagementService_UpdateLDAPProvider_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddAppleProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAppleProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddAppleProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddAppleProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddAppleProvider(ctx, req.(*AddAppleProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateAppleProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAppleProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateAppleProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateAppleProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateAppleProvider(ctx, req.(*UpdateAppleProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_DeleteProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteProviderRequest)
 	if err := dec(in); err != nil {
@@ -10336,6 +10404,14 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateLDAPProvider",
 			Handler:    _ManagementService_UpdateLDAPProvider_Handler,
+		},
+		{
+			MethodName: "AddAppleProvider",
+			Handler:    _ManagementService_AddAppleProvider_Handler,
+		},
+		{
+			MethodName: "UpdateAppleProvider",
+			Handler:    _ManagementService_UpdateAppleProvider_Handler,
 		},
 		{
 			MethodName: "DeleteProvider",
