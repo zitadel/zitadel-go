@@ -13,10 +13,10 @@ type OrgInterceptor struct {
 	orgID string
 }
 
-//NewOrgInterceptor statically set the organisation context for every call
+// NewOrgInterceptor statically set the organisation context for every call
 //
-//If you need to switch between multiple organisations for different requests, use the SetOrgID function
-//directly on your calls (see example/mgmt/mgmt.go)
+// If you need to switch between multiple organisations for different requests, use the SetOrgID function
+// directly on your calls (see example/mgmt/mgmt.go)
 func NewOrgInterceptor(orgID string) *OrgInterceptor {
 	return &OrgInterceptor{
 		orgID: orgID,
@@ -35,7 +35,12 @@ func (interceptor *OrgInterceptor) Stream() grpc.StreamClientInterceptor {
 	}
 }
 
-//SetOrgID passes the orgID used for the organization context (where the api calls are executed)
+// SetOrgID passes the orgID used for the organization context (where the api calls are executed)
 func SetOrgID(ctx context.Context, orgID string) context.Context {
-	return metadata.AppendToOutgoingContext(ctx, client.OrgHeader, orgID)
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return metadata.AppendToOutgoingContext(ctx, client.OrgHeader, orgID)
+	}
+	md.Set(client.OrgHeader, orgID)
+	return metadata.NewOutgoingContext(ctx, md)
 }
