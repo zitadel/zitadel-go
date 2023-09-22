@@ -70,7 +70,12 @@ type SystemServiceClient interface {
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(ctx context.Context, in *RemoveFailedEventRequest, opts ...grpc.CallOption) (*RemoveFailedEventResponse, error)
 	// Creates a new quota
+	// Returns an error if the quota already exists for the specified unit
+	// Deprecated: use SetQuota instead
 	AddQuota(ctx context.Context, in *AddQuotaRequest, opts ...grpc.CallOption) (*AddQuotaResponse, error)
+	// Sets quota configuration properties
+	// Creates a new quota if it doesn't exist for the specified unit
+	SetQuota(ctx context.Context, in *SetQuotaRequest, opts ...grpc.CallOption) (*SetQuotaResponse, error)
 	// Removes a quota
 	RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error)
 }
@@ -245,6 +250,15 @@ func (c *systemServiceClient) AddQuota(ctx context.Context, in *AddQuotaRequest,
 	return out, nil
 }
 
+func (c *systemServiceClient) SetQuota(ctx context.Context, in *SetQuotaRequest, opts ...grpc.CallOption) (*SetQuotaResponse, error) {
+	out := new(SetQuotaResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/SetQuota", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *systemServiceClient) RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error) {
 	out := new(RemoveQuotaResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/RemoveQuota", in, out, opts...)
@@ -310,7 +324,12 @@ type SystemServiceServer interface {
 	// failed event. You can find out if it worked on the `failure_count`
 	RemoveFailedEvent(context.Context, *RemoveFailedEventRequest) (*RemoveFailedEventResponse, error)
 	// Creates a new quota
+	// Returns an error if the quota already exists for the specified unit
+	// Deprecated: use SetQuota instead
 	AddQuota(context.Context, *AddQuotaRequest) (*AddQuotaResponse, error)
+	// Sets quota configuration properties
+	// Creates a new quota if it doesn't exist for the specified unit
+	SetQuota(context.Context, *SetQuotaRequest) (*SetQuotaResponse, error)
 	// Removes a quota
 	RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error)
 	mustEmbedUnimplementedSystemServiceServer()
@@ -373,6 +392,9 @@ func (UnimplementedSystemServiceServer) RemoveFailedEvent(context.Context, *Remo
 }
 func (UnimplementedSystemServiceServer) AddQuota(context.Context, *AddQuotaRequest) (*AddQuotaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddQuota not implemented")
+}
+func (UnimplementedSystemServiceServer) SetQuota(context.Context, *SetQuotaRequest) (*SetQuotaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetQuota not implemented")
 }
 func (UnimplementedSystemServiceServer) RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveQuota not implemented")
@@ -714,6 +736,24 @@ func _SystemService_AddQuota_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SystemService_SetQuota_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetQuotaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).SetQuota(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/SetQuota",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).SetQuota(ctx, req.(*SetQuotaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SystemService_RemoveQuota_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RemoveQuotaRequest)
 	if err := dec(in); err != nil {
@@ -810,6 +850,10 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddQuota",
 			Handler:    _SystemService_AddQuota_Handler,
+		},
+		{
+			MethodName: "SetQuota",
+			Handler:    _SystemService_SetQuota_Handler,
 		},
 		{
 			MethodName: "RemoveQuota",
