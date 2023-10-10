@@ -327,6 +327,12 @@ type ManagementServiceClient interface {
 	AddAppleProvider(ctx context.Context, in *AddAppleProviderRequest, opts ...grpc.CallOption) (*AddAppleProviderResponse, error)
 	// Change an existing Apple identity provider in the organization
 	UpdateAppleProvider(ctx context.Context, in *UpdateAppleProviderRequest, opts ...grpc.CallOption) (*UpdateAppleProviderResponse, error)
+	// Add a new SAML identity provider in the organization
+	AddSAMLProvider(ctx context.Context, in *AddSAMLProviderRequest, opts ...grpc.CallOption) (*AddSAMLProviderResponse, error)
+	// Change an existing SAML identity provider in the organization
+	UpdateSAMLProvider(ctx context.Context, in *UpdateSAMLProviderRequest, opts ...grpc.CallOption) (*UpdateSAMLProviderResponse, error)
+	// Regenerate certificate for an existing SAML identity provider in the organization
+	RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error)
@@ -2818,6 +2824,33 @@ func (c *managementServiceClient) UpdateAppleProvider(ctx context.Context, in *U
 	return out, nil
 }
 
+func (c *managementServiceClient) AddSAMLProvider(ctx context.Context, in *AddSAMLProviderRequest, opts ...grpc.CallOption) (*AddSAMLProviderResponse, error) {
+	out := new(AddSAMLProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/AddSAMLProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) UpdateSAMLProvider(ctx context.Context, in *UpdateSAMLProviderRequest, opts ...grpc.CallOption) (*UpdateSAMLProviderResponse, error) {
+	out := new(UpdateSAMLProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/UpdateSAMLProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error) {
+	out := new(RegenerateSAMLProviderCertificateResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RegenerateSAMLProviderCertificate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error) {
 	out := new(DeleteProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/DeleteProvider", in, out, opts...)
@@ -3248,6 +3281,12 @@ type ManagementServiceServer interface {
 	AddAppleProvider(context.Context, *AddAppleProviderRequest) (*AddAppleProviderResponse, error)
 	// Change an existing Apple identity provider in the organization
 	UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error)
+	// Add a new SAML identity provider in the organization
+	AddSAMLProvider(context.Context, *AddSAMLProviderRequest) (*AddSAMLProviderResponse, error)
+	// Change an existing SAML identity provider in the organization
+	UpdateSAMLProvider(context.Context, *UpdateSAMLProviderRequest) (*UpdateSAMLProviderResponse, error)
+	// Regenerate certificate for an existing SAML identity provider in the organization
+	RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error)
@@ -4091,6 +4130,15 @@ func (UnimplementedManagementServiceServer) AddAppleProvider(context.Context, *A
 }
 func (UnimplementedManagementServiceServer) UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAppleProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) AddSAMLProvider(context.Context, *AddSAMLProviderRequest) (*AddSAMLProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSAMLProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) UpdateSAMLProvider(context.Context, *UpdateSAMLProviderRequest) (*UpdateSAMLProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSAMLProvider not implemented")
+}
+func (UnimplementedManagementServiceServer) RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegenerateSAMLProviderCertificate not implemented")
 }
 func (UnimplementedManagementServiceServer) DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProvider not implemented")
@@ -9076,6 +9124,60 @@ func _ManagementService_UpdateAppleProvider_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_AddSAMLProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSAMLProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).AddSAMLProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/AddSAMLProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).AddSAMLProvider(ctx, req.(*AddSAMLProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_UpdateSAMLProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSAMLProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).UpdateSAMLProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/UpdateSAMLProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).UpdateSAMLProvider(ctx, req.(*UpdateSAMLProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RegenerateSAMLProviderCertificate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegenerateSAMLProviderCertificateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RegenerateSAMLProviderCertificate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RegenerateSAMLProviderCertificate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RegenerateSAMLProviderCertificate(ctx, req.(*RegenerateSAMLProviderCertificateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_DeleteProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteProviderRequest)
 	if err := dec(in); err != nil {
@@ -10412,6 +10514,18 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAppleProvider",
 			Handler:    _ManagementService_UpdateAppleProvider_Handler,
+		},
+		{
+			MethodName: "AddSAMLProvider",
+			Handler:    _ManagementService_AddSAMLProvider_Handler,
+		},
+		{
+			MethodName: "UpdateSAMLProvider",
+			Handler:    _ManagementService_UpdateSAMLProvider_Handler,
+		},
+		{
+			MethodName: "RegenerateSAMLProviderCertificate",
+			Handler:    _ManagementService_RegenerateSAMLProviderCertificate_Handler,
 		},
 		{
 			MethodName: "DeleteProvider",

@@ -78,6 +78,8 @@ type SystemServiceClient interface {
 	SetQuota(ctx context.Context, in *SetQuotaRequest, opts ...grpc.CallOption) (*SetQuotaResponse, error)
 	// Removes a quota
 	RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error)
+	// Set a feature flag on an instance
+	SetInstanceFeature(ctx context.Context, in *SetInstanceFeatureRequest, opts ...grpc.CallOption) (*SetInstanceFeatureResponse, error)
 }
 
 type systemServiceClient struct {
@@ -268,6 +270,15 @@ func (c *systemServiceClient) RemoveQuota(ctx context.Context, in *RemoveQuotaRe
 	return out, nil
 }
 
+func (c *systemServiceClient) SetInstanceFeature(ctx context.Context, in *SetInstanceFeatureRequest, opts ...grpc.CallOption) (*SetInstanceFeatureResponse, error) {
+	out := new(SetInstanceFeatureResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/SetInstanceFeature", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SystemServiceServer is the server API for SystemService service.
 // All implementations must embed UnimplementedSystemServiceServer
 // for forward compatibility
@@ -332,6 +343,8 @@ type SystemServiceServer interface {
 	SetQuota(context.Context, *SetQuotaRequest) (*SetQuotaResponse, error)
 	// Removes a quota
 	RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error)
+	// Set a feature flag on an instance
+	SetInstanceFeature(context.Context, *SetInstanceFeatureRequest) (*SetInstanceFeatureResponse, error)
 	mustEmbedUnimplementedSystemServiceServer()
 }
 
@@ -398,6 +411,9 @@ func (UnimplementedSystemServiceServer) SetQuota(context.Context, *SetQuotaReque
 }
 func (UnimplementedSystemServiceServer) RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveQuota not implemented")
+}
+func (UnimplementedSystemServiceServer) SetInstanceFeature(context.Context, *SetInstanceFeatureRequest) (*SetInstanceFeatureResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetInstanceFeature not implemented")
 }
 func (UnimplementedSystemServiceServer) mustEmbedUnimplementedSystemServiceServer() {}
 
@@ -772,6 +788,24 @@ func _SystemService_RemoveQuota_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SystemService_SetInstanceFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetInstanceFeatureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).SetInstanceFeature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/SetInstanceFeature",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).SetInstanceFeature(ctx, req.(*SetInstanceFeatureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SystemService_ServiceDesc is the grpc.ServiceDesc for SystemService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -858,6 +892,10 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveQuota",
 			Handler:    _SystemService_RemoveQuota_Handler,
+		},
+		{
+			MethodName: "SetInstanceFeature",
+			Handler:    _SystemService_SetInstanceFeature_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
