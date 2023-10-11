@@ -9,7 +9,7 @@ package session
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	v2alpha "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2alpha"
+	v2beta "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2beta"
 	_ "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/protoc/v2"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -31,8 +31,8 @@ type ListSessionsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Query   *v2alpha.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	Queries []*SearchQuery     `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
+	Query   *v2beta.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	Queries []*SearchQuery    `protobuf:"bytes,2,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
 func (x *ListSessionsRequest) Reset() {
@@ -67,7 +67,7 @@ func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_session_v2beta_session_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListSessionsRequest) GetQuery() *v2alpha.ListQuery {
+func (x *ListSessionsRequest) GetQuery() *v2beta.ListQuery {
 	if x != nil {
 		return x.Query
 	}
@@ -86,8 +86,8 @@ type ListSessionsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details  *v2alpha.ListDetails `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	Sessions []*Session           `protobuf:"bytes,2,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	Details  *v2beta.ListDetails `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	Sessions []*Session          `protobuf:"bytes,2,rep,name=sessions,proto3" json:"sessions,omitempty"`
 }
 
 func (x *ListSessionsResponse) Reset() {
@@ -122,7 +122,7 @@ func (*ListSessionsResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_session_v2beta_session_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListSessionsResponse) GetDetails() *v2alpha.ListDetails {
+func (x *ListSessionsResponse) GetDetails() *v2beta.ListDetails {
 	if x != nil {
 		return x.Details
 	}
@@ -306,10 +306,10 @@ type CreateSessionResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details      *v2alpha.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	SessionId    string           `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	SessionToken string           `protobuf:"bytes,3,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
-	Challenges   *Challenges      `protobuf:"bytes,4,opt,name=challenges,proto3" json:"challenges,omitempty"`
+	Details      *v2beta.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	SessionId    string          `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	SessionToken string          `protobuf:"bytes,3,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
+	Challenges   *Challenges     `protobuf:"bytes,4,opt,name=challenges,proto3" json:"challenges,omitempty"`
 }
 
 func (x *CreateSessionResponse) Reset() {
@@ -344,7 +344,7 @@ func (*CreateSessionResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_session_v2beta_session_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateSessionResponse) GetDetails() *v2alpha.Details {
+func (x *CreateSessionResponse) GetDetails() *v2beta.Details {
 	if x != nil {
 		return x.Details
 	}
@@ -456,9 +456,9 @@ type SetSessionResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details      *v2alpha.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	SessionToken string           `protobuf:"bytes,2,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
-	Challenges   *Challenges      `protobuf:"bytes,3,opt,name=challenges,proto3" json:"challenges,omitempty"`
+	Details      *v2beta.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	SessionToken string          `protobuf:"bytes,2,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
+	Challenges   *Challenges     `protobuf:"bytes,3,opt,name=challenges,proto3" json:"challenges,omitempty"`
 }
 
 func (x *SetSessionResponse) Reset() {
@@ -493,7 +493,7 @@ func (*SetSessionResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_session_v2beta_session_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *SetSessionResponse) GetDetails() *v2alpha.Details {
+func (x *SetSessionResponse) GetDetails() *v2beta.Details {
 	if x != nil {
 		return x.Details
 	}
@@ -574,7 +574,7 @@ type DeleteSessionResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details *v2alpha.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	Details *v2beta.Details `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
 }
 
 func (x *DeleteSessionResponse) Reset() {
@@ -609,7 +609,7 @@ func (*DeleteSessionResponse) Descriptor() ([]byte, []int) {
 	return file_zitadel_session_v2beta_session_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *DeleteSessionResponse) GetDetails() *v2alpha.Details {
+func (x *DeleteSessionResponse) GetDetails() *v2beta.Details {
 	if x != nil {
 		return x.Details
 	}
@@ -1590,12 +1590,12 @@ var file_zitadel_session_v2beta_session_service_proto_goTypes = []interface{}{
 	(*CheckOTP)(nil),              // 16: zitadel.session.v2beta.CheckOTP
 	nil,                           // 17: zitadel.session.v2beta.CreateSessionRequest.MetadataEntry
 	nil,                           // 18: zitadel.session.v2beta.SetSessionRequest.MetadataEntry
-	(*v2alpha.ListQuery)(nil),     // 19: zitadel.object.v2beta.ListQuery
+	(*v2beta.ListQuery)(nil),      // 19: zitadel.object.v2beta.ListQuery
 	(*SearchQuery)(nil),           // 20: zitadel.session.v2beta.SearchQuery
-	(*v2alpha.ListDetails)(nil),   // 21: zitadel.object.v2beta.ListDetails
+	(*v2beta.ListDetails)(nil),    // 21: zitadel.object.v2beta.ListDetails
 	(*Session)(nil),               // 22: zitadel.session.v2beta.Session
 	(*RequestChallenges)(nil),     // 23: zitadel.session.v2beta.RequestChallenges
-	(*v2alpha.Details)(nil),       // 24: zitadel.object.v2beta.Details
+	(*v2beta.Details)(nil),        // 24: zitadel.object.v2beta.Details
 	(*Challenges)(nil),            // 25: zitadel.session.v2beta.Challenges
 	(*structpb.Struct)(nil),       // 26: google.protobuf.Struct
 }
