@@ -25,7 +25,7 @@ protoc \
     --go_opt=Mzitadel/auth_n_key.proto=${ZITADEL_IMPORT}/authn \
     --go_opt=Mzitadel/change.proto=${ZITADEL_IMPORT}/change \
     --go_opt=Mzitadel/event.proto=${ZITADEL_IMPORT}/event \
-    --go_opt=Mzitadel/features.proto=${ZITADEL_IMPORT}/features \
+    --go_opt=Mzitadel/feature.proto=${ZITADEL_IMPORT}/feature \
     --go_opt=Mzitadel/idp.proto=${ZITADEL_IMPORT}/idp \
     --go_opt=Mzitadel/instance.proto=${ZITADEL_IMPORT}/instance \
     --go_opt=Mzitadel/management.proto=${ZITADEL_IMPORT}/management \

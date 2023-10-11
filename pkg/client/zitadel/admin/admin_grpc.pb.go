@@ -115,6 +115,12 @@ type AdminServiceClient interface {
 	AddAppleProvider(ctx context.Context, in *AddAppleProviderRequest, opts ...grpc.CallOption) (*AddAppleProviderResponse, error)
 	// Change an existing Apple identity provider on the instance
 	UpdateAppleProvider(ctx context.Context, in *UpdateAppleProviderRequest, opts ...grpc.CallOption) (*UpdateAppleProviderResponse, error)
+	// Add a new SAML identity provider on the instance
+	AddSAMLProvider(ctx context.Context, in *AddSAMLProviderRequest, opts ...grpc.CallOption) (*AddSAMLProviderResponse, error)
+	// Change an existing SAML identity provider on the instance
+	UpdateSAMLProvider(ctx context.Context, in *UpdateSAMLProviderRequest, opts ...grpc.CallOption) (*UpdateSAMLProviderResponse, error)
+	// Regenerate certificate for an existing SAML identity provider in the organization
+	RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error)
@@ -217,6 +223,10 @@ type AdminServiceClient interface {
 	ListEventTypes(ctx context.Context, in *ListEventTypesRequest, opts ...grpc.CallOption) (*ListEventTypesResponse, error)
 	ListEvents(ctx context.Context, in *ListEventsRequest, opts ...grpc.CallOption) (*ListEventsResponse, error)
 	ListAggregateTypes(ctx context.Context, in *ListAggregateTypesRequest, opts ...grpc.CallOption) (*ListAggregateTypesResponse, error)
+	// Activates the "LoginDefaultOrg" feature by setting the flag to "true"
+	// This is irreversible!
+	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organisation context is set
+	ActivateFeatureLoginDefaultOrg(ctx context.Context, in *ActivateFeatureLoginDefaultOrgRequest, opts ...grpc.CallOption) (*ActivateFeatureLoginDefaultOrgResponse, error)
 }
 
 type adminServiceClient struct {
@@ -860,6 +870,33 @@ func (c *adminServiceClient) AddAppleProvider(ctx context.Context, in *AddAppleP
 func (c *adminServiceClient) UpdateAppleProvider(ctx context.Context, in *UpdateAppleProviderRequest, opts ...grpc.CallOption) (*UpdateAppleProviderResponse, error) {
 	out := new(UpdateAppleProviderResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateAppleProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddSAMLProvider(ctx context.Context, in *AddSAMLProviderRequest, opts ...grpc.CallOption) (*AddSAMLProviderResponse, error) {
+	out := new(AddSAMLProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/AddSAMLProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSAMLProvider(ctx context.Context, in *UpdateSAMLProviderRequest, opts ...grpc.CallOption) (*UpdateSAMLProviderResponse, error) {
+	out := new(UpdateSAMLProviderResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/UpdateSAMLProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error) {
+	out := new(RegenerateSAMLProviderCertificateResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/RegenerateSAMLProviderCertificate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1739,6 +1776,15 @@ func (c *adminServiceClient) ListAggregateTypes(ctx context.Context, in *ListAgg
 	return out, nil
 }
 
+func (c *adminServiceClient) ActivateFeatureLoginDefaultOrg(ctx context.Context, in *ActivateFeatureLoginDefaultOrgRequest, opts ...grpc.CallOption) (*ActivateFeatureLoginDefaultOrgResponse, error) {
+	out := new(ActivateFeatureLoginDefaultOrgResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ActivateFeatureLoginDefaultOrg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -1840,6 +1886,12 @@ type AdminServiceServer interface {
 	AddAppleProvider(context.Context, *AddAppleProviderRequest) (*AddAppleProviderResponse, error)
 	// Change an existing Apple identity provider on the instance
 	UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error)
+	// Add a new SAML identity provider on the instance
+	AddSAMLProvider(context.Context, *AddSAMLProviderRequest) (*AddSAMLProviderResponse, error)
+	// Change an existing SAML identity provider on the instance
+	UpdateSAMLProvider(context.Context, *UpdateSAMLProviderRequest) (*UpdateSAMLProviderResponse, error)
+	// Regenerate certificate for an existing SAML identity provider in the organization
+	RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error)
@@ -1942,6 +1994,10 @@ type AdminServiceServer interface {
 	ListEventTypes(context.Context, *ListEventTypesRequest) (*ListEventTypesResponse, error)
 	ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error)
 	ListAggregateTypes(context.Context, *ListAggregateTypesRequest) (*ListAggregateTypesResponse, error)
+	// Activates the "LoginDefaultOrg" feature by setting the flag to "true"
+	// This is irreversible!
+	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organisation context is set
+	ActivateFeatureLoginDefaultOrg(context.Context, *ActivateFeatureLoginDefaultOrgRequest) (*ActivateFeatureLoginDefaultOrgResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -2161,6 +2217,15 @@ func (UnimplementedAdminServiceServer) AddAppleProvider(context.Context, *AddApp
 }
 func (UnimplementedAdminServiceServer) UpdateAppleProvider(context.Context, *UpdateAppleProviderRequest) (*UpdateAppleProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAppleProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) AddSAMLProvider(context.Context, *AddSAMLProviderRequest) (*AddSAMLProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSAMLProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSAMLProvider(context.Context, *UpdateSAMLProviderRequest) (*UpdateSAMLProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSAMLProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegenerateSAMLProviderCertificate not implemented")
 }
 func (UnimplementedAdminServiceServer) DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProvider not implemented")
@@ -2452,6 +2517,9 @@ func (UnimplementedAdminServiceServer) ListEvents(context.Context, *ListEventsRe
 }
 func (UnimplementedAdminServiceServer) ListAggregateTypes(context.Context, *ListAggregateTypesRequest) (*ListAggregateTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAggregateTypes not implemented")
+}
+func (UnimplementedAdminServiceServer) ActivateFeatureLoginDefaultOrg(context.Context, *ActivateFeatureLoginDefaultOrgRequest) (*ActivateFeatureLoginDefaultOrgResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateFeatureLoginDefaultOrg not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -3740,6 +3808,60 @@ func _AdminService_UpdateAppleProvider_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).UpdateAppleProvider(ctx, req.(*UpdateAppleProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddSAMLProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSAMLProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddSAMLProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/AddSAMLProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddSAMLProvider(ctx, req.(*AddSAMLProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSAMLProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSAMLProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSAMLProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/UpdateSAMLProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSAMLProvider(ctx, req.(*UpdateSAMLProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RegenerateSAMLProviderCertificate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegenerateSAMLProviderCertificateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RegenerateSAMLProviderCertificate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/RegenerateSAMLProviderCertificate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RegenerateSAMLProviderCertificate(ctx, req.(*RegenerateSAMLProviderCertificateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5490,6 +5612,24 @@ func _AdminService_ListAggregateTypes_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_ActivateFeatureLoginDefaultOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateFeatureLoginDefaultOrgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ActivateFeatureLoginDefaultOrg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ActivateFeatureLoginDefaultOrg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ActivateFeatureLoginDefaultOrg(ctx, req.(*ActivateFeatureLoginDefaultOrgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminService_ServiceDesc is the grpc.ServiceDesc for AdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5780,6 +5920,18 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAppleProvider",
 			Handler:    _AdminService_UpdateAppleProvider_Handler,
+		},
+		{
+			MethodName: "AddSAMLProvider",
+			Handler:    _AdminService_AddSAMLProvider_Handler,
+		},
+		{
+			MethodName: "UpdateSAMLProvider",
+			Handler:    _AdminService_UpdateSAMLProvider_Handler,
+		},
+		{
+			MethodName: "RegenerateSAMLProviderCertificate",
+			Handler:    _AdminService_RegenerateSAMLProviderCertificate_Handler,
 		},
 		{
 			MethodName: "DeleteProvider",
@@ -6168,6 +6320,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAggregateTypes",
 			Handler:    _AdminService_ListAggregateTypes_Handler,
+		},
+		{
+			MethodName: "ActivateFeatureLoginDefaultOrg",
+			Handler:    _AdminService_ActivateFeatureLoginDefaultOrg_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
