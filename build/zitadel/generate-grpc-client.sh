@@ -43,6 +43,11 @@ protoc \
     --go_opt=Mzitadel/text.proto=${ZITADEL_IMPORT}/text \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
     --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
+    --go_opt=Mzitadel/protoc_gen_zitadel/v2/options.proto=${ZITADEL_IMPORT}/protoc/v2 \
+    --go_opt=Mzitadel/object/v2beta/object.proto=${ZITADEL_IMPORT}/object/v2beta \
+    --go_opt=Mzitadel/session/v2beta/challenge.proto=${ZITADEL_IMPORT}/session/v2beta \
+    --go_opt=Mzitadel/session/v2beta/session.proto=${ZITADEL_IMPORT}/session/v2beta \
+    --go_opt=Mzitadel/session/v2beta/session_service.proto=${ZITADEL_IMPORT}/session/v2beta \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)
