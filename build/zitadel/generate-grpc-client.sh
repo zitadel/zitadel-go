@@ -48,6 +48,24 @@ protoc \
     --go_opt=Mzitadel/session/v2beta/challenge.proto=${ZITADEL_IMPORT}/session/v2beta \
     --go_opt=Mzitadel/session/v2beta/session.proto=${ZITADEL_IMPORT}/session/v2beta \
     --go_opt=Mzitadel/session/v2beta/session_service.proto=${ZITADEL_IMPORT}/session/v2beta \
+    --go_opt=Mzitadel/oidc/v2beta/authorization.proto=${ZITADEL_IMPORT}/oidc/v2beta \
+    --go_opt=Mzitadel/oidc/v2beta/oidc_service.proto=${ZITADEL_IMPORT}/oidc/v2beta \
+    --go_opt=Mzitadel/org/v2beta/org_service.proto=${ZITADEL_IMPORT}/org/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/branding_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/domain_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/legal_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/lockout_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/login_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/password_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/settings_service.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/user/v2beta/auth.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/email.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/idp.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/password.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/phone.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/user.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)
