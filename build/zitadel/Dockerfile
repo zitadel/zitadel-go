@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.19
+ARG GO_VERSION=1.21
 
 #######################
 ## These steps set platform / arch type specific variables
@@ -18,7 +18,7 @@ ENV PROTOC_ARCH x86_64
 FROM ${BUILDARCH}-base AS base
 ARG PROTOC_VERSION=3.18.0
 ARG PROTOC_ZIP=protoc-${PROTOC_VERSION}-linux-${PROTOC_ARCH}.zip
-ARG GATEWAY_VERSION=2.15.2
+ARG GATEWAY_VERSION=2.18.0
 ARG VALIDATOR_VERSION=0.9.1
 ARG TAG_NAME=main
 
