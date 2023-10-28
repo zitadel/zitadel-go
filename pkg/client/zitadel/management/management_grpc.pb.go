@@ -61,6 +61,8 @@ type ManagementServiceClient interface {
 	ListHumanAuthFactors(ctx context.Context, in *ListHumanAuthFactorsRequest, opts ...grpc.CallOption) (*ListHumanAuthFactorsResponse, error)
 	RemoveHumanAuthFactorOTP(ctx context.Context, in *RemoveHumanAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPResponse, error)
 	RemoveHumanAuthFactorU2F(ctx context.Context, in *RemoveHumanAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorU2FResponse, error)
+	RemoveHumanAuthFactorOTPSMS(ctx context.Context, in *RemoveHumanAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPSMSResponse, error)
+	RemoveHumanAuthFactorOTPEmail(ctx context.Context, in *RemoveHumanAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPEmailResponse, error)
 	ListHumanPasswordless(ctx context.Context, in *ListHumanPasswordlessRequest, opts ...grpc.CallOption) (*ListHumanPasswordlessResponse, error)
 	AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error)
 	SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error)
@@ -295,9 +297,9 @@ type ManagementServiceClient interface {
 	AddJWTProvider(ctx context.Context, in *AddJWTProviderRequest, opts ...grpc.CallOption) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider in the organization
 	UpdateJWTProvider(ctx context.Context, in *UpdateJWTProviderRequest, opts ...grpc.CallOption) (*UpdateJWTProviderResponse, error)
-	// Add a new Azure AD identity provider in the organisation
+	// Add a new Azure AD identity provider in the organization
 	AddAzureADProvider(ctx context.Context, in *AddAzureADProviderRequest, opts ...grpc.CallOption) (*AddAzureADProviderResponse, error)
-	// Change an existing Azure AD identity provider in the organisation
+	// Change an existing Azure AD identity provider in the organization
 	UpdateAzureADProvider(ctx context.Context, in *UpdateAzureADProviderRequest, opts ...grpc.CallOption) (*UpdateAzureADProviderResponse, error)
 	// Add a new GitHub identity provider in the organization
 	AddGitHubProvider(ctx context.Context, in *AddGitHubProviderRequest, opts ...grpc.CallOption) (*AddGitHubProviderResponse, error)
@@ -721,6 +723,24 @@ func (c *managementServiceClient) RemoveHumanAuthFactorOTP(ctx context.Context, 
 func (c *managementServiceClient) RemoveHumanAuthFactorU2F(ctx context.Context, in *RemoveHumanAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorU2FResponse, error) {
 	out := new(RemoveHumanAuthFactorU2FResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveHumanAuthFactorU2F", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveHumanAuthFactorOTPSMS(ctx context.Context, in *RemoveHumanAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPSMSResponse, error) {
+	out := new(RemoveHumanAuthFactorOTPSMSResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveHumanAuthFactorOTPSMS", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) RemoveHumanAuthFactorOTPEmail(ctx context.Context, in *RemoveHumanAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPEmailResponse, error) {
+	out := new(RemoveHumanAuthFactorOTPEmailResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.management.v1.ManagementService/RemoveHumanAuthFactorOTPEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3015,6 +3035,8 @@ type ManagementServiceServer interface {
 	ListHumanAuthFactors(context.Context, *ListHumanAuthFactorsRequest) (*ListHumanAuthFactorsResponse, error)
 	RemoveHumanAuthFactorOTP(context.Context, *RemoveHumanAuthFactorOTPRequest) (*RemoveHumanAuthFactorOTPResponse, error)
 	RemoveHumanAuthFactorU2F(context.Context, *RemoveHumanAuthFactorU2FRequest) (*RemoveHumanAuthFactorU2FResponse, error)
+	RemoveHumanAuthFactorOTPSMS(context.Context, *RemoveHumanAuthFactorOTPSMSRequest) (*RemoveHumanAuthFactorOTPSMSResponse, error)
+	RemoveHumanAuthFactorOTPEmail(context.Context, *RemoveHumanAuthFactorOTPEmailRequest) (*RemoveHumanAuthFactorOTPEmailResponse, error)
 	ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error)
 	AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error)
 	SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error)
@@ -3249,9 +3271,9 @@ type ManagementServiceServer interface {
 	AddJWTProvider(context.Context, *AddJWTProviderRequest) (*AddJWTProviderResponse, error)
 	// Change an existing JWT identity provider in the organization
 	UpdateJWTProvider(context.Context, *UpdateJWTProviderRequest) (*UpdateJWTProviderResponse, error)
-	// Add a new Azure AD identity provider in the organisation
+	// Add a new Azure AD identity provider in the organization
 	AddAzureADProvider(context.Context, *AddAzureADProviderRequest) (*AddAzureADProviderResponse, error)
-	// Change an existing Azure AD identity provider in the organisation
+	// Change an existing Azure AD identity provider in the organization
 	UpdateAzureADProvider(context.Context, *UpdateAzureADProviderRequest) (*UpdateAzureADProviderResponse, error)
 	// Add a new GitHub identity provider in the organization
 	AddGitHubProvider(context.Context, *AddGitHubProviderRequest) (*AddGitHubProviderResponse, error)
@@ -3431,6 +3453,12 @@ func (UnimplementedManagementServiceServer) RemoveHumanAuthFactorOTP(context.Con
 }
 func (UnimplementedManagementServiceServer) RemoveHumanAuthFactorU2F(context.Context, *RemoveHumanAuthFactorU2FRequest) (*RemoveHumanAuthFactorU2FResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveHumanAuthFactorU2F not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveHumanAuthFactorOTPSMS(context.Context, *RemoveHumanAuthFactorOTPSMSRequest) (*RemoveHumanAuthFactorOTPSMSResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveHumanAuthFactorOTPSMS not implemented")
+}
+func (UnimplementedManagementServiceServer) RemoveHumanAuthFactorOTPEmail(context.Context, *RemoveHumanAuthFactorOTPEmailRequest) (*RemoveHumanAuthFactorOTPEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveHumanAuthFactorOTPEmail not implemented")
 }
 func (UnimplementedManagementServiceServer) ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListHumanPasswordless not implemented")
@@ -4926,6 +4954,42 @@ func _ManagementService_RemoveHumanAuthFactorU2F_Handler(srv interface{}, ctx co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).RemoveHumanAuthFactorU2F(ctx, req.(*RemoveHumanAuthFactorU2FRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveHumanAuthFactorOTPSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveHumanAuthFactorOTPSMSRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveHumanAuthFactorOTPSMS(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveHumanAuthFactorOTPSMS",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveHumanAuthFactorOTPSMS(ctx, req.(*RemoveHumanAuthFactorOTPSMSRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_RemoveHumanAuthFactorOTPEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveHumanAuthFactorOTPEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).RemoveHumanAuthFactorOTPEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.management.v1.ManagementService/RemoveHumanAuthFactorOTPEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).RemoveHumanAuthFactorOTPEmail(ctx, req.(*RemoveHumanAuthFactorOTPEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -9582,6 +9646,14 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveHumanAuthFactorU2F",
 			Handler:    _ManagementService_RemoveHumanAuthFactorU2F_Handler,
+		},
+		{
+			MethodName: "RemoveHumanAuthFactorOTPSMS",
+			Handler:    _ManagementService_RemoveHumanAuthFactorOTPSMS_Handler,
+		},
+		{
+			MethodName: "RemoveHumanAuthFactorOTPEmail",
+			Handler:    _ManagementService_RemoveHumanAuthFactorOTPEmail_Handler,
 		},
 		{
 			MethodName: "ListHumanPasswordless",
