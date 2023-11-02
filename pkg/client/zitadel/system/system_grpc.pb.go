@@ -39,10 +39,13 @@ type SystemServiceClient interface {
 	RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
 	// all queries need to match (ANDed)
+	// Deprecated: Use the Admin APIs ListIAMMembers instead
 	ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
 	ExistsDomain(ctx context.Context, in *ExistsDomainRequest, opts ...grpc.CallOption) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
+	// Checks if a domain exists
+	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
 	ListDomains(ctx context.Context, in *ListDomainsRequest, opts ...grpc.CallOption) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
 	AddDomain(ctx context.Context, in *AddDomainRequest, opts ...grpc.CallOption) (*AddDomainResponse, error)
@@ -80,6 +83,10 @@ type SystemServiceClient interface {
 	RemoveQuota(ctx context.Context, in *RemoveQuotaRequest, opts ...grpc.CallOption) (*RemoveQuotaResponse, error)
 	// Set a feature flag on an instance
 	SetInstanceFeature(ctx context.Context, in *SetInstanceFeatureRequest, opts ...grpc.CallOption) (*SetInstanceFeatureResponse, error)
+	// Sets instance level limits
+	SetLimits(ctx context.Context, in *SetLimitsRequest, opts ...grpc.CallOption) (*SetLimitsResponse, error)
+	// Resets instance level limits
+	ResetLimits(ctx context.Context, in *ResetLimitsRequest, opts ...grpc.CallOption) (*ResetLimitsResponse, error)
 }
 
 type systemServiceClient struct {
@@ -279,6 +286,24 @@ func (c *systemServiceClient) SetInstanceFeature(ctx context.Context, in *SetIns
 	return out, nil
 }
 
+func (c *systemServiceClient) SetLimits(ctx context.Context, in *SetLimitsRequest, opts ...grpc.CallOption) (*SetLimitsResponse, error) {
+	out := new(SetLimitsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/SetLimits", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *systemServiceClient) ResetLimits(ctx context.Context, in *ResetLimitsRequest, opts ...grpc.CallOption) (*ResetLimitsResponse, error) {
+	out := new(ResetLimitsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/ResetLimits", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SystemServiceServer is the server API for SystemService service.
 // All implementations must embed UnimplementedSystemServiceServer
 // for forward compatibility
@@ -304,10 +329,13 @@ type SystemServiceServer interface {
 	RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
 	// all queries need to match (ANDed)
+	// Deprecated: Use the Admin APIs ListIAMMembers instead
 	ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
 	ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
+	// Checks if a domain exists
+	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
 	ListDomains(context.Context, *ListDomainsRequest) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
 	AddDomain(context.Context, *AddDomainRequest) (*AddDomainResponse, error)
@@ -345,6 +373,10 @@ type SystemServiceServer interface {
 	RemoveQuota(context.Context, *RemoveQuotaRequest) (*RemoveQuotaResponse, error)
 	// Set a feature flag on an instance
 	SetInstanceFeature(context.Context, *SetInstanceFeatureRequest) (*SetInstanceFeatureResponse, error)
+	// Sets instance level limits
+	SetLimits(context.Context, *SetLimitsRequest) (*SetLimitsResponse, error)
+	// Resets instance level limits
+	ResetLimits(context.Context, *ResetLimitsRequest) (*ResetLimitsResponse, error)
 	mustEmbedUnimplementedSystemServiceServer()
 }
 
@@ -414,6 +446,12 @@ func (UnimplementedSystemServiceServer) RemoveQuota(context.Context, *RemoveQuot
 }
 func (UnimplementedSystemServiceServer) SetInstanceFeature(context.Context, *SetInstanceFeatureRequest) (*SetInstanceFeatureResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetInstanceFeature not implemented")
+}
+func (UnimplementedSystemServiceServer) SetLimits(context.Context, *SetLimitsRequest) (*SetLimitsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetLimits not implemented")
+}
+func (UnimplementedSystemServiceServer) ResetLimits(context.Context, *ResetLimitsRequest) (*ResetLimitsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetLimits not implemented")
 }
 func (UnimplementedSystemServiceServer) mustEmbedUnimplementedSystemServiceServer() {}
 
@@ -806,6 +844,42 @@ func _SystemService_SetInstanceFeature_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SystemService_SetLimits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetLimitsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).SetLimits(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/SetLimits",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).SetLimits(ctx, req.(*SetLimitsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SystemService_ResetLimits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetLimitsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).ResetLimits(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/ResetLimits",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).ResetLimits(ctx, req.(*ResetLimitsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SystemService_ServiceDesc is the grpc.ServiceDesc for SystemService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -896,6 +970,14 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetInstanceFeature",
 			Handler:    _SystemService_SetInstanceFeature_Handler,
+		},
+		{
+			MethodName: "SetLimits",
+			Handler:    _SystemService_SetLimits_Handler,
+		},
+		{
+			MethodName: "ResetLimits",
+			Handler:    _SystemService_ResetLimits_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
