@@ -32,6 +32,7 @@ protoc \
     --go_opt=Mzitadel/member.proto=${ZITADEL_IMPORT}/member \
     --go_opt=Mzitadel/message.proto=${ZITADEL_IMPORT}/message \
     --go_opt=Mzitadel/metadata.proto=${ZITADEL_IMPORT}/metadata \
+    --go_opt=Mzitadel/milestone/v1/milestone.proto=${ZITADEL_IMPORT}/milestone \
     --go_opt=Mzitadel/object.proto=${ZITADEL_IMPORT}/object \
     --go_opt=Mzitadel/options.proto=${ZITADEL_IMPORT}/authoption \
     --go_opt=Mzitadel/org.proto=${ZITADEL_IMPORT}/org \
