@@ -2,9 +2,7 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -28,9 +26,19 @@ var (
 	ErrInvalidAuthorization = errors.New("invalid authorization")
 )
 
+func newResourceServer(ctx context.Context, oidc *configurationOIDC) (rs.ResourceServer, error) {
+	if oidc.keyPath != "" {
+		return rs.NewResourceServerFromKeyFile(ctx, oidc.getIssuer(), oidc.keyPath)
+	}
+	return rs.NewResourceServerClientCredentials(ctx, oidc.getIssuer(), oidc.clientID, oidc.clientSecret)
+}
+
 func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.RelyingParty, error) {
-	redirectURI := fmt.Sprintf("http://localhost:%v%v", oidc.port, oidc.callbackURL)
-	cookieHandler := httphelper.NewCookieHandler(key, key, httphelper.WithUnsecure())
+	opts := make([]httphelper.CookieHandlerOpt, 0)
+	if oidc.insecure {
+		opts = append(opts, httphelper.WithUnsecure())
+	}
+	cookieHandler := httphelper.NewCookieHandler(key, key, opts...)
 	options := []rp.Option{
 		rp.WithCookieHandler(cookieHandler),
 		rp.WithVerifierOpts(rp.WithIssuedAtOffset(5 * time.Second)),
@@ -41,63 +49,41 @@ func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.Rely
 	if oidc.keyPath != "" {
 		options = append(options, rp.WithJWTProfile(rp.SignerFromKeyPath(oidc.keyPath)))
 	}
-	return rp.NewRelyingPartyOIDC(ctx, oidc.issuer, oidc.clientID, oidc.clientSecret, redirectURI, oidc.scopes, options...)
+	return rp.NewRelyingPartyOIDC(ctx,
+		oidc.getIssuer(),
+		oidc.clientID,
+		oidc.clientSecret,
+		oidc.getIssuer()+oidc.callbackURL,
+		oidc.scopes,
+		options...,
+	)
 }
 
-func marshalUserinfo() rp.CodeExchangeUserinfoCallback[*oidc.IDTokenClaims, *oidc.UserInfo] {
-	return func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[*oidc.IDTokenClaims], state string, rp rp.RelyingParty, info *oidc.UserInfo) {
-		data, err := json.Marshal(info)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Write(data)
-	}
-}
-
-func oidcAuthenticatedHTTPInterceptor(resourceServer rs.ResourceServer) func(next http.Handler) http.Handler {
+func oidcAuthenticatedHTTPInterceptor(relayingParty rp.RelyingParty) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx := req.Context()
-
-			token, err := checkOIDCTokenFromRequest(req)
+			ctx, _, err := checkOIDCTokenFromRequest[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, relayingParty, req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
 			}
-
-			pi := info.ProviderInfoFromContext(ctx)
-			resp, err := checkIntrospectWithCached(ctx, resourceServer, token, pi.IntrospectionResponse)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusForbidden)
-				return
-			}
-			ctx = pi.SetIntrospectionResponse(resp).IntoContext(ctx)
-
 			next.ServeHTTP(w, req.WithContext(ctx))
 		})
 	}
 }
-func oidcAuthorizedHTTPInterceptor(resourceServer rs.ResourceServer, requestedClaim, requestedValue string) func(next http.Handler) http.Handler {
+
+func oidcAuthorizedHTTPInterceptor[R any](cache Cache[string, R], resourceServer rs.ResourceServer, check Check[R]) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx := req.Context()
-
-			token, err := checkOIDCTokenFromRequest(req)
+			token, err := getTokenFromRequest(req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
 			}
 
-			pi := info.ProviderInfoFromContext(ctx)
-			resp, err := checkIntrospectWithCached(ctx, resourceServer, token, pi.IntrospectionResponse)
+			ctx, _, err = checkIntrospect[R](ctx, cache, resourceServer, token, check)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusForbidden)
-				return
-			}
-			ctx = pi.SetIntrospectionResponse(resp).IntoContext(ctx)
-
-			if err := checkAuthorization(pi.IntrospectionResponse, requestedClaim, requestedValue); err != nil {
 				http.Error(w, err.Error(), http.StatusForbidden)
 				return
 			}
@@ -106,19 +92,12 @@ func oidcAuthorizedHTTPInterceptor(resourceServer rs.ResourceServer, requestedCl
 	}
 }
 
-func oidcAuthenticatedUnaryInterceptor(resourceServer rs.ResourceServer) grpc.UnaryServerInterceptor {
+func oidcAuthenticatedUnaryInterceptor[U rp.SubjectGetter](cache Cache[string, U], relayingParty rp.RelyingParty) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, sInfo *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		token, err := checkOIDCToken(metautils.ExtractIncoming(ctx).Get("authorization"))
+		ctx, _, err = checkOIDCToken[U](ctx, cache, relayingParty, metautils.ExtractIncoming(ctx).Get("authorization"))
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
-
-		pi := info.ProviderInfoFromContext(ctx)
-		iResp, err := checkIntrospectWithCached(ctx, resourceServer, token, pi.IntrospectionResponse)
-		if err != nil {
-			return nil, status.Error(codes.PermissionDenied, err.Error())
-		}
-		ctx = pi.SetIntrospectionResponse(iResp).IntoContext(ctx)
 
 		return handler(ctx, req)
 	}
@@ -133,63 +112,71 @@ func (s *serverStream) Context() context.Context {
 	return s.ctx
 }
 
-func oidcAuthenticatedStreamInterceptor(resourceServer rs.ResourceServer) grpc.StreamServerInterceptor {
+func oidcAuthenticatedStreamInterceptor[U rp.SubjectGetter](cache Cache[string, U], relayingParty rp.RelyingParty) grpc.StreamServerInterceptor {
 	return func(srv interface{}, stream grpc.ServerStream, sInfo *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 
-		token, err := checkOIDCToken(metautils.ExtractIncoming(ctx).Get("authorization"))
+		ctx, _, err := checkOIDCToken[U](ctx, cache, relayingParty, metautils.ExtractIncoming(ctx).Get("authorization"))
 		if err != nil {
 			return status.Error(codes.Unauthenticated, err.Error())
 		}
-
-		pi := info.ProviderInfoFromContext(ctx)
-		resp, err := checkIntrospectWithCached(ctx, resourceServer, token, pi.IntrospectionResponse)
-		if err != nil {
-			return status.Error(codes.PermissionDenied, err.Error())
-		}
-		ctx = pi.SetIntrospectionResponse(resp).IntoContext(ctx)
 
 		return handler(srv, &serverStream{stream, ctx})
 	}
 }
 
-func checkOIDCTokenFromRequest(r *http.Request) (string, error) {
+func checkOIDCTokenFromRequest[U rp.SubjectGetter](cache Cache[string, U], relayingParty rp.RelyingParty, r *http.Request) (context.Context, string, error) {
+	token, err := getTokenFromRequest(r)
+	if err != nil {
+		return r.Context(), "", err
+	}
+	return checkOIDCToken[U](r.Context(), cache, relayingParty, token)
+}
+
+func getTokenFromRequest(r *http.Request) (string, error) {
 	auth := r.Header.Get("authorization")
 	if auth == "" {
 		return "", ErrMissingHeader
 	}
-	return checkOIDCToken(auth)
-}
-
-func checkOIDCToken(auth string) (string, error) {
 	if !strings.HasPrefix(auth, oidc.PrefixBearer) {
 		return "", ErrInvalidHeader
 	}
 	return strings.TrimPrefix(auth, oidc.PrefixBearer), nil
 }
 
-func checkIntrospect(ctx context.Context, resourceServer rs.ResourceServer, token string) (*oidc.IntrospectionResponse, error) {
-	resp, err := rs.Introspect[*oidc.IntrospectionResponse](ctx, resourceServer, token)
-	if err != nil {
-		return nil, ErrInvalidToken
+func checkOIDCToken[U rp.SubjectGetter](ctx context.Context, cache Cache[string, U], relayingParty rp.RelyingParty, token string) (context.Context, string, error) {
+	resp, err := cache.Get(token)
+	if resp == nil || err != nil {
+		resp, err := rp.Userinfo[U](ctx, token, oidc.PrefixBearer, "userid", relayingParty)
+		if err != nil {
+			return ctx, "", ErrInvalidToken
+		}
+		if err := cache.Set(token, resp); err != nil {
+			return ctx, "", ErrInvalidToken
+		}
 	}
-	if !resp.Active {
-		return nil, ErrInvalidToken
-	}
-	return resp, nil
+	return info.UserinfoIntoContext[U](ctx, resp), token, err
 }
 
-func checkIntrospectWithCached(ctx context.Context, resourceServer rs.ResourceServer, token string, cached *oidc.IntrospectionResponse) (*oidc.IntrospectionResponse, error) {
-	if cached == nil {
-		return checkIntrospect(ctx, resourceServer, token)
+func checkIntrospect[R any](ctx context.Context, cache Cache[string, R], resourceServer rs.ResourceServer, token string, check func(resp R) error) (context.Context, R, error) {
+	var rnil R
+	// try get from cache
+	resp, err := cache.Get(token)
+	// if not found in cache, try to call introspection endpoint
+	if resp == nil || err != nil {
+		resp, err := rs.Introspect[R](ctx, resourceServer, token)
+		if err != nil {
+			return ctx, rnil, ErrInvalidToken
+		}
+		// set introspection response in cache
+		if err := cache.Set(token, resp); err != nil {
+			return ctx, rnil, ErrInvalidToken
+		}
 	}
-	return cached, nil
-}
-
-func checkAuthorization(resp *oidc.IntrospectionResponse, requestedClaim, requestedValue string) error {
-	value, ok := resp.Claims[requestedClaim].(string)
-	if !ok || value == "" || value != requestedValue {
-		return ErrInvalidAuthorization
+	// check introspection response if authorization are correct
+	if err := check(resp); err != nil {
+		return ctx, rnil, err
 	}
-	return nil
+	// save checked introspection response into context
+	return info.IntrospectionIntoContext[R](ctx, resp), resp, nil
 }

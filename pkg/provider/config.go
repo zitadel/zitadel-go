@@ -2,45 +2,59 @@ package provider
 
 type configuration struct {
 	oidc *configurationOIDC
-	saml *configurationSAML
 }
 
 type configurationOIDC struct {
-	issuer       string
 	keyPath      string
 	clientID     string
 	clientSecret string
+	insecure     bool
+	domain       string
 	port         string
 	callbackURL  string
 	scopes       []string
 }
 
 func (c *configurationOIDC) validRS() bool {
-	return c.issuer != "" && c.keyPath != ""
+	return c.domain != "" &&
+		(c.keyPath != "" || (c.clientID != "" && c.clientSecret != ""))
 }
 
 func (c *configurationOIDC) validRP() bool {
-	return c.issuer != "" && c.clientID != "" && c.port != "" && c.callbackURL != ""
+	return c.domain != "" &&
+		c.clientID != "" &&
+		c.callbackURL != ""
 }
 
-type configurationSAML struct{}
-
-func OIDCProviderConfiguration(issuer, keyPath, clientID, clientSecret, port, callbackURL string, scopes []string) *configuration {
+func OIDCProviderConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string) *configuration {
 	return &configuration{
 		oidc: &configurationOIDC{
-			issuer:       issuer,
+			domain:       domain,
+			port:         port,
+			insecure:     insecure,
 			keyPath:      keyPath,
 			clientID:     clientID,
 			clientSecret: clientSecret,
-			port:         port,
 			callbackURL:  callbackURL,
 			scopes:       scopes,
 		},
 	}
 }
 
-func SAMLProviderConfiguration() *configuration {
-	return &configuration{
-		saml: &configurationSAML{},
+func (c *configurationOIDC) getIssuer() string {
+	issuerScheme := "https://"
+	if c.insecure {
+		issuerScheme = "http://"
 	}
+
+	issuerPort := c.port
+	if c.port == "80" && c.insecure || c.port == "443" && !c.insecure {
+		issuerPort = ""
+	}
+
+	issuer := issuerScheme + c.domain
+	if issuerPort != "" {
+		issuer += ":" + issuerPort
+	}
+	return issuer
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/client/rs"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"google.golang.org/grpc"
 )
 
@@ -17,7 +18,6 @@ var (
 
 type Provider struct {
 	oidc *oidcProvider
-	saml *samlProvider
 }
 
 type oidcProvider struct {
@@ -25,13 +25,12 @@ type oidcProvider struct {
 	relayingParty  rp.RelyingParty
 }
 
-type samlProvider struct{}
-
 func New(ctx context.Context, conf *configuration) (_ *Provider, err error) {
 	if conf.oidc != nil {
+
 		var resourceServer rs.ResourceServer
 		if conf.oidc.validRS() {
-			resourceServer, err = rs.NewResourceServerFromKeyFile(ctx, conf.oidc.issuer, conf.oidc.keyPath)
+			resourceServer, err = newResourceServer(ctx, conf.oidc)
 			if err != nil {
 				return nil, err
 			}
@@ -49,24 +48,20 @@ func New(ctx context.Context, conf *configuration) (_ *Provider, err error) {
 				relayingParty:  relayingParty,
 			},
 		}, nil
-	} else if conf.saml != nil {
-		return &Provider{
-			saml: &samlProvider{},
-		}, nil
 	}
 	return nil, fmt.Errorf("not supported")
 }
 
 func (p *Provider) AuthenticationHandler() http.Handler {
 	if p.oidc != nil && p.oidc.relayingParty != nil {
-		return rp.AuthURLHandler(uuid.New().String, p.oidc.relayingParty, rp.WithPromptURLParam("Welcome back!"))
+		return rp.AuthURLHandler(uuid.New().String, p.oidc.relayingParty)
 	}
 	return nil
 }
 
-func (p *Provider) AuthenticationCallbackHandler() http.Handler {
+func (p *Provider) AuthenticationCallbackHandler(redirect rp.CodeExchangeCallback[oidc.IDClaims]) http.Handler {
 	if p.oidc != nil && p.oidc.relayingParty != nil {
-		return rp.CodeExchangeHandler(rp.UserinfoCallback(marshalUserinfo()), p.oidc.relayingParty)
+		return rp.CodeExchangeHandler(redirect, p.oidc.relayingParty)
 	}
 	return nil
 }
