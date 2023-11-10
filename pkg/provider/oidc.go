@@ -59,10 +59,10 @@ func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.Rely
 	)
 }
 
-func oidcAuthenticatedHTTPInterceptor(relayingParty rp.RelyingParty) func(next http.Handler) http.Handler {
+func oidcAuthenticatedHTTPInterceptor[U rp.SubjectGetter](cache Cache[string, U], relayingParty rp.RelyingParty) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, _, err := checkOIDCTokenFromRequest[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, relayingParty, req)
+			ctx, _, err := checkOIDCTokenFromRequest[U](cache, relayingParty, req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
