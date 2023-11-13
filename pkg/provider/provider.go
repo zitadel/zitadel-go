@@ -55,9 +55,9 @@ func (p *Provider) AuthenticationHandler() http.Handler {
 	return nil
 }
 
-func (p *Provider) AuthenticationCallbackHandler(redirect rp.CodeExchangeCallback[oidc.IDClaims]) http.Handler {
+func (p *Provider) AuthenticationCallbackHandler(redirectURL string) http.Handler {
 	if p.oidc != nil && p.oidc.relayingParty != nil {
-		return rp.CodeExchangeHandler(redirect, p.oidc.relayingParty)
+		return rp.CodeExchangeHandler(redirectCallback[*oidc.IDTokenClaims](redirectURL), p.oidc.relayingParty)
 	}
 	return nil
 }

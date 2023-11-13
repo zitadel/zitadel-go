@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -53,7 +54,7 @@ func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.Rely
 		oidc.getIssuer(),
 		oidc.clientID,
 		oidc.clientSecret,
-		oidc.getIssuer()+oidc.callbackURL,
+		oidc.callbackURL,
 		oidc.scopes,
 		options...,
 	)
@@ -179,4 +180,15 @@ func checkIntrospect[R any](ctx context.Context, cache Cache[string, R], resourc
 	}
 	// save checked introspection response into context
 	return info.IntrospectionIntoContext[R](ctx, resp), resp, nil
+}
+
+func redirectCallback[C oidc.IDClaims](redirectURL string) rp.CodeExchangeCallback[C] {
+	return func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[C], state string, rp rp.RelyingParty) {
+		log.Printf("access token: %v", tokens.AccessToken)
+		log.Printf("refresh token: %v", tokens.RefreshToken)
+		log.Printf("id token: %v", tokens.IDToken)
+		log.Printf("state: %v", state)
+		tokens.SetAuthHeader(r)
+		http.Redirect(w, r, redirectURL, 302)
+	}
 }
