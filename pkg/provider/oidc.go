@@ -146,7 +146,7 @@ func getTokenFromRequest(r *http.Request) (string, error) {
 
 func checkOIDCToken[U rp.SubjectGetter](ctx context.Context, cache Cache[string, U], relayingParty rp.RelyingParty, token string) (context.Context, string, error) {
 	resp, err := cache.Get(token)
-	if resp == nil || err != nil {
+	if err != nil {
 		resp, err := rp.Userinfo[U](ctx, token, oidc.PrefixBearer, "userid", relayingParty)
 		if err != nil {
 			return ctx, "", ErrInvalidToken
@@ -163,7 +163,7 @@ func checkIntrospect[R any](ctx context.Context, cache Cache[string, R], resourc
 	// try get from cache
 	resp, err := cache.Get(token)
 	// if not found in cache, try to call introspection endpoint
-	if resp == nil || err != nil {
+	if err != nil {
 		resp, err := rs.Introspect[R](ctx, resourceServer, token)
 		if err != nil {
 			return ctx, rnil, ErrInvalidToken
