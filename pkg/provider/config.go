@@ -26,11 +26,10 @@ func (c *configurationOIDC) validRP() bool {
 		c.callbackURL != ""
 }
 
-func OIDCConfiguration(issuer string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string, cookieKey []byte) *configuration {
+func OIDCConfiguration(issuer, keyPath, clientID, clientSecret, callbackURL string, scopes []string, cookieKey []byte) *configuration {
 	return &configuration{
 		oidc: &configurationOIDC{
 			issuer:       issuer,
-			insecure:     insecure,
 			keyPath:      keyPath,
 			clientID:     clientID,
 			clientSecret: clientSecret,
