@@ -9,29 +9,27 @@ type configurationOIDC struct {
 	clientID     string
 	clientSecret string
 	insecure     bool
-	domain       string
-	port         string
+	issuer       string
 	callbackURL  string
 	scopes       []string
 	cookieKey    []byte
 }
 
 func (c *configurationOIDC) validRS() bool {
-	return c.domain != "" &&
+	return c.issuer != "" &&
 		(c.keyPath != "" || (c.clientID != "" && c.clientSecret != ""))
 }
 
 func (c *configurationOIDC) validRP() bool {
-	return c.domain != "" &&
+	return c.issuer != "" &&
 		c.clientID != "" &&
 		c.callbackURL != ""
 }
 
-func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string, cookieKey []byte) *configuration {
+func OIDCConfiguration(issuer string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string, cookieKey []byte) *configuration {
 	return &configuration{
 		oidc: &configurationOIDC{
-			domain:       domain,
-			port:         port,
+			issuer:       issuer,
 			insecure:     insecure,
 			keyPath:      keyPath,
 			clientID:     clientID,
@@ -41,22 +39,4 @@ func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, cl
 			cookieKey:    cookieKey,
 		},
 	}
-}
-
-func (c *configurationOIDC) getIssuer() string {
-	issuerScheme := "https://"
-	if c.insecure {
-		issuerScheme = "http://"
-	}
-
-	issuerPort := c.port
-	if c.port == "80" && c.insecure || c.port == "443" && !c.insecure {
-		issuerPort = ""
-	}
-
-	issuer := issuerScheme + c.domain
-	if issuerPort != "" {
-		issuer += ":" + issuerPort
-	}
-	return issuer
 }

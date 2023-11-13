@@ -29,9 +29,9 @@ var (
 
 func newResourceServer(ctx context.Context, oidc *configurationOIDC) (rs.ResourceServer, error) {
 	if oidc.keyPath != "" {
-		return rs.NewResourceServerFromKeyFile(ctx, oidc.getIssuer(), oidc.keyPath)
+		return rs.NewResourceServerFromKeyFile(ctx, oidc.issuer, oidc.keyPath)
 	}
-	return rs.NewResourceServerClientCredentials(ctx, oidc.getIssuer(), oidc.clientID, oidc.clientSecret)
+	return rs.NewResourceServerClientCredentials(ctx, oidc.issuer, oidc.clientID, oidc.clientSecret)
 }
 
 func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.RelyingParty, error) {
@@ -51,7 +51,7 @@ func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.Rely
 		options = append(options, rp.WithJWTProfile(rp.SignerFromKeyPath(oidc.keyPath)))
 	}
 	return rp.NewRelyingPartyOIDC(ctx,
-		oidc.getIssuer(),
+		oidc.issuer,
 		oidc.clientID,
 		oidc.clientSecret,
 		oidc.callbackURL,
