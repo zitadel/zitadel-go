@@ -12,10 +12,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-var (
-	key = []byte("test1234test1234")
-)
-
 type Provider struct {
 	oidc *oidcProvider
 }

@@ -38,7 +38,7 @@ func newRelayingPartyOIDC(ctx context.Context, oidc *configurationOIDC) (rp.Rely
 	if oidc.insecure {
 		opts = append(opts, httphelper.WithUnsecure())
 	}
-	cookieHandler := httphelper.NewCookieHandler(key, key, opts...)
+	cookieHandler := httphelper.NewCookieHandler(oidc.cookieKey, oidc.cookieKey, opts...)
 	options := []rp.Option{
 		rp.WithCookieHandler(cookieHandler),
 		rp.WithVerifierOpts(rp.WithIssuedAtOffset(5 * time.Second)),

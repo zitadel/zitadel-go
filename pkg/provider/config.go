@@ -13,6 +13,7 @@ type configurationOIDC struct {
 	port         string
 	callbackURL  string
 	scopes       []string
+	cookieKey    []byte
 }
 
 func (c *configurationOIDC) validRS() bool {
@@ -26,7 +27,7 @@ func (c *configurationOIDC) validRP() bool {
 		c.callbackURL != ""
 }
 
-func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string) *configuration {
+func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string, cookieKey []byte) *configuration {
 	return &configuration{
 		oidc: &configurationOIDC{
 			domain:       domain,
@@ -37,6 +38,7 @@ func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, cl
 			clientSecret: clientSecret,
 			callbackURL:  callbackURL,
 			scopes:       scopes,
+			cookieKey:    cookieKey,
 		},
 	}
 }
