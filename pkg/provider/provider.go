@@ -68,28 +68,28 @@ func (p *Provider) AuthenticationCallbackHandler(redirect rp.CodeExchangeCallbac
 
 func (p *Provider) AuthenticatedHTTPInterceptor() func(next http.Handler) http.Handler {
 	if p.oidc != nil && p.oidc.resourceServer != nil {
-		return oidcAuthenticatedHTTPInterceptor(p.oidc.resourceServer)
+		return oidcAuthenticatedHTTPInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil
 }
 
-func (p *Provider) AuthorizedHTTPInterceptor(requestedClaim, requestedValue string) func(next http.Handler) http.Handler {
+func (p *Provider) AuthorizedHTTPInterceptor(check Check[*oidc.IntrospectionResponse]) func(next http.Handler) http.Handler {
 	if p.oidc != nil && p.oidc.resourceServer != nil {
-		return oidcAuthorizedHTTPInterceptor(p.oidc.resourceServer, requestedClaim, requestedValue)
+		return oidcAuthorizedHTTPInterceptor[*oidc.IntrospectionResponse](&EmptyCache[string, *oidc.IntrospectionResponse]{}, p.oidc.resourceServer, check)
 	}
 	return nil
 }
 
 func (p *Provider) AuthenticatedUnaryInterceptor() grpc.UnaryServerInterceptor {
 	if p.oidc != nil && p.oidc.resourceServer != nil {
-		return oidcAuthenticatedUnaryInterceptor(p.oidc.resourceServer)
+		return oidcAuthenticatedUnaryInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil
 }
 
-func (p *Provider) AuthenticatedUnaryStreamInterceptor() grpc.StreamServerInterceptor {
+func (p *Provider) AuthenticatedStreamInterceptor() grpc.StreamServerInterceptor {
 	if p.oidc != nil && p.oidc.resourceServer != nil {
-		return oidcAuthenticatedStreamInterceptor(p.oidc.resourceServer)
+		return oidcAuthenticatedStreamInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil
 }
