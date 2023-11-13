@@ -67,7 +67,7 @@ func (p *Provider) AuthenticationCallbackHandler(redirect rp.CodeExchangeCallbac
 }
 
 func (p *Provider) AuthenticatedHTTPInterceptor() func(next http.Handler) http.Handler {
-	if p.oidc != nil && p.oidc.resourceServer != nil {
+	if p.oidc != nil && p.oidc.relayingParty != nil {
 		return oidcAuthenticatedHTTPInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil
@@ -81,14 +81,14 @@ func (p *Provider) AuthorizedHTTPInterceptor(check Check[*oidc.IntrospectionResp
 }
 
 func (p *Provider) AuthenticatedUnaryInterceptor() grpc.UnaryServerInterceptor {
-	if p.oidc != nil && p.oidc.resourceServer != nil {
+	if p.oidc != nil && p.oidc.relayingParty != nil {
 		return oidcAuthenticatedUnaryInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil
 }
 
 func (p *Provider) AuthenticatedStreamInterceptor() grpc.StreamServerInterceptor {
-	if p.oidc != nil && p.oidc.resourceServer != nil {
+	if p.oidc != nil && p.oidc.relayingParty != nil {
 		return oidcAuthenticatedStreamInterceptor[*oidc.IDTokenClaims](&EmptyCache[string, *oidc.IDTokenClaims]{}, p.oidc.relayingParty)
 	}
 	return nil

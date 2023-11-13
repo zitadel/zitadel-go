@@ -26,7 +26,7 @@ func (c *configurationOIDC) validRP() bool {
 		c.callbackURL != ""
 }
 
-func OIDCProviderConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string) *configuration {
+func OIDCConfiguration(domain, port string, insecure bool, keyPath, clientID, clientSecret, callbackURL string, scopes []string) *configuration {
 	return &configuration{
 		oidc: &configurationOIDC{
 			domain:       domain,
