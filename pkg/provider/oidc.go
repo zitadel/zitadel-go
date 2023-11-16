@@ -21,10 +21,15 @@ import (
 )
 
 var (
+	ErrMissingCookie        = errors.New("auth cookie missing")
 	ErrMissingHeader        = errors.New("auth header missing")
 	ErrInvalidHeader        = errors.New("invalid auth header")
 	ErrInvalidToken         = errors.New("invalid token")
 	ErrInvalidAuthorization = errors.New("invalid authorization")
+)
+
+const (
+	oidcCookieName = "zitadel-go"
 )
 
 func newResourceServer(ctx context.Context, oidc *configurationOIDC) (rs.ResourceServer, error) {
@@ -73,11 +78,11 @@ func oidcAuthenticatedHTTPInterceptor[U rp.SubjectGetter](cache Cache[string, U]
 	}
 }
 
-func oidcAuthorizedHTTPInterceptor[R any](cache Cache[string, R], resourceServer rs.ResourceServer, check Check[R]) func(next http.Handler) http.Handler {
+func oidcAuthorizedHTTPInterceptor[R any](getToken func(r *http.Request) (string, error), cache Cache[string, R], resourceServer rs.ResourceServer, check Check[R]) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx := req.Context()
-			token, err := getTokenFromRequest(req)
+			token, err := getToken(req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
@@ -145,6 +150,34 @@ func getTokenFromRequest(r *http.Request) (string, error) {
 	return strings.TrimPrefix(auth, oidc.PrefixBearer), nil
 }
 
+func setTokenToHeader(w http.ResponseWriter, value string) {
+	w.Header().Add("authorization", value)
+}
+
+func getTokenFromCookie(r *http.Request) (string, error) {
+	auth, err := r.Cookie(oidcCookieName)
+	if err != nil {
+		return "", ErrMissingCookie
+	}
+	return auth.Value, nil
+}
+
+func setTokenToCookieFunc(path, domain string, maxAge int) func(w http.ResponseWriter, value string) {
+	return func(w http.ResponseWriter, value string) {
+		http.SetCookie(w, &http.Cookie{
+			Name:     oidcCookieName,
+			Value:    value,
+			Path:     path,
+			Domain:   domain,
+			Expires:  time.Now().Add(time.Hour),
+			MaxAge:   maxAge,
+			Secure:   false,
+			HttpOnly: false,
+			SameSite: 0,
+		})
+	}
+}
+
 func checkOIDCToken[U rp.SubjectGetter](ctx context.Context, cache Cache[string, U], relayingParty rp.RelyingParty, token string) (context.Context, string, error) {
 	resp, err := cache.Get(token)
 	if err != nil {
@@ -182,13 +215,13 @@ func checkIntrospect[R any](ctx context.Context, cache Cache[string, R], resourc
 	return info.IntrospectionIntoContext[R](ctx, resp), resp, nil
 }
 
-func redirectCallback[C oidc.IDClaims](redirectURL string) rp.CodeExchangeCallback[C] {
-	return func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[C], state string, rp rp.RelyingParty) {
+func redirectCallback(setToken func(w http.ResponseWriter, value string), redirectURL string) rp.CodeExchangeCallback[*oidc.IDTokenClaims] {
+	return func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[*oidc.IDTokenClaims], state string, rp rp.RelyingParty) {
 		log.Printf("access token: %v", tokens.AccessToken)
 		log.Printf("refresh token: %v", tokens.RefreshToken)
 		log.Printf("id token: %v", tokens.IDToken)
 		log.Printf("state: %v", state)
-		tokens.SetAuthHeader(r)
+		setToken(w, tokens.AccessToken)
 		http.Redirect(w, r, redirectURL, 302)
 	}
 }

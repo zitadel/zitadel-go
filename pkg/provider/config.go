@@ -13,6 +13,7 @@ type configurationOIDC struct {
 	callbackURL  string
 	scopes       []string
 	cookieKey    []byte
+	authCookie   bool
 }
 
 func (c *configurationOIDC) validRS() bool {
