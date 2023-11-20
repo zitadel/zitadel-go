@@ -29,7 +29,7 @@ type Server[T authorization.Ctx] struct {
 	v3alpha.UnimplementedExampleServiceServer
 }
 
-func (s *Server[T]) Public(ctx context.Context, request *v3alpha.PublicRequest) (*v3alpha.PublicResponse, error) {
+func (s *Server[T]) Public(ctx context.Context, _ *v3alpha.PublicRequest) (*v3alpha.PublicResponse, error) {
 	respCtx, err := ctxToStructPb[T](ctx)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *Server[T]) Public(ctx context.Context, request *v3alpha.PublicRequest) 
 	}, nil
 }
 
-func (s *Server[T]) Protected(ctx context.Context, request *v3alpha.ProtectedRequest) (*v3alpha.ProtectedResponse, error) {
+func (s *Server[T]) Protected(ctx context.Context, _ *v3alpha.ProtectedRequest) (*v3alpha.ProtectedResponse, error) {
 	respCtx, err := ctxToStructPb[T](ctx)
 	if err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func (s *Server[T]) Protected(ctx context.Context, request *v3alpha.ProtectedReq
 	}, nil
 }
 
-func (s *Server[T]) ProtectedAdmin(ctx context.Context, request *v3alpha.ProtectedAdminRequest) (*v3alpha.ProtectedAdminResponse, error) {
+func (s *Server[T]) ProtectedAdmin(ctx context.Context, _ *v3alpha.ProtectedAdminRequest) (*v3alpha.ProtectedAdminResponse, error) {
 	respCtx, err := ctxToStructPb[T](ctx)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (s *Server[T]) ClientServerStream(stream v3alpha.ExampleService_ClientServe
 	}
 }
 
-func (s *Server[T]) ServerStream(request *v3alpha.ServerStreamRequest, stream v3alpha.ExampleService_ServerStreamServer) error {
+func (s *Server[T]) ServerStream(_ *v3alpha.ServerStreamRequest, stream v3alpha.ExampleService_ServerStreamServer) error {
 	for i := 0; i < 3; i++ {
 		ctx, err := ctxToStructPb[T](stream.Context())
 		if err != nil {

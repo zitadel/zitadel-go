@@ -25,17 +25,3 @@ func Context[T Ctx](ctx context.Context) (t T) {
 func WithAuthContext[T Ctx](ctx context.Context, c T) context.Context {
 	return context.WithValue(ctx, ctxKey, c)
 }
-
-type emptyCtx struct{}
-
-func (e *emptyCtx) IsAuthorized() bool {
-	return false
-}
-
-func (e *emptyCtx) IsGrantedRole(_ string) bool {
-	return false
-}
-
-func (e *emptyCtx) IsGrantedRoleForOrganization(_, _ string) bool {
-	return false
-}
