@@ -14,10 +14,10 @@ type Ctx interface {
 	IsGrantedRoleForOrganization(role, organizationID string) bool
 }
 
-func Context(ctx context.Context) Ctx {
-	authCtx, ok := ctx.Value(ctxKey).(Ctx)
+func Context[T Ctx](ctx context.Context) (t T) {
+	authCtx, ok := ctx.Value(ctxKey).(T)
 	if !ok {
-		return &emptyCtx{}
+		return t
 	}
 	return authCtx
 }

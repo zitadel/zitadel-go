@@ -77,7 +77,7 @@ func (i *IntrospectionVerification[T]) CheckAuthorization(ctx context.Context, a
 	if !ok {
 		return resp, ErrInvalidAuthorizationHeader
 	}
-	resp, err = rs.Introspect[T](ctx, i.ResourceServer, accessToken)
+	resp, err = rs.Introspect[T](ctx, i.ResourceServer, strings.TrimSpace(accessToken))
 	if err != nil {
 		return resp, authorization.NewError(ErrIntrospectionFailed, err)
 	}

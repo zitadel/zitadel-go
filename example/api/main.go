@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"flag"
 	"log/slog"
 	"net/http"
 	"os"
@@ -13,6 +14,11 @@ import (
 	"github.com/zitadel/zitadel-go/v2/pkg/authorization/oauth"
 	"github.com/zitadel/zitadel-go/v2/pkg/http/middleware"
 	"github.com/zitadel/zitadel-go/v2/pkg/zitadel"
+)
+
+var (
+	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	key    = flag.String("key", "", "path to your key.json")
 )
 
 /*
@@ -25,6 +31,7 @@ import (
 */
 
 func main() {
+	flag.Parse()
 
 	ctx := context.Background()
 
@@ -33,16 +40,16 @@ func main() {
 	// you will also need to initialize that with the downloaded api key.json
 	//
 	// it's a short form of:
-	// 	z, err := zitadel.New("https://livio-rodepo.zitadel.cloud",
+	// 	z, err := zitadel.New("https://your-domain.zitadel.cloud",
 	//		zitadel.WithAuthorization(ctx,
 	//			oauth.WithIntrospection[*oauth.IntrospectionContext](
-	//				oauth.JWTProfileIntrospectionAuthentication("./240991537406674288.json"),
+	//				oauth.JWTProfileIntrospectionAuthentication("./key.json"),
 	//			),
 	//		),
 	//	)
-	z, err := zitadel.New("https://livio-rodepo.zitadel.cloud",
+	z, err := zitadel.New(*domain,
 		zitadel.WithAuthorization(ctx,
-			oauth.DefaultAuthorization("./240991537406674288.json"),
+			oauth.DefaultAuthorization(*key),
 		),
 	)
 	if err != nil {
@@ -61,7 +68,7 @@ func main() {
 	// This endpoint is only accessible with a valid authorization (in this case a valid access_token).
 	router.Handle("/api/protected", mw.RequireAuthorization()(printContext()))
 
-	// This endpoint is only accessible with a valid authorization, which was granted the `admin` role.
+	// This endpoint is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
 	router.Handle("/api/protected-admin", mw.RequireAuthorization(authorization.WithRole(`admin`))(printContext()))
 
 	lis := ":8089"
@@ -82,18 +89,18 @@ func main() {
 // - ...
 func printContext() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		authCtx := authorization.Context(req.Context())
+		authCtx := authorization.Context[*oauth.IntrospectionContext](req.Context())
 		data, err := json.Marshal(&struct {
-			Now        time.Time         `json:"now,omitempty"`
-			Authorized bool              `json:"authorized,omitempty"`
-			User       bool              `json:"user,omitempty"`
-			UserInOrg  bool              `json:"user_in_org,omitempty"`
-			Ctx        authorization.Ctx `json:"ctx,omitempty"`
+			Now        time.Time                   `json:"now,omitempty"`
+			Authorized bool                        `json:"authorized,omitempty"`
+			Admin      bool                        `json:"admin,omitempty"`
+			AdminInOrg bool                        `json:"admin_in_org,omitempty"`
+			Ctx        *oauth.IntrospectionContext `json:"ctx,omitempty"`
 		}{
 			Now:        time.Now(),
 			Authorized: authCtx.IsAuthorized(),
-			User:       authCtx.IsGrantedRole("user"),
-			UserInOrg:  authCtx.IsGrantedRoleForOrganization("user", "hodor"),
+			Admin:      authCtx.IsGrantedRole("admin"),
+			AdminInOrg: authCtx.IsGrantedRoleForOrganization("admin", "some org id"),
 			Ctx:        authCtx,
 		})
 		if err != nil {

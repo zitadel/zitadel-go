@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package zitadel.go.example.api.v3alpha;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/zitadel/zitadel-go/example/api/grpc/v3alpha";
+
+service ExampleService {
+
+  rpc Public (PublicRequest) returns (PublicResponse) {}
+  rpc Protected (ProtectedRequest) returns (ProtectedResponse) {}
+  rpc ProtectedAdmin (ProtectedAdminRequest) returns (ProtectedAdminResponse) {}
+
+  rpc ClientStream (stream ClientStreamRequest) returns (ClientStreamResponse) {}
+  rpc ServerStream (ServerStreamRequest) returns (stream ServerStreamResponse) {}
+  rpc ClientServerStream (stream ClientServerStreamRequest) returns (stream ClientServerStreamResponse) {}
+}
+
+message PublicRequest {}
+
+message PublicResponse {
+  google.protobuf.Struct context = 1;
+}
+
+message ProtectedRequest {}
+
+message ProtectedResponse {
+  google.protobuf.Struct context = 1;
+}
+
+message ProtectedAdminRequest {}
+
+message ProtectedAdminResponse {
+  google.protobuf.Struct context = 1;
+}
+
+message ClientStreamRequest {}
+
+message ClientStreamResponse {
+  google.protobuf.Struct context = 1;
+}
+
+message ServerStreamRequest {}
+
+message ServerStreamResponse {
+  google.protobuf.Struct context = 1;
+}
+
+message ClientServerStreamRequest {}
+
+message ClientServerStreamResponse {
+  google.protobuf.Struct context = 1;
+}
