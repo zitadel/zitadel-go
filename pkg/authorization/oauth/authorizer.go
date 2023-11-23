@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	ErrInvalidAuthorizationHeader = errors.New("")
+	ErrInvalidAuthorizationHeader = errors.New("invalid authorization header, must be prefixed with `Bearer`")
 	ErrIntrospectionFailed        = errors.New("token introspection failed")
 )
 

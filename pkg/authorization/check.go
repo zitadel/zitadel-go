@@ -45,11 +45,7 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 	for _, option := range options {
 		option(check)
 	}
-	if a.cache != nil {
-		authCtx = a.cache.Get(token)
-	} else {
-		authCtx, err = a.verifier.CheckAuthorization(ctx, token)
-	}
+	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
 	if err != nil || !authCtx.IsAuthorized() {
 		return t, NewError(ErrUnauthorized, err)
 	}
@@ -58,24 +54,14 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 			return t, NewError(ErrUnauthorized, err)
 		}
 	}
-	//if check.role != "" && !authCtx.IsGrantedRole(check.role) {
-	//	return t, NewError(ErrUnauthorized, ErrMissingRole(check.role))
-	//}
 	return authCtx, nil
 }
 
 type Authorizer[T Ctx] struct {
 	verifier Verifier[T]
-	cache    Cache[T]
 }
 
 type Option[T Ctx] func(authorizer *Authorizer[T])
-
-func WithCache[T Ctx](cache Cache[T]) Option[T] {
-	return func(authorizer *Authorizer[T]) {
-		authorizer.cache = cache
-	}
-}
 
 func New[T Ctx](ctx context.Context, domain string, newVerifier NewVerifier[T], options ...Option[T]) (*Authorizer[T], error) {
 	verifier, err := newVerifier(ctx, domain)

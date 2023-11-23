@@ -27,9 +27,9 @@ var (
  This example demonstrates how to secure an HTTP API with ZITADEL using the provided authorization (AuthZ) middleware.
 
  It will serve the following 3 different endpoints:
- - /api/public (can be called by anyone)
- - /api/protected (requires authorization)
- - /api/protected-admin (requires authorization with granted `admin` role)
+ - /api/healthz (can be called by anyone)
+ - /api/tasks (requires authorization)
+ - /api/add-task (requires authorization with granted `admin` role)
 */
 
 func main() {
@@ -121,6 +121,7 @@ func main() {
 			slog.Info("admin added task", "id", authorization.UserID(r.Context()), "task", task)
 		})))
 
+	// start the server on http://localhost:8089
 	lis := ":8089"
 	slog.Info("server listening, press ctrl+c to stop", "addr", "http://localhost"+lis)
 	err = http.ListenAndServe(lis, router)
