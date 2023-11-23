@@ -8,33 +8,41 @@ type IntrospectionContext struct {
 }
 
 // IsAuthorized implements [authorization.Ctx] by checking the `active` claim of the [oidc.IntrospectionResponse].
-func (u *IntrospectionContext) IsAuthorized() bool {
-	if u == nil {
+func (c *IntrospectionContext) IsAuthorized() bool {
+	if c == nil {
 		return false
 	}
-	return u.IntrospectionResponse.Active
+	return c.IntrospectionResponse.Active
+}
+
+// UserID implements [authorization.Ctx] by returning the `sub` claim of the [oidc.IntrospectionResponse].
+func (c *IntrospectionContext) UserID() string {
+	if c == nil {
+		return ""
+	}
+	return c.IntrospectionResponse.Subject
 }
 
 // IsGrantedRole implements [authorization.Ctx] by checking if the `urn:zitadel:iam:org:project:roles` claim contains the requested role.
-func (u *IntrospectionContext) IsGrantedRole(role string) bool {
-	if u == nil {
+func (c *IntrospectionContext) IsGrantedRole(role string) bool {
+	if c == nil {
 		return false
 	}
-	return len(u.checkRoleClaim(role)) > 0
+	return len(c.checkRoleClaim(role)) > 0
 }
 
-// IsGrantedRoleForOrganization implements [authorization.Ctx] by checking if the organizationID is part of the list
+// IsGrantedRoleInOrganization implements [authorization.Ctx] by checking if the organizationID is part of the list
 // of the `urn:zitadel:iam:org:project:roles` claim requested role.
-func (u *IntrospectionContext) IsGrantedRoleForOrganization(role, organizationID string) bool {
-	if u == nil {
+func (c *IntrospectionContext) IsGrantedRoleInOrganization(role, organizationID string) bool {
+	if c == nil {
 		return false
 	}
-	_, ok := u.checkRoleClaim(role)[organizationID]
+	_, ok := c.checkRoleClaim(role)[organizationID]
 	return ok
 }
 
-func (u *IntrospectionContext) checkRoleClaim(role string) map[string]interface{} {
-	roles, ok := u.IntrospectionResponse.Claims["urn:zitadel:iam:org:project:roles"].(map[string]interface{})
+func (c *IntrospectionContext) checkRoleClaim(role string) map[string]interface{} {
+	roles, ok := c.IntrospectionResponse.Claims["urn:zitadel:iam:org:project:roles"].(map[string]interface{})
 	if !ok || len(roles) == 0 {
 		return nil
 	}

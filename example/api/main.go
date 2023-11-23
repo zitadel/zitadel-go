@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
-	"time"
+	"strings"
 
 	"github.com/zitadel/zitadel-go/v2/pkg/authorization"
 	"github.com/zitadel/zitadel-go/v2/pkg/authorization/oauth"
@@ -19,6 +20,7 @@ import (
 var (
 	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
 	key    = flag.String("key", "", "path to your key.json")
+	tasks  []string
 )
 
 /*
@@ -62,14 +64,62 @@ func main() {
 
 	router := http.NewServeMux()
 
-	// This endpoint is accessible by anyone.
-	router.Handle("/api/public", printContext())
+	// This endpoint is accessible by anyone and will always return "200 OK" to indicate the API is running
+	router.Handle("/api/healthz", http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, err = w.Write([]byte(`"OK"`))
+			if err != nil {
+				slog.Error("error writing response", "error", err)
+			}
+		}))
 
-	// This endpoint is only accessible with a valid authorization (in this case a valid access_token).
-	router.Handle("/api/protected", mw.RequireAuthorization()(printContext()))
+	// This endpoint is only accessible with a valid authorization (in this case a valid access_token / PAT).
+	router.Handle("/api/tasks", mw.RequireAuthorization()(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			// Using the [authorization.Context] function we can gather information about the authorized user.
+			// This example will just print the users ID using the provided method, and it will also
+			// print the username by directly access the field of the typed [*oauth.IntrospectionContext].
+			authCtx := authorization.Context[*oauth.IntrospectionContext](r.Context())
+			slog.Info("user accessed task list", "id", authCtx.UserID(), "username", authCtx.Username)
+
+			// Although this endpoint is accessible by any authorized user, you might want to take additional steps
+			// if the user is granted a specific role. In this case an `admin` will be informed to add a new task:
+			taskList := tasks
+			if authCtx.IsGrantedRole("admin") {
+				taskList = append(taskList, "create a new task on /api/add-task")
+			}
+
+			// return the existing task list
+			data, err := json.Marshal(taskList)
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, err = w.Write(data)
+			if err != nil {
+				slog.Error("error writing response", "error", err)
+			}
+		})))
 
 	// This endpoint is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
-	router.Handle("/api/protected-admin", mw.RequireAuthorization(authorization.WithRole(`admin`))(printContext()))
+	router.Handle("/api/add-task", mw.RequireAuthorization(authorization.WithRole(`admin`))(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			task := strings.TrimSpace(r.FormValue("task"))
+			if task == "" {
+				http.Error(w, "task must not be empty", http.StatusBadRequest)
+				return
+			}
+			tasks = append(tasks, task)
+
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, err = w.Write([]byte(fmt.Sprintf(`"task %v added"`, task)))
+			if err != nil {
+				slog.Error("error task added response", "error", err)
+			}
+			// since we only want the authorized userID and don't need any specific data, we can simply use [authorization.UserID]
+			slog.Info("admin added task", "id", authorization.UserID(r.Context()), "task", task)
+		})))
 
 	lis := ":8089"
 	slog.Info("server listening, press ctrl+c to stop", "addr", "http://localhost"+lis)
@@ -77,42 +127,5 @@ func main() {
 	if !errors.Is(err, http.ErrServerClosed) {
 		slog.Error("server terminated", "error", err)
 		os.Exit(1)
-	}
-}
-
-// printContext is used in this example to demonstrate how to get additional information from the [authorization.Context]
-// and use it in your handler / implementation.
-//
-// For simplicity the function will only return those infos, but in an actual implementation, you could use it to:
-// - do additional checks / restrictions
-// - extract the authorized user and its attributes
-// - ...
-func printContext() http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		authCtx := authorization.Context[*oauth.IntrospectionContext](req.Context())
-		data, err := json.Marshal(&struct {
-			Now        time.Time                   `json:"now,omitempty"`
-			Authorized bool                        `json:"authorized,omitempty"`
-			Admin      bool                        `json:"admin,omitempty"`
-			AdminInOrg bool                        `json:"admin_in_org,omitempty"`
-			Ctx        *oauth.IntrospectionContext `json:"ctx,omitempty"`
-		}{
-			Now:        time.Now(),
-			Authorized: authCtx.IsAuthorized(),
-			Admin:      authCtx.IsGrantedRole("admin"),
-			AdminInOrg: authCtx.IsGrantedRoleForOrganization("admin", "some org id"),
-			Ctx:        authCtx,
-		})
-		if err != nil {
-			slog.Error("error marshalling response data", "error", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(data)
-		if err != nil {
-			slog.Error("error writing response", "error", err)
-		}
 	}
 }
