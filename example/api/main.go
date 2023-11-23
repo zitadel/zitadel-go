@@ -20,6 +20,7 @@ import (
 var (
 	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
 	key    = flag.String("key", "", "path to your key.json")
+	port   = flag.String("port", "8089", "port to run the server on (default is 8089)")
 	tasks  []string
 )
 
@@ -67,9 +68,7 @@ func main() {
 	// This endpoint is accessible by anyone and will always return "200 OK" to indicate the API is running
 	router.Handle("/api/healthz", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			_, err = w.Write([]byte(`"OK"`))
+			err = jsonResponse(w, "OK", http.StatusOK)
 			if err != nil {
 				slog.Error("error writing response", "error", err)
 			}
@@ -92,10 +91,7 @@ func main() {
 			}
 
 			// return the existing task list
-			data, err := json.Marshal(taskList)
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			_, err = w.Write(data)
+			err = jsonResponse(w, taskList, http.StatusOK)
 			if err != nil {
 				slog.Error("error writing response", "error", err)
 			}
@@ -104,29 +100,48 @@ func main() {
 	// This endpoint is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
 	router.Handle("/api/add-task", mw.RequireAuthorization(authorization.WithRole(`admin`))(http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
+			// get the provided task and do not accept an empty value
 			task := strings.TrimSpace(r.FormValue("task"))
 			if task == "" {
-				http.Error(w, "task must not be empty", http.StatusBadRequest)
+				err = jsonResponse(w, "task must not be empty", http.StatusBadRequest)
+				if err != nil {
+					slog.Error("error writing invalid task response", "error", err)
+					return
+				}
 				return
 			}
+
+			// since it was not empty, let's add it to the existing list
 			tasks = append(tasks, task)
 
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			_, err = w.Write([]byte(fmt.Sprintf(`"task %v added"`, task)))
-			if err != nil {
-				slog.Error("error task added response", "error", err)
-			}
 			// since we only want the authorized userID and don't need any specific data, we can simply use [authorization.UserID]
 			slog.Info("admin added task", "id", authorization.UserID(r.Context()), "task", task)
+
+			// inform the admin about the successful addition
+			err = jsonResponse(w, fmt.Sprintf("task `%s` added", task), http.StatusOK)
+			if err != nil {
+				slog.Error("error writing task added response", "error", err)
+				return
+			}
 		})))
 
-	// start the server on http://localhost:8089
-	lis := ":8089"
+	// start the server on the specified port (default http://localhost:8089)
+	lis := fmt.Sprintf(":%s", *port)
 	slog.Info("server listening, press ctrl+c to stop", "addr", "http://localhost"+lis)
 	err = http.ListenAndServe(lis, router)
 	if !errors.Is(err, http.ErrServerClosed) {
 		slog.Error("server terminated", "error", err)
 		os.Exit(1)
 	}
+}
+
+func jsonResponse(w http.ResponseWriter, resp any, status int) error {
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(status)
+	data, err := json.Marshal(resp)
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(data)
+	return err
 }
