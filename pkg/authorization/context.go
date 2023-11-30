@@ -8,6 +8,7 @@ const (
 	ctxKey key = 1
 )
 
+// Ctx represents the authorization context with information about the authorized user.
 type Ctx interface {
 	IsAuthorized() bool
 	UserID() string

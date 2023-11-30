@@ -3,6 +3,7 @@ package oauth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/client"
@@ -13,6 +14,7 @@ import (
 )
 
 var (
+	ErrEmptyAuthorizationHeader   = errors.New("authorization header is empty")
 	ErrInvalidAuthorizationHeader = errors.New("invalid authorization header, must be prefixed with `Bearer`")
 	ErrIntrospectionFailed        = errors.New("token introspection failed")
 )
@@ -27,7 +29,7 @@ type IntrospectionVerification[T any] struct {
 // WithIntrospection creates the OAuth2 Introspection implementation of the [authorization.Verifier] interface.
 // The introspection endpoint itself requires some [IntrospectionAuthentication] the client.
 // Possible implementation are [JWTProfileIntrospectionAuthentication] and [ClientIDSecretIntrospectionAuthentication].
-func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) authorization.NewVerifier[T] {
+func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) authorization.VerifierInitializer[T] {
 	return func(ctx context.Context, domain string) (authorization.Verifier[T], error) {
 		resourceServer, err := auth(ctx, domain)
 		if err != nil {
@@ -59,7 +61,7 @@ func ClientIDSecretIntrospectionAuthentication(clientID, clientSecret string) In
 
 // DefaultAuthorization is a short version of [WithIntrospection[*IntrospectionContext](JWTProfileIntrospectionAuthentication)]
 // with a key.json read from a provided path.
-func DefaultAuthorization(path string) authorization.NewVerifier[*IntrospectionContext] {
+func DefaultAuthorization(path string) authorization.VerifierInitializer[*IntrospectionContext] {
 	c, err := client.ConfigFromKeyFile(path)
 	if err != nil {
 		return func(ctx context.Context, domain string) (authorization.Verifier[*IntrospectionContext], error) {
@@ -73,13 +75,16 @@ func DefaultAuthorization(path string) authorization.NewVerifier[*IntrospectionC
 // on the OAuth2 introspection endpoint.
 // On success, it will return a generic struct of type [T] of the [IntrospectionVerification].
 func (i *IntrospectionVerification[T]) CheckAuthorization(ctx context.Context, authorizationToken string) (resp T, err error) {
+	if authorizationToken == "" {
+		return resp, ErrEmptyAuthorizationHeader
+	}
 	accessToken, ok := strings.CutPrefix(authorizationToken, oidc.BearerToken)
 	if !ok {
 		return resp, ErrInvalidAuthorizationHeader
 	}
 	resp, err = rs.Introspect[T](ctx, i.ResourceServer, strings.TrimSpace(accessToken))
 	if err != nil {
-		return resp, authorization.NewError(ErrIntrospectionFailed, err)
+		return resp, fmt.Errorf("%w: %v", ErrIntrospectionFailed, err)
 	}
 	return resp, nil
 }

@@ -17,8 +17,10 @@ import (
 )
 
 var (
+	// flags to be provided for running the example server
 	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
 	key    = flag.String("key", "", "path to your key.json")
+	port   = flag.String("port", "8089", "port to run the server on (default is 8089)")
 )
 
 func main() {
@@ -26,6 +28,18 @@ func main() {
 
 	ctx := context.Background()
 
+	// Initiate the zitadel sdk by providing its domain
+	// and as this example will focus on authorization (using Oauth2 Introspection),
+	// you will also need to initialize that with the downloaded api key.json
+	//
+	// it's a short form of:
+	// 	z, err := zitadel.New("https://your-domain.zitadel.cloud",
+	//		zitadel.WithAuthorization(ctx,
+	//			oauth.WithIntrospection[*oauth.IntrospectionContext](
+	//				oauth.JWTProfileIntrospectionAuthentication("./key.json"),
+	//			),
+	//		),
+	//	)
 	z, err := zitadel.New(*domain,
 		zitadel.WithAuthorization(ctx,
 			oauth.DefaultAuthorization(*key),
@@ -47,7 +61,7 @@ func main() {
 	grpcServer := grpc.NewServer(serverOptions...)
 
 	// Register your server implementation
-	v3alpha.RegisterExampleServiceServer(grpcServer, &Server[*oauth.IntrospectionContext]{})
+	v3alpha.RegisterExampleServiceServer(grpcServer, NewServer(mw))
 	// for easier use, we also register the grpc server reflection
 	reflection.Register(grpcServer)
 

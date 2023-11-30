@@ -19,24 +19,29 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ExampleService_Public_FullMethodName             = "/zitadel.go.example.api.v3alpha.ExampleService/Public"
-	ExampleService_Protected_FullMethodName          = "/zitadel.go.example.api.v3alpha.ExampleService/Protected"
-	ExampleService_ProtectedAdmin_FullMethodName     = "/zitadel.go.example.api.v3alpha.ExampleService/ProtectedAdmin"
-	ExampleService_ClientStream_FullMethodName       = "/zitadel.go.example.api.v3alpha.ExampleService/ClientStream"
-	ExampleService_ServerStream_FullMethodName       = "/zitadel.go.example.api.v3alpha.ExampleService/ServerStream"
-	ExampleService_ClientServerStream_FullMethodName = "/zitadel.go.example.api.v3alpha.ExampleService/ClientServerStream"
+	ExampleService_Healthz_FullMethodName   = "/zitadel.go.example.api.v3alpha.ExampleService/Healthz"
+	ExampleService_ListTasks_FullMethodName = "/zitadel.go.example.api.v3alpha.ExampleService/ListTasks"
+	ExampleService_AddTask_FullMethodName   = "/zitadel.go.example.api.v3alpha.ExampleService/AddTask"
+	ExampleService_AddTasks_FullMethodName  = "/zitadel.go.example.api.v3alpha.ExampleService/AddTasks"
 )
 
 // ExampleServiceClient is the client API for ExampleService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ExampleServiceClient interface {
-	Public(ctx context.Context, in *PublicRequest, opts ...grpc.CallOption) (*PublicResponse, error)
-	Protected(ctx context.Context, in *ProtectedRequest, opts ...grpc.CallOption) (*ProtectedResponse, error)
-	ProtectedAdmin(ctx context.Context, in *ProtectedAdminRequest, opts ...grpc.CallOption) (*ProtectedAdminResponse, error)
-	ClientStream(ctx context.Context, opts ...grpc.CallOption) (ExampleService_ClientStreamClient, error)
-	ServerStream(ctx context.Context, in *ServerStreamRequest, opts ...grpc.CallOption) (ExampleService_ServerStreamClient, error)
-	ClientServerStream(ctx context.Context, opts ...grpc.CallOption) (ExampleService_ClientServerStreamClient, error)
+	// Healthz is accessible by anyone and will always return "OK" to indicate the API is running
+	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
+	// ListTasks is only accessible with a valid authorization (in this case a valid access_token / PAT).
+	// It will list all stored tasks. In case the user is granted the `admin` role it will add a separate task telling him
+	// to add a new task.
+	ListTasks(ctx context.Context, in *ListTasksRequest, opts ...grpc.CallOption) (*ListTasksResponse, error)
+	// AddTask is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+	// It will add the provided task to the list of existing ones.
+	AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*AddTaskResponse, error)
+	// AddTasks is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+	// It demonstrates that GRPC client Stream can be used the same way a standard RPC methods.
+	// It will also add the provided task(s) to the list of existing ones.
+	AddTasks(ctx context.Context, opts ...grpc.CallOption) (ExampleService_AddTasksClient, error)
 }
 
 type exampleServiceClient struct {
@@ -47,124 +52,61 @@ func NewExampleServiceClient(cc grpc.ClientConnInterface) ExampleServiceClient {
 	return &exampleServiceClient{cc}
 }
 
-func (c *exampleServiceClient) Public(ctx context.Context, in *PublicRequest, opts ...grpc.CallOption) (*PublicResponse, error) {
-	out := new(PublicResponse)
-	err := c.cc.Invoke(ctx, ExampleService_Public_FullMethodName, in, out, opts...)
+func (c *exampleServiceClient) Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error) {
+	out := new(HealthzResponse)
+	err := c.cc.Invoke(ctx, ExampleService_Healthz_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *exampleServiceClient) Protected(ctx context.Context, in *ProtectedRequest, opts ...grpc.CallOption) (*ProtectedResponse, error) {
-	out := new(ProtectedResponse)
-	err := c.cc.Invoke(ctx, ExampleService_Protected_FullMethodName, in, out, opts...)
+func (c *exampleServiceClient) ListTasks(ctx context.Context, in *ListTasksRequest, opts ...grpc.CallOption) (*ListTasksResponse, error) {
+	out := new(ListTasksResponse)
+	err := c.cc.Invoke(ctx, ExampleService_ListTasks_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *exampleServiceClient) ProtectedAdmin(ctx context.Context, in *ProtectedAdminRequest, opts ...grpc.CallOption) (*ProtectedAdminResponse, error) {
-	out := new(ProtectedAdminResponse)
-	err := c.cc.Invoke(ctx, ExampleService_ProtectedAdmin_FullMethodName, in, out, opts...)
+func (c *exampleServiceClient) AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*AddTaskResponse, error) {
+	out := new(AddTaskResponse)
+	err := c.cc.Invoke(ctx, ExampleService_AddTask_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *exampleServiceClient) ClientStream(ctx context.Context, opts ...grpc.CallOption) (ExampleService_ClientStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ExampleService_ServiceDesc.Streams[0], ExampleService_ClientStream_FullMethodName, opts...)
+func (c *exampleServiceClient) AddTasks(ctx context.Context, opts ...grpc.CallOption) (ExampleService_AddTasksClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ExampleService_ServiceDesc.Streams[0], ExampleService_AddTasks_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &exampleServiceClientStreamClient{stream}
+	x := &exampleServiceAddTasksClient{stream}
 	return x, nil
 }
 
-type ExampleService_ClientStreamClient interface {
-	Send(*ClientStreamRequest) error
-	CloseAndRecv() (*ClientStreamResponse, error)
+type ExampleService_AddTasksClient interface {
+	Send(*AddTasksRequest) error
+	CloseAndRecv() (*AddTasksResponse, error)
 	grpc.ClientStream
 }
 
-type exampleServiceClientStreamClient struct {
+type exampleServiceAddTasksClient struct {
 	grpc.ClientStream
 }
 
-func (x *exampleServiceClientStreamClient) Send(m *ClientStreamRequest) error {
+func (x *exampleServiceAddTasksClient) Send(m *AddTasksRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *exampleServiceClientStreamClient) CloseAndRecv() (*ClientStreamResponse, error) {
+func (x *exampleServiceAddTasksClient) CloseAndRecv() (*AddTasksResponse, error) {
 	if err := x.ClientStream.CloseSend(); err != nil {
 		return nil, err
 	}
-	m := new(ClientStreamResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *exampleServiceClient) ServerStream(ctx context.Context, in *ServerStreamRequest, opts ...grpc.CallOption) (ExampleService_ServerStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ExampleService_ServiceDesc.Streams[1], ExampleService_ServerStream_FullMethodName, opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &exampleServiceServerStreamClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type ExampleService_ServerStreamClient interface {
-	Recv() (*ServerStreamResponse, error)
-	grpc.ClientStream
-}
-
-type exampleServiceServerStreamClient struct {
-	grpc.ClientStream
-}
-
-func (x *exampleServiceServerStreamClient) Recv() (*ServerStreamResponse, error) {
-	m := new(ServerStreamResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *exampleServiceClient) ClientServerStream(ctx context.Context, opts ...grpc.CallOption) (ExampleService_ClientServerStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ExampleService_ServiceDesc.Streams[2], ExampleService_ClientServerStream_FullMethodName, opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &exampleServiceClientServerStreamClient{stream}
-	return x, nil
-}
-
-type ExampleService_ClientServerStreamClient interface {
-	Send(*ClientServerStreamRequest) error
-	Recv() (*ClientServerStreamResponse, error)
-	grpc.ClientStream
-}
-
-type exampleServiceClientServerStreamClient struct {
-	grpc.ClientStream
-}
-
-func (x *exampleServiceClientServerStreamClient) Send(m *ClientServerStreamRequest) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *exampleServiceClientServerStreamClient) Recv() (*ClientServerStreamResponse, error) {
-	m := new(ClientServerStreamResponse)
+	m := new(AddTasksResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -175,12 +117,19 @@ func (x *exampleServiceClientServerStreamClient) Recv() (*ClientServerStreamResp
 // All implementations must embed UnimplementedExampleServiceServer
 // for forward compatibility
 type ExampleServiceServer interface {
-	Public(context.Context, *PublicRequest) (*PublicResponse, error)
-	Protected(context.Context, *ProtectedRequest) (*ProtectedResponse, error)
-	ProtectedAdmin(context.Context, *ProtectedAdminRequest) (*ProtectedAdminResponse, error)
-	ClientStream(ExampleService_ClientStreamServer) error
-	ServerStream(*ServerStreamRequest, ExampleService_ServerStreamServer) error
-	ClientServerStream(ExampleService_ClientServerStreamServer) error
+	// Healthz is accessible by anyone and will always return "OK" to indicate the API is running
+	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
+	// ListTasks is only accessible with a valid authorization (in this case a valid access_token / PAT).
+	// It will list all stored tasks. In case the user is granted the `admin` role it will add a separate task telling him
+	// to add a new task.
+	ListTasks(context.Context, *ListTasksRequest) (*ListTasksResponse, error)
+	// AddTask is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+	// It will add the provided task to the list of existing ones.
+	AddTask(context.Context, *AddTaskRequest) (*AddTaskResponse, error)
+	// AddTasks is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+	// It demonstrates that GRPC client Stream can be used the same way a standard RPC methods.
+	// It will also add the provided task(s) to the list of existing ones.
+	AddTasks(ExampleService_AddTasksServer) error
 	mustEmbedUnimplementedExampleServiceServer()
 }
 
@@ -188,23 +137,17 @@ type ExampleServiceServer interface {
 type UnimplementedExampleServiceServer struct {
 }
 
-func (UnimplementedExampleServiceServer) Public(context.Context, *PublicRequest) (*PublicResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Public not implemented")
+func (UnimplementedExampleServiceServer) Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Healthz not implemented")
 }
-func (UnimplementedExampleServiceServer) Protected(context.Context, *ProtectedRequest) (*ProtectedResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Protected not implemented")
+func (UnimplementedExampleServiceServer) ListTasks(context.Context, *ListTasksRequest) (*ListTasksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTasks not implemented")
 }
-func (UnimplementedExampleServiceServer) ProtectedAdmin(context.Context, *ProtectedAdminRequest) (*ProtectedAdminResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ProtectedAdmin not implemented")
+func (UnimplementedExampleServiceServer) AddTask(context.Context, *AddTaskRequest) (*AddTaskResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddTask not implemented")
 }
-func (UnimplementedExampleServiceServer) ClientStream(ExampleService_ClientStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method ClientStream not implemented")
-}
-func (UnimplementedExampleServiceServer) ServerStream(*ServerStreamRequest, ExampleService_ServerStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method ServerStream not implemented")
-}
-func (UnimplementedExampleServiceServer) ClientServerStream(ExampleService_ClientServerStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method ClientServerStream not implemented")
+func (UnimplementedExampleServiceServer) AddTasks(ExampleService_AddTasksServer) error {
+	return status.Errorf(codes.Unimplemented, "method AddTasks not implemented")
 }
 func (UnimplementedExampleServiceServer) mustEmbedUnimplementedExampleServiceServer() {}
 
@@ -219,127 +162,80 @@ func RegisterExampleServiceServer(s grpc.ServiceRegistrar, srv ExampleServiceSer
 	s.RegisterService(&ExampleService_ServiceDesc, srv)
 }
 
-func _ExampleService_Public_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublicRequest)
+func _ExampleService_Healthz_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HealthzRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExampleServiceServer).Public(ctx, in)
+		return srv.(ExampleServiceServer).Healthz(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ExampleService_Public_FullMethodName,
+		FullMethod: ExampleService_Healthz_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceServer).Public(ctx, req.(*PublicRequest))
+		return srv.(ExampleServiceServer).Healthz(ctx, req.(*HealthzRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExampleService_Protected_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProtectedRequest)
+func _ExampleService_ListTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTasksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExampleServiceServer).Protected(ctx, in)
+		return srv.(ExampleServiceServer).ListTasks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ExampleService_Protected_FullMethodName,
+		FullMethod: ExampleService_ListTasks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceServer).Protected(ctx, req.(*ProtectedRequest))
+		return srv.(ExampleServiceServer).ListTasks(ctx, req.(*ListTasksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExampleService_ProtectedAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProtectedAdminRequest)
+func _ExampleService_AddTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExampleServiceServer).ProtectedAdmin(ctx, in)
+		return srv.(ExampleServiceServer).AddTask(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ExampleService_ProtectedAdmin_FullMethodName,
+		FullMethod: ExampleService_AddTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceServer).ProtectedAdmin(ctx, req.(*ProtectedAdminRequest))
+		return srv.(ExampleServiceServer).AddTask(ctx, req.(*AddTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExampleService_ClientStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ExampleServiceServer).ClientStream(&exampleServiceClientStreamServer{stream})
+func _ExampleService_AddTasks_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ExampleServiceServer).AddTasks(&exampleServiceAddTasksServer{stream})
 }
 
-type ExampleService_ClientStreamServer interface {
-	SendAndClose(*ClientStreamResponse) error
-	Recv() (*ClientStreamRequest, error)
+type ExampleService_AddTasksServer interface {
+	SendAndClose(*AddTasksResponse) error
+	Recv() (*AddTasksRequest, error)
 	grpc.ServerStream
 }
 
-type exampleServiceClientStreamServer struct {
+type exampleServiceAddTasksServer struct {
 	grpc.ServerStream
 }
 
-func (x *exampleServiceClientStreamServer) SendAndClose(m *ClientStreamResponse) error {
+func (x *exampleServiceAddTasksServer) SendAndClose(m *AddTasksResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *exampleServiceClientStreamServer) Recv() (*ClientStreamRequest, error) {
-	m := new(ClientStreamRequest)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func _ExampleService_ServerStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ServerStreamRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(ExampleServiceServer).ServerStream(m, &exampleServiceServerStreamServer{stream})
-}
-
-type ExampleService_ServerStreamServer interface {
-	Send(*ServerStreamResponse) error
-	grpc.ServerStream
-}
-
-type exampleServiceServerStreamServer struct {
-	grpc.ServerStream
-}
-
-func (x *exampleServiceServerStreamServer) Send(m *ServerStreamResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func _ExampleService_ClientServerStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ExampleServiceServer).ClientServerStream(&exampleServiceClientServerStreamServer{stream})
-}
-
-type ExampleService_ClientServerStreamServer interface {
-	Send(*ClientServerStreamResponse) error
-	Recv() (*ClientServerStreamRequest, error)
-	grpc.ServerStream
-}
-
-type exampleServiceClientServerStreamServer struct {
-	grpc.ServerStream
-}
-
-func (x *exampleServiceClientServerStreamServer) Send(m *ClientServerStreamResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *exampleServiceClientServerStreamServer) Recv() (*ClientServerStreamRequest, error) {
-	m := new(ClientServerStreamRequest)
+func (x *exampleServiceAddTasksServer) Recv() (*AddTasksRequest, error) {
+	m := new(AddTasksRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -354,33 +250,22 @@ var ExampleService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ExampleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Public",
-			Handler:    _ExampleService_Public_Handler,
+			MethodName: "Healthz",
+			Handler:    _ExampleService_Healthz_Handler,
 		},
 		{
-			MethodName: "Protected",
-			Handler:    _ExampleService_Protected_Handler,
+			MethodName: "ListTasks",
+			Handler:    _ExampleService_ListTasks_Handler,
 		},
 		{
-			MethodName: "ProtectedAdmin",
-			Handler:    _ExampleService_ProtectedAdmin_Handler,
+			MethodName: "AddTask",
+			Handler:    _ExampleService_AddTask_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ClientStream",
-			Handler:       _ExampleService_ClientStream_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "ServerStream",
-			Handler:       _ExampleService_ServerStream_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "ClientServerStream",
-			Handler:       _ExampleService_ClientServerStream_Handler,
-			ServerStreams: true,
+			StreamName:    "AddTasks",
+			Handler:       _ExampleService_AddTasks_Handler,
 			ClientStreams: true,
 		},
 	},

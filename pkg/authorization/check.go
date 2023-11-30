@@ -6,65 +6,25 @@ import (
 	"fmt"
 )
 
+const (
+	HeaderName = "authorization"
+)
+
 var (
 	ErrUnauthorized = errors.New("unauthorized")
 	ErrMissingRole  = func(role string) error { return fmt.Errorf("missing required role: `%s`", role) }
 )
 
-type Verifier[T Ctx] interface {
-	CheckAuthorization(ctx context.Context, accessToken string) (T, error)
-}
-
-type NewVerifier[T Ctx] func(ctx context.Context, domain string) (Verifier[T], error)
-
-type Check[T Ctx] struct {
-	Checks []func(authCtx T) error
-}
-
-type Cache[T Ctx] interface {
-	Get(token string) T
-	Set(token string, value T)
-}
-
-type CheckOption func(*Check[Ctx])
-
-func WithRole(role string) CheckOption {
-	return func(check *Check[Ctx]) {
-		check.Checks = append(check.Checks, func(authCtx Ctx) error {
-			if authCtx.IsGrantedRole(role) {
-				return nil
-			}
-			return ErrMissingRole(role)
-		})
-	}
-}
-
-func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error) {
-	var t T
-	check := new(Check[Ctx])
-	for _, option := range options {
-		option(check)
-	}
-	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
-	if err != nil || !authCtx.IsAuthorized() {
-		return t, NewError(ErrUnauthorized, err)
-	}
-	for _, c := range check.Checks {
-		if err = c(authCtx); err != nil {
-			return t, NewError(ErrUnauthorized, err)
-		}
-	}
-	return authCtx, nil
-}
-
+// Authorizer provides the functionality to check for authorization such as token verification including role checks.
 type Authorizer[T Ctx] struct {
 	verifier Verifier[T]
 }
 
+// Option allows customization of the [Authorizer] such as caching and more.
 type Option[T Ctx] func(authorizer *Authorizer[T])
 
-func New[T Ctx](ctx context.Context, domain string, newVerifier NewVerifier[T], options ...Option[T]) (*Authorizer[T], error) {
-	verifier, err := newVerifier(ctx, domain)
+func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitializer[T], options ...Option[T]) (*Authorizer[T], error) {
+	verifier, err := initVerifier(ctx, domain)
 	if err != nil {
 		return nil, err
 	}
@@ -75,4 +35,53 @@ func New[T Ctx](ctx context.Context, domain string, newVerifier NewVerifier[T], 
 		option(authorizer)
 	}
 	return authorizer, nil
+}
+
+// CheckAuthorization will verify the token using the configured [Verifier] and provided [Check]
+func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error) {
+	var t T
+	checks := new(Check[Ctx])
+	for _, option := range options {
+		option(checks)
+	}
+	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
+	if err != nil || !authCtx.IsAuthorized() {
+		return t, NewError(ErrUnauthorized, err)
+	}
+	for _, c := range checks.Checks {
+		if err = c(authCtx); err != nil {
+			return t, NewError(ErrUnauthorized, err)
+		}
+	}
+	return authCtx, nil
+}
+
+// Verifier defines the possible verification checks such as validation of the authorizationToken.
+type Verifier[T Ctx] interface {
+	CheckAuthorization(ctx context.Context, authorizationToken string) (T, error)
+}
+
+// VerifierInitializer abstracts the initialization of a [Verifier] by providing the ZITADEL domain
+type VerifierInitializer[T Ctx] func(ctx context.Context, domain string) (Verifier[T], error)
+
+// Check will be executed during the authorization check and provide a mechanism to require additional permission such as a role.
+// There will be options, e.g. caching and more in the near future.
+type Check[T Ctx] struct {
+	Checks []func(authCtx T) error
+}
+
+// CheckOption allows customization of the [Check] like additional permission requirements (e.g. roles)
+type CheckOption func(*Check[Ctx])
+
+// WithRole requires the authorized user to be granted the provided role.
+// If the role is not granted to the user, an [ErrMissingRole] is returned.
+func WithRole(role string) CheckOption {
+	return func(checks *Check[Ctx]) {
+		checks.Checks = append(checks.Checks, func(authCtx Ctx) error {
+			if authCtx.IsGrantedRole(role) {
+				return nil
+			}
+			return ErrMissingRole(role)
+		})
+	}
 }
