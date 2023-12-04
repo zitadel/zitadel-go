@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
+	"golang.org/x/exp/slog"
 )
 
 const (
@@ -18,10 +20,20 @@ var (
 // Authorizer provides the functionality to check for authorization such as token verification including role checks.
 type Authorizer[T Ctx] struct {
 	verifier Verifier[T]
+	logger   *slog.Logger
 }
 
-// Option allows customization of the [Authorizer] such as caching and more.
+// Option allows customization of the [Authorizer] such as caching, logging and more.
 type Option[T Ctx] func(authorizer *Authorizer[T])
+
+// WithLogger allows a logger other than slog.Default().
+//
+// EXPERIMENTAL: Will change to log/slog import after we drop support for Go 1.20
+func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
+	return func(a *Authorizer[T]) {
+		a.logger = logger
+	}
+}
 
 func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitializer[T], options ...Option[T]) (*Authorizer[T], error) {
 	verifier, err := initVerifier(ctx, domain)
@@ -30,6 +42,7 @@ func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitial
 	}
 	authorizer := &Authorizer[T]{
 		verifier: verifier,
+		logger:   slog.Default(),
 	}
 	for _, option := range options {
 		option(authorizer)
@@ -39,8 +52,10 @@ func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitial
 
 // CheckAuthorization will verify the token using the configured [Verifier] and provided [Check]
 func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error) {
+	a.logger.Log(ctx, slog.LevelDebug, "checking authorization")
 	var t T
 	if token == "" {
+		a.logger.Log(ctx, slog.LevelWarn, "no authorization header")
 		return t, NewErrorUnauthorized(ErrEmptyAuthorizationHeader)
 	}
 	checks := new(Check[Ctx])
@@ -49,10 +64,12 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 	}
 	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
 	if err != nil || !authCtx.IsAuthorized() {
+		a.logger.With("error", err).Log(ctx, slog.LevelWarn, "unauthorized")
 		return t, NewErrorUnauthorized(err)
 	}
 	for _, c := range checks.Checks {
 		if err = c(authCtx); err != nil {
+			a.logger.With("error", err, "user", authCtx.UserID()).Log(ctx, slog.LevelWarn, "permission denied")
 			return t, NewErrorPermissionDenied(err)
 		}
 	}
