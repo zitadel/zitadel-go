@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"google.golang.org/grpc"
@@ -61,6 +62,9 @@ func (i *Interceptor[T]) intercept(ctx context.Context, method string) (context.
 		}
 		authCtx, err := i.authorizer.CheckAuthorization(ctx, metautils.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
 		if err != nil {
+			if errors.Is(err, authorization.ErrUnauthorized) {
+				return nil, status.Error(codes.Unauthenticated, err.Error())
+			}
 			return nil, status.Error(codes.PermissionDenied, err.Error())
 		}
 		return authorization.WithAuthContext(ctx, authCtx), nil

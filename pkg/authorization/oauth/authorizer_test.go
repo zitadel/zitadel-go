@@ -24,15 +24,15 @@ func TestIntrospectionVerification_CheckAuthorization(t *testing.T) {
 	}
 	tests := []testCase[*introspection]{
 		{
-			name: "empty authorizationToken",
+			name: "invalid authorizationToken format",
 			i: IntrospectionVerification[*introspection]{
 				ResourceServer: &resourceServer{},
 			},
 			args: args{
 				ctx:                context.Background(),
-				authorizationToken: "",
+				authorizationToken: "token",
 			},
-			wantErr: ErrEmptyAuthorizationHeader,
+			wantErr: ErrInvalidAuthorizationHeader,
 		},
 		{
 			name: "invalid authorizationToken format",

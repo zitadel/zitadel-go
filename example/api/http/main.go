@@ -92,13 +92,13 @@ func main() {
 
 			// Although this endpoint is accessible by any authorized user, you might want to take additional steps
 			// if the user is granted a specific role. In this case an `admin` will be informed to add a new task:
-			taskList := tasks
+			list := tasks
 			if authCtx.IsGrantedRole("admin") {
-				taskList = append(taskList, "create a new task on /api/add-task")
+				list = append(list, "create a new task on /api/add-task")
 			}
 
 			// return the existing task list
-			err = jsonResponse(w, taskList, http.StatusOK)
+			err = jsonResponse(w, &taskList{Tasks: list}, http.StatusOK)
 			if err != nil {
 				slog.Error("error writing response", "error", err)
 			}
@@ -153,4 +153,8 @@ func jsonResponse(w http.ResponseWriter, resp any, status int) error {
 	}
 	_, err = w.Write(data)
 	return err
+}
+
+type taskList struct {
+	Tasks []string `json:"tasks,omitempty"`
 }

@@ -14,7 +14,6 @@ import (
 )
 
 var (
-	ErrEmptyAuthorizationHeader   = errors.New("authorization header is empty")
 	ErrInvalidAuthorizationHeader = errors.New("invalid authorization header, must be prefixed with `Bearer`")
 	ErrIntrospectionFailed        = errors.New("token introspection failed")
 )
@@ -75,9 +74,6 @@ func DefaultAuthorization(path string) authorization.VerifierInitializer[*Intros
 // on the OAuth2 introspection endpoint.
 // On success, it will return a generic struct of type [T] of the [IntrospectionVerification].
 func (i *IntrospectionVerification[T]) CheckAuthorization(ctx context.Context, authorizationToken string) (resp T, err error) {
-	if authorizationToken == "" {
-		return resp, ErrEmptyAuthorizationHeader
-	}
 	accessToken, ok := strings.CutPrefix(authorizationToken, oidc.BearerToken)
 	if !ok {
 		return resp, ErrInvalidAuthorizationHeader

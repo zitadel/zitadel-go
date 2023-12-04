@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
@@ -22,6 +23,10 @@ func (i *Interceptor[T]) RequireAuthorization(options ...authorization.CheckOpti
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx, err := i.authorizer.CheckAuthorization(req.Context(), req.Header.Get(authorization.HeaderName), options...)
 			if err != nil {
+				if errors.Is(err, authorization.ErrUnauthorized) {
+					http.Error(w, err.Error(), http.StatusUnauthorized)
+					return
+				}
 				http.Error(w, err.Error(), http.StatusForbidden)
 				return
 			}
