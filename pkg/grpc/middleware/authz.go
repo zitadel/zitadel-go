@@ -62,7 +62,7 @@ func (i *Interceptor[T]) intercept(ctx context.Context, method string) (context.
 		}
 		authCtx, err := i.authorizer.CheckAuthorization(ctx, metautils.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
 		if err != nil {
-			if errors.Is(err, authorization.ErrUnauthorized) {
+			if errors.Is(err, &authorization.UnauthorizedErr{}) {
 				return nil, status.Error(codes.Unauthenticated, err.Error())
 			}
 			return nil, status.Error(codes.PermissionDenied, err.Error())

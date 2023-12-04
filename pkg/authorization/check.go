@@ -12,8 +12,6 @@ const (
 
 var (
 	ErrEmptyAuthorizationHeader = errors.New("authorization header is empty")
-	ErrUnauthorized             = errors.New("unauthorized")
-	ErrPermissionDenied         = errors.New("permission denied")
 	ErrMissingRole              = func(role string) error { return fmt.Errorf("missing required role: `%s`", role) }
 )
 
@@ -43,7 +41,7 @@ func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitial
 func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error) {
 	var t T
 	if token == "" {
-		return t, NewError(ErrUnauthorized, ErrEmptyAuthorizationHeader)
+		return t, NewErrorUnauthorized(ErrEmptyAuthorizationHeader)
 	}
 	checks := new(Check[Ctx])
 	for _, option := range options {
@@ -51,11 +49,11 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 	}
 	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
 	if err != nil || !authCtx.IsAuthorized() {
-		return t, NewError(ErrUnauthorized, err)
+		return t, NewErrorUnauthorized(err)
 	}
 	for _, c := range checks.Checks {
 		if err = c(authCtx); err != nil {
-			return t, NewError(ErrPermissionDenied, err)
+			return t, NewErrorPermissionDenied(err)
 		}
 	}
 	return authCtx, nil

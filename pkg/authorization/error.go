@@ -1,19 +1,59 @@
 package authorization
 
-import "fmt"
+import "errors"
 
-type Error struct {
-	err    error
-	parent any
+type UnauthorizedErr struct {
+	err error
 }
 
-func NewError(err error, parent any) *Error {
-	return &Error{
-		err:    err,
-		parent: parent,
+func NewErrorUnauthorized(err error) *UnauthorizedErr {
+	return &UnauthorizedErr{
+		err: err,
 	}
 }
 
-func (e *Error) Error() string {
-	return fmt.Sprintf("%s: %v", e.err.Error(), e.parent)
+func (e *UnauthorizedErr) Error() string {
+	if e.err == nil {
+		return "unauthorized"
+	}
+	return e.err.Error()
+}
+
+func (e *UnauthorizedErr) Is(target error) bool {
+	t, ok := target.(*UnauthorizedErr)
+	if !ok {
+		return false
+	}
+	if t.err == nil {
+		return true
+	}
+	return errors.Is(t.err, e.err)
+}
+
+type PermissionDeniedErr struct {
+	err error
+}
+
+func NewErrorPermissionDenied(err error) *PermissionDeniedErr {
+	return &PermissionDeniedErr{
+		err: err,
+	}
+}
+
+func (e *PermissionDeniedErr) Error() string {
+	if e.err == nil {
+		return "permission denied"
+	}
+	return e.err.Error()
+}
+
+func (e *PermissionDeniedErr) Is(target error) bool {
+	t, ok := target.(*PermissionDeniedErr)
+	if !ok {
+		return false
+	}
+	if t.err == nil {
+		return true
+	}
+	return errors.Is(t.err, e.err)
 }

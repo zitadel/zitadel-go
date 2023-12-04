@@ -23,7 +23,7 @@ func (i *Interceptor[T]) RequireAuthorization(options ...authorization.CheckOpti
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx, err := i.authorizer.CheckAuthorization(req.Context(), req.Header.Get(authorization.HeaderName), options...)
 			if err != nil {
-				if errors.Is(err, authorization.ErrUnauthorized) {
+				if errors.Is(err, &authorization.UnauthorizedErr{}) {
 					http.Error(w, err.Error(), http.StatusUnauthorized)
 					return
 				}
