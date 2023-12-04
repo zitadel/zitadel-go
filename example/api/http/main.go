@@ -45,7 +45,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initiate the zitadel sdk by providing its domain
-	// and as this example will focus on authorization (using Oauth2 Introspection),
+	// and as this example will focus on authorization (using OAuth2 Introspection),
 	// you will also need to initialize that with the downloaded api key.json
 	//
 	// it's a short form of:
