@@ -12,7 +12,7 @@ const (
 
 var (
 	ErrEmptyAuthorizationHeader = errors.New("authorization header is empty")
-	ErrMissingRole              = func(role string) error { return fmt.Errorf("missing required role: `%s`", role) }
+	ErrMissingRole              = errors.New("missing required role")
 )
 
 // Authorizer provides the functionality to check for authorization such as token verification including role checks.
@@ -84,7 +84,7 @@ func WithRole(role string) CheckOption {
 			if authCtx.IsGrantedRole(role) {
 				return nil
 			}
-			return ErrMissingRole(role)
+			return fmt.Errorf("%w: `%s`", ErrMissingRole, role)
 		})
 	}
 }
