@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log/slog"
+
+	"golang.org/x/exp/slog"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -45,7 +46,7 @@ type Server struct {
 }
 
 // Healthz is accessible by anyone and will always return "OK" to indicate the API is running
-func (s *Server) Healthz(ctx context.Context, _ *v3alpha.HealthzRequest) (*v3alpha.HealthzResponse, error) {
+func (s *Server) Healthz(_ context.Context, _ *v3alpha.HealthzRequest) (*v3alpha.HealthzResponse, error) {
 	return &v3alpha.HealthzResponse{
 		Health: "OK",
 	}, nil

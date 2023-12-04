@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"flag"
-	"log/slog"
+	"fmt"
 	"net"
 	"os"
+
+	"golang.org/x/exp/slog"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -66,7 +68,7 @@ func main() {
 	reflection.Register(grpcServer)
 
 	// finally start the server on port 8099
-	lis, err := net.Listen("tcp", ":8089")
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
 	if err != nil {
 		slog.Error("creating listener failed", "error", err)
 		os.Exit(1)
