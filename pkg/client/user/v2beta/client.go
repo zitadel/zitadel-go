@@ -1,6 +1,8 @@
 package v2beta
 
 import (
+	"context"
+
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
 	user "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
 )
@@ -10,9 +12,8 @@ type Client struct {
 	user.UserServiceClient
 }
 
-func NewClient(issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
-
-	conn, err := zitadel.NewConnection(issuer, api, scopes, options...)
+func NewClient(ctx context.Context, issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
+	conn, err := zitadel.NewConnection(ctx, issuer, api, scopes, options...)
 	if err != nil {
 		return nil, err
 	}
