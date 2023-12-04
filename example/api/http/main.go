@@ -11,10 +11,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/authorization"
-	"github.com/zitadel/zitadel-go/v2/pkg/authorization/oauth"
-	"github.com/zitadel/zitadel-go/v2/pkg/http/middleware"
-	"github.com/zitadel/zitadel-go/v2/pkg/zitadel"
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization/oauth"
+	"github.com/zitadel/zitadel-go/v3/pkg/http/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 var (

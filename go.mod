@@ -1,4 +1,4 @@
-module github.com/zitadel/zitadel-go/v2
+module github.com/zitadel/zitadel-go/v3
 
 go 1.19
 

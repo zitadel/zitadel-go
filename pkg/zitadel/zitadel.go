@@ -3,7 +3,7 @@ package zitadel
 import (
 	"context"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
 )
 
 // Zitadel provides the ability to interact with your ZITADEL instance.

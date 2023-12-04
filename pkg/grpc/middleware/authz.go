@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
 )
 
 type Interceptor[T authorization.Ctx] struct {

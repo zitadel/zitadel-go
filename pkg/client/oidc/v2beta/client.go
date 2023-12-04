@@ -1,8 +1,8 @@
 package v2beta
 
 import (
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	oidc "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/oidc/v2beta"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	oidc "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
 )
 
 type Client struct {

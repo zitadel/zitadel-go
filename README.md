@@ -17,7 +17,7 @@ Go client library for the [ZITADEL](https://github.com/zitadel/zitadel) API.
 Add the package to your go.mod by
 
 ```
-go get github.com/zitadel/zitadel-go/v2
+go get github.com/zitadel/zitadel-go/v3
 ```
 
 ...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.com/docs/quickstarts/introduction).

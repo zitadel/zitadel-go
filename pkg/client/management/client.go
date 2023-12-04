@@ -1,8 +1,8 @@
 package management
 
 import (
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
 )
 
 type Client struct {

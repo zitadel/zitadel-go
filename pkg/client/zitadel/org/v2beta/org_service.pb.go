@@ -9,9 +9,9 @@ package org
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	v2beta "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2beta"
-	_ "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/protoc/v2"
-	v2beta1 "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/user/v2beta"
+	v2beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/object/v2beta"
+	_ "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/protoc/v2"
+	v2beta1 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
