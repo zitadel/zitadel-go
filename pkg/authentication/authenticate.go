@@ -4,50 +4,78 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/exp/slog"
 )
 
 type Authenticator[T Ctx] struct {
-	authN    AuthenticationProvider[T]
-	sessions map[string]T
-	key      string
+	authN             Handler[T]
+	logger            slog.Logger
+	router            *http.ServeMux
+	sessions          Sessions[T]
+	key               string
+	sessionCookieName string
+	tls               bool
 }
 
-// AuthenticationProvider defines the possible verification checks such as validation of the authorizationToken.
-type AuthenticationProvider[T Ctx] interface {
-	Authenticate(state string) http.HandlerFunc
+type Sessions[T Ctx] interface {
+	Set(id string, session T)
+	Get(id string) (T, error)
+}
+
+// Handler defines the handling of authentication and logout
+type Handler[T Ctx] interface {
+	Authenticate(w http.ResponseWriter, r *http.Request, state string)
 	Callback(w http.ResponseWriter, r *http.Request) (t T, state string)
-	Logout(ctx context.Context, idToken, state string) http.HandlerFunc
+	Logout(w http.ResponseWriter, r *http.Request, authCtx T, state string)
 }
 
-// VerifierInitializer abstracts the initialization of a [Verifier] by providing the ZITADEL domain
-type AuthenticationProviderInitializer[T Ctx] func(ctx context.Context, domain string) (AuthenticationProvider[T], error)
+// HandlerInitializer abstracts the initialization of a [Handler] by providing the ZITADEL domain
+type HandlerInitializer[T Ctx] func(ctx context.Context, domain string) (Handler[T], error)
 
-func New[T Ctx](ctx context.Context, domain string, initAuthentication AuthenticationProviderInitializer[T]) (*Authenticator[T], error) {
+func New[T Ctx](ctx context.Context, domain string, initAuthentication HandlerInitializer[T]) (*Authenticator[T], error) {
 	authN, err := initAuthentication(ctx, domain)
 	if err != nil {
 		return nil, err
 	}
 	authenticator := &Authenticator[T]{
-		authN:    authN,
-		sessions: make(map[string]T),
-		key:      "arajcoejmdijijf3joirio3sdf3gsfdg",
+		authN:             authN,
+		sessions:          &InMemorySessions[T]{sessions: make(map[string]T)},
+		key:               "arajcoejmdijijf3joirio3sdf3gsfdg", // TODO: change after development!
+		sessionCookieName: "zitadel.session",
+		tls:               false, // TODO: change after development!
 	}
 	return authenticator, nil
 }
 
-func (a *Authenticator[T]) Authenticate(requestedURI string) http.HandlerFunc {
+func (a *Authenticator[T]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	a.router.ServeHTTP(w, r)
+}
+
+func (a *Authenticator[T]) createRouter() {
+	a.router = http.NewServeMux()
+	a.router.Handle("/login", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		a.Authenticate(w, req, "")
+	}))
+	a.router.Handle("/callback", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		a.Callback(w, req)
+	}))
+
+	a.router.Handle("/logout", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		a.Logout(w, req)
+	}))
+}
+
+func (a *Authenticator[T]) Authenticate(w http.ResponseWriter, r *http.Request, requestedURI string) {
 	s := &State{RequestedURI: requestedURI}
 	stateParam, err := s.Encrypt(a.key)
 
 	if err != nil {
-		return func(w http.ResponseWriter, req *http.Request) {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	return a.authN.Authenticate(stateParam)
+	a.authN.Authenticate(w, r, stateParam)
 }
 
 func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
@@ -63,25 +91,32 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 
 	id := uuid.NewString()
 	http.SetCookie(w, &http.Cookie{
-		Name:       "test",
-		Value:      id,
-		Path:       "/",
-		Domain:     "",
-		Expires:    time.Time{},
-		RawExpires: "",
-		MaxAge:     0,
-		Secure:     false,
-		HttpOnly:   true,
-		SameSite:   http.SameSiteLaxMode,
-		Raw:        "",
-		Unparsed:   nil,
+		Name:     a.sessionCookieName,
+		Value:    id,
+		Path:     "/",
+		Domain:   "",
+		MaxAge:   0, // TODO: ?
+		Secure:   a.tls,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
 	})
-	a.sessions[id] = ctx
+	a.sessions.Set(id, ctx)
 
 	http.Redirect(w, req, state.RequestedURI, http.StatusFound)
 }
 
+func (a *Authenticator[T]) cookieName() string {
+	if a.tls {
+		return "__Host-" + a.sessionCookieName
+	}
+	return a.sessionCookieName
+}
+
 func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
+	ctx, err := a.IsAuthenticated(w, req)
+	if err != nil {
+
+	}
 	s := &State{RequestedURI: ""}
 	stateParam, err := s.Encrypt(a.key)
 
@@ -90,7 +125,7 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	a.authN.Logout(req.Context(), "", stateParam)(w, req)
+	a.authN.Logout(w, req, ctx, stateParam)
 }
 
 var (
@@ -98,15 +133,32 @@ var (
 	ErrNoSession = errors.New("no session")
 )
 
-func (a *Authenticator[T]) IsAuthenticated(w http.ResponseWriter, req *http.Request) (Ctx, error) {
+func (a *Authenticator[T]) IsAuthenticated(w http.ResponseWriter, req *http.Request) (T, error) {
 	var t T
-	cookie, err := req.Cookie("test")
+	cookie, err := req.Cookie(a.sessionCookieName)
 	if err != nil {
 		return t, ErrNoCookie
 	}
-	session, ok := a.sessions[cookie.Value]
-	if !ok {
+	session, err := a.sessions.Get(cookie.Value)
+	if err != nil {
+		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", cookie.Value)
 		return t, ErrNoSession
 	}
 	return session, nil
+}
+
+type InMemorySessions[T Ctx] struct {
+	sessions map[string]T
+}
+
+func (s *InMemorySessions[T]) Get(id string) (T, error) {
+	t, ok := s.sessions[id]
+	if !ok {
+		return t, errors.New("not found")
+	}
+	return t, nil
+}
+func (s *InMemorySessions[T]) Set(id string, session T) {
+
+	s.sessions[id] = session
 }

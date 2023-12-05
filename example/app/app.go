@@ -14,10 +14,11 @@ import (
 	"os"
 
 	http2 "github.com/zitadel/oidc/v3/pkg/http"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/authentication"
-	openid "github.com/zitadel/zitadel-go/v2/pkg/authentication/oidc"
-	"github.com/zitadel/zitadel-go/v2/pkg/zitadel"
+	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
+	openid "github.com/zitadel/zitadel-go/v3/pkg/authentication/oidc"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 var (
@@ -39,6 +40,12 @@ func main() {
 
 	ctx := context.Background()
 
+	t, err := template.New("").ParseFS(templates, "templates/*.html")
+	if err != nil {
+		slog.Error("unable to parse template", "error", err)
+		os.Exit(1)
+	}
+
 	// Initiate the zitadel sdk by providing its domain
 	// and as this example will focus on authentication (using OIDC / OAuth2 PKCE flow),
 	// you will also need to initialize that with the generated client_id.
@@ -51,23 +58,12 @@ func main() {
 	//			),
 	//		),
 	//	)
-
-	t, err := template.New("").ParseFS(templates, "templates/*.html")
-	_ = err
-
-	//tmpl := template.New("")
-	//tmpl, err := tmpl.Parse(tasksTmpl)
-	//if err != nil {
-	//	slog.Error("unable to parse template", "error", err)
-	//	os.Exit(1)
-	//}
-
 	key := []byte("XKv2Lqd7YAq13NUZVUWZEWZeruqyzViM")
 	cookieHandler := http2.NewCookieHandler(key, key)
 	z, err := zitadel.New(*domain,
 		zitadel.WithAuthentication(ctx,
-			openid.WithCodeFlow[*openid.UserInfoContext](
-				openid.PKCEAuthentication(*clientID, "http://localhost:8089/callback", cookieHandler),
+			openid.WithCodeFlow[*openid.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
+				openid.PKCEAuthentication(*clientID, "http://localhost:8089/callback", []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}, cookieHandler),
 			),
 		),
 	)
@@ -81,12 +77,7 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.Handle("/auth", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		z.Authentication.Authenticate("")(w, req)
-	}))
-	router.Handle("/callback", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		z.Authentication.Callback(w, req)
-	}))
+	router.Handle("/auth", z.Authentication)
 	router.Handle("/profile", mw.RequireAuthentication()(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		authCtx := authentication.Context[*openid.UserInfoContext](req.Context())
 		data, err := json.Marshal(authCtx)
@@ -94,9 +85,6 @@ func main() {
 		err = t.ExecuteTemplate(w, "profile.html", string(data))
 		_ = err
 	})))
-	router.Handle("/logout", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		z.Authentication.Logout(w, req)
-	}))
 	router.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		err = t.ExecuteTemplate(w, "home.html", &struct {
 			IsAdmin bool

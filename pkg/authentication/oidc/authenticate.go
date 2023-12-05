@@ -2,74 +2,80 @@ package oidc
 
 import (
 	"context"
-	"log/slog"
 	"net/http"
 
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	http2 "github.com/zitadel/oidc/v3/pkg/http"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/authentication"
+	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
 )
 
-type Ctx interface {
+type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 	authentication.Ctx
-	oidc.IDClaims
-	rp.SubjectGetter
+	SetTokens(*oidc.Tokens[C])
+	GetTokens() *oidc.Tokens[C]
+	SetUserInfo(S)
+	GetUserInfo() S
 }
 
-type CodeFlowAuthentication[T Ctx] struct {
-	rp.RelyingParty
+type CodeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] struct {
+	relyingParty rp.RelyingParty
 }
 
-func WithCodeFlow[T Ctx](auth ClientAuthentication) authentication.AuthenticationProviderInitializer[T] {
-	return func(ctx context.Context, domain string) (authentication.AuthenticationProvider[T], error) {
+func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientAuthentication) authentication.HandlerInitializer[T] {
+	return func(ctx context.Context, domain string) (authentication.Handler[T], error) {
 		relyingParty, err := auth(ctx, domain)
 		if err != nil {
 			return nil, err
 		}
-		return &CodeFlowAuthentication[T]{
-			RelyingParty: relyingParty,
+		return &CodeFlowAuthentication[T, C, S]{
+			relyingParty: relyingParty,
 		}, nil
 	}
 }
 
 type ClientAuthentication func(ctx context.Context, domain string) (rp.RelyingParty, error)
 
-func PKCEAuthentication(clientID, redirectURI string, cookieHandler *http2.CookieHandler) ClientAuthentication {
+func PKCEAuthentication(clientID, redirectURI string, scopes []string, cookieHandler *http2.CookieHandler) ClientAuthentication {
 	return func(ctx context.Context, domain string) (rp.RelyingParty, error) {
-		return rp.NewRelyingPartyOIDC(ctx, domain, clientID, "", redirectURI, []string{"openid", "profile", "email"}, rp.WithPKCE(cookieHandler))
+		return newRP(ctx, domain, clientID, "", redirectURI, scopes, rp.WithPKCE(cookieHandler))
 	}
 }
 
-func ClientIDSecretAuthentication(clientID, clientSecret string) ClientAuthentication {
+func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, scopes []string, cookieHandler *http2.CookieHandler) ClientAuthentication {
 	return func(ctx context.Context, domain string) (rp.RelyingParty, error) {
-		return rp.NewRelyingPartyOIDC(ctx, domain, clientID, clientSecret, "redirectURI", []string{"openid"})
+		return newRP(ctx, domain, clientID, clientSecret, redirectURI, scopes, rp.WithCookieHandler(cookieHandler))
 	}
 }
 
-func (c *CodeFlowAuthentication[T]) Authenticate(state string) http.HandlerFunc {
-	return rp.AuthURLHandler(func() string {
-		return state
-	}, c.RelyingParty)
+func DefaultAuthentication() {}
+
+func newRP(ctx context.Context, domain, clientID, clientSecret, redirectURI string, scopes []string, options ...rp.Option) (rp.RelyingParty, error) {
+	if len(scopes) == 0 {
+		scopes = []string{oidc.ScopeOpenID}
+	}
+	return rp.NewRelyingPartyOIDC(ctx, domain, clientID, clientSecret, redirectURI, scopes, options...)
 }
 
-func (c *CodeFlowAuthentication[T]) Callback(w http.ResponseWriter, r *http.Request) (t T, state string) {
-	rp.CodeExchangeHandler[T](rp.UserinfoCallback[T, T](func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[T], callbackState string, provider rp.RelyingParty, info T) {
-		slog.Info("callback", "at", tokens.AccessToken, "state", callbackState, "info", info)
-		t = info
+func (c *CodeFlowAuthentication[T, C, S]) Authenticate(w http.ResponseWriter, r *http.Request, state string) {
+	rp.AuthURLHandler(func() string { return state }, c.relyingParty)(w, r)
+}
+
+func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *http.Request) (t T, state string) {
+	rp.CodeExchangeHandler[C](rp.UserinfoCallback[C, S](func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[C], callbackState string, provider rp.RelyingParty, info S) {
 		state = callbackState
-	}), c.RelyingParty)(w, r)
+		t.SetTokens(tokens)
+		t.SetUserInfo(info)
+	}), c.relyingParty)(w, r)
 	return t, state
 }
 
-func (c *CodeFlowAuthentication[T]) Logout(ctx context.Context, idToken, state string) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		url, err := rp.EndSession(ctx, c.RelyingParty, idToken, "", state)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		http.Redirect(w, req, url.String(), http.StatusFound)
+func (c *CodeFlowAuthentication[T, C, S]) Logout(w http.ResponseWriter, r *http.Request, authCtx T, state string) {
+	url, err := rp.EndSession(r.Context(), c.relyingParty, authCtx.GetTokens().IDToken, "", state)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+	http.Redirect(w, r, url.String(), http.StatusFound)
 }

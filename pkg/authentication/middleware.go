@@ -19,7 +19,7 @@ func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Ha
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx, err := i.authenticator.IsAuthenticated(w, req)
 			if err != nil {
-				i.authenticator.Authenticate(req.RequestURI)(w, req)
+				i.authenticator.Authenticate(w, req, req.RequestURI)
 				return
 			}
 			req = req.WithContext(WithAuthContext(req.Context(), ctx))
