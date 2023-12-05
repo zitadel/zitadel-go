@@ -2,8 +2,8 @@ package system
 
 import (
 	"context"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-jose/go-jose/v3"
@@ -54,7 +54,7 @@ type JWTAuthenticationSource func() middleware.JWTProfileTokenSource
 func JWTProfileFromPath(keyPath, userID string) JWTAuthenticationSource {
 	return func() middleware.JWTProfileTokenSource {
 		return func(issuer string, _ []string) (oauth2.TokenSource, error) {
-			key, err := ioutil.ReadFile(keyPath)
+			key, err := os.ReadFile(keyPath)
 			if err != nil {
 				return nil, err
 			}
