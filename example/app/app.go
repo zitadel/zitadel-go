@@ -13,9 +13,6 @@ import (
 	"net/http"
 	"os"
 
-	http2 "github.com/zitadel/oidc/v3/pkg/http"
-	"github.com/zitadel/oidc/v3/pkg/oidc"
-
 	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
 	openid "github.com/zitadel/zitadel-go/v3/pkg/authentication/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
@@ -58,13 +55,10 @@ func main() {
 	//			),
 	//		),
 	//	)
-	key := []byte("XKv2Lqd7YAq13NUZVUWZEWZeruqyzViM")
-	cookieHandler := http2.NewCookieHandler(key, key)
+	key := "XKv2Lqd7YAq13NUZVUWZEWZeruqyzViM"
 	z, err := zitadel.New(*domain,
-		zitadel.WithAuthentication(ctx,
-			openid.WithCodeFlow[*openid.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
-				openid.PKCEAuthentication(*clientID, "http://localhost:8089/callback", []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}, cookieHandler),
-			),
+		zitadel.WithAuthentication(ctx, key,
+			openid.DefaultAuthentication(*clientID, "http://localhost:8089/auth/callback", key),
 		),
 	)
 
@@ -77,12 +71,14 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.Handle("/auth", z.Authentication)
+	router.Handle("/auth/", z.Authentication)
 	router.Handle("/profile", mw.RequireAuthentication()(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		authCtx := authentication.Context[*openid.UserInfoContext](req.Context())
-		data, err := json.Marshal(authCtx)
+		authCtx := mw.Context(req.Context())
+		data, err := json.MarshalIndent(authCtx.UserInfo, "", "  ")
 		_ = err
-		err = t.ExecuteTemplate(w, "profile.html", string(data))
+		s := string(data)
+		_ = s
+		err = t.ExecuteTemplate(w, "profile.html", authCtx.UserInfo)
 		_ = err
 	})))
 	router.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

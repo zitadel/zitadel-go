@@ -11,16 +11,16 @@ import (
 
 type Authenticator[T Ctx] struct {
 	authN             Handler[T]
-	logger            slog.Logger
+	logger            *slog.Logger
 	router            *http.ServeMux
 	sessions          Sessions[T]
-	key               string
+	encryptionKey     string
 	sessionCookieName string
 	tls               bool
 }
 
 type Sessions[T Ctx] interface {
-	Set(id string, session T)
+	Set(id string, session T) error
 	Get(id string) (T, error)
 }
 
@@ -34,7 +34,7 @@ type Handler[T Ctx] interface {
 // HandlerInitializer abstracts the initialization of a [Handler] by providing the ZITADEL domain
 type HandlerInitializer[T Ctx] func(ctx context.Context, domain string) (Handler[T], error)
 
-func New[T Ctx](ctx context.Context, domain string, initAuthentication HandlerInitializer[T]) (*Authenticator[T], error) {
+func New[T Ctx](ctx context.Context, domain, encryptionKey string, initAuthentication HandlerInitializer[T]) (*Authenticator[T], error) {
 	authN, err := initAuthentication(ctx, domain)
 	if err != nil {
 		return nil, err
@@ -42,15 +42,17 @@ func New[T Ctx](ctx context.Context, domain string, initAuthentication HandlerIn
 	authenticator := &Authenticator[T]{
 		authN:             authN,
 		sessions:          &InMemorySessions[T]{sessions: make(map[string]T)},
-		key:               "arajcoejmdijijf3joirio3sdf3gsfdg", // TODO: change after development!
+		encryptionKey:     encryptionKey,
 		sessionCookieName: "zitadel.session",
 		tls:               false, // TODO: change after development!
+		logger:            slog.Default(),
 	}
+	authenticator.createRouter()
 	return authenticator, nil
 }
 
 func (a *Authenticator[T]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a.router.ServeHTTP(w, r)
+	http.StripPrefix("/auth", a.router).ServeHTTP(w, r)
 }
 
 func (a *Authenticator[T]) createRouter() {
@@ -69,7 +71,7 @@ func (a *Authenticator[T]) createRouter() {
 
 func (a *Authenticator[T]) Authenticate(w http.ResponseWriter, r *http.Request, requestedURI string) {
 	s := &State{RequestedURI: requestedURI}
-	stateParam, err := s.Encrypt(a.key)
+	stateParam, err := s.Encrypt(a.encryptionKey)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -84,7 +86,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "not authenticated", http.StatusForbidden)
 		return
 	}
-	state, err := DecryptState(stateParam, a.key)
+	state, err := DecryptState(stateParam, a.encryptionKey)
 	if err != nil {
 
 	}
@@ -115,10 +117,10 @@ func (a *Authenticator[T]) cookieName() string {
 func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 	ctx, err := a.IsAuthenticated(w, req)
 	if err != nil {
-
+		// TODO: ?
 	}
 	s := &State{RequestedURI: ""}
-	stateParam, err := s.Encrypt(a.key)
+	stateParam, err := s.Encrypt(a.encryptionKey)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -158,7 +160,7 @@ func (s *InMemorySessions[T]) Get(id string) (T, error) {
 	}
 	return t, nil
 }
-func (s *InMemorySessions[T]) Set(id string, session T) {
-
+func (s *InMemorySessions[T]) Set(id string, session T) error {
 	s.sessions[id] = session
+	return nil
 }

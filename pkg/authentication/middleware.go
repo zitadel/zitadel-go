@@ -1,6 +1,7 @@
 package authentication
 
 import (
+	"context"
 	"net/http"
 )
 
@@ -26,4 +27,8 @@ func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Ha
 			next.ServeHTTP(w, req)
 		})
 	}
+}
+
+func (i *Interceptor[T]) Context(ctx context.Context) T {
+	return Context[T](ctx)
 }

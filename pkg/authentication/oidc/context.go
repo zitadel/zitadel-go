@@ -3,16 +3,16 @@ package oidc
 import (
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
-
-	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
 )
-
-var _ authentication.Ctx = (*UserInfoContext)(nil)
 
 // UserInfoContext implements the [authentication.Ctx] interface with the [oidc.UserInfo] as underlying data.
 type UserInfoContext[C oidc.IDClaims, S rp.SubjectGetter] struct {
 	UserInfo S
 	Tokens   *oidc.Tokens[C]
+}
+
+func (c *UserInfoContext[C, S]) New() Ctx[C, S] {
+	return &UserInfoContext[C, S]{}
 }
 
 // IsAuthenticated implements [authentication.Ctx] by checking the `sub` claim of the [oidc.UserInfo].

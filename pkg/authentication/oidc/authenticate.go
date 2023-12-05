@@ -13,6 +13,7 @@ import (
 
 type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 	authentication.Ctx
+	New() Ctx[C, S]
 	SetTokens(*oidc.Tokens[C])
 	GetTokens() *oidc.Tokens[C]
 	SetUserInfo(S)
@@ -49,7 +50,14 @@ func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, sc
 	}
 }
 
-func DefaultAuthentication() {}
+func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...string) authentication.HandlerInitializer[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]] {
+	if len(scopes) == 0 {
+		scopes = []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}
+	}
+	return WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
+		PKCEAuthentication(clientID, redirectURI, scopes, http2.NewCookieHandler([]byte(key), []byte(key))),
+	)
+}
 
 func newRP(ctx context.Context, domain, clientID, clientSecret, redirectURI string, scopes []string, options ...rp.Option) (rp.RelyingParty, error) {
 	if len(scopes) == 0 {
@@ -62,13 +70,14 @@ func (c *CodeFlowAuthentication[T, C, S]) Authenticate(w http.ResponseWriter, r 
 	rp.AuthURLHandler(func() string { return state }, c.relyingParty)(w, r)
 }
 
-func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *http.Request) (t T, state string) {
+func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *http.Request) (authCtx T, state string) {
 	rp.CodeExchangeHandler[C](rp.UserinfoCallback[C, S](func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[C], callbackState string, provider rp.RelyingParty, info S) {
 		state = callbackState
-		t.SetTokens(tokens)
-		t.SetUserInfo(info)
+		authCtx = authCtx.New().(T)
+		authCtx.SetTokens(tokens)
+		authCtx.SetUserInfo(info)
 	}), c.relyingParty)(w, r)
-	return t, state
+	return authCtx, state
 }
 
 func (c *CodeFlowAuthentication[T, C, S]) Logout(w http.ResponseWriter, r *http.Request, authCtx T, state string) {
