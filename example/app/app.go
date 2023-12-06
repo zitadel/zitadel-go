@@ -20,10 +20,11 @@ import (
 
 var (
 	// flags to be provided for running the example server
-	domain   = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
-	key      = flag.String("key", "", "path to your key.json")
-	clientID = flag.String("clientID", "", "clientID provided by ZITADEL")
-	port     = flag.String("port", "8089", "port to run the server on (default is 8089)")
+	domain      = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	key         = flag.String("key", "", "path to your key.json")
+	clientID    = flag.String("clientID", "", "clientID provided by ZITADEL")
+	redirectURI = flag.String("redirectURI", "", "redirectURI registered at ZITADEL")
+	port        = flag.String("port", "8089", "port to run the server on (default is 8089)")
 
 	//go:embed "templates/*.html"
 	templates embed.FS
@@ -48,20 +49,19 @@ func main() {
 	// you will also need to initialize that with the generated client_id.
 	//
 	// it's a short form of:
-	// 	z, err := zitadel.New("https://your-domain.zitadel.cloud",
-	//		zitadel.WithAuthorization(ctx,
-	//			oauth.WithIntrospection[*oauth.IntrospectionContext](
-	//				oauth.JWTProfileIntrospectionAuthentication("./key.json"),
-	//			),
+	// cookieHandler := http2.NewCookieHandler([]byte(*key), []byte(*key))
+	//z, err := zitadel.New(*domain,
+	//	zitadel.WithAuthentication(ctx, *key,
+	//		openid.WithCodeFlow[*openid.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
+	//			openid.PKCEAuthentication(*clientID, *redirectURI, []string{"openid","profile","email"}, cookieHandler,
 	//		),
-	//	)
-	key := "XKv2Lqd7YAq13NUZVUWZEWZeruqyzViM"
+	//	),
+	//)
 	z, err := zitadel.New(*domain,
-		zitadel.WithAuthentication(ctx, key,
-			openid.DefaultAuthentication(*clientID, "http://localhost:8089/auth/callback", key),
+		zitadel.WithAuthentication(ctx, *key,
+			openid.DefaultAuthentication(*clientID, *redirectURI, *key),
 		),
 	)
-
 	if err != nil {
 		slog.Error("zitadel sdk could not initialize", "error", err)
 		os.Exit(1)
@@ -82,14 +82,11 @@ func main() {
 		_ = err
 	})))
 	router.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		err = t.ExecuteTemplate(w, "home.html", &struct {
-			IsAdmin bool
-			Tasks   []string
-		}{
-			IsAdmin: true,
-			Tasks:   tasks,
-		})
-		_ = err
+		if authentication.IsAuthenticated(req.Context()) {
+			http.Redirect(w, req, "/profile", http.StatusFound)
+			return
+		}
+		err = t.ExecuteTemplate(w, "home.html", nil)
 	}))
 
 	// start the server on the specified port (default http://localhost:8089)
