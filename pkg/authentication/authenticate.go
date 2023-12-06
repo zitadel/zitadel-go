@@ -3,6 +3,7 @@ package authentication
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -23,7 +24,6 @@ type Authenticator[T Ctx] struct {
 	sessions          Sessions[T]
 	encryptionKey     string
 	sessionCookieName string
-	tls               bool
 }
 
 // Option allows customization of the [Authenticator] such as logging and more.
@@ -38,13 +38,6 @@ func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	}
 }
 
-// WithInsecure informs the [Authenticator] that the app is running without TLS (HTTP)
-func WithInsecure[T Ctx]() Option[T] {
-	return func(a *Authenticator[T]) {
-		a.tls = false
-	}
-}
-
 func New[T Ctx](ctx context.Context, domain, encryptionKey string, initAuthentication HandlerInitializer[T], options ...Option[T]) (*Authenticator[T], error) {
 	authN, err := initAuthentication(ctx, domain)
 	if err != nil {
@@ -55,7 +48,6 @@ func New[T Ctx](ctx context.Context, domain, encryptionKey string, initAuthentic
 		sessions:          &InMemorySessions[T]{sessions: make(map[string]T)},
 		encryptionKey:     encryptionKey,
 		sessionCookieName: "zitadel.session",
-		tls:               true,
 		logger:            slog.Default(),
 	}
 	for _, option := range options {
@@ -71,6 +63,7 @@ func (a *Authenticator[T]) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Authenticate starts a new authentication (by redirecting the user to the Login UI)
+// The initially requested URI (in the application) is passed as encrypted state.
 func (a *Authenticator[T]) Authenticate(w http.ResponseWriter, r *http.Request, requestedURI string) {
 	s := &State{RequestedURI: requestedURI}
 	stateParam, err := s.Encrypt(a.encryptionKey)
@@ -84,6 +77,7 @@ func (a *Authenticator[T]) Authenticate(w http.ResponseWriter, r *http.Request, 
 
 // Callback handles the redirect back from the Login UI. On successful authentication a new session
 // will be created and its id will be stored in a cookie.
+// The user will be redirected to the initially requested UI (passed as encrypted state)
 func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 	ctx, stateParam := a.authN.Callback(w, req)
 	if !ctx.IsAuthenticated() {
@@ -101,8 +95,8 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		Value:    id,
 		Path:     "/",
 		Domain:   "",
-		MaxAge:   0, // TODO: ?
-		Secure:   a.tls,
+		MaxAge:   0,
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -115,7 +109,8 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 	ctx, err := a.IsAuthenticated(w, req)
 	if err != nil {
-		// TODO: ?
+		http.Redirect(w, req, "/", http.StatusFound)
+		return
 	}
 	s := &State{RequestedURI: ""}
 	stateParam, err := s.Encrypt(a.encryptionKey)
@@ -125,7 +120,12 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	a.authN.Logout(w, req, ctx, stateParam)
+	proto := "http"
+	if req.TLS != nil {
+		proto = "https"
+	}
+	postLogout := fmt.Sprintf("%s://%s/", proto, req.Host)
+	a.authN.Logout(w, req, ctx, stateParam, postLogout)
 }
 
 // IsAuthenticated checks whether there is an existing session of not.
@@ -157,18 +157,11 @@ func (a *Authenticator[T]) createRouter() {
 	}))
 }
 
-func (a *Authenticator[T]) cookieName() string {
-	if a.tls {
-		return "__Host-" + a.sessionCookieName
-	}
-	return a.sessionCookieName
-}
-
 // Handler defines the handling of authentication and logout
 type Handler[T Ctx] interface {
 	Authenticate(w http.ResponseWriter, r *http.Request, state string)
 	Callback(w http.ResponseWriter, r *http.Request) (t T, state string)
-	Logout(w http.ResponseWriter, r *http.Request, authCtx T, state string)
+	Logout(w http.ResponseWriter, r *http.Request, authCtx T, state, optionalRedirectURI string)
 }
 
 // HandlerInitializer abstracts the initialization of a [Handler] by providing the ZITADEL domain

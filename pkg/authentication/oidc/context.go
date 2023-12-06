@@ -5,7 +5,7 @@ import (
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 )
 
-// UserInfoContext implements the [authentication.Ctx] interface with the [oidc.UserInfo] as underlying data.
+// UserInfoContext implements the [authentication.Ctx], resp. [Ctx] interface with the [oidc.UserInfo] as underlying data.
 type UserInfoContext[C oidc.IDClaims, S rp.SubjectGetter] struct {
 	UserInfo S
 	Tokens   *oidc.Tokens[C]
@@ -23,15 +23,22 @@ func (c *UserInfoContext[C, S]) IsAuthenticated() bool {
 	return c.UserInfo.GetSubject() != ""
 }
 
+// SetTokens implements [Ctx]
 func (c *UserInfoContext[C, S]) SetTokens(tokens *oidc.Tokens[C]) {
 	c.Tokens = tokens
 }
+
+// GetTokens implements [Ctx]
 func (c *UserInfoContext[C, S]) GetTokens() *oidc.Tokens[C] {
 	return c.Tokens
 }
+
+// SetUserInfo implements [Ctx]
 func (c *UserInfoContext[C, S]) SetUserInfo(info S) {
 	c.UserInfo = info
 }
+
+// GetUserInfo implements [Ctx]
 func (c *UserInfoContext[C, S]) GetUserInfo() S {
 	return c.UserInfo
 }
