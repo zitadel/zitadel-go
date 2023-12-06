@@ -1,18 +1,19 @@
 package system
 
 import (
-	"io/ioutil"
+	"context"
 	"net/http"
+	"os"
 	"time"
 
-	"github.com/zitadel/oidc/pkg/client"
-	"github.com/zitadel/oidc/pkg/oidc"
+	"github.com/go-jose/go-jose/v3"
+	"github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
-	"gopkg.in/square/go-jose.v2"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/system"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/system"
 )
 
 type Client struct {
@@ -20,13 +21,13 @@ type Client struct {
 	system.SystemServiceClient
 }
 
-func NewClient(issuer, api string, source JWTAuthenticationSource, opts ...Option) (*Client, error) {
+func NewClient(ctx context.Context, issuer, api string, source JWTAuthenticationSource, opts ...Option) (*Client, error) {
 	options := make([]zitadel.Option, len(opts)+1)
 	options[0] = zitadel.WithJWTProfileTokenSource(source())
 	for i, opt := range opts {
 		options[i+1] = opt()
 	}
-	conn, err := zitadel.NewConnection(issuer, api, nil, options...)
+	conn, err := zitadel.NewConnection(ctx, issuer, api, nil, options...)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +54,7 @@ type JWTAuthenticationSource func() middleware.JWTProfileTokenSource
 func JWTProfileFromPath(keyPath, userID string) JWTAuthenticationSource {
 	return func() middleware.JWTProfileTokenSource {
 		return func(issuer string, _ []string) (oauth2.TokenSource, error) {
-			key, err := ioutil.ReadFile(keyPath)
+			key, err := os.ReadFile(keyPath)
 			if err != nil {
 				return nil, err
 			}

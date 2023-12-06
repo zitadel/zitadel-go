@@ -1,15 +1,14 @@
 package zitadel
 
 import (
+	"context"
 	"crypto/x509"
 	"strings"
 
-	"github.com/zitadel/oidc/pkg/client/profile"
-	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
 type Connection struct {
@@ -24,11 +23,11 @@ type Connection struct {
 	*grpc.ClientConn
 }
 
-func NewConnection(issuer, api string, scopes []string, options ...Option) (*Connection, error) {
+func NewConnection(ctx context.Context, issuer, api string, scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
 		issuer:                issuer,
 		api:                   api,
-		jwtProfileTokenSource: middleware.JWTProfileFromPath(middleware.OSKeyPath()),
+		jwtProfileTokenSource: middleware.JWTProfileFromPath(ctx, middleware.OSKeyPath()),
 		scopes:                scopes,
 	}
 
@@ -107,7 +106,7 @@ func transportCredentials(api string) (credentials.TransportCredentials, error) 
 
 type Option func(*Connection) error
 
-//WithCustomURL replaces the standard issuer (https://issuer.zitadel.ch) and api endpoint (api.zitadel.ch:443)
+// WithCustomURL replaces the standard issuer (https://issuer.zitadel.ch) and api endpoint (api.zitadel.ch:443)
 func WithCustomURL(issuer, api string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.issuer = issuer
@@ -116,21 +115,8 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 	}
 }
 
-//WithKeyPath sets the path to the key.json used for the authentication
-//if not set env var ZITADEL_KEY_PATH will be used
-//
-//Deprecated: use WithJWTProfileTokenSource(middleware.JWTProfileFromPath(keyPath)) instead
-func WithKeyPath(keyPath string) func(*Connection) error {
-	return func(client *Connection) error {
-		client.jwtProfileTokenSource = func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-			return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
-		}
-		return nil
-	}
-}
-
-//WithJWTProfileTokenSource sets the provider used for the authentication
-//if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
+// WithJWTProfileTokenSource sets the provider used for the authentication
+// if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = provider
@@ -138,8 +124,8 @@ func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*
 	}
 }
 
-//WithOrgID sets the organization context (where the api calls are executed)
-//if not set the resource owner (organisation) of the calling user will be used
+// WithOrgID sets the organization context (where the api calls are executed)
+// if not set the resource owner (organization) of the calling user will be used
 func WithOrgID(orgID string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.orgID = orgID
@@ -147,8 +133,8 @@ func WithOrgID(orgID string) func(*Connection) error {
 	}
 }
 
-//WithInsecure disables transport security for the client connection
-//use only when absolutely necessary (local development)
+// WithInsecure disables transport security for the client connection
+// use only when absolutely necessary (local development)
 func WithInsecure() func(*Connection) error {
 	return func(client *Connection) error {
 		client.insecure = true
@@ -156,7 +142,7 @@ func WithInsecure() func(*Connection) error {
 	}
 }
 
-//WithUnaryInterceptors adds non ZITADEL specific interceptors to the connection
+// WithUnaryInterceptors adds non ZITADEL specific interceptors to the connection
 func WithUnaryInterceptors(interceptors ...grpc.UnaryClientInterceptor) func(*Connection) error {
 	return func(client *Connection) error {
 		client.unaryInterceptors = append(client.unaryInterceptors, interceptors...)
@@ -164,7 +150,7 @@ func WithUnaryInterceptors(interceptors ...grpc.UnaryClientInterceptor) func(*Co
 	}
 }
 
-//WithStreamInterceptors adds non ZITADEL specific interceptors to the connection
+// WithStreamInterceptors adds non ZITADEL specific interceptors to the connection
 func WithStreamInterceptors(interceptors ...grpc.StreamClientInterceptor) func(*Connection) error {
 	return func(client *Connection) error {
 		client.streamInterceptors = append(client.streamInterceptors, interceptors...)

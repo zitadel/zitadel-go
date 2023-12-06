@@ -26,5 +26,5 @@ For example: TAG_NAME=v1.0.0
 use under project root:
 
 ```
-DOCKER_BUILDKIT=1 docker build --target zitadel-copy -t zitadel-go:main --build-arg PROJECT_PATH=github.com/zitadel/zitadel-go/v2/pkg/client --build-arg TAG_NAME=main -f build/zitadel/Dockerfile . -o ./pkg/client
+DOCKER_BUILDKIT=1 docker build --target zitadel-copy -t zitadel-go:main --build-arg PROJECT_PATH=github.com/zitadel/zitadel-go/v3/pkg/client --build-arg TAG_NAME=main -f build/zitadel/Dockerfile . -o ./pkg/client
 ``` 
