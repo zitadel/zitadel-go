@@ -25,7 +25,11 @@ func Context[T Ctx](ctx context.Context) (t T) {
 
 // IsAuthenticated returns if the user is authenticated
 func IsAuthenticated(ctx context.Context) bool {
-	return Context[Ctx](ctx).IsAuthenticated()
+	authCtx := Context[Ctx](ctx)
+	if authCtx == nil {
+		return false
+	}
+	return authCtx.IsAuthenticated()
 }
 
 // WithAuthContext allows to set the authentication context ([Ctx]), which can later be retrieved

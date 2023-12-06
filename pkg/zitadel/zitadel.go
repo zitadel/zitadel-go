@@ -34,9 +34,9 @@ type Option[N authentication.Ctx, Z authorization.Ctx] func(*Zitadel[N, Z]) erro
 // WithAuthentication initializes the authentication capability of the provider.
 // It will define the type of the [authentication.Ctx] you can access in your application.
 // It requires you to provide a [authorization.VerifierInitializer] such as [oauth.DefaultAuthorization].
-func WithAuthentication[N authentication.Ctx](ctx context.Context, encryptionKey string, initHandler authentication.HandlerInitializer[N]) Option[N, authorization.Ctx] {
+func WithAuthentication[N authentication.Ctx](ctx context.Context, encryptionKey string, initHandler authentication.HandlerInitializer[N], options ...authentication.Option[N]) Option[N, authorization.Ctx] {
 	return func(z *Zitadel[N, authorization.Ctx]) (err error) {
-		z.Authentication, err = authentication.New(ctx, z.Domain, encryptionKey, initHandler)
+		z.Authentication, err = authentication.New(ctx, z.Domain, encryptionKey, initHandler, options...)
 		return err
 	}
 }

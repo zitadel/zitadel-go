@@ -6,6 +6,8 @@ import (
 	"github.com/zitadel/oidc/v3/pkg/crypto"
 )
 
+// State represents the state of the users application before an authentication process starts,
+// It is used to transfer the state from the application to the Login UI and back, e.g. when starting the login flow.
 type State struct {
 	RequestedURI string
 }
