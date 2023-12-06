@@ -16,10 +16,10 @@ ENV PROTOC_ARCH x86_64
 ## protoc and protoc-gen-grpc-web for later use
 #######################
 FROM ${BUILDARCH}-base AS base
-ARG PROTOC_VERSION=3.18.0
+ARG PROTOC_VERSION=25.1
 ARG PROTOC_ZIP=protoc-${PROTOC_VERSION}-linux-${PROTOC_ARCH}.zip
-ARG GATEWAY_VERSION=2.18.0
-ARG VALIDATOR_VERSION=0.9.1
+ARG GATEWAY_VERSION=2.18.1
+ARG VALIDATOR_VERSION=1.0.2
 ARG TAG_NAME=main
 
 
@@ -51,10 +51,12 @@ RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/zitadel/zitadel . \
 #######################
 FROM golang:${GO_VERSION} as go-dep
 COPY --from=base /proto/include /proto/include
+ARG PROTOC_GEN_GO_GRPC_VERSION=1.3.0
+ARG PROTOC_GEN_GO_VERSION=1.31.0
 
 WORKDIR /go/src/github.com/zitadel/zitadel-go
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GRPC_VERSION}
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v${PROTOC_GEN_GO_VERSION}
 
 #######################
 ## Go base build
