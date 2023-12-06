@@ -92,7 +92,7 @@ func main() {
 		// Using the [middleware.Context] function we can gather information about the authenticated user.
 		// This example will just print a JSON representation of the UserInfo of the typed [*oidc.UserInfoContext].
 		authCtx := mw.Context(req.Context())
-		data, err := json.Marshal(authCtx.UserInfo)
+		data, err := json.MarshalIndent(authCtx.UserInfo, "", "	")
 		if err != nil {
 			slog.Error("error marshalling profile response", "error", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
