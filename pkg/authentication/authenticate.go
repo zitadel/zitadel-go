@@ -86,7 +86,8 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 	}
 	state, err := DecryptState(stateParam, a.encryptionKey)
 	if err != nil {
-
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	id := uuid.NewString()
@@ -119,6 +120,15 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     a.sessionCookieName,
+		Path:     "/",
+		Domain:   "",
+		MaxAge:   -1,
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	proto := "http"
 	if req.TLS != nil {
