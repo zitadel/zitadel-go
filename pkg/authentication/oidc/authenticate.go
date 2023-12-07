@@ -3,9 +3,11 @@ package oidc
 import (
 	"context"
 	"net/http"
+	"net/url"
 
+	"github.com/zitadel/oidc/v3/pkg/client"
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
-	http2 "github.com/zitadel/oidc/v3/pkg/http"
+	httphelper "github.com/zitadel/oidc/v3/pkg/http"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
@@ -45,14 +47,14 @@ func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientA
 type ClientAuthentication func(ctx context.Context, domain string) (rp.RelyingParty, error)
 
 // PKCEAuthentication allows to authenticate the code exchange request with Proof Key of Code Exchange (PKCE).
-func PKCEAuthentication(clientID, redirectURI string, scopes []string, cookieHandler *http2.CookieHandler) ClientAuthentication {
+func PKCEAuthentication(clientID, redirectURI string, scopes []string, cookieHandler *httphelper.CookieHandler) ClientAuthentication {
 	return func(ctx context.Context, domain string) (rp.RelyingParty, error) {
 		return newRP(ctx, domain, clientID, "", redirectURI, scopes, rp.WithPKCE(cookieHandler))
 	}
 }
 
 // ClientIDSecretAuthentication allows to authenticate the code exchange request with client_id and client_secret provide by ZITADEL.
-func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, scopes []string, cookieHandler *http2.CookieHandler) ClientAuthentication {
+func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, scopes []string, cookieHandler *httphelper.CookieHandler) ClientAuthentication {
 	return func(ctx context.Context, domain string) (rp.RelyingParty, error) {
 		return newRP(ctx, domain, clientID, clientSecret, redirectURI, scopes, rp.WithCookieHandler(cookieHandler))
 	}
@@ -66,7 +68,7 @@ func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...s
 		scopes = []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}
 	}
 	return WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
-		PKCEAuthentication(clientID, redirectURI, scopes, http2.NewCookieHandler([]byte(key), []byte(key))),
+		PKCEAuthentication(clientID, redirectURI, scopes, httphelper.NewCookieHandler([]byte(key), []byte(key))),
 	)
 }
 
@@ -94,12 +96,31 @@ func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *htt
 	return authCtx, state
 }
 
-// Logout will call the end_session_endpoint at the Authorization Server (Login UI).
+// Logout will call, resp. redirect to the end_session_endpoint at the Authorization Server (Login UI).
 func (c *CodeFlowAuthentication[T, C, S]) Logout(w http.ResponseWriter, r *http.Request, authCtx T, state, optionalRedirectURI string) {
-	url, err := rp.EndSession(r.Context(), c.relyingParty, authCtx.GetTokens().IDToken, optionalRedirectURI, state)
+	// the OIDC library currently does a server side POST request, but the spec. requires a browser call
+	// and esp. ZITADEL requires the "user agent" cookie present to be able to terminate the session(s).
+	//
+	// The current implementation of the library was done when the spec was still in draft.
+	// However, in the meantime the spec was updated with more parameters and published.
+	// Until the library is updated to the current standard, we will implement the library's
+	// current request (same parameters) as redirect here.
+	req := oidc.EndSessionRequest{
+		IdTokenHint:           authCtx.GetTokens().IDToken,
+		ClientID:              c.relyingParty.OAuthConfig().ClientID,
+		PostLogoutRedirectURI: optionalRedirectURI,
+		State:                 state,
+	}
+	endSession, err := url.Parse(c.relyingParty.GetEndSessionEndpoint())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "failed to build end session endpoint: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, url.String(), http.StatusFound)
+	params, err := httphelper.URLEncodeParams(req, client.Encoder)
+	if err != nil {
+		http.Error(w, "failed to build end session parameters: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	endSession.RawQuery = params.Encode()
+	http.Redirect(w, r, endSession.String(), http.StatusFound)
 }
