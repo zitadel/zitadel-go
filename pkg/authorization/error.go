@@ -2,7 +2,6 @@ package authorization
 
 import (
 	"errors"
-	"fmt"
 )
 
 // UnauthorizedErr is used to provide the information to the caller, that the provided authorization
@@ -35,11 +34,14 @@ func (e *UnauthorizedErr) Is(target error) bool {
 	return errors.Is(e.err, t.err)
 }
 
+func (e *UnauthorizedErr) Unwrap() error {
+	return e.err
+}
+
 // PermissionDeniedErr is used to provide the information to the caller, that the provided authorization
 // was valid but not sufficient (missing role).
 type PermissionDeniedErr struct {
-	err    error
-	reason string
+	err error
 }
 
 func NewErrorPermissionDenied(err error) *PermissionDeniedErr {
@@ -52,10 +54,7 @@ func (e *PermissionDeniedErr) Error() string {
 	if e.err == nil {
 		return "permission denied"
 	}
-	if e.reason == "" {
-		return e.err.Error()
-	}
-	return fmt.Sprintf("%v: %s", e.Error(), e.reason)
+	return e.err.Error()
 }
 
 func (e *PermissionDeniedErr) Is(target error) bool {
@@ -67,4 +66,8 @@ func (e *PermissionDeniedErr) Is(target error) bool {
 		return true
 	}
 	return errors.Is(e.err, t.err)
+}
+
+func (e *PermissionDeniedErr) Unwrap() error {
+	return e.err
 }

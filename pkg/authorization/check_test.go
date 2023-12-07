@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/exp/slog"
 )
 
 func TestAuthorizer_CheckAuthorization(t *testing.T) {
@@ -24,7 +25,8 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 		{
 			name: "empty token, unauthorized error",
 			a: Authorizer[*testCtx]{
-				&testVerifier[*testCtx]{},
+				verifier: &testVerifier[*testCtx]{},
+				logger:   slog.Default(),
 			},
 			args: args{
 				ctx:     context.Background(),
@@ -37,7 +39,8 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 		{
 			name: "unauthorized, unauthorized error",
 			a: Authorizer[*testCtx]{
-				&testVerifier[*testCtx]{},
+				verifier: &testVerifier[*testCtx]{},
+				logger:   slog.Default(),
 			},
 			args: args{
 				ctx:     context.Background(),
@@ -50,11 +53,12 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 		{
 			name: "missing role, permissiondenied error",
 			a: Authorizer[*testCtx]{
-				&testVerifier[*testCtx]{
+				verifier: &testVerifier[*testCtx]{
 					ctx: &testCtx{
 						isAuthorized: true,
 					},
 				},
+				logger: slog.Default(),
 			},
 			args: args{
 				ctx:     context.Background(),
@@ -67,11 +71,12 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 		{
 			name: "authorized",
 			a: Authorizer[*testCtx]{
-				&testVerifier[*testCtx]{
+				verifier: &testVerifier[*testCtx]{
 					ctx: &testCtx{
 						isAuthorized: true,
 					},
 				},
+				logger: slog.Default(),
 			},
 			args: args{
 				ctx:     context.Background(),
@@ -84,12 +89,13 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 		{
 			name: "authorized with role",
 			a: Authorizer[*testCtx]{
-				&testVerifier[*testCtx]{
+				verifier: &testVerifier[*testCtx]{
 					ctx: &testCtx{
 						isAuthorized:  true,
 						isGrantedRole: true,
 					},
 				},
+				logger: slog.Default(),
 			},
 			args: args{
 				ctx:     context.Background(),
