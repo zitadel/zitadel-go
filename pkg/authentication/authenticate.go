@@ -81,27 +81,25 @@ func (a *Authenticator[T]) Authenticate(w http.ResponseWriter, r *http.Request, 
 func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 	ctx, stateParam := a.authN.Callback(w, req)
 	if !ctx.IsAuthenticated() {
+		a.logger.Error("unauthenticated after callback")
 		http.Error(w, "not authenticated", http.StatusForbidden)
 		return
 	}
 	state, err := DecryptState(stateParam, a.encryptionKey)
 	if err != nil {
+		a.logger.Error("unable to decrypt state", "state", stateParam)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	id := uuid.NewString()
-	http.SetCookie(w, &http.Cookie{
-		Name:     a.sessionCookieName,
-		Value:    id,
-		Path:     "/",
-		Domain:   "",
-		MaxAge:   0,
-		Secure:   true,
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	})
-	a.sessions.Set(id, ctx)
+	a.setSessionCookie(w, id)
+	err = a.sessions.Set(id, ctx)
+	if err != nil {
+		a.logger.Error("unable to save session", "error", err, "id", id)
+		http.Error(w, "session could not be stored", http.StatusInternalServerError)
+		return
+	}
 
 	http.Redirect(w, req, state.RequestedURI, http.StatusFound)
 }
@@ -120,15 +118,7 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.SetCookie(w, &http.Cookie{
-		Name:     a.sessionCookieName,
-		Path:     "/",
-		Domain:   "",
-		MaxAge:   -1,
-		Secure:   true,
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	})
+	a.deleteSessionCookie(w)
 
 	proto := "http"
 	if req.TLS != nil {
@@ -165,6 +155,31 @@ func (a *Authenticator[T]) createRouter() {
 	a.router.Handle("/logout", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		a.Logout(w, req)
 	}))
+}
+
+func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     a.sessionCookieName,
+		Value:    sessionID,
+		Path:     "/",
+		Domain:   "",
+		MaxAge:   0,
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+}
+
+func (a *Authenticator[T]) deleteSessionCookie(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     a.sessionCookieName,
+		Path:     "/",
+		Domain:   "",
+		MaxAge:   -1,
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
 }
 
 // Handler defines the handling of authentication and logout
