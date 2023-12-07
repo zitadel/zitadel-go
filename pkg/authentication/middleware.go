@@ -20,7 +20,7 @@ func Middleware[T Ctx](authenticator *Authenticator[T]) *Interceptor[T] {
 func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, err := i.authenticator.IsAuthenticated(w, req)
+			ctx, err := i.authenticator.IsAuthenticated(req)
 			if err != nil {
 				i.authenticator.Authenticate(w, req, req.RequestURI)
 				return
@@ -36,7 +36,7 @@ func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Ha
 func (i *Interceptor[T]) CheckAuthentication() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, err := i.authenticator.IsAuthenticated(w, req)
+			ctx, err := i.authenticator.IsAuthenticated(req)
 			if err == nil {
 				req = req.WithContext(WithAuthContext(req.Context(), ctx))
 			}

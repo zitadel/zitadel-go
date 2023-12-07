@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/zitadel/oidc/v3/pkg/crypto"
 	"golang.org/x/exp/slog"
 )
 
@@ -93,7 +94,12 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 	}
 
 	id := uuid.NewString()
-	a.setSessionCookie(w, id)
+	err = a.setSessionCookie(w, id)
+	if err != nil {
+		a.logger.Error("unable to save session cookie", "error", err, "id", id)
+		http.Error(w, "session could not be stored", http.StatusInternalServerError)
+		return
+	}
 	err = a.sessions.Set(id, ctx)
 	if err != nil {
 		a.logger.Error("unable to save session", "error", err, "id", id)
@@ -106,7 +112,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 
 // Logout will terminate the exising session.
 func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
-	ctx, err := a.IsAuthenticated(w, req)
+	ctx, err := a.IsAuthenticated(req)
 	if err != nil {
 		http.Redirect(w, req, "/", http.StatusFound)
 		return
@@ -130,15 +136,20 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 
 // IsAuthenticated checks whether there is an existing session of not.
 // In case there is one, it will be returned.
-func (a *Authenticator[T]) IsAuthenticated(w http.ResponseWriter, req *http.Request) (T, error) {
+func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 	var t T
 	cookie, err := req.Cookie(a.sessionCookieName)
 	if err != nil {
 		return t, ErrNoCookie
 	}
-	session, err := a.sessions.Get(cookie.Value)
+	sessionID, err := crypto.DecryptAES(cookie.Value, a.encryptionKey)
 	if err != nil {
-		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", cookie.Value)
+		a.logger.Log(req.Context(), slog.LevelWarn, "unable to decrypt session cookie", "cookie value", cookie.Value)
+		return t, ErrNoSession
+	}
+	session, err := a.sessions.Get(sessionID)
+	if err != nil {
+		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", sessionID)
 		return t, ErrNoSession
 	}
 	return session, nil
@@ -157,10 +168,14 @@ func (a *Authenticator[T]) createRouter() {
 	}))
 }
 
-func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string) {
+func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string) error {
+	value, err := crypto.EncryptAES(sessionID, a.encryptionKey)
+	if err != nil {
+		return err
+	}
 	http.SetCookie(w, &http.Cookie{
 		Name:     a.sessionCookieName,
-		Value:    sessionID,
+		Value:    value,
 		Path:     "/",
 		Domain:   "",
 		MaxAge:   0,
@@ -168,6 +183,7 @@ func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID str
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
+	return nil
 }
 
 func (a *Authenticator[T]) deleteSessionCookie(w http.ResponseWriter) {
