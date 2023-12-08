@@ -225,8 +225,13 @@ type AdminServiceClient interface {
 	ListAggregateTypes(ctx context.Context, in *ListAggregateTypesRequest, opts ...grpc.CallOption) (*ListAggregateTypesResponse, error)
 	// Activates the "LoginDefaultOrg" feature by setting the flag to "true"
 	// This is irreversible!
-	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organisation context is set
+	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organization context is set
 	ActivateFeatureLoginDefaultOrg(ctx context.Context, in *ActivateFeatureLoginDefaultOrgRequest, opts ...grpc.CallOption) (*ActivateFeatureLoginDefaultOrgResponse, error)
+	ListMilestones(ctx context.Context, in *ListMilestonesRequest, opts ...grpc.CallOption) (*ListMilestonesResponse, error)
+	// Sets restrictions
+	SetRestrictions(ctx context.Context, in *SetRestrictionsRequest, opts ...grpc.CallOption) (*SetRestrictionsResponse, error)
+	// Gets restrictions
+	GetRestrictions(ctx context.Context, in *GetRestrictionsRequest, opts ...grpc.CallOption) (*GetRestrictionsResponse, error)
 }
 
 type adminServiceClient struct {
@@ -1785,6 +1790,33 @@ func (c *adminServiceClient) ActivateFeatureLoginDefaultOrg(ctx context.Context,
 	return out, nil
 }
 
+func (c *adminServiceClient) ListMilestones(ctx context.Context, in *ListMilestonesRequest, opts ...grpc.CallOption) (*ListMilestonesResponse, error) {
+	out := new(ListMilestonesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListMilestones", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetRestrictions(ctx context.Context, in *SetRestrictionsRequest, opts ...grpc.CallOption) (*SetRestrictionsResponse, error) {
+	out := new(SetRestrictionsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/SetRestrictions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetRestrictions(ctx context.Context, in *GetRestrictionsRequest, opts ...grpc.CallOption) (*GetRestrictionsResponse, error) {
+	out := new(GetRestrictionsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetRestrictions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -1996,8 +2028,13 @@ type AdminServiceServer interface {
 	ListAggregateTypes(context.Context, *ListAggregateTypesRequest) (*ListAggregateTypesResponse, error)
 	// Activates the "LoginDefaultOrg" feature by setting the flag to "true"
 	// This is irreversible!
-	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organisation context is set
+	// Once activated, the login UI will use the settings of the default org (and not from the instance) if not organization context is set
 	ActivateFeatureLoginDefaultOrg(context.Context, *ActivateFeatureLoginDefaultOrgRequest) (*ActivateFeatureLoginDefaultOrgResponse, error)
+	ListMilestones(context.Context, *ListMilestonesRequest) (*ListMilestonesResponse, error)
+	// Sets restrictions
+	SetRestrictions(context.Context, *SetRestrictionsRequest) (*SetRestrictionsResponse, error)
+	// Gets restrictions
+	GetRestrictions(context.Context, *GetRestrictionsRequest) (*GetRestrictionsResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -2520,6 +2557,15 @@ func (UnimplementedAdminServiceServer) ListAggregateTypes(context.Context, *List
 }
 func (UnimplementedAdminServiceServer) ActivateFeatureLoginDefaultOrg(context.Context, *ActivateFeatureLoginDefaultOrgRequest) (*ActivateFeatureLoginDefaultOrgResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateFeatureLoginDefaultOrg not implemented")
+}
+func (UnimplementedAdminServiceServer) ListMilestones(context.Context, *ListMilestonesRequest) (*ListMilestonesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMilestones not implemented")
+}
+func (UnimplementedAdminServiceServer) SetRestrictions(context.Context, *SetRestrictionsRequest) (*SetRestrictionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetRestrictions not implemented")
+}
+func (UnimplementedAdminServiceServer) GetRestrictions(context.Context, *GetRestrictionsRequest) (*GetRestrictionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRestrictions not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -5630,6 +5676,60 @@ func _AdminService_ActivateFeatureLoginDefaultOrg_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_ListMilestones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMilestonesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListMilestones(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/ListMilestones",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListMilestones(ctx, req.(*ListMilestonesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetRestrictions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRestrictionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetRestrictions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/SetRestrictions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetRestrictions(ctx, req.(*SetRestrictionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetRestrictions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRestrictionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetRestrictions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetRestrictions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetRestrictions(ctx, req.(*GetRestrictionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminService_ServiceDesc is the grpc.ServiceDesc for AdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -6324,6 +6424,18 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ActivateFeatureLoginDefaultOrg",
 			Handler:    _AdminService_ActivateFeatureLoginDefaultOrg_Handler,
+		},
+		{
+			MethodName: "ListMilestones",
+			Handler:    _AdminService_ListMilestones_Handler,
+		},
+		{
+			MethodName: "SetRestrictions",
+			Handler:    _AdminService_SetRestrictions_Handler,
+		},
+		{
+			MethodName: "GetRestrictions",
+			Handler:    _AdminService_GetRestrictions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
