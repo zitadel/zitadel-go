@@ -20,7 +20,7 @@ Add the package to your go.mod by
 go get github.com/zitadel/zitadel-go/v2
 ```
 
-...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.com/docs/quickstarts/introduction).
+...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
 
 ### V1
 
