@@ -55,16 +55,6 @@ func main() {
 	// Initiate the zitadel sdk by providing its domain
 	// and as this example will focus on authentication (using OIDC / OAuth2 PKCE flow),
 	// you will also need to initialize that with the generated client_id.
-	//
-	// it's a short form of:
-	// cookieHandler := http2.NewCookieHandler([]byte(*key), []byte(*key))
-	//z, err := zitadel.New(*domain,
-	//	zitadel.WithAuthentication(ctx, *key,
-	//		openid.WithCodeFlow[*openid.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
-	//			openid.PKCEAuthentication(*clientID, *redirectURI, []string{"openid","profile","email"}, cookieHandler,
-	//		),
-	//	),
-	//)
 	z, err := zitadel.New(*domain,
 		zitadel.WithAuthentication(ctx, *key,
 			openid.DefaultAuthentication(*clientID, *redirectURI, *key),
@@ -113,6 +103,9 @@ func main() {
 			return
 		}
 		err = t.ExecuteTemplate(w, "home.html", nil)
+		if err != nil {
+			slog.Error("error writing home page response", "error", err)
+		}
 	})))
 
 	// start the server on the specified port (default http://localhost:8089)
