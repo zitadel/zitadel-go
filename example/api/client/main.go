@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
-	"time"
 
 	"golang.org/x/exp/slog"
 
@@ -24,22 +22,19 @@ import (
 var (
 	// flags to be provided for running the example server
 	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: <instance>.zitadel.cloud or <yourdomain>)")
-	key    = flag.String("key", "", "path to your key.json")
+	key    = flag.String("key", "", "path to your api key.json")
 	port   = flag.String("port", "8089", "port to run the server on (default is 8089)")
-
-	// tasks are used to store an in-memory list used in the protected endpoint
-	tasks []string
 )
 
 /*
- This example demonstrates how to secure an HTTP API with ZITADEL using the provided authorization (AuthZ) middleware.
+ This example demonstrates how to secure an HTTP API with ZITADEL using the provided authorization (AuthZ) middleware
+ in combination with using the ZITADEL API as well.
 
- It will serve the following 3 different endpoints:
+ It will serve the following 2 different endpoints:
  (These are meant to demonstrate the possibilities and do not follow REST best practices):
 
  - /api/healthz (can be called by anyone)
- - /api/tasks (requires authorization)
- - /api/add-task (requires authorization with granted `admin` role)
+ - /api/permissions (requires authorization)
 */
 
 func main() {
@@ -79,63 +74,26 @@ func main() {
 		}))
 
 	// This endpoint is only accessible with a valid authorization (in this case a valid access_token / PAT).
-	// It will list all stored tasks. In case the user is granted the `admin` role it will add a separate task telling him
-	// to add a new task.
-	router.Handle("/api/tasks", mw.RequireAuthorization()(http.HandlerFunc(
+	// It will call ZITADEL to additionally get all permissions granted to the user in ZITADEL and return that.
+	router.Handle("/api/permissions", mw.RequireAuthorization()(http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			// Using the [middleware.Context] function we can gather information about the authorized user.
 			// This example will just print the users ID using the provided method, and it will also
 			// print the username by directly access the field of the typed [*oauth.IntrospectionContext].
 			authCtx := mw.Context(r.Context())
-			slog.Info("user accessed task list", "id", authCtx.UserID(), "username", authCtx.Username)
+			slog.Info("user accessed permission check", "id", authCtx.UserID(), "username", authCtx.Username)
 
-			// Although this endpoint is accessible by any authorized user, you might want to take additional steps
-			// if the user is granted a specific role. In this case an `admin` will be informed to add a new task:
-			list := tasks
-			if authCtx.IsGrantedRole("admin") {
-				list = append(list, "create a new task on /api/add-task")
-				resp, err := c.AuthService().GetMyUser(client.AuthorizedUserCtx(r.Context()), &auth.GetMyUserRequest{})
-				if err != nil {
-					slog.Error("error checking the user profile", "error", err)
-				}
-				if resp != nil && time.Now().Sub(resp.User.Details.ChangeDate.AsTime()) > 5*time.Minute {
-					list = append(list, "you're profile has not been updated in a while, make sure it's up to date")
-				}
+			// we use the callers on token to retrieve the permission on the ZITADEL API
+			// this will only work if ZITADEL is contained in the tokens audience (e.g. a PAT will always do so)
+			resp, err := c.AuthService().ListMyZitadelPermissions(client.AuthorizedUserCtx(r.Context()), &auth.ListMyZitadelPermissionsRequest{})
+			if err != nil {
+				slog.Error("error listing zitadel permissions", "error", err)
+				return
 			}
 
-			// return the existing task list
-			err = jsonResponse(w, &taskList{Tasks: list}, http.StatusOK)
+			err = jsonResponse(w, resp.Result, http.StatusOK)
 			if err != nil {
 				slog.Error("error writing response", "error", err)
-			}
-		})))
-
-	// This endpoint is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
-	// It will add the provided task to the list of existing ones.
-	router.Handle("/api/add-task", mw.RequireAuthorization(authorization.WithRole(`admin`))(http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			// get the provided task and do not accept an empty value
-			task := strings.TrimSpace(r.FormValue("task"))
-			if task == "" {
-				err = jsonResponse(w, "task must not be empty", http.StatusBadRequest)
-				if err != nil {
-					slog.Error("error writing invalid task response", "error", err)
-					return
-				}
-				return
-			}
-
-			// since it was not empty, let's add it to the existing list
-			tasks = append(tasks, task)
-
-			// since we only want the authorized userID and don't need any specific data, we can simply use [authorization.UserID]
-			slog.Info("admin added task", "id", authorization.UserID(r.Context()), "task", task)
-
-			// inform the admin about the successful addition
-			err = jsonResponse(w, fmt.Sprintf("task `%s` added", task), http.StatusOK)
-			if err != nil {
-				slog.Error("error writing task added response", "error", err)
-				return
 			}
 		})))
 
@@ -159,8 +117,4 @@ func jsonResponse(w http.ResponseWriter, resp any, status int) error {
 	}
 	_, err = w.Write(data)
 	return err
-}
-
-type taskList struct {
-	Tasks []string `json:"tasks,omitempty"`
 }

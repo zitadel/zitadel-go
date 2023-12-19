@@ -26,7 +26,7 @@ func New(domain string, options ...Option) *Zitadel {
 // Option allows customization of the [Zitadel] provider.
 type Option func(*Zitadel)
 
-// WithInsecure allows to
+// WithInsecure allows to connect to a ZITADEL instance running without TLS
 func WithInsecure(port string) Option {
 	return func(z *Zitadel) {
 		z.port = port
@@ -34,10 +34,15 @@ func WithInsecure(port string) Option {
 	}
 }
 
+// Origin returns the HTTP Origin (schema://hostname[:port]), e.g.
+// https://your-instance.zitadel.cloud
+// https://your-domain.com
+// http://localhost:8080
 func (z *Zitadel) Origin() string {
 	return buildOrigin(z.domain, z.port, z.tls)
 }
 
+// Host returns the domain:port (even if the default port is used)
 func (z *Zitadel) Host() string {
 	return z.domain + ":" + z.port
 }

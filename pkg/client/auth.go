@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -17,15 +18,15 @@ import (
 type TokenSourceInitializer func(ctx context.Context, issuer string) (oauth2.TokenSource, error)
 
 // JWTAuthentication allows using the OAuth2 JWT Profile Grant to get a token using a key.json of a service user provided by ZITADEL.
-func JWTAuthentication(file *client.KeyFile) TokenSourceInitializer {
+func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSource(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key), nil)
+		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, []byte(file.Key), scopes)
 	}
 }
 
 // PasswordAuthentication allows using the OAuth2 Client Credentials Grant to get a token using username and password
 // of a service user provided by ZITADEL.
-func PasswordAuthentication(username, password string) TokenSourceInitializer {
+func PasswordAuthentication(username, password string, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 		discovery, err := client.Discover(ctx, issuer, http.DefaultClient)
 		if err != nil {
@@ -35,6 +36,7 @@ func PasswordAuthentication(username, password string) TokenSourceInitializer {
 			ClientID:     username,
 			ClientSecret: password,
 			TokenURL:     discovery.TokenEndpoint,
+			Scopes:       scopes,
 		}
 		return config.TokenSource(ctx), nil
 	}
@@ -52,14 +54,14 @@ func PAT(pat string) TokenSourceInitializer {
 
 // DefaultServiceUserAuthentication is a short version of [JWTAuthentication]
 // with a key.json read from a provided path.
-func DefaultServiceUserAuthentication(path string) TokenSourceInitializer {
+func DefaultServiceUserAuthentication(path string, scopes ...string) TokenSourceInitializer {
 	c, err := client.ConfigFromKeyFile(path)
 	if err != nil {
 		return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 			return nil, err
 		}
 	}
-	return JWTAuthentication(c)
+	return JWTAuthentication(c, scopes...)
 }
 
 // AuthorizedUserCtx will set the authorization token of the authorized context (user) to be used
@@ -78,4 +80,19 @@ func BearerTokenCtx(ctx context.Context, token string) context.Context {
 		AccessToken: strings.Trim(token, " "),
 		TokenType:   oidc.BearerToken,
 	})
+}
+
+const (
+	scopeFormatProjectID  = "urn:zitadel:iam:org:project:id:%s:aud"
+	scopeZITADELProjectID = "zitadel"
+)
+
+// ScopeProjectID will add the requested projectID to the audience of the access and id token
+func ScopeProjectID(projectID string) string {
+	return fmt.Sprintf(scopeFormatProjectID, projectID)
+}
+
+// ScopeZitadelAPI adds the projectID of ZITADEL to the audience
+func ScopeZitadelAPI() string {
+	return ScopeProjectID(scopeZITADELProjectID)
 }

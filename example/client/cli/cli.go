@@ -5,6 +5,7 @@ import (
 	"flag"
 	"os"
 
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
@@ -27,7 +28,7 @@ func main() {
 	// You can also directly set an authorization option, resp. provide its authentication mechanism,
 	// by passing the downloaded service user key:
 	api, err := client.New(ctx, zitadel.New(*domain),
-		client.WithAuth(client.DefaultServiceUserAuthentication(*keyPath)),
+		client.WithAuth(client.DefaultServiceUserAuthentication(*keyPath, oidc.ScopeOpenID, client.ScopeZitadelAPI())),
 	)
 
 	resp, err := api.ManagementService().GetMyOrg(ctx, &management.GetMyOrgRequest{})
