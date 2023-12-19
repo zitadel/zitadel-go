@@ -23,10 +23,10 @@ type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 	GetUserInfo() S
 }
 
-// CodeFlowAuthentication provides an [authentication.Handler] implementation with
+// codeFlowAuthentication provides an [authentication.Handler] implementation with
 // an OIDC/OAuth2 Authorization Code Flow.
 // Use [WithCodeFlow] for implementation.
-type CodeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] struct {
+type codeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] struct {
 	relyingParty rp.RelyingParty
 }
 
@@ -39,7 +39,7 @@ func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientA
 		if err != nil {
 			return nil, err
 		}
-		return &CodeFlowAuthentication[T, C, S]{
+		return &codeFlowAuthentication[T, C, S]{
 			relyingParty: relyingParty,
 		}, nil
 	}
@@ -81,13 +81,13 @@ func newRP(ctx context.Context, domain, clientID, clientSecret, redirectURI stri
 }
 
 // Authenticate starts the OIDC/OAuth2 Authorization Code Flow and redirects the user to the Login UI.
-func (c *CodeFlowAuthentication[T, C, S]) Authenticate(w http.ResponseWriter, r *http.Request, state string) {
+func (c *codeFlowAuthentication[T, C, S]) Authenticate(w http.ResponseWriter, r *http.Request, state string) {
 	rp.AuthURLHandler(func() string { return state }, c.relyingParty)(w, r)
 }
 
 // Callback handles the redirect back from the Login UI and will exchange the code for the tokens.
 // Additionally, it will retrieve the information from the userinfo_endpoint and store everything in the [Ctx].
-func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *http.Request) (authCtx T, state string) {
+func (c *codeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *http.Request) (authCtx T, state string) {
 	rp.CodeExchangeHandler[C](rp.UserinfoCallback[C, S](func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[C], callbackState string, provider rp.RelyingParty, info S) {
 		state = callbackState
 		authCtx = authCtx.New().(T)
@@ -98,7 +98,7 @@ func (c *CodeFlowAuthentication[T, C, S]) Callback(w http.ResponseWriter, r *htt
 }
 
 // Logout will call, resp. redirect to the end_session_endpoint at the Authorization Server (Login UI).
-func (c *CodeFlowAuthentication[T, C, S]) Logout(w http.ResponseWriter, r *http.Request, authCtx T, state, optionalRedirectURI string) {
+func (c *codeFlowAuthentication[T, C, S]) Logout(w http.ResponseWriter, r *http.Request, authCtx T, state, optionalRedirectURI string) {
 	// the OIDC library currently does a server side POST request, but the spec. requires a browser call
 	// and esp. ZITADEL requires the "user agent" cookie present to be able to terminate the session(s).
 	//

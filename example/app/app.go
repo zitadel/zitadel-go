@@ -100,6 +100,9 @@ func main() {
 			return
 		}
 		err = t.ExecuteTemplate(w, "home.html", nil)
+		if err != nil {
+			slog.Error("error writing home page response", "error", err)
+		}
 	})))
 
 	// start the server on the specified port (default http://localhost:8089)
