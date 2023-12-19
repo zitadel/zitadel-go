@@ -14,6 +14,8 @@ type Ctx interface {
 	UserID() string
 	IsGrantedRole(role string) bool
 	IsGrantedRoleInOrganization(role, organizationID string) bool
+	SetToken(token string)
+	GetToken() string
 }
 
 // Context returns a typed implementation the authorization context [Ctx].

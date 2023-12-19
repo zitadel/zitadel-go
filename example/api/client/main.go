@@ -9,11 +9,14 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization/oauth"
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/auth"
 	"github.com/zitadel/zitadel-go/v3/pkg/http/middleware"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
@@ -44,16 +47,25 @@ func main() {
 
 	ctx := context.Background()
 
-	// Initiate the authorization by providing a zitadel configuration and a verifier.
-	// This example will use OAuth2 Introspection for this, therefore you will also need to provide the downloaded api key.json
-	authZ, err := authorization.New(ctx, zitadel.New(*domain), oauth.DefaultAuthorization(*key))
+	// Initiate the zitadel sdk by providing its domain
+	// and as this example will focus on authorization (using OAuth2 Introspection),
+	// you will also need to initialize that with the downloaded api key.json
+
+	conf := zitadel.New(*domain)
+	authZ, err := authorization.New(ctx, conf, oauth.DefaultAuthorization(*key))
 	if err != nil {
-		slog.Error("zitadel sdk could not initialize", "error", err)
+		slog.Error("zitadel sdk could not initialize authorization", "error", err)
 		os.Exit(1)
 	}
-
-	// Initialize the HTTP middleware by providing the authorization
+	// Initialize the HTTP middleware by providing the sdk
 	mw := middleware.New(authZ)
+
+	// as we will also call the ZITADEL API, we need to initialize the client
+	c, err := client.New(ctx, conf)
+	if err != nil {
+		slog.Error("zitadel sdk could not initialize authorization", "error", err)
+		os.Exit(1)
+	}
 
 	router := http.NewServeMux()
 
@@ -82,6 +94,13 @@ func main() {
 			list := tasks
 			if authCtx.IsGrantedRole("admin") {
 				list = append(list, "create a new task on /api/add-task")
+				resp, err := c.AuthService().GetMyUser(client.AuthorizedUserCtx(r.Context()), &auth.GetMyUserRequest{})
+				if err != nil {
+					slog.Error("error checking the user profile", "error", err)
+				}
+				if resp != nil && time.Now().Sub(resp.User.Details.ChangeDate.AsTime()) > 5*time.Minute {
+					list = append(list, "you're profile has not been updated in a while, make sure it's up to date")
+				}
 			}
 
 			// return the existing task list

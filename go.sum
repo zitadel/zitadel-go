@@ -81,6 +81,8 @@ github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9dec
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/zitadel/logging v0.5.0 h1:Kunouvqse/efXy4UDvFw5s3vP+Z4AlHo3y8wF7stXHA=
 github.com/zitadel/logging v0.5.0/go.mod h1:IzP5fzwFhzzyxHkSmfF8dsyqFsQRJLLcQmwhIBzlGsE=
+github.com/zitadel/oidc v1.13.5 h1:7jhh68NGZitLqwLiVU9Dtwa4IraJPFF1vS+4UupO93U=
+github.com/zitadel/oidc v1.13.5/go.mod h1:rHs1DhU3Sv3tnI6bQRVlFa3u0lCwtR7S21WHY+yXgPA=
 github.com/zitadel/oidc/v3 v3.4.0 h1:JkbNnrk/7IG+NOBoZp/P0kx6tPcBvnCekSqDTPCOok4=
 github.com/zitadel/oidc/v3 v3.4.0/go.mod h1:jUnLnx5ihKlo88cSEduZkKlzeMrjzcWVZ8fTzKBxZKY=
 github.com/zitadel/oidc/v3 v3.5.1 h1:7gyrxRNqX5eZYai2KhzPj8MhBZ7I3YpviQeX1Lp4j4U=

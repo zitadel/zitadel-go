@@ -10,9 +10,12 @@
 
 > This branch is WIP. It can AND will continue breaking until version 3.0.0 is released
 
-Go library for [ZITADEL](https://github.com/zitadel/zitadel). It provides features including:
- - Authorization checks
+Go library for [ZITADEL](https://github.com/zitadel/zitadel).
+
+## Features 
+
  - Authentication
+ - Authorization checks
  - Client for ZITADEL API
 
 ## Usage
@@ -23,8 +26,7 @@ Add the package to your go.mod by
 go get -u github.com/zitadel/zitadel-go/v3
 ```
 
-...and check out the [examples](./example) in this repo or head over to our [docs website](https://docs.zitadel.com/docs/quickstarts/introduction).
-
+...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart).
 
 ## Supported Go Versions
 
