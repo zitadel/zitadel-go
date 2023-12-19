@@ -26,7 +26,7 @@ type IntrospectionVerification[T any] struct {
 }
 
 // WithIntrospection creates the OAuth2 Introspection implementation of the [authorization.Verifier] interface.
-// The introspection endpoint itself requires some [IntrospectionAuthentication] the client.
+// The introspection endpoint itself requires some [IntrospectionAuthentication] of the client.
 // Possible implementation are [JWTProfileIntrospectionAuthentication] and [ClientIDSecretIntrospectionAuthentication].
 func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) authorization.VerifierInitializer[T] {
 	return func(ctx context.Context, domain string) (authorization.Verifier[T], error) {

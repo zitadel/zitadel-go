@@ -34,7 +34,7 @@ var (
  It will serve the following 3 different endpoints:
  (These are meant to demonstrate the possibilities and do not follow REST best practices):
 
-- /api/healthz (can be called by anyone)
+ - /api/healthz (can be called by anyone)
  - /api/tasks (requires authorization)
  - /api/add-task (requires authorization with granted `admin` role)
 */
@@ -45,7 +45,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initiate the zitadel sdk by providing its domain
-	// and as this example will focus on authorization (using Oauth2 Introspection),
+	// and as this example will focus on authorization (using OAuth2 Introspection),
 	// you will also need to initialize that with the downloaded api key.json
 	//
 	// it's a short form of:
