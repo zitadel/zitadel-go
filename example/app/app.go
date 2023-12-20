@@ -52,13 +52,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Initiate the zitadel sdk by providing its domain
-	// and as this example will focus on authentication (using OIDC / OAuth2 PKCE flow),
-	// you will also need to initialize that with the generated client_id.
-	z, err := zitadel.New(*domain,
-		zitadel.WithAuthentication(ctx, *key,
-			openid.DefaultAuthentication(*clientID, *redirectURI, *key),
-		),
+	// Initiate the authentication by providing a zitadel configuration and handler.
+	// This example will use OIDC/OAuth2 PKCE Flow, therefore you will also need to initialize that with the generated client_id:
+	authN, err := authentication.New(ctx, zitadel.New(*domain), *key,
+		openid.DefaultAuthentication(*clientID, *redirectURI, *key),
 	)
 	if err != nil {
 		slog.Error("zitadel sdk could not initialize", "error", err)
@@ -66,7 +63,7 @@ func main() {
 	}
 
 	// Initialize the middleware by providing the sdk
-	mw := authentication.Middleware(z.Authentication)
+	mw := authentication.Middleware(authN)
 
 	router := http.NewServeMux()
 
@@ -75,7 +72,7 @@ func main() {
 	// - /login (starts the authentication process to the Login UI)
 	// - /callback (handles the redirect back from the Login UI)
 	// - /logout (handles the logout process)
-	router.Handle("/auth/", z.Authentication)
+	router.Handle("/auth/", authN)
 	// This endpoint is only accessible with a valid authentication. If there is none, it will directly redirect the user
 	// to the Login UI for authentication. If successful (or already authenticated), the user will be presented the profile page.
 	router.Handle("/profile", mw.RequireAuthentication()(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

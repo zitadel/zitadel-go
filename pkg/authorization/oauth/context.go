@@ -5,6 +5,7 @@ import "github.com/zitadel/oidc/v3/pkg/oidc"
 // IntrospectionContext implements the [authorization.Ctx] interface with the [oidc.IntrospectionResponse] as underlying data.
 type IntrospectionContext struct {
 	oidc.IntrospectionResponse
+	token string
 }
 
 // IsAuthorized implements [authorization.Ctx] by checking the `active` claim of the [oidc.IntrospectionResponse].
@@ -39,6 +40,14 @@ func (c *IntrospectionContext) IsGrantedRoleInOrganization(role, organizationID 
 	}
 	_, ok := c.checkRoleClaim(role)[organizationID]
 	return ok
+}
+
+func (c *IntrospectionContext) SetToken(token string) {
+	c.token = token
+}
+
+func (c *IntrospectionContext) GetToken() string {
+	return c.token
 }
 
 func (c *IntrospectionContext) checkRoleClaim(role string) map[string]interface{} {

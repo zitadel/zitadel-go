@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
 	"golang.org/x/exp/slog"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 var (
@@ -39,8 +41,8 @@ func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	}
 }
 
-func New[T Ctx](ctx context.Context, domain, encryptionKey string, initAuthentication HandlerInitializer[T], options ...Option[T]) (*Authenticator[T], error) {
-	authN, err := initAuthentication(ctx, domain)
+func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, encryptionKey string, initAuthentication HandlerInitializer[T], options ...Option[T]) (*Authenticator[T], error) {
+	authN, err := initAuthentication(ctx, zitadel)
 	if err != nil {
 		return nil, err
 	}
@@ -205,5 +207,5 @@ type Handler[T Ctx] interface {
 	Logout(w http.ResponseWriter, r *http.Request, authCtx T, state, optionalRedirectURI string)
 }
 
-// HandlerInitializer abstracts the initialization of a [Handler] by providing the ZITADEL domain
-type HandlerInitializer[T Ctx] func(ctx context.Context, domain string) (Handler[T], error)
+// HandlerInitializer abstracts the initialization of a [Handler] by providing the ZITADEL domain, port and if tls is set
+type HandlerInitializer[T Ctx] func(ctx context.Context, zitadel *zitadel.Zitadel) (Handler[T], error)

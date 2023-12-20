@@ -11,6 +11,7 @@ import (
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
@@ -33,8 +34,8 @@ type codeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] st
 // The token endpoint itself requires some [ClientAuthentication] of the client.
 // Possible implementation are [PKCEAuthentication] and [ClientIDSecretAuthentication].
 func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientAuthentication) authentication.HandlerInitializer[T] {
-	return func(ctx context.Context, domain string) (authentication.Handler[T], error) {
-		relyingParty, err := auth(ctx, domain)
+	return func(ctx context.Context, zitadel *zitadel.Zitadel) (authentication.Handler[T], error) {
+		relyingParty, err := auth(ctx, zitadel.Origin())
 		if err != nil {
 			return nil, err
 		}

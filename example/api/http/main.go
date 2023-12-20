@@ -20,7 +20,7 @@ import (
 
 var (
 	// flags to be provided for running the example server
-	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: https://<instance>.zitadel.cloud or https://<yourdomain>)")
+	domain = flag.String("domain", "", "your ZITADEL instance domain (in the form: <instance>.zitadel.cloud or <yourdomain>)")
 	key    = flag.String("key", "", "path to your key.json")
 	port   = flag.String("port", "8089", "port to run the server on (default is 8089)")
 
@@ -44,30 +44,16 @@ func main() {
 
 	ctx := context.Background()
 
-	// Initiate the zitadel sdk by providing its domain
-	// and as this example will focus on authorization (using OAuth2 Introspection),
-	// you will also need to initialize that with the downloaded api key.json
-	//
-	// it's a short form of:
-	// 	z, err := zitadel.New("https://your-domain.zitadel.cloud",
-	//		zitadel.WithAuthorization(ctx,
-	//			oauth.WithIntrospection[*oauth.IntrospectionContext](
-	//				oauth.JWTProfileIntrospectionAuthentication("./key.json"),
-	//			),
-	//		),
-	//	)
-	z, err := zitadel.New(*domain,
-		zitadel.WithAuthorization(ctx,
-			oauth.DefaultAuthorization(*key),
-		),
-	)
+	// Initiate the authorization by providing a zitadel configuration and a verifier.
+	// This example will use OAuth2 Introspection for this, therefore you will also need to provide the downloaded api key.json
+	authZ, err := authorization.New(ctx, zitadel.New(*domain), oauth.DefaultAuthorization(*key))
 	if err != nil {
 		slog.Error("zitadel sdk could not initialize", "error", err)
 		os.Exit(1)
 	}
 
-	// Initialize the HTTP middleware by providing the sdk
-	mw := middleware.New(z.Authorization)
+	// Initialize the HTTP middleware by providing the authorization
+	mw := middleware.New(authZ)
 
 	router := http.NewServeMux()
 

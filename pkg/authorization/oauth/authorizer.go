@@ -11,6 +11,7 @@ import (
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 var (
@@ -29,8 +30,8 @@ type IntrospectionVerification[T any] struct {
 // The introspection endpoint itself requires some [IntrospectionAuthentication] of the client.
 // Possible implementation are [JWTProfileIntrospectionAuthentication] and [ClientIDSecretIntrospectionAuthentication].
 func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) authorization.VerifierInitializer[T] {
-	return func(ctx context.Context, domain string) (authorization.Verifier[T], error) {
-		resourceServer, err := auth(ctx, domain)
+	return func(ctx context.Context, zitadel *zitadel.Zitadel) (authorization.Verifier[T], error) {
+		resourceServer, err := auth(ctx, zitadel.Origin())
 		if err != nil {
 			return nil, err
 		}
@@ -40,21 +41,21 @@ func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) au
 	}
 }
 
-type IntrospectionAuthentication func(ctx context.Context, domain string) (rs.ResourceServer, error)
+type IntrospectionAuthentication func(ctx context.Context, issuer string) (rs.ResourceServer, error)
 
 // JWTProfileIntrospectionAuthentication allows to authenticate the introspection request with JWT Profile
 // using a key.json provided by ZITADEL.
 func JWTProfileIntrospectionAuthentication(file *client.KeyFile) IntrospectionAuthentication {
-	return func(ctx context.Context, domain string) (rs.ResourceServer, error) {
-		return rs.NewResourceServerJWTProfile(ctx, domain, file.ClientID, file.KeyID, []byte(file.Key))
+	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
+		return rs.NewResourceServerJWTProfile(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key))
 	}
 }
 
 // ClientIDSecretIntrospectionAuthentication allows to authenticate the introspection request with
 // the client_id and client_secret provided by ZITADEL.
 func ClientIDSecretIntrospectionAuthentication(clientID, clientSecret string) IntrospectionAuthentication {
-	return func(ctx context.Context, domain string) (rs.ResourceServer, error) {
-		return rs.NewResourceServerClientCredentials(ctx, domain, clientID, clientSecret)
+	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
+		return rs.NewResourceServerClientCredentials(ctx, issuer, clientID, clientSecret)
 	}
 }
 
@@ -63,7 +64,7 @@ func ClientIDSecretIntrospectionAuthentication(clientID, clientSecret string) In
 func DefaultAuthorization(path string) authorization.VerifierInitializer[*IntrospectionContext] {
 	c, err := client.ConfigFromKeyFile(path)
 	if err != nil {
-		return func(ctx context.Context, domain string) (authorization.Verifier[*IntrospectionContext], error) {
+		return func(ctx context.Context, _ *zitadel.Zitadel) (authorization.Verifier[*IntrospectionContext], error) {
 			return nil, err
 		}
 	}

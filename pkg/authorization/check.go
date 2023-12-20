@@ -6,6 +6,8 @@ import (
 	"fmt"
 
 	"golang.org/x/exp/slog"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 const (
@@ -35,8 +37,8 @@ func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	}
 }
 
-func New[T Ctx](ctx context.Context, domain string, initVerifier VerifierInitializer[T], options ...Option[T]) (*Authorizer[T], error) {
-	verifier, err := initVerifier(ctx, domain)
+func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, initVerifier VerifierInitializer[T], options ...Option[T]) (*Authorizer[T], error) {
+	verifier, err := initVerifier(ctx, zitadel)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +75,7 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 			return t, NewErrorPermissionDenied(err)
 		}
 	}
+	authCtx.SetToken(token)
 	return authCtx, nil
 }
 
@@ -81,8 +84,8 @@ type Verifier[T Ctx] interface {
 	CheckAuthorization(ctx context.Context, authorizationToken string) (T, error)
 }
 
-// VerifierInitializer abstracts the initialization of a [Verifier] by providing the ZITADEL domain
-type VerifierInitializer[T Ctx] func(ctx context.Context, domain string) (Verifier[T], error)
+// VerifierInitializer abstracts the initialization of a [Verifier] by providing the ZITADEL domain, port and if tls is set
+type VerifierInitializer[T Ctx] func(ctx context.Context, zitadel *zitadel.Zitadel) (Verifier[T], error)
 
 // Check will be executed during the authorization check and provide a mechanism to require additional permission such as a role.
 // There will be options, e.g. caching and more in the near future.

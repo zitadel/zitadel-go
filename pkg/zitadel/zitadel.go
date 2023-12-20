@@ -1,52 +1,71 @@
 package zitadel
 
-import (
-	"context"
-
-	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
-	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
-)
+import "fmt"
 
 // Zitadel provides the ability to interact with your ZITADEL instance.
 // This includes authentication, authorization as well as explicit API interaction
 // and is dependent of the provided information and initialization of such.
-type Zitadel[N authentication.Ctx, Z authorization.Ctx] struct {
-	Domain         string
-	Authentication *authentication.Authenticator[N]
-	Authorization  *authorization.Authorizer[Z]
+type Zitadel struct {
+	domain string
+	port   string
+	tls    bool
 }
 
-func New[N authentication.Ctx, Z authorization.Ctx](domain string, options ...Option[N, Z]) (*Zitadel[N, Z], error) {
-	zitadel := &Zitadel[N, Z]{
-		Domain: domain,
+func New(domain string, options ...Option) *Zitadel {
+	zitadel := &Zitadel{
+		domain: domain,
+		port:   "443",
+		tls:    true,
 	}
 	for _, option := range options {
-		if err := option(zitadel); err != nil {
-			return nil, err
-		}
+		option(zitadel)
 	}
-	return zitadel, nil
+	return zitadel
 }
 
 // Option allows customization of the [Zitadel] provider.
-type Option[N authentication.Ctx, Z authorization.Ctx] func(*Zitadel[N, Z]) error
+type Option func(*Zitadel)
 
-// WithAuthentication initializes the authentication capability of the provider.
-// It will define the type of the [authentication.Ctx] you can access in your application.
-// It requires you to provide a [authorization.VerifierInitializer] such as [oauth.DefaultAuthorization].
-func WithAuthentication[N authentication.Ctx](ctx context.Context, encryptionKey string, initHandler authentication.HandlerInitializer[N], options ...authentication.Option[N]) Option[N, authorization.Ctx] {
-	return func(z *Zitadel[N, authorization.Ctx]) (err error) {
-		z.Authentication, err = authentication.New(ctx, z.Domain, encryptionKey, initHandler, options...)
-		return err
+// WithInsecure allows to connect to a ZITADEL instance running without TLS
+func WithInsecure(port string) Option {
+	return func(z *Zitadel) {
+		z.port = port
+		z.tls = false
 	}
 }
 
-// WithAuthorization initializes the authorization check capability of the provider.
-// It will define the type of the [authorization.Ctx] you can access in your API.
-// It requires you to provide a [authorization.VerifierInitializer] such as [oauth.DefaultAuthorization].
-func WithAuthorization[Z authorization.Ctx](ctx context.Context, initVerifier authorization.VerifierInitializer[Z], options ...authorization.Option[Z]) Option[authentication.Ctx, Z] {
-	return func(z *Zitadel[authentication.Ctx, Z]) (err error) {
-		z.Authorization, err = authorization.New(ctx, z.Domain, initVerifier, options...)
-		return err
+// Origin returns the HTTP Origin (schema://hostname[:port]), e.g.
+// https://your-instance.zitadel.cloud
+// https://your-domain.com
+// http://localhost:8080
+func (z *Zitadel) Origin() string {
+	return buildOrigin(z.domain, z.port, z.tls)
+}
+
+// Host returns the domain:port (even if the default port is used)
+func (z *Zitadel) Host() string {
+	return z.domain + ":" + z.port
+}
+
+func (z *Zitadel) IsTLS() bool {
+	return z.tls
+}
+
+func (z *Zitadel) Domain() string {
+	return z.domain
+}
+
+func buildOrigin(hostname string, externalPort string, tls bool) string {
+	if externalPort == "" || (externalPort == "443" && tls) || (externalPort == "80" && !tls) {
+		return buildOriginFromHost(hostname, tls)
 	}
+	return buildOriginFromHost(fmt.Sprintf("%s:%s", hostname, externalPort), tls)
+}
+
+func buildOriginFromHost(host string, tls bool) string {
+	schema := "https"
+	if !tls {
+		schema = "http"
+	}
+	return fmt.Sprintf("%s://%s", schema, host)
 }
