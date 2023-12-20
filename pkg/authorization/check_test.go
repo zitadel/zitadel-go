@@ -83,7 +83,7 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 				token:   "token",
 				options: nil,
 			},
-			wantAuthCtx: &testCtx{isAuthorized: true},
+			wantAuthCtx: &testCtx{isAuthorized: true, token: "token"},
 			wantErr:     nil,
 		},
 		{
@@ -102,7 +102,7 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 				token:   "token",
 				options: []CheckOption{WithRole("test")},
 			},
-			wantAuthCtx: &testCtx{isAuthorized: true, isGrantedRole: true},
+			wantAuthCtx: &testCtx{isAuthorized: true, isGrantedRole: true, token: "token"},
 			wantErr:     nil,
 		},
 	}
@@ -129,6 +129,15 @@ type testCtx struct {
 	userID                      string
 	isGrantedRole               bool
 	isGrantedRoleInOrganization bool
+	token                       string
+}
+
+func (t *testCtx) SetToken(token string) {
+	t.token = token
+}
+
+func (t *testCtx) GetToken() string {
+	return t.token
 }
 
 func (t *testCtx) IsAuthorized() bool {
