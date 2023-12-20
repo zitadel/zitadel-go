@@ -31,6 +31,8 @@ func main() {
 		client.WithAuth(client.DefaultServiceUserAuthentication(*keyPath, oidc.ScopeOpenID, client.ScopeZitadelAPI())),
 	)
 
+	// In this example we will just use the ManagementService to retrieve the users organisation,
+	// but you can use the API for all the other services (Admin, Auth, User, Session, ...) too.
 	resp, err := api.ManagementService().GetMyOrg(ctx, &management.GetMyOrgRequest{})
 	if err != nil {
 		slog.Error("cannot retrieve the organisation", "error", err)
