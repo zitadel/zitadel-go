@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AdminServiceClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
+	GetAllowedLanguages(ctx context.Context, in *GetAllowedLanguagesRequest, opts ...grpc.CallOption) (*GetAllowedLanguagesResponse, error)
 	SetDefaultLanguage(ctx context.Context, in *SetDefaultLanguageRequest, opts ...grpc.CallOption) (*SetDefaultLanguageResponse, error)
 	GetDefaultLanguage(ctx context.Context, in *GetDefaultLanguageRequest, opts ...grpc.CallOption) (*GetDefaultLanguageResponse, error)
 	GetMyInstance(ctx context.Context, in *GetMyInstanceRequest, opts ...grpc.CallOption) (*GetMyInstanceResponse, error)
@@ -254,6 +255,15 @@ func (c *adminServiceClient) Healthz(ctx context.Context, in *HealthzRequest, op
 func (c *adminServiceClient) GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error) {
 	out := new(GetSupportedLanguagesResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSupportedLanguages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetAllowedLanguages(ctx context.Context, in *GetAllowedLanguagesRequest, opts ...grpc.CallOption) (*GetAllowedLanguagesResponse, error) {
+	out := new(GetAllowedLanguagesResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetAllowedLanguages", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1823,6 +1833,7 @@ func (c *adminServiceClient) GetRestrictions(ctx context.Context, in *GetRestric
 type AdminServiceServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
+	GetAllowedLanguages(context.Context, *GetAllowedLanguagesRequest) (*GetAllowedLanguagesResponse, error)
 	SetDefaultLanguage(context.Context, *SetDefaultLanguageRequest) (*SetDefaultLanguageResponse, error)
 	GetDefaultLanguage(context.Context, *GetDefaultLanguageRequest) (*GetDefaultLanguageResponse, error)
 	GetMyInstance(context.Context, *GetMyInstanceRequest) (*GetMyInstanceResponse, error)
@@ -2047,6 +2058,9 @@ func (UnimplementedAdminServiceServer) Healthz(context.Context, *HealthzRequest)
 }
 func (UnimplementedAdminServiceServer) GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSupportedLanguages not implemented")
+}
+func (UnimplementedAdminServiceServer) GetAllowedLanguages(context.Context, *GetAllowedLanguagesRequest) (*GetAllowedLanguagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllowedLanguages not implemented")
 }
 func (UnimplementedAdminServiceServer) SetDefaultLanguage(context.Context, *SetDefaultLanguageRequest) (*SetDefaultLanguageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultLanguage not implemented")
@@ -2612,6 +2626,24 @@ func _AdminService_GetSupportedLanguages_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetSupportedLanguages(ctx, req.(*GetSupportedLanguagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetAllowedLanguages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllowedLanguagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetAllowedLanguages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/GetAllowedLanguages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetAllowedLanguages(ctx, req.(*GetAllowedLanguagesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5744,6 +5776,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSupportedLanguages",
 			Handler:    _AdminService_GetSupportedLanguages_Handler,
+		},
+		{
+			MethodName: "GetAllowedLanguages",
+			Handler:    _AdminService_GetAllowedLanguages_Handler,
 		},
 		{
 			MethodName: "SetDefaultLanguage",
