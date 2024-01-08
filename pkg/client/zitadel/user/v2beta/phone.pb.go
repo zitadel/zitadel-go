@@ -126,6 +126,61 @@ func (*SetHumanPhone_ReturnCode) isSetHumanPhone_Verification() {}
 
 func (*SetHumanPhone_IsVerified) isSetHumanPhone_Verification() {}
 
+type HumanPhone struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Phone      string `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+	IsVerified bool   `protobuf:"varint,2,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+}
+
+func (x *HumanPhone) Reset() {
+	*x = HumanPhone{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *HumanPhone) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HumanPhone) ProtoMessage() {}
+
+func (x *HumanPhone) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HumanPhone.ProtoReflect.Descriptor instead.
+func (*HumanPhone) Descriptor() ([]byte, []int) {
+	return file_zitadel_user_v2beta_phone_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *HumanPhone) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+func (x *HumanPhone) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
 type SendPhoneVerificationCode struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -135,7 +190,7 @@ type SendPhoneVerificationCode struct {
 func (x *SendPhoneVerificationCode) Reset() {
 	*x = SendPhoneVerificationCode{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[1]
+		mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -148,7 +203,7 @@ func (x *SendPhoneVerificationCode) String() string {
 func (*SendPhoneVerificationCode) ProtoMessage() {}
 
 func (x *SendPhoneVerificationCode) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[1]
+	mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,7 +216,7 @@ func (x *SendPhoneVerificationCode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendPhoneVerificationCode.ProtoReflect.Descriptor instead.
 func (*SendPhoneVerificationCode) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_v2beta_phone_proto_rawDescGZIP(), []int{1}
+	return file_zitadel_user_v2beta_phone_proto_rawDescGZIP(), []int{2}
 }
 
 type ReturnPhoneVerificationCode struct {
@@ -173,7 +228,7 @@ type ReturnPhoneVerificationCode struct {
 func (x *ReturnPhoneVerificationCode) Reset() {
 	*x = ReturnPhoneVerificationCode{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[2]
+		mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -186,7 +241,7 @@ func (x *ReturnPhoneVerificationCode) String() string {
 func (*ReturnPhoneVerificationCode) ProtoMessage() {}
 
 func (x *ReturnPhoneVerificationCode) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[2]
+	mi := &file_zitadel_user_v2beta_phone_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -199,7 +254,7 @@ func (x *ReturnPhoneVerificationCode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReturnPhoneVerificationCode.ProtoReflect.Descriptor instead.
 func (*ReturnPhoneVerificationCode) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_v2beta_phone_proto_rawDescGZIP(), []int{2}
+	return file_zitadel_user_v2beta_phone_proto_rawDescGZIP(), []int{3}
 }
 
 var File_zitadel_user_v2beta_phone_proto protoreflect.FileDescriptor
@@ -235,15 +290,21 @@ var file_zitadel_user_v2beta_phone_proto_rawDesc = []byte{
 	0x69, 0x73, 0x5f, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
 	0x08, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x6a, 0x02, 0x08, 0x01, 0x48, 0x00, 0x52, 0x0a, 0x69, 0x73,
 	0x56, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x42, 0x0e, 0x0a, 0x0c, 0x76, 0x65, 0x72, 0x69,
-	0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x1b, 0x0a, 0x19, 0x53, 0x65, 0x6e, 0x64,
-	0x50, 0x68, 0x6f, 0x6e, 0x65, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f,
-	0x6e, 0x43, 0x6f, 0x64, 0x65, 0x22, 0x1d, 0x0a, 0x1b, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x50,
-	0x68, 0x6f, 0x6e, 0x65, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x43, 0x6f, 0x64, 0x65, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64,
-	0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x75, 0x73, 0x65, 0x72,
-	0x2f, 0x76, 0x32, 0x62, 0x65, 0x74, 0x61, 0x3b, 0x75, 0x73, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x5b, 0x0a, 0x0a, 0x48, 0x75, 0x6d, 0x61,
+	0x6e, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x12, 0x2c, 0x0a, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x16, 0x92, 0x41, 0x13, 0x4a, 0x0e, 0x22, 0x2b, 0x34, 0x31,
+	0x37, 0x39, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x22, 0x78, 0xc8, 0x01, 0x52, 0x05, 0x70,
+	0x68, 0x6f, 0x6e, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x69, 0x73, 0x5f, 0x76, 0x65, 0x72, 0x69, 0x66,
+	0x69, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0a, 0x69, 0x73, 0x56, 0x65, 0x72,
+	0x69, 0x66, 0x69, 0x65, 0x64, 0x22, 0x1b, 0x0a, 0x19, 0x53, 0x65, 0x6e, 0x64, 0x50, 0x68, 0x6f,
+	0x6e, 0x65, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f,
+	0x64, 0x65, 0x22, 0x1d, 0x0a, 0x1b, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x50, 0x68, 0x6f, 0x6e,
+	0x65, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64,
+	0x65, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f,
+	0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x2f, 0x76, 0x32,
+	0x62, 0x65, 0x74, 0x61, 0x3b, 0x75, 0x73, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -258,15 +319,16 @@ func file_zitadel_user_v2beta_phone_proto_rawDescGZIP() []byte {
 	return file_zitadel_user_v2beta_phone_proto_rawDescData
 }
 
-var file_zitadel_user_v2beta_phone_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_zitadel_user_v2beta_phone_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_zitadel_user_v2beta_phone_proto_goTypes = []interface{}{
 	(*SetHumanPhone)(nil),               // 0: zitadel.user.v2beta.SetHumanPhone
-	(*SendPhoneVerificationCode)(nil),   // 1: zitadel.user.v2beta.SendPhoneVerificationCode
-	(*ReturnPhoneVerificationCode)(nil), // 2: zitadel.user.v2beta.ReturnPhoneVerificationCode
+	(*HumanPhone)(nil),                  // 1: zitadel.user.v2beta.HumanPhone
+	(*SendPhoneVerificationCode)(nil),   // 2: zitadel.user.v2beta.SendPhoneVerificationCode
+	(*ReturnPhoneVerificationCode)(nil), // 3: zitadel.user.v2beta.ReturnPhoneVerificationCode
 }
 var file_zitadel_user_v2beta_phone_proto_depIdxs = []int32{
-	1, // 0: zitadel.user.v2beta.SetHumanPhone.send_code:type_name -> zitadel.user.v2beta.SendPhoneVerificationCode
-	2, // 1: zitadel.user.v2beta.SetHumanPhone.return_code:type_name -> zitadel.user.v2beta.ReturnPhoneVerificationCode
+	2, // 0: zitadel.user.v2beta.SetHumanPhone.send_code:type_name -> zitadel.user.v2beta.SendPhoneVerificationCode
+	3, // 1: zitadel.user.v2beta.SetHumanPhone.return_code:type_name -> zitadel.user.v2beta.ReturnPhoneVerificationCode
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -293,7 +355,7 @@ func file_zitadel_user_v2beta_phone_proto_init() {
 			}
 		}
 		file_zitadel_user_v2beta_phone_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SendPhoneVerificationCode); i {
+			switch v := v.(*HumanPhone); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -305,6 +367,18 @@ func file_zitadel_user_v2beta_phone_proto_init() {
 			}
 		}
 		file_zitadel_user_v2beta_phone_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SendPhoneVerificationCode); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_zitadel_user_v2beta_phone_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ReturnPhoneVerificationCode); i {
 			case 0:
 				return &v.state
@@ -328,7 +402,7 @@ func file_zitadel_user_v2beta_phone_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_user_v2beta_phone_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
