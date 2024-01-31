@@ -1442,6 +1442,7 @@ type SetLimitsRequest struct {
 
 	InstanceId        string               `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
 	AuditLogRetention *durationpb.Duration `protobuf:"bytes,2,opt,name=audit_log_retention,json=auditLogRetention,proto3" json:"audit_log_retention,omitempty"`
+	Block             *bool                `protobuf:"varint,3,opt,name=block,proto3,oneof" json:"block,omitempty"`
 }
 
 func (x *SetLimitsRequest) Reset() {
@@ -1488,6 +1489,13 @@ func (x *SetLimitsRequest) GetAuditLogRetention() *durationpb.Duration {
 		return x.AuditLogRetention
 	}
 	return nil
+}
+
+func (x *SetLimitsRequest) GetBlock() bool {
+	if x != nil && x.Block != nil {
+		return *x.Block
+	}
+	return false
 }
 
 type SetLimitsResponse struct {
@@ -1537,6 +1545,108 @@ func (x *SetLimitsResponse) GetDetails() *object.ObjectDetails {
 	return nil
 }
 
+type BulkSetLimitsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Limits []*SetLimitsRequest `protobuf:"bytes,1,rep,name=limits,proto3" json:"limits,omitempty"`
+}
+
+func (x *BulkSetLimitsRequest) Reset() {
+	*x = BulkSetLimitsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_system_proto_msgTypes[25]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BulkSetLimitsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BulkSetLimitsRequest) ProtoMessage() {}
+
+func (x *BulkSetLimitsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_system_proto_msgTypes[25]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BulkSetLimitsRequest.ProtoReflect.Descriptor instead.
+func (*BulkSetLimitsRequest) Descriptor() ([]byte, []int) {
+	return file_zitadel_system_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *BulkSetLimitsRequest) GetLimits() []*SetLimitsRequest {
+	if x != nil {
+		return x.Limits
+	}
+	return nil
+}
+
+type BulkSetLimitsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Details       *object.ObjectDetails   `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	TargetDetails []*object.ObjectDetails `protobuf:"bytes,2,rep,name=target_details,json=targetDetails,proto3" json:"target_details,omitempty"`
+}
+
+func (x *BulkSetLimitsResponse) Reset() {
+	*x = BulkSetLimitsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_system_proto_msgTypes[26]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BulkSetLimitsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BulkSetLimitsResponse) ProtoMessage() {}
+
+func (x *BulkSetLimitsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_system_proto_msgTypes[26]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BulkSetLimitsResponse.ProtoReflect.Descriptor instead.
+func (*BulkSetLimitsResponse) Descriptor() ([]byte, []int) {
+	return file_zitadel_system_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *BulkSetLimitsResponse) GetDetails() *object.ObjectDetails {
+	if x != nil {
+		return x.Details
+	}
+	return nil
+}
+
+func (x *BulkSetLimitsResponse) GetTargetDetails() []*object.ObjectDetails {
+	if x != nil {
+		return x.TargetDetails
+	}
+	return nil
+}
+
 type ResetLimitsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1548,7 +1658,7 @@ type ResetLimitsRequest struct {
 func (x *ResetLimitsRequest) Reset() {
 	*x = ResetLimitsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[25]
+		mi := &file_zitadel_system_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1561,7 +1671,7 @@ func (x *ResetLimitsRequest) String() string {
 func (*ResetLimitsRequest) ProtoMessage() {}
 
 func (x *ResetLimitsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[25]
+	mi := &file_zitadel_system_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1574,7 +1684,7 @@ func (x *ResetLimitsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetLimitsRequest.ProtoReflect.Descriptor instead.
 func (*ResetLimitsRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{25}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ResetLimitsRequest) GetInstanceId() string {
@@ -1595,7 +1705,7 @@ type ResetLimitsResponse struct {
 func (x *ResetLimitsResponse) Reset() {
 	*x = ResetLimitsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[26]
+		mi := &file_zitadel_system_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1608,7 +1718,7 @@ func (x *ResetLimitsResponse) String() string {
 func (*ResetLimitsResponse) ProtoMessage() {}
 
 func (x *ResetLimitsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[26]
+	mi := &file_zitadel_system_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1621,7 +1731,7 @@ func (x *ResetLimitsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetLimitsResponse.ProtoReflect.Descriptor instead.
 func (*ResetLimitsResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{26}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ResetLimitsResponse) GetDetails() *object.ObjectDetails {
@@ -1642,7 +1752,7 @@ type ExistsDomainRequest struct {
 func (x *ExistsDomainRequest) Reset() {
 	*x = ExistsDomainRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[27]
+		mi := &file_zitadel_system_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1655,7 +1765,7 @@ func (x *ExistsDomainRequest) String() string {
 func (*ExistsDomainRequest) ProtoMessage() {}
 
 func (x *ExistsDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[27]
+	mi := &file_zitadel_system_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1668,7 +1778,7 @@ func (x *ExistsDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExistsDomainRequest.ProtoReflect.Descriptor instead.
 func (*ExistsDomainRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{27}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *ExistsDomainRequest) GetDomain() string {
@@ -1689,7 +1799,7 @@ type ExistsDomainResponse struct {
 func (x *ExistsDomainResponse) Reset() {
 	*x = ExistsDomainResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[28]
+		mi := &file_zitadel_system_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1702,7 +1812,7 @@ func (x *ExistsDomainResponse) String() string {
 func (*ExistsDomainResponse) ProtoMessage() {}
 
 func (x *ExistsDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[28]
+	mi := &file_zitadel_system_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1715,7 +1825,7 @@ func (x *ExistsDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExistsDomainResponse.ProtoReflect.Descriptor instead.
 func (*ExistsDomainResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{28}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ExistsDomainResponse) GetExists() bool {
@@ -1741,7 +1851,7 @@ type ListDomainsRequest struct {
 func (x *ListDomainsRequest) Reset() {
 	*x = ListDomainsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[29]
+		mi := &file_zitadel_system_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1754,7 +1864,7 @@ func (x *ListDomainsRequest) String() string {
 func (*ListDomainsRequest) ProtoMessage() {}
 
 func (x *ListDomainsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[29]
+	mi := &file_zitadel_system_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1767,7 +1877,7 @@ func (x *ListDomainsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainsRequest.ProtoReflect.Descriptor instead.
 func (*ListDomainsRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{29}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ListDomainsRequest) GetInstanceId() string {
@@ -1811,7 +1921,7 @@ type ListDomainsResponse struct {
 func (x *ListDomainsResponse) Reset() {
 	*x = ListDomainsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[30]
+		mi := &file_zitadel_system_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1824,7 +1934,7 @@ func (x *ListDomainsResponse) String() string {
 func (*ListDomainsResponse) ProtoMessage() {}
 
 func (x *ListDomainsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[30]
+	mi := &file_zitadel_system_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1837,7 +1947,7 @@ func (x *ListDomainsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainsResponse.ProtoReflect.Descriptor instead.
 func (*ListDomainsResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{30}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ListDomainsResponse) GetDetails() *object.ListDetails {
@@ -1873,7 +1983,7 @@ type AddDomainRequest struct {
 func (x *AddDomainRequest) Reset() {
 	*x = AddDomainRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[31]
+		mi := &file_zitadel_system_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1886,7 +1996,7 @@ func (x *AddDomainRequest) String() string {
 func (*AddDomainRequest) ProtoMessage() {}
 
 func (x *AddDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[31]
+	mi := &file_zitadel_system_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1899,7 +2009,7 @@ func (x *AddDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddDomainRequest.ProtoReflect.Descriptor instead.
 func (*AddDomainRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{31}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *AddDomainRequest) GetInstanceId() string {
@@ -1927,7 +2037,7 @@ type AddDomainResponse struct {
 func (x *AddDomainResponse) Reset() {
 	*x = AddDomainResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[32]
+		mi := &file_zitadel_system_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1940,7 +2050,7 @@ func (x *AddDomainResponse) String() string {
 func (*AddDomainResponse) ProtoMessage() {}
 
 func (x *AddDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[32]
+	mi := &file_zitadel_system_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1953,7 +2063,7 @@ func (x *AddDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddDomainResponse.ProtoReflect.Descriptor instead.
 func (*AddDomainResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{32}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *AddDomainResponse) GetDetails() *object.ObjectDetails {
@@ -1975,7 +2085,7 @@ type RemoveDomainRequest struct {
 func (x *RemoveDomainRequest) Reset() {
 	*x = RemoveDomainRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[33]
+		mi := &file_zitadel_system_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1988,7 +2098,7 @@ func (x *RemoveDomainRequest) String() string {
 func (*RemoveDomainRequest) ProtoMessage() {}
 
 func (x *RemoveDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[33]
+	mi := &file_zitadel_system_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2001,7 +2111,7 @@ func (x *RemoveDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveDomainRequest.ProtoReflect.Descriptor instead.
 func (*RemoveDomainRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{33}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *RemoveDomainRequest) GetInstanceId() string {
@@ -2029,7 +2139,7 @@ type RemoveDomainResponse struct {
 func (x *RemoveDomainResponse) Reset() {
 	*x = RemoveDomainResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[34]
+		mi := &file_zitadel_system_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2042,7 +2152,7 @@ func (x *RemoveDomainResponse) String() string {
 func (*RemoveDomainResponse) ProtoMessage() {}
 
 func (x *RemoveDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[34]
+	mi := &file_zitadel_system_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2055,7 +2165,7 @@ func (x *RemoveDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveDomainResponse.ProtoReflect.Descriptor instead.
 func (*RemoveDomainResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{34}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *RemoveDomainResponse) GetDetails() *object.ObjectDetails {
@@ -2077,7 +2187,7 @@ type SetPrimaryDomainRequest struct {
 func (x *SetPrimaryDomainRequest) Reset() {
 	*x = SetPrimaryDomainRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[35]
+		mi := &file_zitadel_system_proto_msgTypes[37]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2090,7 +2200,7 @@ func (x *SetPrimaryDomainRequest) String() string {
 func (*SetPrimaryDomainRequest) ProtoMessage() {}
 
 func (x *SetPrimaryDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[35]
+	mi := &file_zitadel_system_proto_msgTypes[37]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2103,7 +2213,7 @@ func (x *SetPrimaryDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPrimaryDomainRequest.ProtoReflect.Descriptor instead.
 func (*SetPrimaryDomainRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{35}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *SetPrimaryDomainRequest) GetInstanceId() string {
@@ -2131,7 +2241,7 @@ type SetPrimaryDomainResponse struct {
 func (x *SetPrimaryDomainResponse) Reset() {
 	*x = SetPrimaryDomainResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[36]
+		mi := &file_zitadel_system_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2144,7 +2254,7 @@ func (x *SetPrimaryDomainResponse) String() string {
 func (*SetPrimaryDomainResponse) ProtoMessage() {}
 
 func (x *SetPrimaryDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[36]
+	mi := &file_zitadel_system_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2157,7 +2267,7 @@ func (x *SetPrimaryDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPrimaryDomainResponse.ProtoReflect.Descriptor instead.
 func (*SetPrimaryDomainResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{36}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *SetPrimaryDomainResponse) GetDetails() *object.ObjectDetails {
@@ -2181,7 +2291,7 @@ type ChangeSubscriptionRequest struct {
 func (x *ChangeSubscriptionRequest) Reset() {
 	*x = ChangeSubscriptionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[37]
+		mi := &file_zitadel_system_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2194,7 +2304,7 @@ func (x *ChangeSubscriptionRequest) String() string {
 func (*ChangeSubscriptionRequest) ProtoMessage() {}
 
 func (x *ChangeSubscriptionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[37]
+	mi := &file_zitadel_system_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2207,7 +2317,7 @@ func (x *ChangeSubscriptionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeSubscriptionRequest.ProtoReflect.Descriptor instead.
 func (*ChangeSubscriptionRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{37}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ChangeSubscriptionRequest) GetDomain() string {
@@ -2249,7 +2359,7 @@ type ChangeSubscriptionResponse struct {
 func (x *ChangeSubscriptionResponse) Reset() {
 	*x = ChangeSubscriptionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[38]
+		mi := &file_zitadel_system_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2262,7 +2372,7 @@ func (x *ChangeSubscriptionResponse) String() string {
 func (*ChangeSubscriptionResponse) ProtoMessage() {}
 
 func (x *ChangeSubscriptionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[38]
+	mi := &file_zitadel_system_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2275,7 +2385,7 @@ func (x *ChangeSubscriptionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeSubscriptionResponse.ProtoReflect.Descriptor instead.
 func (*ChangeSubscriptionResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{38}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *ChangeSubscriptionResponse) GetDetails() *object.ObjectDetails {
@@ -2295,7 +2405,7 @@ type ListViewsRequest struct {
 func (x *ListViewsRequest) Reset() {
 	*x = ListViewsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[39]
+		mi := &file_zitadel_system_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2308,7 +2418,7 @@ func (x *ListViewsRequest) String() string {
 func (*ListViewsRequest) ProtoMessage() {}
 
 func (x *ListViewsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[39]
+	mi := &file_zitadel_system_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2321,7 +2431,7 @@ func (x *ListViewsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListViewsRequest.ProtoReflect.Descriptor instead.
 func (*ListViewsRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{39}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{41}
 }
 
 type ListViewsResponse struct {
@@ -2336,7 +2446,7 @@ type ListViewsResponse struct {
 func (x *ListViewsResponse) Reset() {
 	*x = ListViewsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[40]
+		mi := &file_zitadel_system_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2349,7 +2459,7 @@ func (x *ListViewsResponse) String() string {
 func (*ListViewsResponse) ProtoMessage() {}
 
 func (x *ListViewsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[40]
+	mi := &file_zitadel_system_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2362,7 +2472,7 @@ func (x *ListViewsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListViewsResponse.ProtoReflect.Descriptor instead.
 func (*ListViewsResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{40}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *ListViewsResponse) GetResult() []*View {
@@ -2384,7 +2494,7 @@ type ClearViewRequest struct {
 func (x *ClearViewRequest) Reset() {
 	*x = ClearViewRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[41]
+		mi := &file_zitadel_system_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2397,7 +2507,7 @@ func (x *ClearViewRequest) String() string {
 func (*ClearViewRequest) ProtoMessage() {}
 
 func (x *ClearViewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[41]
+	mi := &file_zitadel_system_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2410,7 +2520,7 @@ func (x *ClearViewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearViewRequest.ProtoReflect.Descriptor instead.
 func (*ClearViewRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{41}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *ClearViewRequest) GetDatabase() string {
@@ -2437,7 +2547,7 @@ type ClearViewResponse struct {
 func (x *ClearViewResponse) Reset() {
 	*x = ClearViewResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[42]
+		mi := &file_zitadel_system_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2450,7 +2560,7 @@ func (x *ClearViewResponse) String() string {
 func (*ClearViewResponse) ProtoMessage() {}
 
 func (x *ClearViewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[42]
+	mi := &file_zitadel_system_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2463,7 +2573,7 @@ func (x *ClearViewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearViewResponse.ProtoReflect.Descriptor instead.
 func (*ClearViewResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{42}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{44}
 }
 
 // This is an empty request
@@ -2476,7 +2586,7 @@ type ListFailedEventsRequest struct {
 func (x *ListFailedEventsRequest) Reset() {
 	*x = ListFailedEventsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[43]
+		mi := &file_zitadel_system_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2489,7 +2599,7 @@ func (x *ListFailedEventsRequest) String() string {
 func (*ListFailedEventsRequest) ProtoMessage() {}
 
 func (x *ListFailedEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[43]
+	mi := &file_zitadel_system_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2502,7 +2612,7 @@ func (x *ListFailedEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListFailedEventsRequest.ProtoReflect.Descriptor instead.
 func (*ListFailedEventsRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{43}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{45}
 }
 
 type ListFailedEventsResponse struct {
@@ -2517,7 +2627,7 @@ type ListFailedEventsResponse struct {
 func (x *ListFailedEventsResponse) Reset() {
 	*x = ListFailedEventsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[44]
+		mi := &file_zitadel_system_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2530,7 +2640,7 @@ func (x *ListFailedEventsResponse) String() string {
 func (*ListFailedEventsResponse) ProtoMessage() {}
 
 func (x *ListFailedEventsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[44]
+	mi := &file_zitadel_system_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2543,7 +2653,7 @@ func (x *ListFailedEventsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListFailedEventsResponse.ProtoReflect.Descriptor instead.
 func (*ListFailedEventsResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{44}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ListFailedEventsResponse) GetResult() []*FailedEvent {
@@ -2567,7 +2677,7 @@ type RemoveFailedEventRequest struct {
 func (x *RemoveFailedEventRequest) Reset() {
 	*x = RemoveFailedEventRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[45]
+		mi := &file_zitadel_system_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2580,7 +2690,7 @@ func (x *RemoveFailedEventRequest) String() string {
 func (*RemoveFailedEventRequest) ProtoMessage() {}
 
 func (x *RemoveFailedEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[45]
+	mi := &file_zitadel_system_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2593,7 +2703,7 @@ func (x *RemoveFailedEventRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFailedEventRequest.ProtoReflect.Descriptor instead.
 func (*RemoveFailedEventRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{45}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *RemoveFailedEventRequest) GetDatabase() string {
@@ -2634,7 +2744,7 @@ type RemoveFailedEventResponse struct {
 func (x *RemoveFailedEventResponse) Reset() {
 	*x = RemoveFailedEventResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[46]
+		mi := &file_zitadel_system_proto_msgTypes[48]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2647,7 +2757,7 @@ func (x *RemoveFailedEventResponse) String() string {
 func (*RemoveFailedEventResponse) ProtoMessage() {}
 
 func (x *RemoveFailedEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[46]
+	mi := &file_zitadel_system_proto_msgTypes[48]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2660,7 +2770,7 @@ func (x *RemoveFailedEventResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFailedEventResponse.ProtoReflect.Descriptor instead.
 func (*RemoveFailedEventResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{46}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{48}
 }
 
 type View struct {
@@ -2679,7 +2789,7 @@ type View struct {
 func (x *View) Reset() {
 	*x = View{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[47]
+		mi := &file_zitadel_system_proto_msgTypes[49]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2692,7 +2802,7 @@ func (x *View) String() string {
 func (*View) ProtoMessage() {}
 
 func (x *View) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[47]
+	mi := &file_zitadel_system_proto_msgTypes[49]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2705,7 +2815,7 @@ func (x *View) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use View.ProtoReflect.Descriptor instead.
 func (*View) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{47}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *View) GetDatabase() string {
@@ -2766,7 +2876,7 @@ type FailedEvent struct {
 func (x *FailedEvent) Reset() {
 	*x = FailedEvent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[48]
+		mi := &file_zitadel_system_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2779,7 +2889,7 @@ func (x *FailedEvent) String() string {
 func (*FailedEvent) ProtoMessage() {}
 
 func (x *FailedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[48]
+	mi := &file_zitadel_system_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2792,7 +2902,7 @@ func (x *FailedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FailedEvent.ProtoReflect.Descriptor instead.
 func (*FailedEvent) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{48}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *FailedEvent) GetDatabase() string {
@@ -2855,7 +2965,7 @@ type SetInstanceFeatureRequest struct {
 func (x *SetInstanceFeatureRequest) Reset() {
 	*x = SetInstanceFeatureRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[49]
+		mi := &file_zitadel_system_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2868,7 +2978,7 @@ func (x *SetInstanceFeatureRequest) String() string {
 func (*SetInstanceFeatureRequest) ProtoMessage() {}
 
 func (x *SetInstanceFeatureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[49]
+	mi := &file_zitadel_system_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2881,7 +2991,7 @@ func (x *SetInstanceFeatureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetInstanceFeatureRequest.ProtoReflect.Descriptor instead.
 func (*SetInstanceFeatureRequest) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{49}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *SetInstanceFeatureRequest) GetInstanceId() string {
@@ -2933,7 +3043,7 @@ type SetInstanceFeatureResponse struct {
 func (x *SetInstanceFeatureResponse) Reset() {
 	*x = SetInstanceFeatureResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[50]
+		mi := &file_zitadel_system_proto_msgTypes[52]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2946,7 +3056,7 @@ func (x *SetInstanceFeatureResponse) String() string {
 func (*SetInstanceFeatureResponse) ProtoMessage() {}
 
 func (x *SetInstanceFeatureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[50]
+	mi := &file_zitadel_system_proto_msgTypes[52]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2959,7 +3069,7 @@ func (x *SetInstanceFeatureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetInstanceFeatureResponse.ProtoReflect.Descriptor instead.
 func (*SetInstanceFeatureResponse) Descriptor() ([]byte, []int) {
-	return file_zitadel_system_proto_rawDescGZIP(), []int{50}
+	return file_zitadel_system_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *SetInstanceFeatureResponse) GetDetails() *object.ObjectDetails {
@@ -2982,7 +3092,7 @@ type AddInstanceRequest_Profile struct {
 func (x *AddInstanceRequest_Profile) Reset() {
 	*x = AddInstanceRequest_Profile{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[51]
+		mi := &file_zitadel_system_proto_msgTypes[53]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2995,7 +3105,7 @@ func (x *AddInstanceRequest_Profile) String() string {
 func (*AddInstanceRequest_Profile) ProtoMessage() {}
 
 func (x *AddInstanceRequest_Profile) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[51]
+	mi := &file_zitadel_system_proto_msgTypes[53]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3044,7 +3154,7 @@ type AddInstanceRequest_Email struct {
 func (x *AddInstanceRequest_Email) Reset() {
 	*x = AddInstanceRequest_Email{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[52]
+		mi := &file_zitadel_system_proto_msgTypes[54]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3057,7 +3167,7 @@ func (x *AddInstanceRequest_Email) String() string {
 func (*AddInstanceRequest_Email) ProtoMessage() {}
 
 func (x *AddInstanceRequest_Email) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[52]
+	mi := &file_zitadel_system_proto_msgTypes[54]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3099,7 +3209,7 @@ type AddInstanceRequest_Password struct {
 func (x *AddInstanceRequest_Password) Reset() {
 	*x = AddInstanceRequest_Password{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[53]
+		mi := &file_zitadel_system_proto_msgTypes[55]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3112,7 +3222,7 @@ func (x *AddInstanceRequest_Password) String() string {
 func (*AddInstanceRequest_Password) ProtoMessage() {}
 
 func (x *AddInstanceRequest_Password) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[53]
+	mi := &file_zitadel_system_proto_msgTypes[55]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3155,7 +3265,7 @@ type CreateInstanceRequest_Profile struct {
 func (x *CreateInstanceRequest_Profile) Reset() {
 	*x = CreateInstanceRequest_Profile{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[54]
+		mi := &file_zitadel_system_proto_msgTypes[56]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3168,7 +3278,7 @@ func (x *CreateInstanceRequest_Profile) String() string {
 func (*CreateInstanceRequest_Profile) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_Profile) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[54]
+	mi := &file_zitadel_system_proto_msgTypes[56]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3217,7 +3327,7 @@ type CreateInstanceRequest_Email struct {
 func (x *CreateInstanceRequest_Email) Reset() {
 	*x = CreateInstanceRequest_Email{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[55]
+		mi := &file_zitadel_system_proto_msgTypes[57]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3230,7 +3340,7 @@ func (x *CreateInstanceRequest_Email) String() string {
 func (*CreateInstanceRequest_Email) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_Email) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[55]
+	mi := &file_zitadel_system_proto_msgTypes[57]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3272,7 +3382,7 @@ type CreateInstanceRequest_Password struct {
 func (x *CreateInstanceRequest_Password) Reset() {
 	*x = CreateInstanceRequest_Password{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[56]
+		mi := &file_zitadel_system_proto_msgTypes[58]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3285,7 +3395,7 @@ func (x *CreateInstanceRequest_Password) String() string {
 func (*CreateInstanceRequest_Password) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_Password) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[56]
+	mi := &file_zitadel_system_proto_msgTypes[58]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3329,7 +3439,7 @@ type CreateInstanceRequest_Human struct {
 func (x *CreateInstanceRequest_Human) Reset() {
 	*x = CreateInstanceRequest_Human{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[57]
+		mi := &file_zitadel_system_proto_msgTypes[59]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3342,7 +3452,7 @@ func (x *CreateInstanceRequest_Human) String() string {
 func (*CreateInstanceRequest_Human) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_Human) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[57]
+	mi := &file_zitadel_system_proto_msgTypes[59]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3397,7 +3507,7 @@ type CreateInstanceRequest_PersonalAccessToken struct {
 func (x *CreateInstanceRequest_PersonalAccessToken) Reset() {
 	*x = CreateInstanceRequest_PersonalAccessToken{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[58]
+		mi := &file_zitadel_system_proto_msgTypes[60]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3410,7 +3520,7 @@ func (x *CreateInstanceRequest_PersonalAccessToken) String() string {
 func (*CreateInstanceRequest_PersonalAccessToken) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_PersonalAccessToken) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[58]
+	mi := &file_zitadel_system_proto_msgTypes[60]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3445,7 +3555,7 @@ type CreateInstanceRequest_MachineKey struct {
 func (x *CreateInstanceRequest_MachineKey) Reset() {
 	*x = CreateInstanceRequest_MachineKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[59]
+		mi := &file_zitadel_system_proto_msgTypes[61]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3458,7 +3568,7 @@ func (x *CreateInstanceRequest_MachineKey) String() string {
 func (*CreateInstanceRequest_MachineKey) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_MachineKey) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[59]
+	mi := &file_zitadel_system_proto_msgTypes[61]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3502,7 +3612,7 @@ type CreateInstanceRequest_Machine struct {
 func (x *CreateInstanceRequest_Machine) Reset() {
 	*x = CreateInstanceRequest_Machine{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_system_proto_msgTypes[60]
+		mi := &file_zitadel_system_proto_msgTypes[62]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3515,7 +3625,7 @@ func (x *CreateInstanceRequest_Machine) String() string {
 func (*CreateInstanceRequest_Machine) ProtoMessage() {}
 
 func (x *CreateInstanceRequest_Machine) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_system_proto_msgTypes[60]
+	mi := &file_zitadel_system_proto_msgTypes[62]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3971,7 +4081,7 @@ var file_zitadel_system_proto_rawDesc = []byte{
 	0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19,
 	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65,
 	0x63, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69,
-	0x6c, 0x73, 0x22, 0xe4, 0x02, 0x0a, 0x10, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73,
+	0x6c, 0x73, 0x22, 0xde, 0x03, 0x0a, 0x10, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2b, 0x0a, 0x0b, 0x69, 0x6e, 0x73, 0x74, 0x61,
 	0x6e, 0x63, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x0a, 0xfa, 0x42,
 	0x07, 0x72, 0x05, 0x10, 0x01, 0x18, 0xc8, 0x01, 0x52, 0x0a, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e,
@@ -3993,11 +4103,33 @@ var file_zitadel_system_proto_rawDesc = []byte{
 	0x73, 0x65, 0x74, 0x2c, 0x20, 0x69, 0x74, 0x20, 0x6f, 0x76, 0x65, 0x72, 0x77, 0x72, 0x69, 0x74,
 	0x65, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x20, 0x64, 0x65,
 	0x66, 0x61, 0x75, 0x6c, 0x74, 0x2e, 0x52, 0x11, 0x61, 0x75, 0x64, 0x69, 0x74, 0x4c, 0x6f, 0x67,
-	0x52, 0x65, 0x74, 0x65, 0x6e, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x48, 0x0a, 0x11, 0x53, 0x65, 0x74,
-	0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33,
-	0x0a, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x19, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a,
-	0x65, 0x63, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61,
+	0x52, 0x65, 0x74, 0x65, 0x6e, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x6e, 0x0a, 0x05, 0x62, 0x6c, 0x6f,
+	0x63, 0x6b, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x42, 0x53, 0x92, 0x41, 0x50, 0x32, 0x4e, 0x69,
+	0x66, 0x20, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x69, 0x73, 0x20, 0x74, 0x72, 0x75, 0x65, 0x2c,
+	0x20, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x20, 0x61, 0x72, 0x65, 0x20, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x64, 0x65, 0x64, 0x20, 0x77, 0x69, 0x74, 0x68, 0x20, 0x61, 0x20, 0x72,
+	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x20, 0x65, 0x78, 0x68, 0x61, 0x75, 0x73, 0x74, 0x65,
+	0x64, 0x20, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x2e, 0x48, 0x00, 0x52,
+	0x05, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x62, 0x6c,
+	0x6f, 0x63, 0x6b, 0x22, 0x48, 0x0a, 0x11, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a, 0x07, 0x64, 0x65, 0x74, 0x61,
+	0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x7a, 0x69, 0x74, 0x61,
+	0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x44, 0x65, 0x74,
+	0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x22, 0x53, 0x0a,
+	0x14, 0x42, 0x75, 0x6c, 0x6b, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x3b, 0x0a, 0x06, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x18,
+	0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e,
+	0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d,
+	0x69, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x06, 0x6c, 0x69, 0x6d, 0x69,
+	0x74, 0x73, 0x22, 0x8e, 0x01, 0x0a, 0x15, 0x42, 0x75, 0x6c, 0x6b, 0x53, 0x65, 0x74, 0x4c, 0x69,
+	0x6d, 0x69, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a, 0x07,
+	0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e,
+	0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63,
+	0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c,
+	0x73, 0x12, 0x40, 0x0a, 0x0e, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x5f, 0x64, 0x65, 0x74, 0x61,
+	0x69, 0x6c, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x7a, 0x69, 0x74, 0x61,
+	0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x44, 0x65, 0x74,
+	0x61, 0x69, 0x6c, 0x73, 0x52, 0x0d, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x44, 0x65, 0x74, 0x61,
 	0x69, 0x6c, 0x73, 0x22, 0x41, 0x0a, 0x12, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69,
 	0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2b, 0x0a, 0x0b, 0x69, 0x6e, 0x73,
 	0x74, 0x61, 0x6e, 0x63, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x0a,
@@ -4214,7 +4346,7 @@ var file_zitadel_system_proto_rawDesc = []byte{
 	0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x7a,
 	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74,
 	0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73,
-	0x32, 0x90, 0x23, 0x0a, 0x0d, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x53, 0x65, 0x72, 0x76, 0x69,
+	0x32, 0xca, 0x25, 0x0a, 0x0d, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x53, 0x65, 0x72, 0x76, 0x69,
 	0x63, 0x65, 0x12, 0xae, 0x01, 0x0a, 0x07, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x7a, 0x12, 0x21,
 	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e,
 	0x76, 0x31, 0x2e, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x7a, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
@@ -4474,72 +4606,92 @@ var file_zitadel_system_proto_rawDesc = []byte{
 	0x6c, 0x65, 0x61, 0x73, 0x74, 0x20, 0x6f, 0x6e, 0x65, 0x20, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x20,
 	0x6d, 0x75, 0x73, 0x74, 0x20, 0x62, 0x65, 0x20, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x65,
 	0x64, 0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65, 0x66, 0x69, 0x6e, 0x69, 0x74,
-	0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0xc2,
-	0x02, 0x0a, 0x0b, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x12, 0x25,
-	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e,
-	0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e,
-	0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c,
-	0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xe3, 0x01,
-	0x82, 0xd3, 0xe4, 0x93, 0x02, 0x21, 0x2a, 0x1f, 0x2f, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63,
-	0x65, 0x73, 0x2f, 0x7b, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x5f, 0x69, 0x64, 0x7d,
-	0x2f, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x82, 0xb5, 0x18, 0x16, 0x0a, 0x14, 0x73, 0x79, 0x73,
-	0x74, 0x65, 0x6d, 0x2e, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x92, 0x41, 0x9e, 0x01, 0x0a, 0x0d, 0x55, 0x73, 0x61, 0x67, 0x65, 0x20, 0x43, 0x6f, 0x6e,
-	0x74, 0x72, 0x6f, 0x6c, 0x0a, 0x06, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x4a, 0x30, 0x0a, 0x03,
-	0x32, 0x30, 0x30, 0x12, 0x29, 0x0a, 0x27, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x20, 0x61, 0x72,
-	0x65, 0x20, 0x72, 0x65, 0x73, 0x65, 0x74, 0x20, 0x74, 0x6f, 0x20, 0x74, 0x68, 0x65, 0x20, 0x73,
-	0x79, 0x73, 0x74, 0x65, 0x6d, 0x20, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x4a, 0x53,
-	0x0a, 0x03, 0x34, 0x30, 0x34, 0x12, 0x4c, 0x0a, 0x2d, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x20,
-	0x61, 0x72, 0x65, 0x20, 0x61, 0x6c, 0x72, 0x65, 0x61, 0x64, 0x79, 0x20, 0x73, 0x65, 0x74, 0x20,
-	0x74, 0x6f, 0x20, 0x74, 0x68, 0x65, 0x20, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x20, 0x64, 0x65,
-	0x66, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65,
-	0x66, 0x69, 0x6e, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x42, 0xb9, 0x05, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64,
-	0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x73, 0x79, 0x73, 0x74,
-	0x65, 0x6d, 0x92, 0x41, 0x89, 0x05, 0x12, 0xda, 0x01, 0x0a, 0x0a, 0x53, 0x79, 0x73, 0x74, 0x65,
-	0x6d, 0x20, 0x41, 0x50, 0x49, 0x12, 0x53, 0x54, 0x68, 0x69, 0x73, 0x20, 0x41, 0x50, 0x49, 0x20,
-	0x69, 0x73, 0x20, 0x69, 0x6e, 0x74, 0x65, 0x6e, 0x64, 0x65, 0x64, 0x20, 0x74, 0x6f, 0x20, 0x63,
-	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x75, 0x72, 0x65, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x6d, 0x61, 0x6e,
-	0x61, 0x67, 0x65, 0x20, 0x74, 0x68, 0x65, 0x20, 0x64, 0x69, 0x66, 0x66, 0x65, 0x72, 0x65, 0x6e,
-	0x74, 0x20, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x73, 0x20, 0x77, 0x68, 0x69, 0x74, 0x68, 0x69,
-	0x6e, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45, 0x4c, 0x2e, 0x22, 0x2e, 0x0a, 0x07, 0x5a, 0x49,
-	0x54, 0x41, 0x44, 0x45, 0x4c, 0x12, 0x13, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x6f, 0x6d, 0x1a, 0x0e, 0x68, 0x69, 0x40, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x6f, 0x6d, 0x2a, 0x42, 0x0a, 0x0a, 0x41, 0x70,
-	0x61, 0x63, 0x68, 0x65, 0x20, 0x32, 0x2e, 0x30, 0x12, 0x34, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a,
-	0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74,
-	0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x62, 0x6c, 0x6f,
-	0x62, 0x2f, 0x6d, 0x61, 0x69, 0x6e, 0x2f, 0x4c, 0x49, 0x43, 0x45, 0x4e, 0x53, 0x45, 0x32, 0x03,
-	0x31, 0x2e, 0x30, 0x1a, 0x0e, 0x24, 0x43, 0x55, 0x53, 0x54, 0x4f, 0x4d, 0x2d, 0x44, 0x4f, 0x4d,
-	0x41, 0x49, 0x4e, 0x22, 0x0a, 0x2f, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2f, 0x76, 0x31, 0x2a,
-	0x02, 0x02, 0x01, 0x32, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x32, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x32, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x3a, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x3a, 0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x3a, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x52, 0x6d, 0x0a, 0x03, 0x34, 0x30, 0x33, 0x12, 0x66, 0x0a, 0x47, 0x52, 0x65,
-	0x74, 0x75, 0x72, 0x6e, 0x65, 0x64, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x74, 0x68, 0x65, 0x20,
-	0x75, 0x73, 0x65, 0x72, 0x20, 0x64, 0x6f, 0x65, 0x73, 0x20, 0x6e, 0x6f, 0x74, 0x20, 0x68, 0x61,
-	0x76, 0x65, 0x20, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x20, 0x74, 0x6f,
-	0x20, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x72, 0x65, 0x73, 0x6f,
-	0x75, 0x72, 0x63, 0x65, 0x2e, 0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65, 0x66,
-	0x69, 0x6e, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74,
-	0x75, 0x73, 0x52, 0x50, 0x0a, 0x03, 0x34, 0x30, 0x34, 0x12, 0x49, 0x0a, 0x2a, 0x52, 0x65, 0x74,
-	0x75, 0x72, 0x6e, 0x65, 0x64, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x74, 0x68, 0x65, 0x20, 0x72,
-	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x20, 0x64, 0x6f, 0x65, 0x73, 0x20, 0x6e, 0x6f, 0x74,
-	0x20, 0x65, 0x78, 0x69, 0x73, 0x74, 0x2e, 0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64,
-	0x65, 0x66, 0x69, 0x6e, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74,
-	0x61, 0x74, 0x75, 0x73, 0x6a, 0x09, 0x0a, 0x07, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x6c, 0x72,
-	0x3e, 0x0a, 0x22, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x65, 0x64, 0x20, 0x69, 0x6e, 0x66, 0x6f,
-	0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x61, 0x62, 0x6f, 0x75, 0x74, 0x20, 0x5a, 0x49,
-	0x54, 0x41, 0x44, 0x45, 0x4c, 0x12, 0x18, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x6f, 0x63, 0x73, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0xb7,
+	0x02, 0x0a, 0x0d, 0x42, 0x75, 0x6c, 0x6b, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73,
+	0x12, 0x27, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65,
+	0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x42, 0x75, 0x6c, 0x6b, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69,
+	0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x7a, 0x69, 0x74, 0x61,
+	0x64, 0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x42, 0x75,
+	0x6c, 0x6b, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0xd2, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x17, 0x2f, 0x69,
+	0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x73, 0x2f, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x2f,
+	0x5f, 0x62, 0x75, 0x6c, 0x6b, 0x3a, 0x01, 0x2a, 0x82, 0xb5, 0x18, 0x15, 0x0a, 0x13, 0x73, 0x79,
+	0x73, 0x74, 0x65, 0x6d, 0x2e, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x2e, 0x77, 0x72, 0x69, 0x74,
+	0x65, 0x92, 0x41, 0x93, 0x01, 0x0a, 0x0d, 0x55, 0x73, 0x61, 0x67, 0x65, 0x20, 0x43, 0x6f, 0x6e,
+	0x74, 0x72, 0x6f, 0x6c, 0x0a, 0x06, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x4a, 0x1c, 0x0a, 0x03,
+	0x32, 0x30, 0x30, 0x12, 0x15, 0x0a, 0x13, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x20,
+	0x6c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x20, 0x73, 0x65, 0x74, 0x4a, 0x5c, 0x0a, 0x03, 0x34, 0x30,
+	0x30, 0x12, 0x55, 0x0a, 0x36, 0x41, 0x74, 0x20, 0x6c, 0x65, 0x61, 0x73, 0x74, 0x20, 0x6f, 0x6e,
+	0x65, 0x20, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x20, 0x6d, 0x75, 0x73, 0x74, 0x20, 0x62, 0x65, 0x20,
+	0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x65, 0x64, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x65, 0x61,
+	0x63, 0x68, 0x20, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x1b, 0x0a, 0x19, 0x1a,
+	0x17, 0x23, 0x2f, 0x64, 0x65, 0x66, 0x69, 0x6e, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72,
+	0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0xc2, 0x02, 0x0a, 0x0b, 0x52, 0x65, 0x73,
+	0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x12, 0x25, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64,
+	0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73,
+	0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x26, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d,
+	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x74, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xe3, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x21,
+	0x2a, 0x1f, 0x2f, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x6e,
+	0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6c, 0x69, 0x6d, 0x69, 0x74,
+	0x73, 0x82, 0xb5, 0x18, 0x16, 0x0a, 0x14, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x6c, 0x69,
+	0x6d, 0x69, 0x74, 0x73, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x92, 0x41, 0x9e, 0x01, 0x0a,
+	0x0d, 0x55, 0x73, 0x61, 0x67, 0x65, 0x20, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x0a, 0x06,
+	0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x4a, 0x30, 0x0a, 0x03, 0x32, 0x30, 0x30, 0x12, 0x29, 0x0a,
+	0x27, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x20, 0x61, 0x72, 0x65, 0x20, 0x72, 0x65, 0x73, 0x65,
+	0x74, 0x20, 0x74, 0x6f, 0x20, 0x74, 0x68, 0x65, 0x20, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x20,
+	0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x4a, 0x53, 0x0a, 0x03, 0x34, 0x30, 0x34, 0x12,
+	0x4c, 0x0a, 0x2d, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x73, 0x20, 0x61, 0x72, 0x65, 0x20, 0x61, 0x6c,
+	0x72, 0x65, 0x61, 0x64, 0x79, 0x20, 0x73, 0x65, 0x74, 0x20, 0x74, 0x6f, 0x20, 0x74, 0x68, 0x65,
+	0x20, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x20, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65, 0x66, 0x69, 0x6e, 0x69, 0x74, 0x69,
+	0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0xb9, 0x05,
+	0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74,
+	0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67,
+	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x92, 0x41, 0x89, 0x05,
+	0x12, 0xda, 0x01, 0x0a, 0x0a, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x20, 0x41, 0x50, 0x49, 0x12,
+	0x53, 0x54, 0x68, 0x69, 0x73, 0x20, 0x41, 0x50, 0x49, 0x20, 0x69, 0x73, 0x20, 0x69, 0x6e, 0x74,
+	0x65, 0x6e, 0x64, 0x65, 0x64, 0x20, 0x74, 0x6f, 0x20, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x75,
+	0x72, 0x65, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x20, 0x74, 0x68,
+	0x65, 0x20, 0x64, 0x69, 0x66, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x74, 0x20, 0x74, 0x65, 0x6e, 0x61,
+	0x6e, 0x74, 0x73, 0x20, 0x77, 0x68, 0x69, 0x74, 0x68, 0x69, 0x6e, 0x20, 0x5a, 0x49, 0x54, 0x41,
+	0x44, 0x45, 0x4c, 0x2e, 0x22, 0x2e, 0x0a, 0x07, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45, 0x4c, 0x12,
+	0x13, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
+	0x2e, 0x63, 0x6f, 0x6d, 0x1a, 0x0e, 0x68, 0x69, 0x40, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2a, 0x42, 0x0a, 0x0a, 0x41, 0x70, 0x61, 0x63, 0x68, 0x65, 0x20, 0x32,
+	0x2e, 0x30, 0x12, 0x34, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a,
+	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x62, 0x6c, 0x6f, 0x62, 0x2f, 0x6d, 0x61, 0x69, 0x6e,
+	0x2f, 0x4c, 0x49, 0x43, 0x45, 0x4e, 0x53, 0x45, 0x32, 0x03, 0x31, 0x2e, 0x30, 0x1a, 0x0e, 0x24,
+	0x43, 0x55, 0x53, 0x54, 0x4f, 0x4d, 0x2d, 0x44, 0x4f, 0x4d, 0x41, 0x49, 0x4e, 0x22, 0x0a, 0x2f,
+	0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2f, 0x76, 0x31, 0x2a, 0x02, 0x02, 0x01, 0x32, 0x10, 0x61,
+	0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x32,
+	0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70,
+	0x63, 0x32, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67,
+	0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3a, 0x10, 0x61,
+	0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x6a, 0x73, 0x6f, 0x6e, 0x3a,
+	0x10, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67, 0x72, 0x70,
+	0x63, 0x3a, 0x1a, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x67,
+	0x72, 0x70, 0x63, 0x2d, 0x77, 0x65, 0x62, 0x2b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x52, 0x6d, 0x0a,
+	0x03, 0x34, 0x30, 0x33, 0x12, 0x66, 0x0a, 0x47, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x65, 0x64,
+	0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x74, 0x68, 0x65, 0x20, 0x75, 0x73, 0x65, 0x72, 0x20, 0x64,
+	0x6f, 0x65, 0x73, 0x20, 0x6e, 0x6f, 0x74, 0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x70, 0x65, 0x72,
+	0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x20, 0x74, 0x6f, 0x20, 0x61, 0x63, 0x63, 0x65, 0x73,
+	0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x2e, 0x12,
+	0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65, 0x66, 0x69, 0x6e, 0x69, 0x74, 0x69, 0x6f,
+	0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x50, 0x0a, 0x03,
+	0x34, 0x30, 0x34, 0x12, 0x49, 0x0a, 0x2a, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x65, 0x64, 0x20,
+	0x77, 0x68, 0x65, 0x6e, 0x20, 0x74, 0x68, 0x65, 0x20, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63,
+	0x65, 0x20, 0x64, 0x6f, 0x65, 0x73, 0x20, 0x6e, 0x6f, 0x74, 0x20, 0x65, 0x78, 0x69, 0x73, 0x74,
+	0x2e, 0x12, 0x1b, 0x0a, 0x19, 0x1a, 0x17, 0x23, 0x2f, 0x64, 0x65, 0x66, 0x69, 0x6e, 0x69, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x72, 0x70, 0x63, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x6a, 0x09,
+	0x0a, 0x07, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x6c, 0x72, 0x3e, 0x0a, 0x22, 0x44, 0x65, 0x74,
+	0x61, 0x69, 0x6c, 0x65, 0x64, 0x20, 0x69, 0x6e, 0x66, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x20, 0x61, 0x62, 0x6f, 0x75, 0x74, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45, 0x4c, 0x12,
+	0x18, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x6f, 0x63, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -4554,7 +4706,7 @@ func file_zitadel_system_proto_rawDescGZIP() []byte {
 	return file_zitadel_system_proto_rawDescData
 }
 
-var file_zitadel_system_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
+var file_zitadel_system_proto_msgTypes = make([]protoimpl.MessageInfo, 63)
 var file_zitadel_system_proto_goTypes = []interface{}{
 	(*HealthzRequest)(nil),                            // 0: zitadel.system.v1.HealthzRequest
 	(*HealthzResponse)(nil),                           // 1: zitadel.system.v1.HealthzResponse
@@ -4581,173 +4733,180 @@ var file_zitadel_system_proto_goTypes = []interface{}{
 	(*RemoveQuotaResponse)(nil),                       // 22: zitadel.system.v1.RemoveQuotaResponse
 	(*SetLimitsRequest)(nil),                          // 23: zitadel.system.v1.SetLimitsRequest
 	(*SetLimitsResponse)(nil),                         // 24: zitadel.system.v1.SetLimitsResponse
-	(*ResetLimitsRequest)(nil),                        // 25: zitadel.system.v1.ResetLimitsRequest
-	(*ResetLimitsResponse)(nil),                       // 26: zitadel.system.v1.ResetLimitsResponse
-	(*ExistsDomainRequest)(nil),                       // 27: zitadel.system.v1.ExistsDomainRequest
-	(*ExistsDomainResponse)(nil),                      // 28: zitadel.system.v1.ExistsDomainResponse
-	(*ListDomainsRequest)(nil),                        // 29: zitadel.system.v1.ListDomainsRequest
-	(*ListDomainsResponse)(nil),                       // 30: zitadel.system.v1.ListDomainsResponse
-	(*AddDomainRequest)(nil),                          // 31: zitadel.system.v1.AddDomainRequest
-	(*AddDomainResponse)(nil),                         // 32: zitadel.system.v1.AddDomainResponse
-	(*RemoveDomainRequest)(nil),                       // 33: zitadel.system.v1.RemoveDomainRequest
-	(*RemoveDomainResponse)(nil),                      // 34: zitadel.system.v1.RemoveDomainResponse
-	(*SetPrimaryDomainRequest)(nil),                   // 35: zitadel.system.v1.SetPrimaryDomainRequest
-	(*SetPrimaryDomainResponse)(nil),                  // 36: zitadel.system.v1.SetPrimaryDomainResponse
-	(*ChangeSubscriptionRequest)(nil),                 // 37: zitadel.system.v1.ChangeSubscriptionRequest
-	(*ChangeSubscriptionResponse)(nil),                // 38: zitadel.system.v1.ChangeSubscriptionResponse
-	(*ListViewsRequest)(nil),                          // 39: zitadel.system.v1.ListViewsRequest
-	(*ListViewsResponse)(nil),                         // 40: zitadel.system.v1.ListViewsResponse
-	(*ClearViewRequest)(nil),                          // 41: zitadel.system.v1.ClearViewRequest
-	(*ClearViewResponse)(nil),                         // 42: zitadel.system.v1.ClearViewResponse
-	(*ListFailedEventsRequest)(nil),                   // 43: zitadel.system.v1.ListFailedEventsRequest
-	(*ListFailedEventsResponse)(nil),                  // 44: zitadel.system.v1.ListFailedEventsResponse
-	(*RemoveFailedEventRequest)(nil),                  // 45: zitadel.system.v1.RemoveFailedEventRequest
-	(*RemoveFailedEventResponse)(nil),                 // 46: zitadel.system.v1.RemoveFailedEventResponse
-	(*View)(nil),                                      // 47: zitadel.system.v1.View
-	(*FailedEvent)(nil),                               // 48: zitadel.system.v1.FailedEvent
-	(*SetInstanceFeatureRequest)(nil),                 // 49: zitadel.system.v1.SetInstanceFeatureRequest
-	(*SetInstanceFeatureResponse)(nil),                // 50: zitadel.system.v1.SetInstanceFeatureResponse
-	(*AddInstanceRequest_Profile)(nil),                // 51: zitadel.system.v1.AddInstanceRequest.Profile
-	(*AddInstanceRequest_Email)(nil),                  // 52: zitadel.system.v1.AddInstanceRequest.Email
-	(*AddInstanceRequest_Password)(nil),               // 53: zitadel.system.v1.AddInstanceRequest.Password
-	(*CreateInstanceRequest_Profile)(nil),             // 54: zitadel.system.v1.CreateInstanceRequest.Profile
-	(*CreateInstanceRequest_Email)(nil),               // 55: zitadel.system.v1.CreateInstanceRequest.Email
-	(*CreateInstanceRequest_Password)(nil),            // 56: zitadel.system.v1.CreateInstanceRequest.Password
-	(*CreateInstanceRequest_Human)(nil),               // 57: zitadel.system.v1.CreateInstanceRequest.Human
-	(*CreateInstanceRequest_PersonalAccessToken)(nil), // 58: zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken
-	(*CreateInstanceRequest_MachineKey)(nil),          // 59: zitadel.system.v1.CreateInstanceRequest.MachineKey
-	(*CreateInstanceRequest_Machine)(nil),             // 60: zitadel.system.v1.CreateInstanceRequest.Machine
-	(*object.ListQuery)(nil),                          // 61: zitadel.v1.ListQuery
-	(instance.FieldName)(0),                           // 62: zitadel.instance.v1.FieldName
-	(*instance.Query)(nil),                            // 63: zitadel.instance.v1.Query
-	(*object.ListDetails)(nil),                        // 64: zitadel.v1.ListDetails
-	(*instance.Instance)(nil),                         // 65: zitadel.instance.v1.Instance
-	(*instance.InstanceDetail)(nil),                   // 66: zitadel.instance.v1.InstanceDetail
-	(*object.ObjectDetails)(nil),                      // 67: zitadel.v1.ObjectDetails
-	(*member.SearchQuery)(nil),                        // 68: zitadel.member.v1.SearchQuery
-	(*member.Member)(nil),                             // 69: zitadel.member.v1.Member
-	(quota.Unit)(0),                                   // 70: zitadel.quota.v1.Unit
-	(*timestamppb.Timestamp)(nil),                     // 71: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),                       // 72: google.protobuf.Duration
-	(*quota.Notification)(nil),                        // 73: zitadel.quota.v1.Notification
-	(instance.DomainFieldName)(0),                     // 74: zitadel.instance.v1.DomainFieldName
-	(*instance.DomainSearchQuery)(nil),                // 75: zitadel.instance.v1.DomainSearchQuery
-	(*instance.Domain)(nil),                           // 76: zitadel.instance.v1.Domain
-	(feature.InstanceFeature)(0),                      // 77: zitadel.feature.v1.InstanceFeature
-	(authn.KeyType)(0),                                // 78: zitadel.authn.v1.KeyType
+	(*BulkSetLimitsRequest)(nil),                      // 25: zitadel.system.v1.BulkSetLimitsRequest
+	(*BulkSetLimitsResponse)(nil),                     // 26: zitadel.system.v1.BulkSetLimitsResponse
+	(*ResetLimitsRequest)(nil),                        // 27: zitadel.system.v1.ResetLimitsRequest
+	(*ResetLimitsResponse)(nil),                       // 28: zitadel.system.v1.ResetLimitsResponse
+	(*ExistsDomainRequest)(nil),                       // 29: zitadel.system.v1.ExistsDomainRequest
+	(*ExistsDomainResponse)(nil),                      // 30: zitadel.system.v1.ExistsDomainResponse
+	(*ListDomainsRequest)(nil),                        // 31: zitadel.system.v1.ListDomainsRequest
+	(*ListDomainsResponse)(nil),                       // 32: zitadel.system.v1.ListDomainsResponse
+	(*AddDomainRequest)(nil),                          // 33: zitadel.system.v1.AddDomainRequest
+	(*AddDomainResponse)(nil),                         // 34: zitadel.system.v1.AddDomainResponse
+	(*RemoveDomainRequest)(nil),                       // 35: zitadel.system.v1.RemoveDomainRequest
+	(*RemoveDomainResponse)(nil),                      // 36: zitadel.system.v1.RemoveDomainResponse
+	(*SetPrimaryDomainRequest)(nil),                   // 37: zitadel.system.v1.SetPrimaryDomainRequest
+	(*SetPrimaryDomainResponse)(nil),                  // 38: zitadel.system.v1.SetPrimaryDomainResponse
+	(*ChangeSubscriptionRequest)(nil),                 // 39: zitadel.system.v1.ChangeSubscriptionRequest
+	(*ChangeSubscriptionResponse)(nil),                // 40: zitadel.system.v1.ChangeSubscriptionResponse
+	(*ListViewsRequest)(nil),                          // 41: zitadel.system.v1.ListViewsRequest
+	(*ListViewsResponse)(nil),                         // 42: zitadel.system.v1.ListViewsResponse
+	(*ClearViewRequest)(nil),                          // 43: zitadel.system.v1.ClearViewRequest
+	(*ClearViewResponse)(nil),                         // 44: zitadel.system.v1.ClearViewResponse
+	(*ListFailedEventsRequest)(nil),                   // 45: zitadel.system.v1.ListFailedEventsRequest
+	(*ListFailedEventsResponse)(nil),                  // 46: zitadel.system.v1.ListFailedEventsResponse
+	(*RemoveFailedEventRequest)(nil),                  // 47: zitadel.system.v1.RemoveFailedEventRequest
+	(*RemoveFailedEventResponse)(nil),                 // 48: zitadel.system.v1.RemoveFailedEventResponse
+	(*View)(nil),                                      // 49: zitadel.system.v1.View
+	(*FailedEvent)(nil),                               // 50: zitadel.system.v1.FailedEvent
+	(*SetInstanceFeatureRequest)(nil),                 // 51: zitadel.system.v1.SetInstanceFeatureRequest
+	(*SetInstanceFeatureResponse)(nil),                // 52: zitadel.system.v1.SetInstanceFeatureResponse
+	(*AddInstanceRequest_Profile)(nil),                // 53: zitadel.system.v1.AddInstanceRequest.Profile
+	(*AddInstanceRequest_Email)(nil),                  // 54: zitadel.system.v1.AddInstanceRequest.Email
+	(*AddInstanceRequest_Password)(nil),               // 55: zitadel.system.v1.AddInstanceRequest.Password
+	(*CreateInstanceRequest_Profile)(nil),             // 56: zitadel.system.v1.CreateInstanceRequest.Profile
+	(*CreateInstanceRequest_Email)(nil),               // 57: zitadel.system.v1.CreateInstanceRequest.Email
+	(*CreateInstanceRequest_Password)(nil),            // 58: zitadel.system.v1.CreateInstanceRequest.Password
+	(*CreateInstanceRequest_Human)(nil),               // 59: zitadel.system.v1.CreateInstanceRequest.Human
+	(*CreateInstanceRequest_PersonalAccessToken)(nil), // 60: zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken
+	(*CreateInstanceRequest_MachineKey)(nil),          // 61: zitadel.system.v1.CreateInstanceRequest.MachineKey
+	(*CreateInstanceRequest_Machine)(nil),             // 62: zitadel.system.v1.CreateInstanceRequest.Machine
+	(*object.ListQuery)(nil),                          // 63: zitadel.v1.ListQuery
+	(instance.FieldName)(0),                           // 64: zitadel.instance.v1.FieldName
+	(*instance.Query)(nil),                            // 65: zitadel.instance.v1.Query
+	(*object.ListDetails)(nil),                        // 66: zitadel.v1.ListDetails
+	(*instance.Instance)(nil),                         // 67: zitadel.instance.v1.Instance
+	(*instance.InstanceDetail)(nil),                   // 68: zitadel.instance.v1.InstanceDetail
+	(*object.ObjectDetails)(nil),                      // 69: zitadel.v1.ObjectDetails
+	(*member.SearchQuery)(nil),                        // 70: zitadel.member.v1.SearchQuery
+	(*member.Member)(nil),                             // 71: zitadel.member.v1.Member
+	(quota.Unit)(0),                                   // 72: zitadel.quota.v1.Unit
+	(*timestamppb.Timestamp)(nil),                     // 73: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),                       // 74: google.protobuf.Duration
+	(*quota.Notification)(nil),                        // 75: zitadel.quota.v1.Notification
+	(instance.DomainFieldName)(0),                     // 76: zitadel.instance.v1.DomainFieldName
+	(*instance.DomainSearchQuery)(nil),                // 77: zitadel.instance.v1.DomainSearchQuery
+	(*instance.Domain)(nil),                           // 78: zitadel.instance.v1.Domain
+	(feature.InstanceFeature)(0),                      // 79: zitadel.feature.v1.InstanceFeature
+	(authn.KeyType)(0),                                // 80: zitadel.authn.v1.KeyType
 }
 var file_zitadel_system_proto_depIdxs = []int32{
-	61, // 0: zitadel.system.v1.ListInstancesRequest.query:type_name -> zitadel.v1.ListQuery
-	62, // 1: zitadel.system.v1.ListInstancesRequest.sorting_column:type_name -> zitadel.instance.v1.FieldName
-	63, // 2: zitadel.system.v1.ListInstancesRequest.queries:type_name -> zitadel.instance.v1.Query
-	64, // 3: zitadel.system.v1.ListInstancesResponse.details:type_name -> zitadel.v1.ListDetails
-	62, // 4: zitadel.system.v1.ListInstancesResponse.sorting_column:type_name -> zitadel.instance.v1.FieldName
-	65, // 5: zitadel.system.v1.ListInstancesResponse.result:type_name -> zitadel.instance.v1.Instance
-	66, // 6: zitadel.system.v1.GetInstanceResponse.instance:type_name -> zitadel.instance.v1.InstanceDetail
-	52, // 7: zitadel.system.v1.AddInstanceRequest.owner_email:type_name -> zitadel.system.v1.AddInstanceRequest.Email
-	51, // 8: zitadel.system.v1.AddInstanceRequest.owner_profile:type_name -> zitadel.system.v1.AddInstanceRequest.Profile
-	53, // 9: zitadel.system.v1.AddInstanceRequest.owner_password:type_name -> zitadel.system.v1.AddInstanceRequest.Password
-	67, // 10: zitadel.system.v1.AddInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
-	57, // 11: zitadel.system.v1.CreateInstanceRequest.human:type_name -> zitadel.system.v1.CreateInstanceRequest.Human
-	60, // 12: zitadel.system.v1.CreateInstanceRequest.machine:type_name -> zitadel.system.v1.CreateInstanceRequest.Machine
-	67, // 13: zitadel.system.v1.CreateInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 14: zitadel.system.v1.UpdateInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 15: zitadel.system.v1.RemoveInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
-	61, // 16: zitadel.system.v1.ListIAMMembersRequest.query:type_name -> zitadel.v1.ListQuery
-	68, // 17: zitadel.system.v1.ListIAMMembersRequest.queries:type_name -> zitadel.member.v1.SearchQuery
-	64, // 18: zitadel.system.v1.ListIAMMembersResponse.details:type_name -> zitadel.v1.ListDetails
-	69, // 19: zitadel.system.v1.ListIAMMembersResponse.result:type_name -> zitadel.member.v1.Member
-	70, // 20: zitadel.system.v1.AddQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
-	71, // 21: zitadel.system.v1.AddQuotaRequest.from:type_name -> google.protobuf.Timestamp
-	72, // 22: zitadel.system.v1.AddQuotaRequest.reset_interval:type_name -> google.protobuf.Duration
-	73, // 23: zitadel.system.v1.AddQuotaRequest.notifications:type_name -> zitadel.quota.v1.Notification
-	67, // 24: zitadel.system.v1.AddQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
-	70, // 25: zitadel.system.v1.SetQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
-	71, // 26: zitadel.system.v1.SetQuotaRequest.from:type_name -> google.protobuf.Timestamp
-	72, // 27: zitadel.system.v1.SetQuotaRequest.reset_interval:type_name -> google.protobuf.Duration
-	73, // 28: zitadel.system.v1.SetQuotaRequest.notifications:type_name -> zitadel.quota.v1.Notification
-	67, // 29: zitadel.system.v1.SetQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
-	70, // 30: zitadel.system.v1.RemoveQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
-	67, // 31: zitadel.system.v1.RemoveQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
-	72, // 32: zitadel.system.v1.SetLimitsRequest.audit_log_retention:type_name -> google.protobuf.Duration
-	67, // 33: zitadel.system.v1.SetLimitsResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 34: zitadel.system.v1.ResetLimitsResponse.details:type_name -> zitadel.v1.ObjectDetails
-	61, // 35: zitadel.system.v1.ListDomainsRequest.query:type_name -> zitadel.v1.ListQuery
-	74, // 36: zitadel.system.v1.ListDomainsRequest.sorting_column:type_name -> zitadel.instance.v1.DomainFieldName
-	75, // 37: zitadel.system.v1.ListDomainsRequest.queries:type_name -> zitadel.instance.v1.DomainSearchQuery
-	64, // 38: zitadel.system.v1.ListDomainsResponse.details:type_name -> zitadel.v1.ListDetails
-	74, // 39: zitadel.system.v1.ListDomainsResponse.sorting_column:type_name -> zitadel.instance.v1.DomainFieldName
-	76, // 40: zitadel.system.v1.ListDomainsResponse.result:type_name -> zitadel.instance.v1.Domain
-	67, // 41: zitadel.system.v1.AddDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 42: zitadel.system.v1.RemoveDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 43: zitadel.system.v1.SetPrimaryDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
-	67, // 44: zitadel.system.v1.ChangeSubscriptionResponse.details:type_name -> zitadel.v1.ObjectDetails
-	47, // 45: zitadel.system.v1.ListViewsResponse.result:type_name -> zitadel.system.v1.View
-	48, // 46: zitadel.system.v1.ListFailedEventsResponse.result:type_name -> zitadel.system.v1.FailedEvent
-	71, // 47: zitadel.system.v1.View.event_timestamp:type_name -> google.protobuf.Timestamp
-	71, // 48: zitadel.system.v1.View.last_successful_spooler_run:type_name -> google.protobuf.Timestamp
-	71, // 49: zitadel.system.v1.FailedEvent.last_failed:type_name -> google.protobuf.Timestamp
-	77, // 50: zitadel.system.v1.SetInstanceFeatureRequest.feature_id:type_name -> zitadel.feature.v1.InstanceFeature
-	67, // 51: zitadel.system.v1.SetInstanceFeatureResponse.details:type_name -> zitadel.v1.ObjectDetails
-	55, // 52: zitadel.system.v1.CreateInstanceRequest.Human.email:type_name -> zitadel.system.v1.CreateInstanceRequest.Email
-	54, // 53: zitadel.system.v1.CreateInstanceRequest.Human.profile:type_name -> zitadel.system.v1.CreateInstanceRequest.Profile
-	56, // 54: zitadel.system.v1.CreateInstanceRequest.Human.password:type_name -> zitadel.system.v1.CreateInstanceRequest.Password
-	71, // 55: zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken.expiration_date:type_name -> google.protobuf.Timestamp
-	78, // 56: zitadel.system.v1.CreateInstanceRequest.MachineKey.type:type_name -> zitadel.authn.v1.KeyType
-	71, // 57: zitadel.system.v1.CreateInstanceRequest.MachineKey.expiration_date:type_name -> google.protobuf.Timestamp
-	58, // 58: zitadel.system.v1.CreateInstanceRequest.Machine.personal_access_token:type_name -> zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken
-	59, // 59: zitadel.system.v1.CreateInstanceRequest.Machine.machine_key:type_name -> zitadel.system.v1.CreateInstanceRequest.MachineKey
-	0,  // 60: zitadel.system.v1.SystemService.Healthz:input_type -> zitadel.system.v1.HealthzRequest
-	2,  // 61: zitadel.system.v1.SystemService.ListInstances:input_type -> zitadel.system.v1.ListInstancesRequest
-	4,  // 62: zitadel.system.v1.SystemService.GetInstance:input_type -> zitadel.system.v1.GetInstanceRequest
-	6,  // 63: zitadel.system.v1.SystemService.AddInstance:input_type -> zitadel.system.v1.AddInstanceRequest
-	10, // 64: zitadel.system.v1.SystemService.UpdateInstance:input_type -> zitadel.system.v1.UpdateInstanceRequest
-	8,  // 65: zitadel.system.v1.SystemService.CreateInstance:input_type -> zitadel.system.v1.CreateInstanceRequest
-	12, // 66: zitadel.system.v1.SystemService.RemoveInstance:input_type -> zitadel.system.v1.RemoveInstanceRequest
-	14, // 67: zitadel.system.v1.SystemService.ListIAMMembers:input_type -> zitadel.system.v1.ListIAMMembersRequest
-	27, // 68: zitadel.system.v1.SystemService.ExistsDomain:input_type -> zitadel.system.v1.ExistsDomainRequest
-	29, // 69: zitadel.system.v1.SystemService.ListDomains:input_type -> zitadel.system.v1.ListDomainsRequest
-	31, // 70: zitadel.system.v1.SystemService.AddDomain:input_type -> zitadel.system.v1.AddDomainRequest
-	33, // 71: zitadel.system.v1.SystemService.RemoveDomain:input_type -> zitadel.system.v1.RemoveDomainRequest
-	35, // 72: zitadel.system.v1.SystemService.SetPrimaryDomain:input_type -> zitadel.system.v1.SetPrimaryDomainRequest
-	39, // 73: zitadel.system.v1.SystemService.ListViews:input_type -> zitadel.system.v1.ListViewsRequest
-	41, // 74: zitadel.system.v1.SystemService.ClearView:input_type -> zitadel.system.v1.ClearViewRequest
-	43, // 75: zitadel.system.v1.SystemService.ListFailedEvents:input_type -> zitadel.system.v1.ListFailedEventsRequest
-	45, // 76: zitadel.system.v1.SystemService.RemoveFailedEvent:input_type -> zitadel.system.v1.RemoveFailedEventRequest
-	17, // 77: zitadel.system.v1.SystemService.AddQuota:input_type -> zitadel.system.v1.AddQuotaRequest
-	19, // 78: zitadel.system.v1.SystemService.SetQuota:input_type -> zitadel.system.v1.SetQuotaRequest
-	21, // 79: zitadel.system.v1.SystemService.RemoveQuota:input_type -> zitadel.system.v1.RemoveQuotaRequest
-	49, // 80: zitadel.system.v1.SystemService.SetInstanceFeature:input_type -> zitadel.system.v1.SetInstanceFeatureRequest
-	23, // 81: zitadel.system.v1.SystemService.SetLimits:input_type -> zitadel.system.v1.SetLimitsRequest
-	25, // 82: zitadel.system.v1.SystemService.ResetLimits:input_type -> zitadel.system.v1.ResetLimitsRequest
-	1,  // 83: zitadel.system.v1.SystemService.Healthz:output_type -> zitadel.system.v1.HealthzResponse
-	3,  // 84: zitadel.system.v1.SystemService.ListInstances:output_type -> zitadel.system.v1.ListInstancesResponse
-	5,  // 85: zitadel.system.v1.SystemService.GetInstance:output_type -> zitadel.system.v1.GetInstanceResponse
-	7,  // 86: zitadel.system.v1.SystemService.AddInstance:output_type -> zitadel.system.v1.AddInstanceResponse
-	11, // 87: zitadel.system.v1.SystemService.UpdateInstance:output_type -> zitadel.system.v1.UpdateInstanceResponse
-	9,  // 88: zitadel.system.v1.SystemService.CreateInstance:output_type -> zitadel.system.v1.CreateInstanceResponse
-	13, // 89: zitadel.system.v1.SystemService.RemoveInstance:output_type -> zitadel.system.v1.RemoveInstanceResponse
-	15, // 90: zitadel.system.v1.SystemService.ListIAMMembers:output_type -> zitadel.system.v1.ListIAMMembersResponse
-	28, // 91: zitadel.system.v1.SystemService.ExistsDomain:output_type -> zitadel.system.v1.ExistsDomainResponse
-	30, // 92: zitadel.system.v1.SystemService.ListDomains:output_type -> zitadel.system.v1.ListDomainsResponse
-	32, // 93: zitadel.system.v1.SystemService.AddDomain:output_type -> zitadel.system.v1.AddDomainResponse
-	34, // 94: zitadel.system.v1.SystemService.RemoveDomain:output_type -> zitadel.system.v1.RemoveDomainResponse
-	36, // 95: zitadel.system.v1.SystemService.SetPrimaryDomain:output_type -> zitadel.system.v1.SetPrimaryDomainResponse
-	40, // 96: zitadel.system.v1.SystemService.ListViews:output_type -> zitadel.system.v1.ListViewsResponse
-	42, // 97: zitadel.system.v1.SystemService.ClearView:output_type -> zitadel.system.v1.ClearViewResponse
-	44, // 98: zitadel.system.v1.SystemService.ListFailedEvents:output_type -> zitadel.system.v1.ListFailedEventsResponse
-	46, // 99: zitadel.system.v1.SystemService.RemoveFailedEvent:output_type -> zitadel.system.v1.RemoveFailedEventResponse
-	18, // 100: zitadel.system.v1.SystemService.AddQuota:output_type -> zitadel.system.v1.AddQuotaResponse
-	20, // 101: zitadel.system.v1.SystemService.SetQuota:output_type -> zitadel.system.v1.SetQuotaResponse
-	22, // 102: zitadel.system.v1.SystemService.RemoveQuota:output_type -> zitadel.system.v1.RemoveQuotaResponse
-	50, // 103: zitadel.system.v1.SystemService.SetInstanceFeature:output_type -> zitadel.system.v1.SetInstanceFeatureResponse
-	24, // 104: zitadel.system.v1.SystemService.SetLimits:output_type -> zitadel.system.v1.SetLimitsResponse
-	26, // 105: zitadel.system.v1.SystemService.ResetLimits:output_type -> zitadel.system.v1.ResetLimitsResponse
-	83, // [83:106] is the sub-list for method output_type
-	60, // [60:83] is the sub-list for method input_type
-	60, // [60:60] is the sub-list for extension type_name
-	60, // [60:60] is the sub-list for extension extendee
-	0,  // [0:60] is the sub-list for field type_name
+	63, // 0: zitadel.system.v1.ListInstancesRequest.query:type_name -> zitadel.v1.ListQuery
+	64, // 1: zitadel.system.v1.ListInstancesRequest.sorting_column:type_name -> zitadel.instance.v1.FieldName
+	65, // 2: zitadel.system.v1.ListInstancesRequest.queries:type_name -> zitadel.instance.v1.Query
+	66, // 3: zitadel.system.v1.ListInstancesResponse.details:type_name -> zitadel.v1.ListDetails
+	64, // 4: zitadel.system.v1.ListInstancesResponse.sorting_column:type_name -> zitadel.instance.v1.FieldName
+	67, // 5: zitadel.system.v1.ListInstancesResponse.result:type_name -> zitadel.instance.v1.Instance
+	68, // 6: zitadel.system.v1.GetInstanceResponse.instance:type_name -> zitadel.instance.v1.InstanceDetail
+	54, // 7: zitadel.system.v1.AddInstanceRequest.owner_email:type_name -> zitadel.system.v1.AddInstanceRequest.Email
+	53, // 8: zitadel.system.v1.AddInstanceRequest.owner_profile:type_name -> zitadel.system.v1.AddInstanceRequest.Profile
+	55, // 9: zitadel.system.v1.AddInstanceRequest.owner_password:type_name -> zitadel.system.v1.AddInstanceRequest.Password
+	69, // 10: zitadel.system.v1.AddInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
+	59, // 11: zitadel.system.v1.CreateInstanceRequest.human:type_name -> zitadel.system.v1.CreateInstanceRequest.Human
+	62, // 12: zitadel.system.v1.CreateInstanceRequest.machine:type_name -> zitadel.system.v1.CreateInstanceRequest.Machine
+	69, // 13: zitadel.system.v1.CreateInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 14: zitadel.system.v1.UpdateInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 15: zitadel.system.v1.RemoveInstanceResponse.details:type_name -> zitadel.v1.ObjectDetails
+	63, // 16: zitadel.system.v1.ListIAMMembersRequest.query:type_name -> zitadel.v1.ListQuery
+	70, // 17: zitadel.system.v1.ListIAMMembersRequest.queries:type_name -> zitadel.member.v1.SearchQuery
+	66, // 18: zitadel.system.v1.ListIAMMembersResponse.details:type_name -> zitadel.v1.ListDetails
+	71, // 19: zitadel.system.v1.ListIAMMembersResponse.result:type_name -> zitadel.member.v1.Member
+	72, // 20: zitadel.system.v1.AddQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
+	73, // 21: zitadel.system.v1.AddQuotaRequest.from:type_name -> google.protobuf.Timestamp
+	74, // 22: zitadel.system.v1.AddQuotaRequest.reset_interval:type_name -> google.protobuf.Duration
+	75, // 23: zitadel.system.v1.AddQuotaRequest.notifications:type_name -> zitadel.quota.v1.Notification
+	69, // 24: zitadel.system.v1.AddQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
+	72, // 25: zitadel.system.v1.SetQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
+	73, // 26: zitadel.system.v1.SetQuotaRequest.from:type_name -> google.protobuf.Timestamp
+	74, // 27: zitadel.system.v1.SetQuotaRequest.reset_interval:type_name -> google.protobuf.Duration
+	75, // 28: zitadel.system.v1.SetQuotaRequest.notifications:type_name -> zitadel.quota.v1.Notification
+	69, // 29: zitadel.system.v1.SetQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
+	72, // 30: zitadel.system.v1.RemoveQuotaRequest.unit:type_name -> zitadel.quota.v1.Unit
+	69, // 31: zitadel.system.v1.RemoveQuotaResponse.details:type_name -> zitadel.v1.ObjectDetails
+	74, // 32: zitadel.system.v1.SetLimitsRequest.audit_log_retention:type_name -> google.protobuf.Duration
+	69, // 33: zitadel.system.v1.SetLimitsResponse.details:type_name -> zitadel.v1.ObjectDetails
+	23, // 34: zitadel.system.v1.BulkSetLimitsRequest.limits:type_name -> zitadel.system.v1.SetLimitsRequest
+	69, // 35: zitadel.system.v1.BulkSetLimitsResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 36: zitadel.system.v1.BulkSetLimitsResponse.target_details:type_name -> zitadel.v1.ObjectDetails
+	69, // 37: zitadel.system.v1.ResetLimitsResponse.details:type_name -> zitadel.v1.ObjectDetails
+	63, // 38: zitadel.system.v1.ListDomainsRequest.query:type_name -> zitadel.v1.ListQuery
+	76, // 39: zitadel.system.v1.ListDomainsRequest.sorting_column:type_name -> zitadel.instance.v1.DomainFieldName
+	77, // 40: zitadel.system.v1.ListDomainsRequest.queries:type_name -> zitadel.instance.v1.DomainSearchQuery
+	66, // 41: zitadel.system.v1.ListDomainsResponse.details:type_name -> zitadel.v1.ListDetails
+	76, // 42: zitadel.system.v1.ListDomainsResponse.sorting_column:type_name -> zitadel.instance.v1.DomainFieldName
+	78, // 43: zitadel.system.v1.ListDomainsResponse.result:type_name -> zitadel.instance.v1.Domain
+	69, // 44: zitadel.system.v1.AddDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 45: zitadel.system.v1.RemoveDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 46: zitadel.system.v1.SetPrimaryDomainResponse.details:type_name -> zitadel.v1.ObjectDetails
+	69, // 47: zitadel.system.v1.ChangeSubscriptionResponse.details:type_name -> zitadel.v1.ObjectDetails
+	49, // 48: zitadel.system.v1.ListViewsResponse.result:type_name -> zitadel.system.v1.View
+	50, // 49: zitadel.system.v1.ListFailedEventsResponse.result:type_name -> zitadel.system.v1.FailedEvent
+	73, // 50: zitadel.system.v1.View.event_timestamp:type_name -> google.protobuf.Timestamp
+	73, // 51: zitadel.system.v1.View.last_successful_spooler_run:type_name -> google.protobuf.Timestamp
+	73, // 52: zitadel.system.v1.FailedEvent.last_failed:type_name -> google.protobuf.Timestamp
+	79, // 53: zitadel.system.v1.SetInstanceFeatureRequest.feature_id:type_name -> zitadel.feature.v1.InstanceFeature
+	69, // 54: zitadel.system.v1.SetInstanceFeatureResponse.details:type_name -> zitadel.v1.ObjectDetails
+	57, // 55: zitadel.system.v1.CreateInstanceRequest.Human.email:type_name -> zitadel.system.v1.CreateInstanceRequest.Email
+	56, // 56: zitadel.system.v1.CreateInstanceRequest.Human.profile:type_name -> zitadel.system.v1.CreateInstanceRequest.Profile
+	58, // 57: zitadel.system.v1.CreateInstanceRequest.Human.password:type_name -> zitadel.system.v1.CreateInstanceRequest.Password
+	73, // 58: zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken.expiration_date:type_name -> google.protobuf.Timestamp
+	80, // 59: zitadel.system.v1.CreateInstanceRequest.MachineKey.type:type_name -> zitadel.authn.v1.KeyType
+	73, // 60: zitadel.system.v1.CreateInstanceRequest.MachineKey.expiration_date:type_name -> google.protobuf.Timestamp
+	60, // 61: zitadel.system.v1.CreateInstanceRequest.Machine.personal_access_token:type_name -> zitadel.system.v1.CreateInstanceRequest.PersonalAccessToken
+	61, // 62: zitadel.system.v1.CreateInstanceRequest.Machine.machine_key:type_name -> zitadel.system.v1.CreateInstanceRequest.MachineKey
+	0,  // 63: zitadel.system.v1.SystemService.Healthz:input_type -> zitadel.system.v1.HealthzRequest
+	2,  // 64: zitadel.system.v1.SystemService.ListInstances:input_type -> zitadel.system.v1.ListInstancesRequest
+	4,  // 65: zitadel.system.v1.SystemService.GetInstance:input_type -> zitadel.system.v1.GetInstanceRequest
+	6,  // 66: zitadel.system.v1.SystemService.AddInstance:input_type -> zitadel.system.v1.AddInstanceRequest
+	10, // 67: zitadel.system.v1.SystemService.UpdateInstance:input_type -> zitadel.system.v1.UpdateInstanceRequest
+	8,  // 68: zitadel.system.v1.SystemService.CreateInstance:input_type -> zitadel.system.v1.CreateInstanceRequest
+	12, // 69: zitadel.system.v1.SystemService.RemoveInstance:input_type -> zitadel.system.v1.RemoveInstanceRequest
+	14, // 70: zitadel.system.v1.SystemService.ListIAMMembers:input_type -> zitadel.system.v1.ListIAMMembersRequest
+	29, // 71: zitadel.system.v1.SystemService.ExistsDomain:input_type -> zitadel.system.v1.ExistsDomainRequest
+	31, // 72: zitadel.system.v1.SystemService.ListDomains:input_type -> zitadel.system.v1.ListDomainsRequest
+	33, // 73: zitadel.system.v1.SystemService.AddDomain:input_type -> zitadel.system.v1.AddDomainRequest
+	35, // 74: zitadel.system.v1.SystemService.RemoveDomain:input_type -> zitadel.system.v1.RemoveDomainRequest
+	37, // 75: zitadel.system.v1.SystemService.SetPrimaryDomain:input_type -> zitadel.system.v1.SetPrimaryDomainRequest
+	41, // 76: zitadel.system.v1.SystemService.ListViews:input_type -> zitadel.system.v1.ListViewsRequest
+	43, // 77: zitadel.system.v1.SystemService.ClearView:input_type -> zitadel.system.v1.ClearViewRequest
+	45, // 78: zitadel.system.v1.SystemService.ListFailedEvents:input_type -> zitadel.system.v1.ListFailedEventsRequest
+	47, // 79: zitadel.system.v1.SystemService.RemoveFailedEvent:input_type -> zitadel.system.v1.RemoveFailedEventRequest
+	17, // 80: zitadel.system.v1.SystemService.AddQuota:input_type -> zitadel.system.v1.AddQuotaRequest
+	19, // 81: zitadel.system.v1.SystemService.SetQuota:input_type -> zitadel.system.v1.SetQuotaRequest
+	21, // 82: zitadel.system.v1.SystemService.RemoveQuota:input_type -> zitadel.system.v1.RemoveQuotaRequest
+	51, // 83: zitadel.system.v1.SystemService.SetInstanceFeature:input_type -> zitadel.system.v1.SetInstanceFeatureRequest
+	23, // 84: zitadel.system.v1.SystemService.SetLimits:input_type -> zitadel.system.v1.SetLimitsRequest
+	25, // 85: zitadel.system.v1.SystemService.BulkSetLimits:input_type -> zitadel.system.v1.BulkSetLimitsRequest
+	27, // 86: zitadel.system.v1.SystemService.ResetLimits:input_type -> zitadel.system.v1.ResetLimitsRequest
+	1,  // 87: zitadel.system.v1.SystemService.Healthz:output_type -> zitadel.system.v1.HealthzResponse
+	3,  // 88: zitadel.system.v1.SystemService.ListInstances:output_type -> zitadel.system.v1.ListInstancesResponse
+	5,  // 89: zitadel.system.v1.SystemService.GetInstance:output_type -> zitadel.system.v1.GetInstanceResponse
+	7,  // 90: zitadel.system.v1.SystemService.AddInstance:output_type -> zitadel.system.v1.AddInstanceResponse
+	11, // 91: zitadel.system.v1.SystemService.UpdateInstance:output_type -> zitadel.system.v1.UpdateInstanceResponse
+	9,  // 92: zitadel.system.v1.SystemService.CreateInstance:output_type -> zitadel.system.v1.CreateInstanceResponse
+	13, // 93: zitadel.system.v1.SystemService.RemoveInstance:output_type -> zitadel.system.v1.RemoveInstanceResponse
+	15, // 94: zitadel.system.v1.SystemService.ListIAMMembers:output_type -> zitadel.system.v1.ListIAMMembersResponse
+	30, // 95: zitadel.system.v1.SystemService.ExistsDomain:output_type -> zitadel.system.v1.ExistsDomainResponse
+	32, // 96: zitadel.system.v1.SystemService.ListDomains:output_type -> zitadel.system.v1.ListDomainsResponse
+	34, // 97: zitadel.system.v1.SystemService.AddDomain:output_type -> zitadel.system.v1.AddDomainResponse
+	36, // 98: zitadel.system.v1.SystemService.RemoveDomain:output_type -> zitadel.system.v1.RemoveDomainResponse
+	38, // 99: zitadel.system.v1.SystemService.SetPrimaryDomain:output_type -> zitadel.system.v1.SetPrimaryDomainResponse
+	42, // 100: zitadel.system.v1.SystemService.ListViews:output_type -> zitadel.system.v1.ListViewsResponse
+	44, // 101: zitadel.system.v1.SystemService.ClearView:output_type -> zitadel.system.v1.ClearViewResponse
+	46, // 102: zitadel.system.v1.SystemService.ListFailedEvents:output_type -> zitadel.system.v1.ListFailedEventsResponse
+	48, // 103: zitadel.system.v1.SystemService.RemoveFailedEvent:output_type -> zitadel.system.v1.RemoveFailedEventResponse
+	18, // 104: zitadel.system.v1.SystemService.AddQuota:output_type -> zitadel.system.v1.AddQuotaResponse
+	20, // 105: zitadel.system.v1.SystemService.SetQuota:output_type -> zitadel.system.v1.SetQuotaResponse
+	22, // 106: zitadel.system.v1.SystemService.RemoveQuota:output_type -> zitadel.system.v1.RemoveQuotaResponse
+	52, // 107: zitadel.system.v1.SystemService.SetInstanceFeature:output_type -> zitadel.system.v1.SetInstanceFeatureResponse
+	24, // 108: zitadel.system.v1.SystemService.SetLimits:output_type -> zitadel.system.v1.SetLimitsResponse
+	26, // 109: zitadel.system.v1.SystemService.BulkSetLimits:output_type -> zitadel.system.v1.BulkSetLimitsResponse
+	28, // 110: zitadel.system.v1.SystemService.ResetLimits:output_type -> zitadel.system.v1.ResetLimitsResponse
+	87, // [87:111] is the sub-list for method output_type
+	63, // [63:87] is the sub-list for method input_type
+	63, // [63:63] is the sub-list for extension type_name
+	63, // [63:63] is the sub-list for extension extendee
+	0,  // [0:63] is the sub-list for field type_name
 }
 
 func init() { file_zitadel_system_proto_init() }
@@ -5057,7 +5216,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ResetLimitsRequest); i {
+			switch v := v.(*BulkSetLimitsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5069,7 +5228,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ResetLimitsResponse); i {
+			switch v := v.(*BulkSetLimitsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5081,7 +5240,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ExistsDomainRequest); i {
+			switch v := v.(*ResetLimitsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5093,7 +5252,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ExistsDomainResponse); i {
+			switch v := v.(*ResetLimitsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5105,7 +5264,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDomainsRequest); i {
+			switch v := v.(*ExistsDomainRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5117,7 +5276,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDomainsResponse); i {
+			switch v := v.(*ExistsDomainResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5129,7 +5288,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddDomainRequest); i {
+			switch v := v.(*ListDomainsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5141,7 +5300,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddDomainResponse); i {
+			switch v := v.(*ListDomainsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5153,7 +5312,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RemoveDomainRequest); i {
+			switch v := v.(*AddDomainRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5165,7 +5324,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RemoveDomainResponse); i {
+			switch v := v.(*AddDomainResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5177,7 +5336,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetPrimaryDomainRequest); i {
+			switch v := v.(*RemoveDomainRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5189,7 +5348,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetPrimaryDomainResponse); i {
+			switch v := v.(*RemoveDomainResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5201,7 +5360,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeSubscriptionRequest); i {
+			switch v := v.(*SetPrimaryDomainRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5213,7 +5372,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeSubscriptionResponse); i {
+			switch v := v.(*SetPrimaryDomainResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5225,7 +5384,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListViewsRequest); i {
+			switch v := v.(*ChangeSubscriptionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5237,7 +5396,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListViewsResponse); i {
+			switch v := v.(*ChangeSubscriptionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5249,7 +5408,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ClearViewRequest); i {
+			switch v := v.(*ListViewsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5261,7 +5420,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ClearViewResponse); i {
+			switch v := v.(*ListViewsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5273,7 +5432,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListFailedEventsRequest); i {
+			switch v := v.(*ClearViewRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5285,7 +5444,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListFailedEventsResponse); i {
+			switch v := v.(*ClearViewResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5297,7 +5456,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RemoveFailedEventRequest); i {
+			switch v := v.(*ListFailedEventsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5309,7 +5468,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RemoveFailedEventResponse); i {
+			switch v := v.(*ListFailedEventsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5321,7 +5480,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*View); i {
+			switch v := v.(*RemoveFailedEventRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5333,7 +5492,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FailedEvent); i {
+			switch v := v.(*RemoveFailedEventResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5345,7 +5504,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetInstanceFeatureRequest); i {
+			switch v := v.(*View); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5357,7 +5516,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetInstanceFeatureResponse); i {
+			switch v := v.(*FailedEvent); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5369,7 +5528,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddInstanceRequest_Profile); i {
+			switch v := v.(*SetInstanceFeatureRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5381,7 +5540,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddInstanceRequest_Email); i {
+			switch v := v.(*SetInstanceFeatureResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5393,7 +5552,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddInstanceRequest_Password); i {
+			switch v := v.(*AddInstanceRequest_Profile); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5405,7 +5564,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[54].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_Profile); i {
+			switch v := v.(*AddInstanceRequest_Email); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5417,7 +5576,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[55].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_Email); i {
+			switch v := v.(*AddInstanceRequest_Password); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5429,7 +5588,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[56].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_Password); i {
+			switch v := v.(*CreateInstanceRequest_Profile); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5441,7 +5600,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[57].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_Human); i {
+			switch v := v.(*CreateInstanceRequest_Email); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5453,7 +5612,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[58].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_PersonalAccessToken); i {
+			switch v := v.(*CreateInstanceRequest_Password); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5465,7 +5624,7 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[59].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateInstanceRequest_MachineKey); i {
+			switch v := v.(*CreateInstanceRequest_Human); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5477,6 +5636,30 @@ func file_zitadel_system_proto_init() {
 			}
 		}
 		file_zitadel_system_proto_msgTypes[60].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateInstanceRequest_PersonalAccessToken); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_zitadel_system_proto_msgTypes[61].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateInstanceRequest_MachineKey); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_zitadel_system_proto_msgTypes[62].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CreateInstanceRequest_Machine); i {
 			case 0:
 				return &v.state
@@ -5493,7 +5676,8 @@ func file_zitadel_system_proto_init() {
 		(*CreateInstanceRequest_Human_)(nil),
 		(*CreateInstanceRequest_Machine_)(nil),
 	}
-	file_zitadel_system_proto_msgTypes[49].OneofWrappers = []interface{}{
+	file_zitadel_system_proto_msgTypes[23].OneofWrappers = []interface{}{}
+	file_zitadel_system_proto_msgTypes[51].OneofWrappers = []interface{}{
 		(*SetInstanceFeatureRequest_Bool)(nil),
 	}
 	type x struct{}
@@ -5502,7 +5686,7 @@ func file_zitadel_system_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_system_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   61,
+			NumMessages:   63,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

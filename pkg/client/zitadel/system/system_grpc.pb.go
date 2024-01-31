@@ -85,6 +85,8 @@ type SystemServiceClient interface {
 	SetInstanceFeature(ctx context.Context, in *SetInstanceFeatureRequest, opts ...grpc.CallOption) (*SetInstanceFeatureResponse, error)
 	// Sets instance level limits
 	SetLimits(ctx context.Context, in *SetLimitsRequest, opts ...grpc.CallOption) (*SetLimitsResponse, error)
+	// Sets many instance level limits
+	BulkSetLimits(ctx context.Context, in *BulkSetLimitsRequest, opts ...grpc.CallOption) (*BulkSetLimitsResponse, error)
 	// Resets instance level limits
 	ResetLimits(ctx context.Context, in *ResetLimitsRequest, opts ...grpc.CallOption) (*ResetLimitsResponse, error)
 }
@@ -295,6 +297,15 @@ func (c *systemServiceClient) SetLimits(ctx context.Context, in *SetLimitsReques
 	return out, nil
 }
 
+func (c *systemServiceClient) BulkSetLimits(ctx context.Context, in *BulkSetLimitsRequest, opts ...grpc.CallOption) (*BulkSetLimitsResponse, error) {
+	out := new(BulkSetLimitsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/BulkSetLimits", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *systemServiceClient) ResetLimits(ctx context.Context, in *ResetLimitsRequest, opts ...grpc.CallOption) (*ResetLimitsResponse, error) {
 	out := new(ResetLimitsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/ResetLimits", in, out, opts...)
@@ -375,6 +386,8 @@ type SystemServiceServer interface {
 	SetInstanceFeature(context.Context, *SetInstanceFeatureRequest) (*SetInstanceFeatureResponse, error)
 	// Sets instance level limits
 	SetLimits(context.Context, *SetLimitsRequest) (*SetLimitsResponse, error)
+	// Sets many instance level limits
+	BulkSetLimits(context.Context, *BulkSetLimitsRequest) (*BulkSetLimitsResponse, error)
 	// Resets instance level limits
 	ResetLimits(context.Context, *ResetLimitsRequest) (*ResetLimitsResponse, error)
 	mustEmbedUnimplementedSystemServiceServer()
@@ -449,6 +462,9 @@ func (UnimplementedSystemServiceServer) SetInstanceFeature(context.Context, *Set
 }
 func (UnimplementedSystemServiceServer) SetLimits(context.Context, *SetLimitsRequest) (*SetLimitsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetLimits not implemented")
+}
+func (UnimplementedSystemServiceServer) BulkSetLimits(context.Context, *BulkSetLimitsRequest) (*BulkSetLimitsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BulkSetLimits not implemented")
 }
 func (UnimplementedSystemServiceServer) ResetLimits(context.Context, *ResetLimitsRequest) (*ResetLimitsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetLimits not implemented")
@@ -862,6 +878,24 @@ func _SystemService_SetLimits_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SystemService_BulkSetLimits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BulkSetLimitsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SystemServiceServer).BulkSetLimits(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.system.v1.SystemService/BulkSetLimits",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SystemServiceServer).BulkSetLimits(ctx, req.(*BulkSetLimitsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SystemService_ResetLimits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ResetLimitsRequest)
 	if err := dec(in); err != nil {
@@ -974,6 +1008,10 @@ var SystemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetLimits",
 			Handler:    _SystemService_SetLimits_Handler,
+		},
+		{
+			MethodName: "BulkSetLimits",
+			Handler:    _SystemService_BulkSetLimits_Handler,
 		},
 		{
 			MethodName: "ResetLimits",
