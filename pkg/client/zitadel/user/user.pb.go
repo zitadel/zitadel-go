@@ -940,6 +940,7 @@ type SearchQuery struct {
 	//	*SearchQuery_OrQuery
 	//	*SearchQuery_AndQuery
 	//	*SearchQuery_NotQuery
+	//	*SearchQuery_InUserEmailsQuery
 	Query isSearchQuery_Query `protobuf_oneof:"query"`
 }
 
@@ -1073,6 +1074,13 @@ func (x *SearchQuery) GetNotQuery() *NotQuery {
 	return nil
 }
 
+func (x *SearchQuery) GetInUserEmailsQuery() *InUserEmailsQuery {
+	if x, ok := x.GetQuery().(*SearchQuery_InUserEmailsQuery); ok {
+		return x.InUserEmailsQuery
+	}
+	return nil
+}
+
 type isSearchQuery_Query interface {
 	isSearchQuery_Query()
 }
@@ -1129,6 +1137,10 @@ type SearchQuery_NotQuery struct {
 	NotQuery *NotQuery `protobuf:"bytes,13,opt,name=not_query,json=notQuery,proto3,oneof"`
 }
 
+type SearchQuery_InUserEmailsQuery struct {
+	InUserEmailsQuery *InUserEmailsQuery `protobuf:"bytes,14,opt,name=in_user_emails_query,json=inUserEmailsQuery,proto3,oneof"`
+}
+
 func (*SearchQuery_UserNameQuery) isSearchQuery_Query() {}
 
 func (*SearchQuery_FirstNameQuery) isSearchQuery_Query() {}
@@ -1154,6 +1166,8 @@ func (*SearchQuery_OrQuery) isSearchQuery_Query() {}
 func (*SearchQuery_AndQuery) isSearchQuery_Query() {}
 
 func (*SearchQuery_NotQuery) isSearchQuery_Query() {}
+
+func (*SearchQuery_InUserEmailsQuery) isSearchQuery_Query() {}
 
 type OrQuery struct {
 	state         protoimpl.MessageState
@@ -1343,6 +1357,53 @@ func (x *InUserIDQuery) GetUserIds() []string {
 	return nil
 }
 
+type InUserEmailsQuery struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserEmails []string `protobuf:"bytes,1,rep,name=user_emails,json=userEmails,proto3" json:"user_emails,omitempty"`
+}
+
+func (x *InUserEmailsQuery) Reset() {
+	*x = InUserEmailsQuery{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_user_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *InUserEmailsQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InUserEmailsQuery) ProtoMessage() {}
+
+func (x *InUserEmailsQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_user_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InUserEmailsQuery.ProtoReflect.Descriptor instead.
+func (*InUserEmailsQuery) Descriptor() ([]byte, []int) {
+	return file_zitadel_user_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *InUserEmailsQuery) GetUserEmails() []string {
+	if x != nil {
+		return x.UserEmails
+	}
+	return nil
+}
+
 type UserNameQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1355,7 +1416,7 @@ type UserNameQuery struct {
 func (x *UserNameQuery) Reset() {
 	*x = UserNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[11]
+		mi := &file_zitadel_user_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1368,7 +1429,7 @@ func (x *UserNameQuery) String() string {
 func (*UserNameQuery) ProtoMessage() {}
 
 func (x *UserNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[11]
+	mi := &file_zitadel_user_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1381,7 +1442,7 @@ func (x *UserNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserNameQuery.ProtoReflect.Descriptor instead.
 func (*UserNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{11}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UserNameQuery) GetUserName() string {
@@ -1410,7 +1471,7 @@ type FirstNameQuery struct {
 func (x *FirstNameQuery) Reset() {
 	*x = FirstNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[12]
+		mi := &file_zitadel_user_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1423,7 +1484,7 @@ func (x *FirstNameQuery) String() string {
 func (*FirstNameQuery) ProtoMessage() {}
 
 func (x *FirstNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[12]
+	mi := &file_zitadel_user_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1436,7 +1497,7 @@ func (x *FirstNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FirstNameQuery.ProtoReflect.Descriptor instead.
 func (*FirstNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{12}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *FirstNameQuery) GetFirstName() string {
@@ -1465,7 +1526,7 @@ type LastNameQuery struct {
 func (x *LastNameQuery) Reset() {
 	*x = LastNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[13]
+		mi := &file_zitadel_user_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1478,7 +1539,7 @@ func (x *LastNameQuery) String() string {
 func (*LastNameQuery) ProtoMessage() {}
 
 func (x *LastNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[13]
+	mi := &file_zitadel_user_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1491,7 +1552,7 @@ func (x *LastNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LastNameQuery.ProtoReflect.Descriptor instead.
 func (*LastNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{13}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *LastNameQuery) GetLastName() string {
@@ -1520,7 +1581,7 @@ type NickNameQuery struct {
 func (x *NickNameQuery) Reset() {
 	*x = NickNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[14]
+		mi := &file_zitadel_user_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1533,7 +1594,7 @@ func (x *NickNameQuery) String() string {
 func (*NickNameQuery) ProtoMessage() {}
 
 func (x *NickNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[14]
+	mi := &file_zitadel_user_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1546,7 +1607,7 @@ func (x *NickNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NickNameQuery.ProtoReflect.Descriptor instead.
 func (*NickNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{14}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *NickNameQuery) GetNickName() string {
@@ -1575,7 +1636,7 @@ type DisplayNameQuery struct {
 func (x *DisplayNameQuery) Reset() {
 	*x = DisplayNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[15]
+		mi := &file_zitadel_user_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1588,7 +1649,7 @@ func (x *DisplayNameQuery) String() string {
 func (*DisplayNameQuery) ProtoMessage() {}
 
 func (x *DisplayNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[15]
+	mi := &file_zitadel_user_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1601,7 +1662,7 @@ func (x *DisplayNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisplayNameQuery.ProtoReflect.Descriptor instead.
 func (*DisplayNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{15}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DisplayNameQuery) GetDisplayName() string {
@@ -1630,7 +1691,7 @@ type EmailQuery struct {
 func (x *EmailQuery) Reset() {
 	*x = EmailQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[16]
+		mi := &file_zitadel_user_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1643,7 +1704,7 @@ func (x *EmailQuery) String() string {
 func (*EmailQuery) ProtoMessage() {}
 
 func (x *EmailQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[16]
+	mi := &file_zitadel_user_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1656,7 +1717,7 @@ func (x *EmailQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmailQuery.ProtoReflect.Descriptor instead.
 func (*EmailQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{16}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *EmailQuery) GetEmailAddress() string {
@@ -1685,7 +1746,7 @@ type LoginNameQuery struct {
 func (x *LoginNameQuery) Reset() {
 	*x = LoginNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[17]
+		mi := &file_zitadel_user_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1698,7 +1759,7 @@ func (x *LoginNameQuery) String() string {
 func (*LoginNameQuery) ProtoMessage() {}
 
 func (x *LoginNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[17]
+	mi := &file_zitadel_user_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1711,7 +1772,7 @@ func (x *LoginNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginNameQuery.ProtoReflect.Descriptor instead.
 func (*LoginNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{17}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *LoginNameQuery) GetLoginName() string {
@@ -1740,7 +1801,7 @@ type StateQuery struct {
 func (x *StateQuery) Reset() {
 	*x = StateQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[18]
+		mi := &file_zitadel_user_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1753,7 +1814,7 @@ func (x *StateQuery) String() string {
 func (*StateQuery) ProtoMessage() {}
 
 func (x *StateQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[18]
+	mi := &file_zitadel_user_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1766,7 +1827,7 @@ func (x *StateQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StateQuery.ProtoReflect.Descriptor instead.
 func (*StateQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{18}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *StateQuery) GetState() UserState {
@@ -1788,7 +1849,7 @@ type TypeQuery struct {
 func (x *TypeQuery) Reset() {
 	*x = TypeQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[19]
+		mi := &file_zitadel_user_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1801,7 +1862,7 @@ func (x *TypeQuery) String() string {
 func (*TypeQuery) ProtoMessage() {}
 
 func (x *TypeQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[19]
+	mi := &file_zitadel_user_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1814,7 +1875,7 @@ func (x *TypeQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TypeQuery.ProtoReflect.Descriptor instead.
 func (*TypeQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{19}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *TypeQuery) GetType() Type {
@@ -1842,7 +1903,7 @@ type AuthFactor struct {
 func (x *AuthFactor) Reset() {
 	*x = AuthFactor{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[20]
+		mi := &file_zitadel_user_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1855,7 +1916,7 @@ func (x *AuthFactor) String() string {
 func (*AuthFactor) ProtoMessage() {}
 
 func (x *AuthFactor) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[20]
+	mi := &file_zitadel_user_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1868,7 +1929,7 @@ func (x *AuthFactor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthFactor.ProtoReflect.Descriptor instead.
 func (*AuthFactor) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{20}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *AuthFactor) GetState() AuthFactorState {
@@ -1950,7 +2011,7 @@ type AuthFactorOTP struct {
 func (x *AuthFactorOTP) Reset() {
 	*x = AuthFactorOTP{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[21]
+		mi := &file_zitadel_user_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1963,7 +2024,7 @@ func (x *AuthFactorOTP) String() string {
 func (*AuthFactorOTP) ProtoMessage() {}
 
 func (x *AuthFactorOTP) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[21]
+	mi := &file_zitadel_user_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1976,7 +2037,7 @@ func (x *AuthFactorOTP) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthFactorOTP.ProtoReflect.Descriptor instead.
 func (*AuthFactorOTP) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{21}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{22}
 }
 
 type AuthFactorOTPSMS struct {
@@ -1988,7 +2049,7 @@ type AuthFactorOTPSMS struct {
 func (x *AuthFactorOTPSMS) Reset() {
 	*x = AuthFactorOTPSMS{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[22]
+		mi := &file_zitadel_user_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2001,7 +2062,7 @@ func (x *AuthFactorOTPSMS) String() string {
 func (*AuthFactorOTPSMS) ProtoMessage() {}
 
 func (x *AuthFactorOTPSMS) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[22]
+	mi := &file_zitadel_user_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2014,7 +2075,7 @@ func (x *AuthFactorOTPSMS) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthFactorOTPSMS.ProtoReflect.Descriptor instead.
 func (*AuthFactorOTPSMS) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{22}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{23}
 }
 
 type AuthFactorOTPEmail struct {
@@ -2026,7 +2087,7 @@ type AuthFactorOTPEmail struct {
 func (x *AuthFactorOTPEmail) Reset() {
 	*x = AuthFactorOTPEmail{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[23]
+		mi := &file_zitadel_user_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2039,7 +2100,7 @@ func (x *AuthFactorOTPEmail) String() string {
 func (*AuthFactorOTPEmail) ProtoMessage() {}
 
 func (x *AuthFactorOTPEmail) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[23]
+	mi := &file_zitadel_user_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2052,7 +2113,7 @@ func (x *AuthFactorOTPEmail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthFactorOTPEmail.ProtoReflect.Descriptor instead.
 func (*AuthFactorOTPEmail) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{23}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{24}
 }
 
 type AuthFactorU2F struct {
@@ -2067,7 +2128,7 @@ type AuthFactorU2F struct {
 func (x *AuthFactorU2F) Reset() {
 	*x = AuthFactorU2F{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[24]
+		mi := &file_zitadel_user_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2080,7 +2141,7 @@ func (x *AuthFactorU2F) String() string {
 func (*AuthFactorU2F) ProtoMessage() {}
 
 func (x *AuthFactorU2F) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[24]
+	mi := &file_zitadel_user_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2093,7 +2154,7 @@ func (x *AuthFactorU2F) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthFactorU2F.ProtoReflect.Descriptor instead.
 func (*AuthFactorU2F) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{24}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *AuthFactorU2F) GetId() string {
@@ -2121,7 +2182,7 @@ type WebAuthNKey struct {
 func (x *WebAuthNKey) Reset() {
 	*x = WebAuthNKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[25]
+		mi := &file_zitadel_user_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2134,7 +2195,7 @@ func (x *WebAuthNKey) String() string {
 func (*WebAuthNKey) ProtoMessage() {}
 
 func (x *WebAuthNKey) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[25]
+	mi := &file_zitadel_user_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2147,7 +2208,7 @@ func (x *WebAuthNKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WebAuthNKey.ProtoReflect.Descriptor instead.
 func (*WebAuthNKey) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{25}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *WebAuthNKey) GetPublicKey() []byte {
@@ -2169,7 +2230,7 @@ type WebAuthNVerification struct {
 func (x *WebAuthNVerification) Reset() {
 	*x = WebAuthNVerification{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[26]
+		mi := &file_zitadel_user_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2182,7 +2243,7 @@ func (x *WebAuthNVerification) String() string {
 func (*WebAuthNVerification) ProtoMessage() {}
 
 func (x *WebAuthNVerification) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[26]
+	mi := &file_zitadel_user_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2195,7 +2256,7 @@ func (x *WebAuthNVerification) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WebAuthNVerification.ProtoReflect.Descriptor instead.
 func (*WebAuthNVerification) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{26}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *WebAuthNVerification) GetPublicKeyCredential() []byte {
@@ -2225,7 +2286,7 @@ type WebAuthNToken struct {
 func (x *WebAuthNToken) Reset() {
 	*x = WebAuthNToken{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[27]
+		mi := &file_zitadel_user_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2238,7 +2299,7 @@ func (x *WebAuthNToken) String() string {
 func (*WebAuthNToken) ProtoMessage() {}
 
 func (x *WebAuthNToken) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[27]
+	mi := &file_zitadel_user_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2251,7 +2312,7 @@ func (x *WebAuthNToken) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WebAuthNToken.ProtoReflect.Descriptor instead.
 func (*WebAuthNToken) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{27}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *WebAuthNToken) GetId() string {
@@ -2296,7 +2357,7 @@ type Membership struct {
 func (x *Membership) Reset() {
 	*x = Membership{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[28]
+		mi := &file_zitadel_user_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2309,7 +2370,7 @@ func (x *Membership) String() string {
 func (*Membership) ProtoMessage() {}
 
 func (x *Membership) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[28]
+	mi := &file_zitadel_user_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2322,7 +2383,7 @@ func (x *Membership) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Membership.ProtoReflect.Descriptor instead.
 func (*Membership) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{28}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *Membership) GetUserId() string {
@@ -2433,7 +2494,7 @@ type MembershipQuery struct {
 func (x *MembershipQuery) Reset() {
 	*x = MembershipQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[29]
+		mi := &file_zitadel_user_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2446,7 +2507,7 @@ func (x *MembershipQuery) String() string {
 func (*MembershipQuery) ProtoMessage() {}
 
 func (x *MembershipQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[29]
+	mi := &file_zitadel_user_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2459,7 +2520,7 @@ func (x *MembershipQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MembershipQuery.ProtoReflect.Descriptor instead.
 func (*MembershipQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{29}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{30}
 }
 
 func (m *MembershipQuery) GetQuery() isMembershipQuery_Query {
@@ -2537,7 +2598,7 @@ type MembershipOrgQuery struct {
 func (x *MembershipOrgQuery) Reset() {
 	*x = MembershipOrgQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[30]
+		mi := &file_zitadel_user_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2550,7 +2611,7 @@ func (x *MembershipOrgQuery) String() string {
 func (*MembershipOrgQuery) ProtoMessage() {}
 
 func (x *MembershipOrgQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[30]
+	mi := &file_zitadel_user_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2563,7 +2624,7 @@ func (x *MembershipOrgQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MembershipOrgQuery.ProtoReflect.Descriptor instead.
 func (*MembershipOrgQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{30}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *MembershipOrgQuery) GetOrgId() string {
@@ -2585,7 +2646,7 @@ type MembershipProjectQuery struct {
 func (x *MembershipProjectQuery) Reset() {
 	*x = MembershipProjectQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[31]
+		mi := &file_zitadel_user_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2598,7 +2659,7 @@ func (x *MembershipProjectQuery) String() string {
 func (*MembershipProjectQuery) ProtoMessage() {}
 
 func (x *MembershipProjectQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[31]
+	mi := &file_zitadel_user_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2611,7 +2672,7 @@ func (x *MembershipProjectQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MembershipProjectQuery.ProtoReflect.Descriptor instead.
 func (*MembershipProjectQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{31}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *MembershipProjectQuery) GetProjectId() string {
@@ -2633,7 +2694,7 @@ type MembershipProjectGrantQuery struct {
 func (x *MembershipProjectGrantQuery) Reset() {
 	*x = MembershipProjectGrantQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[32]
+		mi := &file_zitadel_user_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2646,7 +2707,7 @@ func (x *MembershipProjectGrantQuery) String() string {
 func (*MembershipProjectGrantQuery) ProtoMessage() {}
 
 func (x *MembershipProjectGrantQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[32]
+	mi := &file_zitadel_user_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2659,7 +2720,7 @@ func (x *MembershipProjectGrantQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MembershipProjectGrantQuery.ProtoReflect.Descriptor instead.
 func (*MembershipProjectGrantQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{32}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *MembershipProjectGrantQuery) GetProjectGrantId() string {
@@ -2681,7 +2742,7 @@ type MembershipIAMQuery struct {
 func (x *MembershipIAMQuery) Reset() {
 	*x = MembershipIAMQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[33]
+		mi := &file_zitadel_user_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2694,7 +2755,7 @@ func (x *MembershipIAMQuery) String() string {
 func (*MembershipIAMQuery) ProtoMessage() {}
 
 func (x *MembershipIAMQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[33]
+	mi := &file_zitadel_user_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2707,7 +2768,7 @@ func (x *MembershipIAMQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MembershipIAMQuery.ProtoReflect.Descriptor instead.
 func (*MembershipIAMQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{33}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *MembershipIAMQuery) GetIam() bool {
@@ -2736,7 +2797,7 @@ type Session struct {
 func (x *Session) Reset() {
 	*x = Session{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[34]
+		mi := &file_zitadel_user_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2749,7 +2810,7 @@ func (x *Session) String() string {
 func (*Session) ProtoMessage() {}
 
 func (x *Session) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[34]
+	mi := &file_zitadel_user_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2762,7 +2823,7 @@ func (x *Session) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Session.ProtoReflect.Descriptor instead.
 func (*Session) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{34}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *Session) GetSessionId() string {
@@ -2846,7 +2907,7 @@ type RefreshToken struct {
 func (x *RefreshToken) Reset() {
 	*x = RefreshToken{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[35]
+		mi := &file_zitadel_user_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2859,7 +2920,7 @@ func (x *RefreshToken) String() string {
 func (*RefreshToken) ProtoMessage() {}
 
 func (x *RefreshToken) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[35]
+	mi := &file_zitadel_user_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2872,7 +2933,7 @@ func (x *RefreshToken) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshToken.ProtoReflect.Descriptor instead.
 func (*RefreshToken) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{35}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *RefreshToken) GetId() string {
@@ -2945,7 +3006,7 @@ type PersonalAccessToken struct {
 func (x *PersonalAccessToken) Reset() {
 	*x = PersonalAccessToken{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[36]
+		mi := &file_zitadel_user_proto_msgTypes[37]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2958,7 +3019,7 @@ func (x *PersonalAccessToken) String() string {
 func (*PersonalAccessToken) ProtoMessage() {}
 
 func (x *PersonalAccessToken) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[36]
+	mi := &file_zitadel_user_proto_msgTypes[37]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2971,7 +3032,7 @@ func (x *PersonalAccessToken) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalAccessToken.ProtoReflect.Descriptor instead.
 func (*PersonalAccessToken) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{36}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *PersonalAccessToken) GetId() string {
@@ -3031,7 +3092,7 @@ type UserGrant struct {
 func (x *UserGrant) Reset() {
 	*x = UserGrant{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[37]
+		mi := &file_zitadel_user_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3044,7 +3105,7 @@ func (x *UserGrant) String() string {
 func (*UserGrant) ProtoMessage() {}
 
 func (x *UserGrant) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[37]
+	mi := &file_zitadel_user_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3057,7 +3118,7 @@ func (x *UserGrant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrant.ProtoReflect.Descriptor instead.
 func (*UserGrant) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{37}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *UserGrant) GetId() string {
@@ -3220,7 +3281,7 @@ type UserGrantQuery struct {
 func (x *UserGrantQuery) Reset() {
 	*x = UserGrantQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[38]
+		mi := &file_zitadel_user_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3233,7 +3294,7 @@ func (x *UserGrantQuery) String() string {
 func (*UserGrantQuery) ProtoMessage() {}
 
 func (x *UserGrantQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[38]
+	mi := &file_zitadel_user_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3246,7 +3307,7 @@ func (x *UserGrantQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{38}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{39}
 }
 
 func (m *UserGrantQuery) GetQuery() isUserGrantQuery_Query {
@@ -3453,7 +3514,7 @@ type UserGrantProjectIDQuery struct {
 func (x *UserGrantProjectIDQuery) Reset() {
 	*x = UserGrantProjectIDQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[39]
+		mi := &file_zitadel_user_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3466,7 +3527,7 @@ func (x *UserGrantProjectIDQuery) String() string {
 func (*UserGrantProjectIDQuery) ProtoMessage() {}
 
 func (x *UserGrantProjectIDQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[39]
+	mi := &file_zitadel_user_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3479,7 +3540,7 @@ func (x *UserGrantProjectIDQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantProjectIDQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantProjectIDQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{39}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *UserGrantProjectIDQuery) GetProjectId() string {
@@ -3500,7 +3561,7 @@ type UserGrantUserIDQuery struct {
 func (x *UserGrantUserIDQuery) Reset() {
 	*x = UserGrantUserIDQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[40]
+		mi := &file_zitadel_user_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3513,7 +3574,7 @@ func (x *UserGrantUserIDQuery) String() string {
 func (*UserGrantUserIDQuery) ProtoMessage() {}
 
 func (x *UserGrantUserIDQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[40]
+	mi := &file_zitadel_user_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3526,7 +3587,7 @@ func (x *UserGrantUserIDQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantUserIDQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantUserIDQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{40}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *UserGrantUserIDQuery) GetUserId() string {
@@ -3547,7 +3608,7 @@ type UserGrantWithGrantedQuery struct {
 func (x *UserGrantWithGrantedQuery) Reset() {
 	*x = UserGrantWithGrantedQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[41]
+		mi := &file_zitadel_user_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3560,7 +3621,7 @@ func (x *UserGrantWithGrantedQuery) String() string {
 func (*UserGrantWithGrantedQuery) ProtoMessage() {}
 
 func (x *UserGrantWithGrantedQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[41]
+	mi := &file_zitadel_user_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3573,7 +3634,7 @@ func (x *UserGrantWithGrantedQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantWithGrantedQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantWithGrantedQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{41}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *UserGrantWithGrantedQuery) GetWithGranted() bool {
@@ -3595,7 +3656,7 @@ type UserGrantRoleKeyQuery struct {
 func (x *UserGrantRoleKeyQuery) Reset() {
 	*x = UserGrantRoleKeyQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[42]
+		mi := &file_zitadel_user_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3608,7 +3669,7 @@ func (x *UserGrantRoleKeyQuery) String() string {
 func (*UserGrantRoleKeyQuery) ProtoMessage() {}
 
 func (x *UserGrantRoleKeyQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[42]
+	mi := &file_zitadel_user_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3621,7 +3682,7 @@ func (x *UserGrantRoleKeyQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantRoleKeyQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantRoleKeyQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{42}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *UserGrantRoleKeyQuery) GetRoleKey() string {
@@ -3649,7 +3710,7 @@ type UserGrantProjectGrantIDQuery struct {
 func (x *UserGrantProjectGrantIDQuery) Reset() {
 	*x = UserGrantProjectGrantIDQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[43]
+		mi := &file_zitadel_user_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3662,7 +3723,7 @@ func (x *UserGrantProjectGrantIDQuery) String() string {
 func (*UserGrantProjectGrantIDQuery) ProtoMessage() {}
 
 func (x *UserGrantProjectGrantIDQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[43]
+	mi := &file_zitadel_user_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3675,7 +3736,7 @@ func (x *UserGrantProjectGrantIDQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantProjectGrantIDQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantProjectGrantIDQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{43}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *UserGrantProjectGrantIDQuery) GetProjectGrantId() string {
@@ -3697,7 +3758,7 @@ type UserGrantUserNameQuery struct {
 func (x *UserGrantUserNameQuery) Reset() {
 	*x = UserGrantUserNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[44]
+		mi := &file_zitadel_user_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3710,7 +3771,7 @@ func (x *UserGrantUserNameQuery) String() string {
 func (*UserGrantUserNameQuery) ProtoMessage() {}
 
 func (x *UserGrantUserNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[44]
+	mi := &file_zitadel_user_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3723,7 +3784,7 @@ func (x *UserGrantUserNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantUserNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantUserNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{44}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *UserGrantUserNameQuery) GetUserName() string {
@@ -3752,7 +3813,7 @@ type UserGrantFirstNameQuery struct {
 func (x *UserGrantFirstNameQuery) Reset() {
 	*x = UserGrantFirstNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[45]
+		mi := &file_zitadel_user_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3765,7 +3826,7 @@ func (x *UserGrantFirstNameQuery) String() string {
 func (*UserGrantFirstNameQuery) ProtoMessage() {}
 
 func (x *UserGrantFirstNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[45]
+	mi := &file_zitadel_user_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3778,7 +3839,7 @@ func (x *UserGrantFirstNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantFirstNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantFirstNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{45}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *UserGrantFirstNameQuery) GetFirstName() string {
@@ -3807,7 +3868,7 @@ type UserGrantLastNameQuery struct {
 func (x *UserGrantLastNameQuery) Reset() {
 	*x = UserGrantLastNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[46]
+		mi := &file_zitadel_user_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3820,7 +3881,7 @@ func (x *UserGrantLastNameQuery) String() string {
 func (*UserGrantLastNameQuery) ProtoMessage() {}
 
 func (x *UserGrantLastNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[46]
+	mi := &file_zitadel_user_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3833,7 +3894,7 @@ func (x *UserGrantLastNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantLastNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantLastNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{46}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *UserGrantLastNameQuery) GetLastName() string {
@@ -3862,7 +3923,7 @@ type UserGrantEmailQuery struct {
 func (x *UserGrantEmailQuery) Reset() {
 	*x = UserGrantEmailQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[47]
+		mi := &file_zitadel_user_proto_msgTypes[48]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3875,7 +3936,7 @@ func (x *UserGrantEmailQuery) String() string {
 func (*UserGrantEmailQuery) ProtoMessage() {}
 
 func (x *UserGrantEmailQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[47]
+	mi := &file_zitadel_user_proto_msgTypes[48]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3888,7 +3949,7 @@ func (x *UserGrantEmailQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantEmailQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantEmailQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{47}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *UserGrantEmailQuery) GetEmail() string {
@@ -3917,7 +3978,7 @@ type UserGrantOrgNameQuery struct {
 func (x *UserGrantOrgNameQuery) Reset() {
 	*x = UserGrantOrgNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[48]
+		mi := &file_zitadel_user_proto_msgTypes[49]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3930,7 +3991,7 @@ func (x *UserGrantOrgNameQuery) String() string {
 func (*UserGrantOrgNameQuery) ProtoMessage() {}
 
 func (x *UserGrantOrgNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[48]
+	mi := &file_zitadel_user_proto_msgTypes[49]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3943,7 +4004,7 @@ func (x *UserGrantOrgNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantOrgNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantOrgNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{48}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *UserGrantOrgNameQuery) GetOrgName() string {
@@ -3972,7 +4033,7 @@ type UserGrantOrgDomainQuery struct {
 func (x *UserGrantOrgDomainQuery) Reset() {
 	*x = UserGrantOrgDomainQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[49]
+		mi := &file_zitadel_user_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3985,7 +4046,7 @@ func (x *UserGrantOrgDomainQuery) String() string {
 func (*UserGrantOrgDomainQuery) ProtoMessage() {}
 
 func (x *UserGrantOrgDomainQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[49]
+	mi := &file_zitadel_user_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3998,7 +4059,7 @@ func (x *UserGrantOrgDomainQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantOrgDomainQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantOrgDomainQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{49}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *UserGrantOrgDomainQuery) GetOrgDomain() string {
@@ -4027,7 +4088,7 @@ type UserGrantProjectNameQuery struct {
 func (x *UserGrantProjectNameQuery) Reset() {
 	*x = UserGrantProjectNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[50]
+		mi := &file_zitadel_user_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4040,7 +4101,7 @@ func (x *UserGrantProjectNameQuery) String() string {
 func (*UserGrantProjectNameQuery) ProtoMessage() {}
 
 func (x *UserGrantProjectNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[50]
+	mi := &file_zitadel_user_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4053,7 +4114,7 @@ func (x *UserGrantProjectNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantProjectNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantProjectNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{50}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *UserGrantProjectNameQuery) GetProjectName() string {
@@ -4082,7 +4143,7 @@ type UserGrantDisplayNameQuery struct {
 func (x *UserGrantDisplayNameQuery) Reset() {
 	*x = UserGrantDisplayNameQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[51]
+		mi := &file_zitadel_user_proto_msgTypes[52]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4095,7 +4156,7 @@ func (x *UserGrantDisplayNameQuery) String() string {
 func (*UserGrantDisplayNameQuery) ProtoMessage() {}
 
 func (x *UserGrantDisplayNameQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[51]
+	mi := &file_zitadel_user_proto_msgTypes[52]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4108,7 +4169,7 @@ func (x *UserGrantDisplayNameQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantDisplayNameQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantDisplayNameQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{51}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *UserGrantDisplayNameQuery) GetDisplayName() string {
@@ -4136,7 +4197,7 @@ type UserGrantUserTypeQuery struct {
 func (x *UserGrantUserTypeQuery) Reset() {
 	*x = UserGrantUserTypeQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_user_proto_msgTypes[52]
+		mi := &file_zitadel_user_proto_msgTypes[53]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4149,7 +4210,7 @@ func (x *UserGrantUserTypeQuery) String() string {
 func (*UserGrantUserTypeQuery) ProtoMessage() {}
 
 func (x *UserGrantUserTypeQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_user_proto_msgTypes[52]
+	mi := &file_zitadel_user_proto_msgTypes[53]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4162,7 +4223,7 @@ func (x *UserGrantUserTypeQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGrantUserTypeQuery.ProtoReflect.Descriptor instead.
 func (*UserGrantUserTypeQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_user_proto_rawDescGZIP(), []int{52}
+	return file_zitadel_user_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *UserGrantUserTypeQuery) GetType() Type {
@@ -4322,7 +4383,7 @@ var file_zitadel_user_proto_rawDesc = []byte{
 	0x20, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x20, 0x69, 0x73, 0x20, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
 	0x64, 0x20, 0x6f, 0x75, 0x74, 0x73, 0x69, 0x64, 0x65, 0x20, 0x5a, 0x49, 0x54, 0x41, 0x44, 0x45,
 	0x4c, 0x52, 0x0f, 0x69, 0x73, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69,
-	0x65, 0x64, 0x22, 0x9b, 0x07, 0x0a, 0x0b, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65,
+	0x65, 0x64, 0x22, 0xf2, 0x07, 0x0a, 0x0b, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65,
 	0x72, 0x79, 0x12, 0x48, 0x0a, 0x0f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x5f,
 	0x71, 0x75, 0x65, 0x72, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1e, 0x2e, 0x7a, 0x69,
 	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x73,
@@ -4379,34 +4440,48 @@ var file_zitadel_user_proto_rawDesc = []byte{
 	0x71, 0x75, 0x65, 0x72, 0x79, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x7a, 0x69,
 	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x4e, 0x6f,
 	0x74, 0x51, 0x75, 0x65, 0x72, 0x79, 0x48, 0x00, 0x52, 0x08, 0x6e, 0x6f, 0x74, 0x51, 0x75, 0x65,
-	0x72, 0x79, 0x42, 0x0c, 0x0a, 0x05, 0x71, 0x75, 0x65, 0x72, 0x79, 0x12, 0x03, 0xf8, 0x42, 0x01,
-	0x22, 0x5f, 0x0a, 0x07, 0x4f, 0x72, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x54, 0x0a, 0x07, 0x71,
-	0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53,
-	0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65, 0x72, 0x79, 0x42, 0x1c, 0x92, 0x41, 0x19, 0x32,
-	0x17, 0x74, 0x68, 0x65, 0x20, 0x73, 0x75, 0x62, 0x20, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73,
-	0x20, 0x74, 0x6f, 0x20, 0x27, 0x4f, 0x52, 0x27, 0x52, 0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65,
-	0x73, 0x22, 0x61, 0x0a, 0x08, 0x41, 0x6e, 0x64, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x55, 0x0a,
-	0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c,
-	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31,
-	0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65, 0x72, 0x79, 0x42, 0x1d, 0x92, 0x41,
-	0x1a, 0x32, 0x18, 0x74, 0x68, 0x65, 0x20, 0x73, 0x75, 0x62, 0x20, 0x71, 0x75, 0x65, 0x72, 0x69,
-	0x65, 0x73, 0x20, 0x74, 0x6f, 0x20, 0x27, 0x41, 0x4e, 0x44, 0x27, 0x52, 0x07, 0x71, 0x75, 0x65,
-	0x72, 0x69, 0x65, 0x73, 0x22, 0x62, 0x0a, 0x08, 0x4e, 0x6f, 0x74, 0x51, 0x75, 0x65, 0x72, 0x79,
-	0x12, 0x56, 0x0a, 0x05, 0x71, 0x75, 0x65, 0x72, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x1c, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76,
-	0x31, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65, 0x72, 0x79, 0x42, 0x22, 0x92,
-	0x41, 0x1f, 0x32, 0x1d, 0x74, 0x68, 0x65, 0x20, 0x73, 0x75, 0x62, 0x20, 0x71, 0x75, 0x65, 0x72,
-	0x79, 0x20, 0x74, 0x6f, 0x20, 0x6e, 0x65, 0x67, 0x61, 0x74, 0x65, 0x20, 0x28, 0x4e, 0x4f, 0x54,
-	0x29, 0x52, 0x05, 0x71, 0x75, 0x65, 0x72, 0x79, 0x22, 0x7b, 0x0a, 0x0d, 0x49, 0x6e, 0x55, 0x73,
-	0x65, 0x72, 0x49, 0x44, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x6a, 0x0a, 0x08, 0x75, 0x73, 0x65,
-	0x72, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x42, 0x4f, 0x92, 0x41, 0x4c,
-	0x32, 0x1f, 0x74, 0x68, 0x65, 0x20, 0x69, 0x64, 0x73, 0x20, 0x6f, 0x66, 0x20, 0x74, 0x68, 0x65,
-	0x20, 0x75, 0x73, 0x65, 0x72, 0x73, 0x20, 0x74, 0x6f, 0x20, 0x69, 0x6e, 0x63, 0x6c, 0x75, 0x64,
-	0x65, 0x4a, 0x29, 0x5b, 0x22, 0x36, 0x39, 0x36, 0x32, 0x39, 0x30, 0x32, 0x33, 0x39, 0x30, 0x36,
-	0x34, 0x38, 0x38, 0x33, 0x33, 0x34, 0x22, 0x2c, 0x22, 0x36, 0x39, 0x36, 0x32, 0x32, 0x33, 0x36,
-	0x36, 0x30, 0x31, 0x32, 0x33, 0x35, 0x35, 0x36, 0x36, 0x32, 0x22, 0x5d, 0x52, 0x07, 0x75, 0x73,
-	0x65, 0x72, 0x49, 0x64, 0x73, 0x22, 0xba, 0x01, 0x0a, 0x0d, 0x55, 0x73, 0x65, 0x72, 0x4e, 0x61,
+	0x72, 0x79, 0x12, 0x55, 0x0a, 0x14, 0x69, 0x6e, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x65, 0x6d,
+	0x61, 0x69, 0x6c, 0x73, 0x5f, 0x71, 0x75, 0x65, 0x72, 0x79, 0x18, 0x0e, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x22, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e,
+	0x76, 0x31, 0x2e, 0x49, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x73, 0x51,
+	0x75, 0x65, 0x72, 0x79, 0x48, 0x00, 0x52, 0x11, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x45, 0x6d,
+	0x61, 0x69, 0x6c, 0x73, 0x51, 0x75, 0x65, 0x72, 0x79, 0x42, 0x0c, 0x0a, 0x05, 0x71, 0x75, 0x65,
+	0x72, 0x79, 0x12, 0x03, 0xf8, 0x42, 0x01, 0x22, 0x5f, 0x0a, 0x07, 0x4f, 0x72, 0x51, 0x75, 0x65,
+	0x72, 0x79, 0x12, 0x54, 0x0a, 0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x75, 0x73,
+	0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75, 0x65, 0x72,
+	0x79, 0x42, 0x1c, 0x92, 0x41, 0x19, 0x32, 0x17, 0x74, 0x68, 0x65, 0x20, 0x73, 0x75, 0x62, 0x20,
+	0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x20, 0x74, 0x6f, 0x20, 0x27, 0x4f, 0x52, 0x27, 0x52,
+	0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x22, 0x61, 0x0a, 0x08, 0x41, 0x6e, 0x64, 0x51,
+	0x75, 0x65, 0x72, 0x79, 0x12, 0x55, 0x0a, 0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x18,
+	0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e,
+	0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51, 0x75,
+	0x65, 0x72, 0x79, 0x42, 0x1d, 0x92, 0x41, 0x1a, 0x32, 0x18, 0x74, 0x68, 0x65, 0x20, 0x73, 0x75,
+	0x62, 0x20, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x20, 0x74, 0x6f, 0x20, 0x27, 0x41, 0x4e,
+	0x44, 0x27, 0x52, 0x07, 0x71, 0x75, 0x65, 0x72, 0x69, 0x65, 0x73, 0x22, 0x62, 0x0a, 0x08, 0x4e,
+	0x6f, 0x74, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x56, 0x0a, 0x05, 0x71, 0x75, 0x65, 0x72, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
+	0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x51,
+	0x75, 0x65, 0x72, 0x79, 0x42, 0x22, 0x92, 0x41, 0x1f, 0x32, 0x1d, 0x74, 0x68, 0x65, 0x20, 0x73,
+	0x75, 0x62, 0x20, 0x71, 0x75, 0x65, 0x72, 0x79, 0x20, 0x74, 0x6f, 0x20, 0x6e, 0x65, 0x67, 0x61,
+	0x74, 0x65, 0x20, 0x28, 0x4e, 0x4f, 0x54, 0x29, 0x52, 0x05, 0x71, 0x75, 0x65, 0x72, 0x79, 0x22,
+	0x7b, 0x0a, 0x0d, 0x49, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x51, 0x75, 0x65, 0x72, 0x79,
+	0x12, 0x6a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x09, 0x42, 0x4f, 0x92, 0x41, 0x4c, 0x32, 0x1f, 0x74, 0x68, 0x65, 0x20, 0x69, 0x64, 0x73,
+	0x20, 0x6f, 0x66, 0x20, 0x74, 0x68, 0x65, 0x20, 0x75, 0x73, 0x65, 0x72, 0x73, 0x20, 0x74, 0x6f,
+	0x20, 0x69, 0x6e, 0x63, 0x6c, 0x75, 0x64, 0x65, 0x4a, 0x29, 0x5b, 0x22, 0x36, 0x39, 0x36, 0x32,
+	0x39, 0x30, 0x32, 0x33, 0x39, 0x30, 0x36, 0x34, 0x38, 0x38, 0x33, 0x33, 0x34, 0x22, 0x2c, 0x22,
+	0x36, 0x39, 0x36, 0x32, 0x32, 0x33, 0x36, 0x36, 0x30, 0x31, 0x32, 0x33, 0x35, 0x35, 0x36, 0x36,
+	0x32, 0x22, 0x5d, 0x52, 0x07, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x22, 0x86, 0x01, 0x0a,
+	0x11, 0x49, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x73, 0x51, 0x75, 0x65,
+	0x72, 0x79, 0x12, 0x71, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x65, 0x6d, 0x61, 0x69, 0x6c,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x42, 0x50, 0x92, 0x41, 0x4d, 0x32, 0x22, 0x74, 0x68,
+	0x65, 0x20, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x73, 0x20, 0x6f, 0x66, 0x20, 0x74, 0x68, 0x65, 0x20,
+	0x75, 0x73, 0x65, 0x72, 0x73, 0x20, 0x74, 0x6f, 0x20, 0x69, 0x6e, 0x63, 0x6c, 0x75, 0x64, 0x65,
+	0x4a, 0x27, 0x5b, 0x22, 0x74, 0x65, 0x73, 0x74, 0x40, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65,
+	0x2e, 0x63, 0x6f, 0x6d, 0x22, 0x2c, 0x22, 0x74, 0x65, 0x73, 0x74, 0x40, 0x65, 0x78, 0x61, 0x6d,
+	0x70, 0x6c, 0x65, 0x2e, 0x6f, 0x72, 0x67, 0x22, 0x5d, 0x52, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x45,
+	0x6d, 0x61, 0x69, 0x6c, 0x73, 0x22, 0xba, 0x01, 0x0a, 0x0d, 0x55, 0x73, 0x65, 0x72, 0x4e, 0x61,
 	0x6d, 0x65, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x3b, 0x0a, 0x09, 0x75, 0x73, 0x65, 0x72, 0x5f,
 	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x1e, 0xfa, 0x42, 0x05, 0x72,
 	0x03, 0x18, 0xc8, 0x01, 0x92, 0x41, 0x13, 0x4a, 0x0e, 0x22, 0x67, 0x69, 0x67, 0x69, 0x2d, 0x67,
@@ -5234,7 +5309,7 @@ func file_zitadel_user_proto_rawDescGZIP() []byte {
 }
 
 var file_zitadel_user_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_zitadel_user_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
+var file_zitadel_user_proto_msgTypes = make([]protoimpl.MessageInfo, 54)
 var file_zitadel_user_proto_goTypes = []interface{}{
 	(UserState)(0),                       // 0: zitadel.user.v1.UserState
 	(Gender)(0),                          // 1: zitadel.user.v1.Gender
@@ -5255,54 +5330,55 @@ var file_zitadel_user_proto_goTypes = []interface{}{
 	(*AndQuery)(nil),                     // 16: zitadel.user.v1.AndQuery
 	(*NotQuery)(nil),                     // 17: zitadel.user.v1.NotQuery
 	(*InUserIDQuery)(nil),                // 18: zitadel.user.v1.InUserIDQuery
-	(*UserNameQuery)(nil),                // 19: zitadel.user.v1.UserNameQuery
-	(*FirstNameQuery)(nil),               // 20: zitadel.user.v1.FirstNameQuery
-	(*LastNameQuery)(nil),                // 21: zitadel.user.v1.LastNameQuery
-	(*NickNameQuery)(nil),                // 22: zitadel.user.v1.NickNameQuery
-	(*DisplayNameQuery)(nil),             // 23: zitadel.user.v1.DisplayNameQuery
-	(*EmailQuery)(nil),                   // 24: zitadel.user.v1.EmailQuery
-	(*LoginNameQuery)(nil),               // 25: zitadel.user.v1.LoginNameQuery
-	(*StateQuery)(nil),                   // 26: zitadel.user.v1.StateQuery
-	(*TypeQuery)(nil),                    // 27: zitadel.user.v1.TypeQuery
-	(*AuthFactor)(nil),                   // 28: zitadel.user.v1.AuthFactor
-	(*AuthFactorOTP)(nil),                // 29: zitadel.user.v1.AuthFactorOTP
-	(*AuthFactorOTPSMS)(nil),             // 30: zitadel.user.v1.AuthFactorOTPSMS
-	(*AuthFactorOTPEmail)(nil),           // 31: zitadel.user.v1.AuthFactorOTPEmail
-	(*AuthFactorU2F)(nil),                // 32: zitadel.user.v1.AuthFactorU2F
-	(*WebAuthNKey)(nil),                  // 33: zitadel.user.v1.WebAuthNKey
-	(*WebAuthNVerification)(nil),         // 34: zitadel.user.v1.WebAuthNVerification
-	(*WebAuthNToken)(nil),                // 35: zitadel.user.v1.WebAuthNToken
-	(*Membership)(nil),                   // 36: zitadel.user.v1.Membership
-	(*MembershipQuery)(nil),              // 37: zitadel.user.v1.MembershipQuery
-	(*MembershipOrgQuery)(nil),           // 38: zitadel.user.v1.MembershipOrgQuery
-	(*MembershipProjectQuery)(nil),       // 39: zitadel.user.v1.MembershipProjectQuery
-	(*MembershipProjectGrantQuery)(nil),  // 40: zitadel.user.v1.MembershipProjectGrantQuery
-	(*MembershipIAMQuery)(nil),           // 41: zitadel.user.v1.MembershipIAMQuery
-	(*Session)(nil),                      // 42: zitadel.user.v1.Session
-	(*RefreshToken)(nil),                 // 43: zitadel.user.v1.RefreshToken
-	(*PersonalAccessToken)(nil),          // 44: zitadel.user.v1.PersonalAccessToken
-	(*UserGrant)(nil),                    // 45: zitadel.user.v1.UserGrant
-	(*UserGrantQuery)(nil),               // 46: zitadel.user.v1.UserGrantQuery
-	(*UserGrantProjectIDQuery)(nil),      // 47: zitadel.user.v1.UserGrantProjectIDQuery
-	(*UserGrantUserIDQuery)(nil),         // 48: zitadel.user.v1.UserGrantUserIDQuery
-	(*UserGrantWithGrantedQuery)(nil),    // 49: zitadel.user.v1.UserGrantWithGrantedQuery
-	(*UserGrantRoleKeyQuery)(nil),        // 50: zitadel.user.v1.UserGrantRoleKeyQuery
-	(*UserGrantProjectGrantIDQuery)(nil), // 51: zitadel.user.v1.UserGrantProjectGrantIDQuery
-	(*UserGrantUserNameQuery)(nil),       // 52: zitadel.user.v1.UserGrantUserNameQuery
-	(*UserGrantFirstNameQuery)(nil),      // 53: zitadel.user.v1.UserGrantFirstNameQuery
-	(*UserGrantLastNameQuery)(nil),       // 54: zitadel.user.v1.UserGrantLastNameQuery
-	(*UserGrantEmailQuery)(nil),          // 55: zitadel.user.v1.UserGrantEmailQuery
-	(*UserGrantOrgNameQuery)(nil),        // 56: zitadel.user.v1.UserGrantOrgNameQuery
-	(*UserGrantOrgDomainQuery)(nil),      // 57: zitadel.user.v1.UserGrantOrgDomainQuery
-	(*UserGrantProjectNameQuery)(nil),    // 58: zitadel.user.v1.UserGrantProjectNameQuery
-	(*UserGrantDisplayNameQuery)(nil),    // 59: zitadel.user.v1.UserGrantDisplayNameQuery
-	(*UserGrantUserTypeQuery)(nil),       // 60: zitadel.user.v1.UserGrantUserTypeQuery
-	(*object.ObjectDetails)(nil),         // 61: zitadel.v1.ObjectDetails
-	(object.TextQueryMethod)(0),          // 62: zitadel.v1.TextQueryMethod
-	(*timestamppb.Timestamp)(nil),        // 63: google.protobuf.Timestamp
+	(*InUserEmailsQuery)(nil),            // 19: zitadel.user.v1.InUserEmailsQuery
+	(*UserNameQuery)(nil),                // 20: zitadel.user.v1.UserNameQuery
+	(*FirstNameQuery)(nil),               // 21: zitadel.user.v1.FirstNameQuery
+	(*LastNameQuery)(nil),                // 22: zitadel.user.v1.LastNameQuery
+	(*NickNameQuery)(nil),                // 23: zitadel.user.v1.NickNameQuery
+	(*DisplayNameQuery)(nil),             // 24: zitadel.user.v1.DisplayNameQuery
+	(*EmailQuery)(nil),                   // 25: zitadel.user.v1.EmailQuery
+	(*LoginNameQuery)(nil),               // 26: zitadel.user.v1.LoginNameQuery
+	(*StateQuery)(nil),                   // 27: zitadel.user.v1.StateQuery
+	(*TypeQuery)(nil),                    // 28: zitadel.user.v1.TypeQuery
+	(*AuthFactor)(nil),                   // 29: zitadel.user.v1.AuthFactor
+	(*AuthFactorOTP)(nil),                // 30: zitadel.user.v1.AuthFactorOTP
+	(*AuthFactorOTPSMS)(nil),             // 31: zitadel.user.v1.AuthFactorOTPSMS
+	(*AuthFactorOTPEmail)(nil),           // 32: zitadel.user.v1.AuthFactorOTPEmail
+	(*AuthFactorU2F)(nil),                // 33: zitadel.user.v1.AuthFactorU2F
+	(*WebAuthNKey)(nil),                  // 34: zitadel.user.v1.WebAuthNKey
+	(*WebAuthNVerification)(nil),         // 35: zitadel.user.v1.WebAuthNVerification
+	(*WebAuthNToken)(nil),                // 36: zitadel.user.v1.WebAuthNToken
+	(*Membership)(nil),                   // 37: zitadel.user.v1.Membership
+	(*MembershipQuery)(nil),              // 38: zitadel.user.v1.MembershipQuery
+	(*MembershipOrgQuery)(nil),           // 39: zitadel.user.v1.MembershipOrgQuery
+	(*MembershipProjectQuery)(nil),       // 40: zitadel.user.v1.MembershipProjectQuery
+	(*MembershipProjectGrantQuery)(nil),  // 41: zitadel.user.v1.MembershipProjectGrantQuery
+	(*MembershipIAMQuery)(nil),           // 42: zitadel.user.v1.MembershipIAMQuery
+	(*Session)(nil),                      // 43: zitadel.user.v1.Session
+	(*RefreshToken)(nil),                 // 44: zitadel.user.v1.RefreshToken
+	(*PersonalAccessToken)(nil),          // 45: zitadel.user.v1.PersonalAccessToken
+	(*UserGrant)(nil),                    // 46: zitadel.user.v1.UserGrant
+	(*UserGrantQuery)(nil),               // 47: zitadel.user.v1.UserGrantQuery
+	(*UserGrantProjectIDQuery)(nil),      // 48: zitadel.user.v1.UserGrantProjectIDQuery
+	(*UserGrantUserIDQuery)(nil),         // 49: zitadel.user.v1.UserGrantUserIDQuery
+	(*UserGrantWithGrantedQuery)(nil),    // 50: zitadel.user.v1.UserGrantWithGrantedQuery
+	(*UserGrantRoleKeyQuery)(nil),        // 51: zitadel.user.v1.UserGrantRoleKeyQuery
+	(*UserGrantProjectGrantIDQuery)(nil), // 52: zitadel.user.v1.UserGrantProjectGrantIDQuery
+	(*UserGrantUserNameQuery)(nil),       // 53: zitadel.user.v1.UserGrantUserNameQuery
+	(*UserGrantFirstNameQuery)(nil),      // 54: zitadel.user.v1.UserGrantFirstNameQuery
+	(*UserGrantLastNameQuery)(nil),       // 55: zitadel.user.v1.UserGrantLastNameQuery
+	(*UserGrantEmailQuery)(nil),          // 56: zitadel.user.v1.UserGrantEmailQuery
+	(*UserGrantOrgNameQuery)(nil),        // 57: zitadel.user.v1.UserGrantOrgNameQuery
+	(*UserGrantOrgDomainQuery)(nil),      // 58: zitadel.user.v1.UserGrantOrgDomainQuery
+	(*UserGrantProjectNameQuery)(nil),    // 59: zitadel.user.v1.UserGrantProjectNameQuery
+	(*UserGrantDisplayNameQuery)(nil),    // 60: zitadel.user.v1.UserGrantDisplayNameQuery
+	(*UserGrantUserTypeQuery)(nil),       // 61: zitadel.user.v1.UserGrantUserTypeQuery
+	(*object.ObjectDetails)(nil),         // 62: zitadel.v1.ObjectDetails
+	(object.TextQueryMethod)(0),          // 63: zitadel.v1.TextQueryMethod
+	(*timestamppb.Timestamp)(nil),        // 64: google.protobuf.Timestamp
 }
 var file_zitadel_user_proto_depIdxs = []int32{
-	61, // 0: zitadel.user.v1.User.details:type_name -> zitadel.v1.ObjectDetails
+	62, // 0: zitadel.user.v1.User.details:type_name -> zitadel.v1.ObjectDetails
 	0,  // 1: zitadel.user.v1.User.state:type_name -> zitadel.user.v1.UserState
 	9,  // 2: zitadel.user.v1.User.human:type_name -> zitadel.user.v1.Human
 	10, // 3: zitadel.user.v1.User.machine:type_name -> zitadel.user.v1.Machine
@@ -5311,82 +5387,83 @@ var file_zitadel_user_proto_depIdxs = []int32{
 	13, // 6: zitadel.user.v1.Human.phone:type_name -> zitadel.user.v1.Phone
 	2,  // 7: zitadel.user.v1.Machine.access_token_type:type_name -> zitadel.user.v1.AccessTokenType
 	1,  // 8: zitadel.user.v1.Profile.gender:type_name -> zitadel.user.v1.Gender
-	19, // 9: zitadel.user.v1.SearchQuery.user_name_query:type_name -> zitadel.user.v1.UserNameQuery
-	20, // 10: zitadel.user.v1.SearchQuery.first_name_query:type_name -> zitadel.user.v1.FirstNameQuery
-	21, // 11: zitadel.user.v1.SearchQuery.last_name_query:type_name -> zitadel.user.v1.LastNameQuery
-	22, // 12: zitadel.user.v1.SearchQuery.nick_name_query:type_name -> zitadel.user.v1.NickNameQuery
-	23, // 13: zitadel.user.v1.SearchQuery.display_name_query:type_name -> zitadel.user.v1.DisplayNameQuery
-	24, // 14: zitadel.user.v1.SearchQuery.email_query:type_name -> zitadel.user.v1.EmailQuery
-	26, // 15: zitadel.user.v1.SearchQuery.state_query:type_name -> zitadel.user.v1.StateQuery
-	27, // 16: zitadel.user.v1.SearchQuery.type_query:type_name -> zitadel.user.v1.TypeQuery
-	25, // 17: zitadel.user.v1.SearchQuery.login_name_query:type_name -> zitadel.user.v1.LoginNameQuery
+	20, // 9: zitadel.user.v1.SearchQuery.user_name_query:type_name -> zitadel.user.v1.UserNameQuery
+	21, // 10: zitadel.user.v1.SearchQuery.first_name_query:type_name -> zitadel.user.v1.FirstNameQuery
+	22, // 11: zitadel.user.v1.SearchQuery.last_name_query:type_name -> zitadel.user.v1.LastNameQuery
+	23, // 12: zitadel.user.v1.SearchQuery.nick_name_query:type_name -> zitadel.user.v1.NickNameQuery
+	24, // 13: zitadel.user.v1.SearchQuery.display_name_query:type_name -> zitadel.user.v1.DisplayNameQuery
+	25, // 14: zitadel.user.v1.SearchQuery.email_query:type_name -> zitadel.user.v1.EmailQuery
+	27, // 15: zitadel.user.v1.SearchQuery.state_query:type_name -> zitadel.user.v1.StateQuery
+	28, // 16: zitadel.user.v1.SearchQuery.type_query:type_name -> zitadel.user.v1.TypeQuery
+	26, // 17: zitadel.user.v1.SearchQuery.login_name_query:type_name -> zitadel.user.v1.LoginNameQuery
 	18, // 18: zitadel.user.v1.SearchQuery.in_user_ids_query:type_name -> zitadel.user.v1.InUserIDQuery
 	15, // 19: zitadel.user.v1.SearchQuery.or_query:type_name -> zitadel.user.v1.OrQuery
 	16, // 20: zitadel.user.v1.SearchQuery.and_query:type_name -> zitadel.user.v1.AndQuery
 	17, // 21: zitadel.user.v1.SearchQuery.not_query:type_name -> zitadel.user.v1.NotQuery
-	14, // 22: zitadel.user.v1.OrQuery.queries:type_name -> zitadel.user.v1.SearchQuery
-	14, // 23: zitadel.user.v1.AndQuery.queries:type_name -> zitadel.user.v1.SearchQuery
-	14, // 24: zitadel.user.v1.NotQuery.query:type_name -> zitadel.user.v1.SearchQuery
-	62, // 25: zitadel.user.v1.UserNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 26: zitadel.user.v1.FirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 27: zitadel.user.v1.LastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 28: zitadel.user.v1.NickNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 29: zitadel.user.v1.DisplayNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 30: zitadel.user.v1.EmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 31: zitadel.user.v1.LoginNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	0,  // 32: zitadel.user.v1.StateQuery.state:type_name -> zitadel.user.v1.UserState
-	3,  // 33: zitadel.user.v1.TypeQuery.type:type_name -> zitadel.user.v1.Type
-	5,  // 34: zitadel.user.v1.AuthFactor.state:type_name -> zitadel.user.v1.AuthFactorState
-	29, // 35: zitadel.user.v1.AuthFactor.otp:type_name -> zitadel.user.v1.AuthFactorOTP
-	32, // 36: zitadel.user.v1.AuthFactor.u2f:type_name -> zitadel.user.v1.AuthFactorU2F
-	30, // 37: zitadel.user.v1.AuthFactor.otp_sms:type_name -> zitadel.user.v1.AuthFactorOTPSMS
-	31, // 38: zitadel.user.v1.AuthFactor.otp_email:type_name -> zitadel.user.v1.AuthFactorOTPEmail
-	5,  // 39: zitadel.user.v1.WebAuthNToken.state:type_name -> zitadel.user.v1.AuthFactorState
-	61, // 40: zitadel.user.v1.Membership.details:type_name -> zitadel.v1.ObjectDetails
-	38, // 41: zitadel.user.v1.MembershipQuery.org_query:type_name -> zitadel.user.v1.MembershipOrgQuery
-	39, // 42: zitadel.user.v1.MembershipQuery.project_query:type_name -> zitadel.user.v1.MembershipProjectQuery
-	40, // 43: zitadel.user.v1.MembershipQuery.project_grant_query:type_name -> zitadel.user.v1.MembershipProjectGrantQuery
-	41, // 44: zitadel.user.v1.MembershipQuery.iam_query:type_name -> zitadel.user.v1.MembershipIAMQuery
-	6,  // 45: zitadel.user.v1.Session.auth_state:type_name -> zitadel.user.v1.SessionState
-	61, // 46: zitadel.user.v1.Session.details:type_name -> zitadel.v1.ObjectDetails
-	61, // 47: zitadel.user.v1.RefreshToken.details:type_name -> zitadel.v1.ObjectDetails
-	63, // 48: zitadel.user.v1.RefreshToken.auth_time:type_name -> google.protobuf.Timestamp
-	63, // 49: zitadel.user.v1.RefreshToken.idle_expiration:type_name -> google.protobuf.Timestamp
-	63, // 50: zitadel.user.v1.RefreshToken.expiration:type_name -> google.protobuf.Timestamp
-	61, // 51: zitadel.user.v1.PersonalAccessToken.details:type_name -> zitadel.v1.ObjectDetails
-	63, // 52: zitadel.user.v1.PersonalAccessToken.expiration_date:type_name -> google.protobuf.Timestamp
-	61, // 53: zitadel.user.v1.UserGrant.details:type_name -> zitadel.v1.ObjectDetails
-	7,  // 54: zitadel.user.v1.UserGrant.state:type_name -> zitadel.user.v1.UserGrantState
-	3,  // 55: zitadel.user.v1.UserGrant.user_type:type_name -> zitadel.user.v1.Type
-	47, // 56: zitadel.user.v1.UserGrantQuery.project_id_query:type_name -> zitadel.user.v1.UserGrantProjectIDQuery
-	48, // 57: zitadel.user.v1.UserGrantQuery.user_id_query:type_name -> zitadel.user.v1.UserGrantUserIDQuery
-	49, // 58: zitadel.user.v1.UserGrantQuery.with_granted_query:type_name -> zitadel.user.v1.UserGrantWithGrantedQuery
-	50, // 59: zitadel.user.v1.UserGrantQuery.role_key_query:type_name -> zitadel.user.v1.UserGrantRoleKeyQuery
-	51, // 60: zitadel.user.v1.UserGrantQuery.project_grant_id_query:type_name -> zitadel.user.v1.UserGrantProjectGrantIDQuery
-	52, // 61: zitadel.user.v1.UserGrantQuery.user_name_query:type_name -> zitadel.user.v1.UserGrantUserNameQuery
-	53, // 62: zitadel.user.v1.UserGrantQuery.first_name_query:type_name -> zitadel.user.v1.UserGrantFirstNameQuery
-	54, // 63: zitadel.user.v1.UserGrantQuery.last_name_query:type_name -> zitadel.user.v1.UserGrantLastNameQuery
-	55, // 64: zitadel.user.v1.UserGrantQuery.email_query:type_name -> zitadel.user.v1.UserGrantEmailQuery
-	56, // 65: zitadel.user.v1.UserGrantQuery.org_name_query:type_name -> zitadel.user.v1.UserGrantOrgNameQuery
-	57, // 66: zitadel.user.v1.UserGrantQuery.org_domain_query:type_name -> zitadel.user.v1.UserGrantOrgDomainQuery
-	58, // 67: zitadel.user.v1.UserGrantQuery.project_name_query:type_name -> zitadel.user.v1.UserGrantProjectNameQuery
-	59, // 68: zitadel.user.v1.UserGrantQuery.display_name_query:type_name -> zitadel.user.v1.UserGrantDisplayNameQuery
-	60, // 69: zitadel.user.v1.UserGrantQuery.user_type_query:type_name -> zitadel.user.v1.UserGrantUserTypeQuery
-	62, // 70: zitadel.user.v1.UserGrantRoleKeyQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 71: zitadel.user.v1.UserGrantUserNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 72: zitadel.user.v1.UserGrantFirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 73: zitadel.user.v1.UserGrantLastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 74: zitadel.user.v1.UserGrantEmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 75: zitadel.user.v1.UserGrantOrgNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 76: zitadel.user.v1.UserGrantOrgDomainQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 77: zitadel.user.v1.UserGrantProjectNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	62, // 78: zitadel.user.v1.UserGrantDisplayNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	3,  // 79: zitadel.user.v1.UserGrantUserTypeQuery.type:type_name -> zitadel.user.v1.Type
-	80, // [80:80] is the sub-list for method output_type
-	80, // [80:80] is the sub-list for method input_type
-	80, // [80:80] is the sub-list for extension type_name
-	80, // [80:80] is the sub-list for extension extendee
-	0,  // [0:80] is the sub-list for field type_name
+	19, // 22: zitadel.user.v1.SearchQuery.in_user_emails_query:type_name -> zitadel.user.v1.InUserEmailsQuery
+	14, // 23: zitadel.user.v1.OrQuery.queries:type_name -> zitadel.user.v1.SearchQuery
+	14, // 24: zitadel.user.v1.AndQuery.queries:type_name -> zitadel.user.v1.SearchQuery
+	14, // 25: zitadel.user.v1.NotQuery.query:type_name -> zitadel.user.v1.SearchQuery
+	63, // 26: zitadel.user.v1.UserNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 27: zitadel.user.v1.FirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 28: zitadel.user.v1.LastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 29: zitadel.user.v1.NickNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 30: zitadel.user.v1.DisplayNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 31: zitadel.user.v1.EmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 32: zitadel.user.v1.LoginNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	0,  // 33: zitadel.user.v1.StateQuery.state:type_name -> zitadel.user.v1.UserState
+	3,  // 34: zitadel.user.v1.TypeQuery.type:type_name -> zitadel.user.v1.Type
+	5,  // 35: zitadel.user.v1.AuthFactor.state:type_name -> zitadel.user.v1.AuthFactorState
+	30, // 36: zitadel.user.v1.AuthFactor.otp:type_name -> zitadel.user.v1.AuthFactorOTP
+	33, // 37: zitadel.user.v1.AuthFactor.u2f:type_name -> zitadel.user.v1.AuthFactorU2F
+	31, // 38: zitadel.user.v1.AuthFactor.otp_sms:type_name -> zitadel.user.v1.AuthFactorOTPSMS
+	32, // 39: zitadel.user.v1.AuthFactor.otp_email:type_name -> zitadel.user.v1.AuthFactorOTPEmail
+	5,  // 40: zitadel.user.v1.WebAuthNToken.state:type_name -> zitadel.user.v1.AuthFactorState
+	62, // 41: zitadel.user.v1.Membership.details:type_name -> zitadel.v1.ObjectDetails
+	39, // 42: zitadel.user.v1.MembershipQuery.org_query:type_name -> zitadel.user.v1.MembershipOrgQuery
+	40, // 43: zitadel.user.v1.MembershipQuery.project_query:type_name -> zitadel.user.v1.MembershipProjectQuery
+	41, // 44: zitadel.user.v1.MembershipQuery.project_grant_query:type_name -> zitadel.user.v1.MembershipProjectGrantQuery
+	42, // 45: zitadel.user.v1.MembershipQuery.iam_query:type_name -> zitadel.user.v1.MembershipIAMQuery
+	6,  // 46: zitadel.user.v1.Session.auth_state:type_name -> zitadel.user.v1.SessionState
+	62, // 47: zitadel.user.v1.Session.details:type_name -> zitadel.v1.ObjectDetails
+	62, // 48: zitadel.user.v1.RefreshToken.details:type_name -> zitadel.v1.ObjectDetails
+	64, // 49: zitadel.user.v1.RefreshToken.auth_time:type_name -> google.protobuf.Timestamp
+	64, // 50: zitadel.user.v1.RefreshToken.idle_expiration:type_name -> google.protobuf.Timestamp
+	64, // 51: zitadel.user.v1.RefreshToken.expiration:type_name -> google.protobuf.Timestamp
+	62, // 52: zitadel.user.v1.PersonalAccessToken.details:type_name -> zitadel.v1.ObjectDetails
+	64, // 53: zitadel.user.v1.PersonalAccessToken.expiration_date:type_name -> google.protobuf.Timestamp
+	62, // 54: zitadel.user.v1.UserGrant.details:type_name -> zitadel.v1.ObjectDetails
+	7,  // 55: zitadel.user.v1.UserGrant.state:type_name -> zitadel.user.v1.UserGrantState
+	3,  // 56: zitadel.user.v1.UserGrant.user_type:type_name -> zitadel.user.v1.Type
+	48, // 57: zitadel.user.v1.UserGrantQuery.project_id_query:type_name -> zitadel.user.v1.UserGrantProjectIDQuery
+	49, // 58: zitadel.user.v1.UserGrantQuery.user_id_query:type_name -> zitadel.user.v1.UserGrantUserIDQuery
+	50, // 59: zitadel.user.v1.UserGrantQuery.with_granted_query:type_name -> zitadel.user.v1.UserGrantWithGrantedQuery
+	51, // 60: zitadel.user.v1.UserGrantQuery.role_key_query:type_name -> zitadel.user.v1.UserGrantRoleKeyQuery
+	52, // 61: zitadel.user.v1.UserGrantQuery.project_grant_id_query:type_name -> zitadel.user.v1.UserGrantProjectGrantIDQuery
+	53, // 62: zitadel.user.v1.UserGrantQuery.user_name_query:type_name -> zitadel.user.v1.UserGrantUserNameQuery
+	54, // 63: zitadel.user.v1.UserGrantQuery.first_name_query:type_name -> zitadel.user.v1.UserGrantFirstNameQuery
+	55, // 64: zitadel.user.v1.UserGrantQuery.last_name_query:type_name -> zitadel.user.v1.UserGrantLastNameQuery
+	56, // 65: zitadel.user.v1.UserGrantQuery.email_query:type_name -> zitadel.user.v1.UserGrantEmailQuery
+	57, // 66: zitadel.user.v1.UserGrantQuery.org_name_query:type_name -> zitadel.user.v1.UserGrantOrgNameQuery
+	58, // 67: zitadel.user.v1.UserGrantQuery.org_domain_query:type_name -> zitadel.user.v1.UserGrantOrgDomainQuery
+	59, // 68: zitadel.user.v1.UserGrantQuery.project_name_query:type_name -> zitadel.user.v1.UserGrantProjectNameQuery
+	60, // 69: zitadel.user.v1.UserGrantQuery.display_name_query:type_name -> zitadel.user.v1.UserGrantDisplayNameQuery
+	61, // 70: zitadel.user.v1.UserGrantQuery.user_type_query:type_name -> zitadel.user.v1.UserGrantUserTypeQuery
+	63, // 71: zitadel.user.v1.UserGrantRoleKeyQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 72: zitadel.user.v1.UserGrantUserNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 73: zitadel.user.v1.UserGrantFirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 74: zitadel.user.v1.UserGrantLastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 75: zitadel.user.v1.UserGrantEmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 76: zitadel.user.v1.UserGrantOrgNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 77: zitadel.user.v1.UserGrantOrgDomainQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 78: zitadel.user.v1.UserGrantProjectNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	63, // 79: zitadel.user.v1.UserGrantDisplayNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	3,  // 80: zitadel.user.v1.UserGrantUserTypeQuery.type:type_name -> zitadel.user.v1.Type
+	81, // [81:81] is the sub-list for method output_type
+	81, // [81:81] is the sub-list for method input_type
+	81, // [81:81] is the sub-list for extension type_name
+	81, // [81:81] is the sub-list for extension extendee
+	0,  // [0:81] is the sub-list for field type_name
 }
 
 func init() { file_zitadel_user_proto_init() }
@@ -5528,7 +5605,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserNameQuery); i {
+			switch v := v.(*InUserEmailsQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5540,7 +5617,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FirstNameQuery); i {
+			switch v := v.(*UserNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5552,7 +5629,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LastNameQuery); i {
+			switch v := v.(*FirstNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5564,7 +5641,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NickNameQuery); i {
+			switch v := v.(*LastNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5576,7 +5653,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DisplayNameQuery); i {
+			switch v := v.(*NickNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5588,7 +5665,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EmailQuery); i {
+			switch v := v.(*DisplayNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5600,7 +5677,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LoginNameQuery); i {
+			switch v := v.(*EmailQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5612,7 +5689,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StateQuery); i {
+			switch v := v.(*LoginNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5624,7 +5701,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TypeQuery); i {
+			switch v := v.(*StateQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5636,7 +5713,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AuthFactor); i {
+			switch v := v.(*TypeQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5648,7 +5725,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AuthFactorOTP); i {
+			switch v := v.(*AuthFactor); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5660,7 +5737,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AuthFactorOTPSMS); i {
+			switch v := v.(*AuthFactorOTP); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5672,7 +5749,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AuthFactorOTPEmail); i {
+			switch v := v.(*AuthFactorOTPSMS); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5684,7 +5761,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AuthFactorU2F); i {
+			switch v := v.(*AuthFactorOTPEmail); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5696,7 +5773,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WebAuthNKey); i {
+			switch v := v.(*AuthFactorU2F); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5708,7 +5785,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WebAuthNVerification); i {
+			switch v := v.(*WebAuthNKey); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5720,7 +5797,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WebAuthNToken); i {
+			switch v := v.(*WebAuthNVerification); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5732,7 +5809,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Membership); i {
+			switch v := v.(*WebAuthNToken); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5744,7 +5821,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MembershipQuery); i {
+			switch v := v.(*Membership); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5756,7 +5833,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MembershipOrgQuery); i {
+			switch v := v.(*MembershipQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5768,7 +5845,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MembershipProjectQuery); i {
+			switch v := v.(*MembershipOrgQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5780,7 +5857,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MembershipProjectGrantQuery); i {
+			switch v := v.(*MembershipProjectQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5792,7 +5869,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MembershipIAMQuery); i {
+			switch v := v.(*MembershipProjectGrantQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5804,7 +5881,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Session); i {
+			switch v := v.(*MembershipIAMQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5816,7 +5893,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RefreshToken); i {
+			switch v := v.(*Session); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5828,7 +5905,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PersonalAccessToken); i {
+			switch v := v.(*RefreshToken); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5840,7 +5917,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrant); i {
+			switch v := v.(*PersonalAccessToken); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5852,7 +5929,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantQuery); i {
+			switch v := v.(*UserGrant); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5864,7 +5941,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantProjectIDQuery); i {
+			switch v := v.(*UserGrantQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5876,7 +5953,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantUserIDQuery); i {
+			switch v := v.(*UserGrantProjectIDQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5888,7 +5965,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantWithGrantedQuery); i {
+			switch v := v.(*UserGrantUserIDQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5900,7 +5977,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantRoleKeyQuery); i {
+			switch v := v.(*UserGrantWithGrantedQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5912,7 +5989,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantProjectGrantIDQuery); i {
+			switch v := v.(*UserGrantRoleKeyQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5924,7 +6001,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantUserNameQuery); i {
+			switch v := v.(*UserGrantProjectGrantIDQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5936,7 +6013,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantFirstNameQuery); i {
+			switch v := v.(*UserGrantUserNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5948,7 +6025,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantLastNameQuery); i {
+			switch v := v.(*UserGrantFirstNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5960,7 +6037,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantEmailQuery); i {
+			switch v := v.(*UserGrantLastNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5972,7 +6049,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantOrgNameQuery); i {
+			switch v := v.(*UserGrantEmailQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5984,7 +6061,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantOrgDomainQuery); i {
+			switch v := v.(*UserGrantOrgNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5996,7 +6073,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantProjectNameQuery); i {
+			switch v := v.(*UserGrantOrgDomainQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -6008,7 +6085,7 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserGrantDisplayNameQuery); i {
+			switch v := v.(*UserGrantProjectNameQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -6020,6 +6097,18 @@ func file_zitadel_user_proto_init() {
 			}
 		}
 		file_zitadel_user_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UserGrantDisplayNameQuery); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_zitadel_user_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserGrantUserTypeQuery); i {
 			case 0:
 				return &v.state
@@ -6050,26 +6139,27 @@ func file_zitadel_user_proto_init() {
 		(*SearchQuery_OrQuery)(nil),
 		(*SearchQuery_AndQuery)(nil),
 		(*SearchQuery_NotQuery)(nil),
+		(*SearchQuery_InUserEmailsQuery)(nil),
 	}
-	file_zitadel_user_proto_msgTypes[20].OneofWrappers = []interface{}{
+	file_zitadel_user_proto_msgTypes[21].OneofWrappers = []interface{}{
 		(*AuthFactor_Otp)(nil),
 		(*AuthFactor_U2F)(nil),
 		(*AuthFactor_OtpSms)(nil),
 		(*AuthFactor_OtpEmail)(nil),
 	}
-	file_zitadel_user_proto_msgTypes[28].OneofWrappers = []interface{}{
+	file_zitadel_user_proto_msgTypes[29].OneofWrappers = []interface{}{
 		(*Membership_Iam)(nil),
 		(*Membership_OrgId)(nil),
 		(*Membership_ProjectId)(nil),
 		(*Membership_ProjectGrantId)(nil),
 	}
-	file_zitadel_user_proto_msgTypes[29].OneofWrappers = []interface{}{
+	file_zitadel_user_proto_msgTypes[30].OneofWrappers = []interface{}{
 		(*MembershipQuery_OrgQuery)(nil),
 		(*MembershipQuery_ProjectQuery)(nil),
 		(*MembershipQuery_ProjectGrantQuery)(nil),
 		(*MembershipQuery_IamQuery)(nil),
 	}
-	file_zitadel_user_proto_msgTypes[38].OneofWrappers = []interface{}{
+	file_zitadel_user_proto_msgTypes[39].OneofWrappers = []interface{}{
 		(*UserGrantQuery_ProjectIdQuery)(nil),
 		(*UserGrantQuery_UserIdQuery)(nil),
 		(*UserGrantQuery_WithGrantedQuery)(nil),
@@ -6091,7 +6181,7 @@ func file_zitadel_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_user_proto_rawDesc,
 			NumEnums:      8,
-			NumMessages:   53,
+			NumMessages:   54,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
