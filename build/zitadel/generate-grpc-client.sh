@@ -65,6 +65,7 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/idp.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/password.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/phone.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2beta/query.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_out /go/src \
