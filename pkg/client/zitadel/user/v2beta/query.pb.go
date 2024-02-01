@@ -10,7 +10,6 @@ import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v2beta "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2beta"
-	v2beta1 "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/user/v2beta"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -972,7 +971,7 @@ type StateQuery struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	State v2beta1.UserState `protobuf:"varint,1,opt,name=state,proto3,enum=zitadel.user.v2beta.UserState" json:"state,omitempty"`
+	State UserState `protobuf:"varint,1,opt,name=state,proto3,enum=zitadel.user.v2beta.UserState" json:"state,omitempty"`
 }
 
 func (x *StateQuery) Reset() {
@@ -1007,11 +1006,11 @@ func (*StateQuery) Descriptor() ([]byte, []int) {
 	return file_zitadel_user_v2beta_query_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *StateQuery) GetState() v2beta1.UserState {
+func (x *StateQuery) GetState() UserState {
 	if x != nil {
 		return x.State
 	}
-	return v2beta1.UserState(0)
+	return UserState_USER_STATE_UNSPECIFIED
 }
 
 // UserTypeQuery always equals
@@ -1400,7 +1399,7 @@ var file_zitadel_user_v2beta_query_proto_goTypes = []interface{}{
 	(*TypeQuery)(nil),           // 15: zitadel.user.v2beta.TypeQuery
 	(*InUserEmailsQuery)(nil),   // 16: zitadel.user.v2beta.InUserEmailsQuery
 	(v2beta.TextQueryMethod)(0), // 17: zitadel.object.v2beta.TextQueryMethod
-	(v2beta1.UserState)(0),      // 18: zitadel.user.v2beta.UserState
+	(UserState)(0),              // 18: zitadel.user.v2beta.UserState
 }
 var file_zitadel_user_v2beta_query_proto_depIdxs = []int32{
 	7,  // 0: zitadel.user.v2beta.SearchQuery.user_name_query:type_name -> zitadel.user.v2beta.UserNameQuery
@@ -1441,6 +1440,7 @@ func file_zitadel_user_v2beta_query_proto_init() {
 	if File_zitadel_user_v2beta_query_proto != nil {
 		return
 	}
+	file_zitadel_user_v2beta_user_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_zitadel_user_v2beta_query_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SearchQuery); i {

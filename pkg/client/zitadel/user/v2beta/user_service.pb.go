@@ -11,7 +11,6 @@ import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v2beta "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2beta"
 	_ "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/protoc/v2"
-	v2beta1 "github.com/zitadel/zitadel/pkg/grpc/user/v2beta"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -437,9 +436,9 @@ type ListUsersRequest struct {
 	// list limitations and ordering
 	Query *v2beta.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
-	SortingColumn v2beta1.UserFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.user.v2beta.UserFieldName" json:"sorting_column,omitempty"`
+	SortingColumn UserFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.user.v2beta.UserFieldName" json:"sorting_column,omitempty"`
 	// criteria the client is looking for
-	Queries []*v2beta1.SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
+	Queries []*SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
 func (x *ListUsersRequest) Reset() {
@@ -481,14 +480,14 @@ func (x *ListUsersRequest) GetQuery() *v2beta.ListQuery {
 	return nil
 }
 
-func (x *ListUsersRequest) GetSortingColumn() v2beta1.UserFieldName {
+func (x *ListUsersRequest) GetSortingColumn() UserFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return v2beta1.UserFieldName(0)
+	return UserFieldName_USER_FIELD_NAME_UNSPECIFIED
 }
 
-func (x *ListUsersRequest) GetQueries() []*v2beta1.SearchQuery {
+func (x *ListUsersRequest) GetQueries() []*SearchQuery {
 	if x != nil {
 		return x.Queries
 	}
@@ -500,9 +499,9 @@ type ListUsersResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details       *v2beta.ListDetails   `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	SortingColumn v2beta1.UserFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.user.v2beta.UserFieldName" json:"sorting_column,omitempty"`
-	Result        []*User               `protobuf:"bytes,3,rep,name=result,proto3" json:"result,omitempty"`
+	Details       *v2beta.ListDetails `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	SortingColumn UserFieldName       `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.user.v2beta.UserFieldName" json:"sorting_column,omitempty"`
+	Result        []*User             `protobuf:"bytes,3,rep,name=result,proto3" json:"result,omitempty"`
 }
 
 func (x *ListUsersResponse) Reset() {
@@ -544,11 +543,11 @@ func (x *ListUsersResponse) GetDetails() *v2beta.ListDetails {
 	return nil
 }
 
-func (x *ListUsersResponse) GetSortingColumn() v2beta1.UserFieldName {
+func (x *ListUsersResponse) GetSortingColumn() UserFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return v2beta1.UserFieldName(0)
+	return UserFieldName_USER_FIELD_NAME_UNSPECIFIED
 }
 
 func (x *ListUsersResponse) GetResult() []*User {
@@ -5613,8 +5612,8 @@ var file_zitadel_user_v2beta_user_service_proto_goTypes = []interface{}{
 	(*v2beta.Details)(nil),                         // 70: zitadel.object.v2beta.Details
 	(*User)(nil),                                   // 71: zitadel.user.v2beta.User
 	(*v2beta.ListQuery)(nil),                       // 72: zitadel.object.v2beta.ListQuery
-	(v2beta1.UserFieldName)(0),                     // 73: zitadel.user.v2beta.UserFieldName
-	(*v2beta1.SearchQuery)(nil),                    // 74: zitadel.user.v2beta.SearchQuery
+	(UserFieldName)(0),                             // 73: zitadel.user.v2beta.UserFieldName
+	(*SearchQuery)(nil),                            // 74: zitadel.user.v2beta.SearchQuery
 	(*v2beta.ListDetails)(nil),                     // 75: zitadel.object.v2beta.ListDetails
 	(*SendEmailVerificationCode)(nil),              // 76: zitadel.user.v2beta.SendEmailVerificationCode
 	(*ReturnEmailVerificationCode)(nil),            // 77: zitadel.user.v2beta.ReturnEmailVerificationCode
@@ -5784,6 +5783,7 @@ func file_zitadel_user_v2beta_user_service_proto_init() {
 	file_zitadel_user_v2beta_idp_proto_init()
 	file_zitadel_user_v2beta_password_proto_init()
 	file_zitadel_user_v2beta_user_proto_init()
+	file_zitadel_user_v2beta_query_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_zitadel_user_v2beta_user_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddHumanUserRequest); i {
