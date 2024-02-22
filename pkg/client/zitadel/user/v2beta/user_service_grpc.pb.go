@@ -24,10 +24,13 @@ type UserServiceClient interface {
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Change the email of a user
 	SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error)
+	// Resend code to verify user email
+	ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error)
 	// Verify the email with the provided code
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
+	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error)
 	UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error)
@@ -104,6 +107,15 @@ func (c *userServiceClient) SetEmail(ctx context.Context, in *SetEmailRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error) {
+	out := new(ResendEmailCodeResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ResendEmailCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
 	out := new(VerifyEmailResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/VerifyEmail", in, out, opts...)
@@ -116,6 +128,15 @@ func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequ
 func (c *userServiceClient) SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error) {
 	out := new(SetPhoneResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/SetPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error) {
+	out := new(ResendPhoneCodeResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ResendPhoneCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -348,10 +369,13 @@ type UserServiceServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Change the email of a user
 	SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error)
+	// Resend code to verify user email
+	ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error)
 	// Verify the email with the provided code
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
+	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error)
 	UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error)
@@ -401,11 +425,17 @@ func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersReque
 func (UnimplementedUserServiceServer) SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetEmail not implemented")
 }
+func (UnimplementedUserServiceServer) ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendEmailCode not implemented")
+}
 func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedUserServiceServer) SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPhone not implemented")
+}
+func (UnimplementedUserServiceServer) ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendPhoneCode not implemented")
 }
 func (UnimplementedUserServiceServer) VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPhone not implemented")
@@ -564,6 +594,24 @@ func _UserService_SetEmail_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ResendEmailCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendEmailCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResendEmailCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ResendEmailCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResendEmailCode(ctx, req.(*ResendEmailCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyEmailRequest)
 	if err := dec(in); err != nil {
@@ -596,6 +644,24 @@ func _UserService_SetPhone_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).SetPhone(ctx, req.(*SetPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ResendPhoneCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendPhoneCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResendPhoneCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ResendPhoneCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResendPhoneCode(ctx, req.(*ResendPhoneCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1056,12 +1122,20 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_SetEmail_Handler,
 		},
 		{
+			MethodName: "ResendEmailCode",
+			Handler:    _UserService_ResendEmailCode_Handler,
+		},
+		{
 			MethodName: "VerifyEmail",
 			Handler:    _UserService_VerifyEmail_Handler,
 		},
 		{
 			MethodName: "SetPhone",
 			Handler:    _UserService_SetPhone_Handler,
+		},
+		{
+			MethodName: "ResendPhoneCode",
+			Handler:    _UserService_ResendPhoneCode_Handler,
 		},
 		{
 			MethodName: "VerifyPhone",
