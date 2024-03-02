@@ -34,6 +34,10 @@ type SettingsServiceClient interface {
 	GetLegalAndSupportSettings(ctx context.Context, in *GetLegalAndSupportSettingsRequest, opts ...grpc.CallOption) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
 	GetLockoutSettings(ctx context.Context, in *GetLockoutSettingsRequest, opts ...grpc.CallOption) (*GetLockoutSettingsResponse, error)
+	// Get the security settings
+	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
+	// Set the security settings
+	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
 }
 
 type settingsServiceClient struct {
@@ -116,6 +120,24 @@ func (c *settingsServiceClient) GetLockoutSettings(ctx context.Context, in *GetL
 	return out, nil
 }
 
+func (c *settingsServiceClient) GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error) {
+	out := new(GetSecuritySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error) {
+	out := new(SetSecuritySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingsServiceServer is the server API for SettingsService service.
 // All implementations must embed UnimplementedSettingsServiceServer
 // for forward compatibility
@@ -136,6 +158,10 @@ type SettingsServiceServer interface {
 	GetLegalAndSupportSettings(context.Context, *GetLegalAndSupportSettingsRequest) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
 	GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error)
+	// Get the security settings
+	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
+	// Set the security settings
+	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
 	mustEmbedUnimplementedSettingsServiceServer()
 }
 
@@ -166,6 +192,12 @@ func (UnimplementedSettingsServiceServer) GetLegalAndSupportSettings(context.Con
 }
 func (UnimplementedSettingsServiceServer) GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLockoutSettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSecuritySettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetSecuritySettings not implemented")
 }
 func (UnimplementedSettingsServiceServer) mustEmbedUnimplementedSettingsServiceServer() {}
 
@@ -324,6 +356,42 @@ func _SettingsService_GetLockoutSettings_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_GetSecuritySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSecuritySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).GetSecuritySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).GetSecuritySettings(ctx, req.(*GetSecuritySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_SetSecuritySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetSecuritySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).SetSecuritySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).SetSecuritySettings(ctx, req.(*SetSecuritySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SettingsService_ServiceDesc is the grpc.ServiceDesc for SettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -362,6 +430,14 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLockoutSettings",
 			Handler:    _SettingsService_GetLockoutSettings_Handler,
+		},
+		{
+			MethodName: "GetSecuritySettings",
+			Handler:    _SettingsService_GetSecuritySettings_Handler,
+		},
+		{
+			MethodName: "SetSecuritySettings",
+			Handler:    _SettingsService_SetSecuritySettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
