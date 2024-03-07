@@ -28,6 +28,7 @@ jobs:
         with:
           file: ./profile.cov
           name: codecov-go
+          token: ${{ secrets.CODECOV_TOKEN }}
   release:
     runs-on: ubuntu-22.04
     needs: [test]
