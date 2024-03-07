@@ -15,19 +15,20 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        go: ['1.19', '1.20', '1.21']
+        go: ['1.19', '1.20', '1.21', '1.22']
     name: Go ${{ matrix.go }} test
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
       - run: go test -race -v -coverprofile=profile.cov ./pkg/...
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
           file: ./profile.cov
           name: codecov-go
+          token: ${{ secrets.CODECOV_TOKEN }}
   release:
     runs-on: ubuntu-22.04
     needs: [test]
@@ -35,11 +36,11 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - name: Source checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v2
+      uses: cycjimmy/semantic-release-action@v4
       with:
         dry_run: false
-        semantic_version: 17.0.4
+        semantic_version: 19.0.2
         extra_plugins: |
-          @semantic-release/exec@5.0.0
+          @semantic-release/exec@6.0.3

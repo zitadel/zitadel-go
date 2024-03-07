@@ -14,7 +14,7 @@ jobs:
     name: update zitadel api
     steps:
       - name: checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: check input tag
         if: ${{github.event_name == 'workflow_dispatch'}}
         id: check-input
@@ -32,6 +32,8 @@ jobs:
         with:
           repository: zitadel/zitadel
           releases-only: true
+          # ignore prereleases
+          regex: '^v([0-9]+)\.([0-9]+)\.([0-9]+)$'
       - name: set tag
         id: tag
         run: |
