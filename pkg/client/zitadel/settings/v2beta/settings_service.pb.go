@@ -11,7 +11,6 @@ import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v2beta "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/object/v2beta"
 	_ "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/protoc/v2"
-	v2beta1 "github.com/zitadel/zitadel/pkg/grpc/settings/v2beta"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -885,8 +884,8 @@ type GetSecuritySettingsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details  *v2beta.Details           `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	Settings *v2beta1.SecuritySettings `protobuf:"bytes,2,opt,name=settings,proto3" json:"settings,omitempty"`
+	Details  *v2beta.Details   `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	Settings *SecuritySettings `protobuf:"bytes,2,opt,name=settings,proto3" json:"settings,omitempty"`
 }
 
 func (x *GetSecuritySettingsResponse) Reset() {
@@ -928,7 +927,7 @@ func (x *GetSecuritySettingsResponse) GetDetails() *v2beta.Details {
 	return nil
 }
 
-func (x *GetSecuritySettingsResponse) GetSettings() *v2beta1.SecuritySettings {
+func (x *GetSecuritySettingsResponse) GetSettings() *SecuritySettings {
 	if x != nil {
 		return x.Settings
 	}
@@ -940,8 +939,8 @@ type SetSecuritySettingsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	EmbeddedIframe      *v2beta1.EmbeddedIframeSettings `protobuf:"bytes,1,opt,name=embedded_iframe,json=embeddedIframe,proto3" json:"embedded_iframe,omitempty"`
-	EnableImpersonation bool                            `protobuf:"varint,2,opt,name=enable_impersonation,json=enableImpersonation,proto3" json:"enable_impersonation,omitempty"`
+	EmbeddedIframe      *EmbeddedIframeSettings `protobuf:"bytes,1,opt,name=embedded_iframe,json=embeddedIframe,proto3" json:"embedded_iframe,omitempty"`
+	EnableImpersonation bool                    `protobuf:"varint,2,opt,name=enable_impersonation,json=enableImpersonation,proto3" json:"enable_impersonation,omitempty"`
 }
 
 func (x *SetSecuritySettingsRequest) Reset() {
@@ -976,7 +975,7 @@ func (*SetSecuritySettingsRequest) Descriptor() ([]byte, []int) {
 	return file_zitadel_settings_v2beta_settings_service_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *SetSecuritySettingsRequest) GetEmbeddedIframe() *v2beta1.EmbeddedIframeSettings {
+func (x *SetSecuritySettingsRequest) GetEmbeddedIframe() *EmbeddedIframeSettings {
 	if x != nil {
 		return x.EmbeddedIframe
 	}
@@ -1554,8 +1553,8 @@ var file_zitadel_settings_v2beta_settings_service_proto_goTypes = []interface{}{
 	(*LockoutSettings)(nil),                       // 27: zitadel.settings.v2beta.LockoutSettings
 	(*v2beta.ListDetails)(nil),                    // 28: zitadel.object.v2beta.ListDetails
 	(*IdentityProvider)(nil),                      // 29: zitadel.settings.v2beta.IdentityProvider
-	(*v2beta1.SecuritySettings)(nil),              // 30: zitadel.settings.v2beta.SecuritySettings
-	(*v2beta1.EmbeddedIframeSettings)(nil),        // 31: zitadel.settings.v2beta.EmbeddedIframeSettings
+	(*SecuritySettings)(nil),                      // 30: zitadel.settings.v2beta.SecuritySettings
+	(*EmbeddedIframeSettings)(nil),                // 31: zitadel.settings.v2beta.EmbeddedIframeSettings
 }
 var file_zitadel_settings_v2beta_settings_service_proto_depIdxs = []int32{
 	20, // 0: zitadel.settings.v2beta.GetLoginSettingsRequest.ctx:type_name -> zitadel.object.v2beta.RequestContext
@@ -1621,6 +1620,7 @@ func file_zitadel_settings_v2beta_settings_service_proto_init() {
 	file_zitadel_settings_v2beta_lockout_settings_proto_init()
 	file_zitadel_settings_v2beta_login_settings_proto_init()
 	file_zitadel_settings_v2beta_password_settings_proto_init()
+	file_zitadel_settings_v2beta_security_settings_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_zitadel_settings_v2beta_settings_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetLoginSettingsRequest); i {

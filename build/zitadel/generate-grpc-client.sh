@@ -58,6 +58,7 @@ protoc \
     --go_opt=Mzitadel/settings/v2beta/lockout_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
     --go_opt=Mzitadel/settings/v2beta/login_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
     --go_opt=Mzitadel/settings/v2beta/password_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
+    --go_opt=Mzitadel/settings/v2beta/security_settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
     --go_opt=Mzitadel/settings/v2beta/settings.proto=${ZITADEL_IMPORT}/settings/v2beta \
     --go_opt=Mzitadel/settings/v2beta/settings_service.proto=${ZITADEL_IMPORT}/settings/v2beta \
     --go_opt=Mzitadel/user/v2beta/auth.proto=${ZITADEL_IMPORT}/user/v2beta \
