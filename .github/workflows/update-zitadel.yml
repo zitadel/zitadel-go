@@ -59,7 +59,7 @@ jobs:
         run: |
           DOCKER_BUILDKIT=1 docker build -f build/zitadel/Dockerfile --build-arg TAG_NAME=${{steps.tag.outputs.tag}} . -o ./pkg/client
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: 'fix: update zitadel api to ${{steps.tag.outputs.tag}}'
