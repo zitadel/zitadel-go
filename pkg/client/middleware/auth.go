@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/zitadel/oidc/pkg/client/profile"
@@ -42,10 +43,10 @@ func JWTProfileFromKeyAndUserID(key []byte, keyID, userID string) JWTProfileToke
 	}
 }
 
-//NewAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).
+//NewJWTProfileAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).
 //There returned token will be used for authorization in all calls
 //if expired, the token will be automatically refreshed
-func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource, scopes ...string) (*AuthInterceptor, error) {
+func NewJWTProfileAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource, scopes ...string) (*AuthInterceptor, error) {
 	ts, err := jwtProfileTokenSource(issuer, scopes)
 	if err != nil {
 		return nil, err
@@ -61,7 +62,7 @@ func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource
 //
 // Deprecated: use NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...) instead
 func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {
-	return NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...)
+	return NewJWTProfileAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...)
 }
 
 func (interceptor *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
@@ -90,4 +91,16 @@ func (interceptor *AuthInterceptor) setToken(ctx context.Context) (context.Conte
 		return ctx, err
 	}
 	return metadata.AppendToOutgoingContext(ctx, "authorization", token.TokenType+" "+token.AccessToken), nil
+}
+
+type StaticTokenSource string
+
+func (a StaticTokenSource) GetRequestMetadata(ctx context.Context, url ...string) (map[string]string, error) {
+	return map[string]string{
+		"authorization": fmt.Sprintf("Bearer %s", a),
+	}, nil
+}
+
+func (a StaticTokenSource) RequireTransportSecurity() bool {
+	return false
 }

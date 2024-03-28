@@ -16,11 +16,13 @@ type Connection struct {
 	issuer                string
 	api                   string
 	jwtProfileTokenSource middleware.JWTProfileTokenSource
+	staticTokenSource     middleware.StaticTokenSource
 	scopes                []string
 	orgID                 string
 	insecure              bool
 	unaryInterceptors     []grpc.UnaryClientInterceptor
 	streamInterceptors    []grpc.StreamClientInterceptor
+	perRPCCredentials     credentials.PerRPCCredentials
 	*grpc.ClientConn
 }
 
@@ -38,17 +40,27 @@ func NewConnection(issuer, api string, scopes []string, options ...Option) (*Con
 		}
 	}
 
-	err := c.setInterceptors(c.issuer, c.orgID, c.scopes, c.jwtProfileTokenSource)
-	if err != nil {
-		return nil, err
-	}
-	dialOptions := []grpc.DialOption{
-		grpc.WithChainUnaryInterceptor(
-			c.unaryInterceptors...,
-		),
-		grpc.WithChainStreamInterceptor(
-			c.streamInterceptors...,
-		),
+	dialOptions := []grpc.DialOption{}
+	if c.staticTokenSource == "" {
+		err := c.setInterceptors(c.issuer, c.orgID, c.scopes, c.jwtProfileTokenSource)
+		if err != nil {
+			return nil, err
+		}
+		dialOptions = append(dialOptions,
+			grpc.WithChainUnaryInterceptor(
+				c.unaryInterceptors...,
+			),
+			grpc.WithChainStreamInterceptor(
+				c.streamInterceptors...,
+			),
+		)
+	} else {
+		c.setCredentials(c.staticTokenSource)
+		dialOptions = append(dialOptions,
+			grpc.WithPerRPCCredentials(
+				c.perRPCCredentials,
+			),
+		)
 	}
 
 	opt, err := transportOption(c.api, c.insecure)
@@ -66,7 +78,7 @@ func NewConnection(issuer, api string, scopes []string, options ...Option) (*Con
 }
 
 func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
-	auth, err := middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+	auth, err := middleware.NewJWTProfileAuthenticator(issuer, jwtProfileTokenSource, scopes...)
 	if err != nil {
 		return err
 	}
@@ -79,6 +91,10 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 		c.streamInterceptors = append(c.streamInterceptors, org.Stream())
 	}
 	return nil
+}
+
+func (c *Connection) setCredentials(staticTokenSource middleware.StaticTokenSource) {
+	c.perRPCCredentials = staticTokenSource
 }
 
 func transportOption(api string, insecure bool) (grpc.DialOption, error) {
@@ -134,6 +150,15 @@ func WithKeyPath(keyPath string) func(*Connection) error {
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = provider
+		return nil
+	}
+}
+
+//WithStaticTokenSource sets the provider used for the authentication
+//if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
+func WithStaticTokenSource(provider middleware.StaticTokenSource) func(*Connection) error {
+	return func(client *Connection) error {
+		client.staticTokenSource = provider
 		return nil
 	}
 }
