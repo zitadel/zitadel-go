@@ -8,8 +8,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/zitadel/zitadel-go)](https://goreportcard.com/report/github.com/zitadel/zitadel-go)
 [![codecov](https://codecov.io/gh/zitadel/zitadel-go/branch/main/graph/badge.svg)](https://codecov.io/gh/zitadel/zitadel-go)
 
-> This project is in alpha state. It can AND will continue breaking until version 2.0.0 is released
-
 Go client library for the [ZITADEL](https://github.com/zitadel/zitadel) API.
 
 ## Usage
