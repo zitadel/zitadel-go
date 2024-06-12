@@ -1,13 +1,15 @@
 package zitadel
 
 import (
+	"context"
 	"crypto/x509"
 	"strings"
 
-	"github.com/zitadel/oidc/pkg/client/profile"
+	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
 )
@@ -57,7 +59,7 @@ func NewConnection(issuer, api string, scopes []string, options ...Option) (*Con
 		return nil, err
 	}
 	dialOptions = append(dialOptions, opt)
-	conn, err := grpc.Dial(c.api, dialOptions...)
+	conn, err := grpc.NewClient(c.api, dialOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +84,9 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 	return nil
 }
 
-func transportOption(api string, insecure bool) (grpc.DialOption, error) {
-	if insecure {
-		return grpc.WithInsecure(), nil
+func transportOption(api string, isInsecure bool) (grpc.DialOption, error) {
+	if isInsecure {
+		return grpc.WithTransportCredentials(insecure.NewCredentials()), nil
 	}
 	certs, err := transportCredentials(api)
 	if err != nil {
@@ -124,7 +126,7 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 func WithKeyPath(keyPath string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-			return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
+			return profile.NewJWTProfileTokenSourceFromKeyFile(context.TODO(), issuer, keyPath, scopes)
 		}
 		return nil
 	}

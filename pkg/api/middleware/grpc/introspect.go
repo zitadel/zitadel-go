@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/zitadel/oidc/pkg/client/rs"
+	"github.com/zitadel/oidc/v3/pkg/client/rs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,10 +16,10 @@ type IntrospectionInterceptor struct {
 	resourceServer rs.ResourceServer
 }
 
-//NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
-//by sending the token to the introspection endpoint)
+// NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
+// by sending the token to the introspection endpoint)
 func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionInterceptor, error) {
-	resourceServer, err := rs.NewResourceServerFromKeyFile(issuer, keyPath)
+	resourceServer, err := rs.NewResourceServerFromKeyFile(context.TODO(), issuer, keyPath)
 	if err != nil {
 		return nil, err
 	}

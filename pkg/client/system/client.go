@@ -1,18 +1,17 @@
 package system
 
 import (
-	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
-	"github.com/zitadel/oidc/pkg/client"
-	"github.com/zitadel/oidc/pkg/oidc"
-	"golang.org/x/oauth2"
-	"gopkg.in/square/go-jose.v2"
-
+	"github.com/go-jose/go-jose/v4"
+	"github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/system"
+	"golang.org/x/oauth2"
 )
 
 type Client struct {
@@ -53,7 +52,7 @@ type JWTAuthenticationSource func() middleware.JWTProfileTokenSource
 func JWTProfileFromPath(keyPath, userID string) JWTAuthenticationSource {
 	return func() middleware.JWTProfileTokenSource {
 		return func(issuer string, _ []string) (oauth2.TokenSource, error) {
-			key, err := ioutil.ReadFile(keyPath)
+			key, err := os.ReadFile(keyPath)
 			if err != nil {
 				return nil, err
 			}

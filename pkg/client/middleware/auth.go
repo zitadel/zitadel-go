@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/zitadel/oidc/pkg/client/profile"
+	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -26,25 +26,25 @@ type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSou
 
 func JWTProfileFromPath(keyPath string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
+		return profile.NewJWTProfileTokenSourceFromKeyFile(context.TODO(), issuer, keyPath, scopes)
 	}
 }
 
 func JWTProfileFromFileData(fileData []byte) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSourceFromKeyFileData(issuer, fileData, scopes)
+		return profile.NewJWTProfileTokenSourceFromKeyFileData(context.TODO(), issuer, fileData, scopes)
 	}
 }
 
 func JWTProfileFromKeyAndUserID(key []byte, keyID, userID string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSource(issuer, userID, keyID, key, scopes)
+		return profile.NewJWTProfileTokenSource(context.TODO(), issuer, userID, keyID, key, scopes)
 	}
 }
 
-//NewAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).
-//There returned token will be used for authorization in all calls
-//if expired, the token will be automatically refreshed
+// NewAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).
+// There returned token will be used for authorization in all calls
+// if expired, the token will be automatically refreshed
 func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource, scopes ...string) (*AuthInterceptor, error) {
 	ts, err := jwtProfileTokenSource(issuer, scopes)
 	if err != nil {
@@ -55,9 +55,9 @@ func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource
 	}, nil
 }
 
-//NewAuthInterceptor creates an interceptor which authenticates a service account with JWT Profile using a key.json.
-//There returned token will be used for authorization in all calls
-//if expired, the token will be automatically refreshed
+// NewAuthInterceptor creates an interceptor which authenticates a service account with JWT Profile using a key.json.
+// There returned token will be used for authorization in all calls
+// if expired, the token will be automatically refreshed
 //
 // Deprecated: use NewAuthenticator(issuer, JWTProfileFromPath(keyPath), scopes...) instead
 func NewAuthInterceptor(issuer, keyPath string, scopes ...string) (*AuthInterceptor, error) {

@@ -5,8 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/zitadel/oidc/pkg/oidc"
-
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/management"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"

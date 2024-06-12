@@ -1,11 +1,12 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/zitadel/oidc/pkg/client/rs"
+	"github.com/zitadel/oidc/v3/pkg/client/rs"
 
 	"github.com/zitadel/zitadel-go/v2/pkg/api/middleware"
 )
@@ -31,10 +32,10 @@ func (j JSONMarshaller) ContentType() string {
 	return "application/json"
 }
 
-//NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
-//by sending the token to the introspection endpoint)
+// NewIntrospectionInterceptor intercepts every call and checks for a correct Bearer token using OAuth2 introspection
+// by sending the token to the introspection endpoint)
 func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionInterceptor, error) {
-	resourceServer, err := rs.NewResourceServerFromKeyFile(issuer, keyPath)
+	resourceServer, err := rs.NewResourceServerFromKeyFile(context.TODO(), issuer, keyPath)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +45,7 @@ func NewIntrospectionInterceptor(issuer, keyPath string) (*IntrospectionIntercep
 	}, nil
 }
 
-//Handler creates a http.Handler for middleware usage
+// Handler creates a http.Handler for middleware usage
 func (interceptor *IntrospectionInterceptor) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		err := interceptor.introspect(r)
@@ -56,7 +57,7 @@ func (interceptor *IntrospectionInterceptor) Handler(next http.Handler) http.Han
 	})
 }
 
-//HandlerFunc creates a http.HandlerFunc for middleware usage
+// HandlerFunc creates a http.HandlerFunc for middleware usage
 func (interceptor *IntrospectionInterceptor) HandlerFunc(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := interceptor.introspect(r)
