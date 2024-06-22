@@ -191,15 +191,10 @@ type ManagementServiceClient interface {
 	AddCustomPasswordComplexityPolicy(ctx context.Context, in *AddCustomPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*AddCustomPasswordComplexityPolicyResponse, error)
 	UpdateCustomPasswordComplexityPolicy(ctx context.Context, in *UpdateCustomPasswordComplexityPolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPasswordComplexityPolicyResponse, error)
 	ResetPasswordComplexityPolicyToDefault(ctx context.Context, in *ResetPasswordComplexityPolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetPasswordComplexityPolicyToDefaultResponse, error)
-	// The password age policy is not used at the moment
 	GetPasswordAgePolicy(ctx context.Context, in *GetPasswordAgePolicyRequest, opts ...grpc.CallOption) (*GetPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	GetDefaultPasswordAgePolicy(ctx context.Context, in *GetDefaultPasswordAgePolicyRequest, opts ...grpc.CallOption) (*GetDefaultPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	AddCustomPasswordAgePolicy(ctx context.Context, in *AddCustomPasswordAgePolicyRequest, opts ...grpc.CallOption) (*AddCustomPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	UpdateCustomPasswordAgePolicy(ctx context.Context, in *UpdateCustomPasswordAgePolicyRequest, opts ...grpc.CallOption) (*UpdateCustomPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	ResetPasswordAgePolicyToDefault(ctx context.Context, in *ResetPasswordAgePolicyToDefaultRequest, opts ...grpc.CallOption) (*ResetPasswordAgePolicyToDefaultResponse, error)
 	GetLockoutPolicy(ctx context.Context, in *GetLockoutPolicyRequest, opts ...grpc.CallOption) (*GetLockoutPolicyResponse, error)
 	GetDefaultLockoutPolicy(ctx context.Context, in *GetDefaultLockoutPolicyRequest, opts ...grpc.CallOption) (*GetDefaultLockoutPolicyResponse, error)
@@ -3165,15 +3160,10 @@ type ManagementServiceServer interface {
 	AddCustomPasswordComplexityPolicy(context.Context, *AddCustomPasswordComplexityPolicyRequest) (*AddCustomPasswordComplexityPolicyResponse, error)
 	UpdateCustomPasswordComplexityPolicy(context.Context, *UpdateCustomPasswordComplexityPolicyRequest) (*UpdateCustomPasswordComplexityPolicyResponse, error)
 	ResetPasswordComplexityPolicyToDefault(context.Context, *ResetPasswordComplexityPolicyToDefaultRequest) (*ResetPasswordComplexityPolicyToDefaultResponse, error)
-	// The password age policy is not used at the moment
 	GetPasswordAgePolicy(context.Context, *GetPasswordAgePolicyRequest) (*GetPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	GetDefaultPasswordAgePolicy(context.Context, *GetDefaultPasswordAgePolicyRequest) (*GetDefaultPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	AddCustomPasswordAgePolicy(context.Context, *AddCustomPasswordAgePolicyRequest) (*AddCustomPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	UpdateCustomPasswordAgePolicy(context.Context, *UpdateCustomPasswordAgePolicyRequest) (*UpdateCustomPasswordAgePolicyResponse, error)
-	// The password age policy is not used at the moment
 	ResetPasswordAgePolicyToDefault(context.Context, *ResetPasswordAgePolicyToDefaultRequest) (*ResetPasswordAgePolicyToDefaultResponse, error)
 	GetLockoutPolicy(context.Context, *GetLockoutPolicyRequest) (*GetLockoutPolicyResponse, error)
 	GetDefaultLockoutPolicy(context.Context, *GetDefaultLockoutPolicyRequest) (*GetDefaultLockoutPolicyResponse, error)
