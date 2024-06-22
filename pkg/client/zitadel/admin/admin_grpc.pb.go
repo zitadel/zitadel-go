@@ -36,6 +36,8 @@ type AdminServiceClient interface {
 	ActivateSMTPConfig(ctx context.Context, in *ActivateSMTPConfigRequest, opts ...grpc.CallOption) (*ActivateSMTPConfigResponse, error)
 	DeactivateSMTPConfig(ctx context.Context, in *DeactivateSMTPConfigRequest, opts ...grpc.CallOption) (*DeactivateSMTPConfigResponse, error)
 	RemoveSMTPConfig(ctx context.Context, in *RemoveSMTPConfigRequest, opts ...grpc.CallOption) (*RemoveSMTPConfigResponse, error)
+	TestSMTPConfigById(ctx context.Context, in *TestSMTPConfigByIdRequest, opts ...grpc.CallOption) (*TestSMTPConfigByIdResponse, error)
+	TestSMTPConfig(ctx context.Context, in *TestSMTPConfigRequest, opts ...grpc.CallOption) (*TestSMTPConfigResponse, error)
 	ListSMTPConfigs(ctx context.Context, in *ListSMTPConfigsRequest, opts ...grpc.CallOption) (*ListSMTPConfigsResponse, error)
 	ListSMSProviders(ctx context.Context, in *ListSMSProvidersRequest, opts ...grpc.CallOption) (*ListSMSProvidersResponse, error)
 	GetSMSProvider(ctx context.Context, in *GetSMSProviderRequest, opts ...grpc.CallOption) (*GetSMSProviderResponse, error)
@@ -403,6 +405,24 @@ func (c *adminServiceClient) DeactivateSMTPConfig(ctx context.Context, in *Deact
 func (c *adminServiceClient) RemoveSMTPConfig(ctx context.Context, in *RemoveSMTPConfigRequest, opts ...grpc.CallOption) (*RemoveSMTPConfigResponse, error) {
 	out := new(RemoveSMTPConfigResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/RemoveSMTPConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) TestSMTPConfigById(ctx context.Context, in *TestSMTPConfigByIdRequest, opts ...grpc.CallOption) (*TestSMTPConfigByIdResponse, error) {
+	out := new(TestSMTPConfigByIdResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/TestSMTPConfigById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) TestSMTPConfig(ctx context.Context, in *TestSMTPConfigRequest, opts ...grpc.CallOption) (*TestSMTPConfigResponse, error) {
+	out := new(TestSMTPConfigResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/TestSMTPConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1889,6 +1909,8 @@ type AdminServiceServer interface {
 	ActivateSMTPConfig(context.Context, *ActivateSMTPConfigRequest) (*ActivateSMTPConfigResponse, error)
 	DeactivateSMTPConfig(context.Context, *DeactivateSMTPConfigRequest) (*DeactivateSMTPConfigResponse, error)
 	RemoveSMTPConfig(context.Context, *RemoveSMTPConfigRequest) (*RemoveSMTPConfigResponse, error)
+	TestSMTPConfigById(context.Context, *TestSMTPConfigByIdRequest) (*TestSMTPConfigByIdResponse, error)
+	TestSMTPConfig(context.Context, *TestSMTPConfigRequest) (*TestSMTPConfigResponse, error)
 	ListSMTPConfigs(context.Context, *ListSMTPConfigsRequest) (*ListSMTPConfigsResponse, error)
 	ListSMSProviders(context.Context, *ListSMSProvidersRequest) (*ListSMSProvidersResponse, error)
 	GetSMSProvider(context.Context, *GetSMSProviderRequest) (*GetSMSProviderResponse, error)
@@ -2150,6 +2172,12 @@ func (UnimplementedAdminServiceServer) DeactivateSMTPConfig(context.Context, *De
 }
 func (UnimplementedAdminServiceServer) RemoveSMTPConfig(context.Context, *RemoveSMTPConfigRequest) (*RemoveSMTPConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveSMTPConfig not implemented")
+}
+func (UnimplementedAdminServiceServer) TestSMTPConfigById(context.Context, *TestSMTPConfigByIdRequest) (*TestSMTPConfigByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestSMTPConfigById not implemented")
+}
+func (UnimplementedAdminServiceServer) TestSMTPConfig(context.Context, *TestSMTPConfigRequest) (*TestSMTPConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestSMTPConfig not implemented")
 }
 func (UnimplementedAdminServiceServer) ListSMTPConfigs(context.Context, *ListSMTPConfigsRequest) (*ListSMTPConfigsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSMTPConfigs not implemented")
@@ -2970,6 +2998,42 @@ func _AdminService_RemoveSMTPConfig_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).RemoveSMTPConfig(ctx, req.(*RemoveSMTPConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_TestSMTPConfigById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestSMTPConfigByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).TestSMTPConfigById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/TestSMTPConfigById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).TestSMTPConfigById(ctx, req.(*TestSMTPConfigByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_TestSMTPConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestSMTPConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).TestSMTPConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.admin.v1.AdminService/TestSMTPConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).TestSMTPConfig(ctx, req.(*TestSMTPConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5968,6 +6032,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveSMTPConfig",
 			Handler:    _AdminService_RemoveSMTPConfig_Handler,
+		},
+		{
+			MethodName: "TestSMTPConfigById",
+			Handler:    _AdminService_TestSMTPConfigById_Handler,
+		},
+		{
+			MethodName: "TestSMTPConfig",
+			Handler:    _AdminService_TestSMTPConfig_Handler,
 		},
 		{
 			MethodName: "ListSMTPConfigs",
