@@ -26,6 +26,8 @@ type SettingsServiceClient interface {
 	GetActiveIdentityProviders(ctx context.Context, in *GetActiveIdentityProvidersRequest, opts ...grpc.CallOption) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
 	GetPasswordComplexitySettings(ctx context.Context, in *GetPasswordComplexitySettingsRequest, opts ...grpc.CallOption) (*GetPasswordComplexitySettingsResponse, error)
+	// Get the password expiry settings
+	GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
 	GetBrandingSettings(ctx context.Context, in *GetBrandingSettingsRequest, opts ...grpc.CallOption) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
@@ -78,6 +80,15 @@ func (c *settingsServiceClient) GetActiveIdentityProviders(ctx context.Context, 
 func (c *settingsServiceClient) GetPasswordComplexitySettings(ctx context.Context, in *GetPasswordComplexitySettingsRequest, opts ...grpc.CallOption) (*GetPasswordComplexitySettingsResponse, error) {
 	out := new(GetPasswordComplexitySettingsResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetPasswordComplexitySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error) {
+	out := new(GetPasswordExpirySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -150,6 +161,8 @@ type SettingsServiceServer interface {
 	GetActiveIdentityProviders(context.Context, *GetActiveIdentityProvidersRequest) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
 	GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error)
+	// Get the password expiry settings
+	GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
 	GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
@@ -180,6 +193,9 @@ func (UnimplementedSettingsServiceServer) GetActiveIdentityProviders(context.Con
 }
 func (UnimplementedSettingsServiceServer) GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPasswordComplexitySettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPasswordExpirySettings not implemented")
 }
 func (UnimplementedSettingsServiceServer) GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBrandingSettings not implemented")
@@ -280,6 +296,24 @@ func _SettingsService_GetPasswordComplexitySettings_Handler(srv interface{}, ctx
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SettingsServiceServer).GetPasswordComplexitySettings(ctx, req.(*GetPasswordComplexitySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_GetPasswordExpirySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPasswordExpirySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).GetPasswordExpirySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).GetPasswordExpirySettings(ctx, req.(*GetPasswordExpirySettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -414,6 +448,10 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPasswordComplexitySettings",
 			Handler:    _SettingsService_GetPasswordComplexitySettings_Handler,
+		},
+		{
+			MethodName: "GetPasswordExpirySettings",
+			Handler:    _SettingsService_GetPasswordExpirySettings_Handler,
 		},
 		{
 			MethodName: "GetBrandingSettings",
