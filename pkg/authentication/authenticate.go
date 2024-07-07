@@ -41,6 +41,20 @@ func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	}
 }
 
+// WithSessionStore allows a session store other than [InMemorySessions].
+func WithSessionStore[T Ctx](sessions Sessions[T]) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.sessions = sessions
+	}
+}
+
+// WithSessionCookieName allows a session cookie name other than "zitadel.session".
+func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.sessionCookieName = cookieName
+	}
+}
+
 func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, encryptionKey string, initAuthentication HandlerInitializer[T], options ...Option[T]) (*Authenticator[T], error) {
 	authN, err := initAuthentication(ctx, zitadel)
 	if err != nil {
