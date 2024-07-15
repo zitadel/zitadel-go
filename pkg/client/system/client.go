@@ -6,10 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v4"
+	"golang.org/x/oauth2"
+
 	"github.com/zitadel/oidc/v3/pkg/client"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
-	"golang.org/x/oauth2"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
