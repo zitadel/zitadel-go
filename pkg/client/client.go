@@ -62,15 +62,23 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, options ...Option) (_ *C
 	return c, nil
 }
 
-func (c *Client) newConnection(ctx context.Context, zitadel *zitadel.Zitadel, tokenSource oauth2.TokenSource) error {
+func (c *Client) newConnection(
+	ctx context.Context,
+	zitadel *zitadel.Zitadel,
+	tokenSource oauth2.TokenSource,
+	opts ...grpc.DialOption,
+) error {
 	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS())
 	if err != nil {
 		return err
 	}
+
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(transportCreds),
 		grpc.WithPerRPCCredentials(&cred{tls: zitadel.IsTLS(), tokenSource: tokenSource}),
 	}
+	dialOptions = append(dialOptions, opts...)
+
 	c.connection, err = grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
 	return err
 }
