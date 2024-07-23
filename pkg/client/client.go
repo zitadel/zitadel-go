@@ -70,7 +70,7 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 		}
 	}
 
-	conn, err := newConnection(ctx, zitadel, source)
+	conn, err := newConnection(ctx, zitadel, source, options.grpcDialOptions...)
 	if err != nil {
 		return nil, err
 	}
