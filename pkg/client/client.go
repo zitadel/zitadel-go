@@ -18,9 +18,31 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
-type Client struct {
+type clientOptions struct {
 	initTokenSource TokenSourceInitializer
-	connection      *grpc.ClientConn
+	grpcDialOptions []grpc.DialOption
+}
+
+type Option func(*clientOptions)
+
+// WithAuth allows to set a token source as authorization, e.g. [PAT], resp. provide an authentication mechanism,
+// such as JWT Profile ([JWTAuthentication]) or Password ([PasswordAuthentication]) for service users.
+func WithAuth(initTokenSource TokenSourceInitializer) Option {
+	return func(c *clientOptions) {
+		c.initTokenSource = initTokenSource
+	}
+}
+
+// WithGRPCDialOptions allows to use custom grpc dial options when establishing connection with Zitadel.
+// Multiple calls to WithGRPCDialOptions is allowed, options will be appended.
+func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
+	return func(c *clientOptions) {
+		c.grpcDialOptions = append(c.grpcDialOptions, opts...)
+	}
+}
+
+type Client struct {
+	connection *grpc.ClientConn
 
 	systemService       system.SystemServiceClient
 	adminService        admin.AdminServiceClient
@@ -33,46 +55,49 @@ type Client struct {
 	oidcService         oidc_pb.OIDCServiceClient
 }
 
-type Option func(*Client)
-
-// WithAuth allows to set a token source as authorization, e.g. [PAT], resp. provide an authentication mechanism,
-// such as JWT Profile ([JWTAuthentication]) or Password ([PasswordAuthentication]) for service users.
-func WithAuth(initTokenSource TokenSourceInitializer) Option {
-	return func(c *Client) {
-		c.initTokenSource = initTokenSource
+func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client, error) {
+	var options clientOptions
+	for _, o := range opts {
+		o(&options)
 	}
-}
 
-func New(ctx context.Context, zitadel *zitadel.Zitadel, options ...Option) (_ *Client, err error) {
-	c := &Client{}
-	for _, option := range options {
-		option(c)
-	}
 	var source oauth2.TokenSource
-	if c.initTokenSource != nil {
-		source, err = c.initTokenSource(ctx, zitadel.Origin())
+	if options.initTokenSource != nil {
+		var err error
+		source, err = options.initTokenSource(ctx, zitadel.Origin())
 		if err != nil {
 			return nil, err
 		}
 	}
-	err = c.newConnection(ctx, zitadel, source)
+
+	conn, err := newConnection(ctx, zitadel, source, options.grpcDialOptions...)
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+
+	return &Client{
+		connection: conn,
+	}, nil
 }
 
-func (c *Client) newConnection(ctx context.Context, zitadel *zitadel.Zitadel, tokenSource oauth2.TokenSource) error {
+func newConnection(
+	ctx context.Context,
+	zitadel *zitadel.Zitadel,
+	tokenSource oauth2.TokenSource,
+	opts ...grpc.DialOption,
+) (*grpc.ClientConn, error) {
 	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS())
 	if err != nil {
-		return err
+		return nil, err
 	}
+
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(transportCreds),
 		grpc.WithPerRPCCredentials(&cred{tls: zitadel.IsTLS(), tokenSource: tokenSource}),
 	}
-	c.connection, err = grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
-	return err
+	dialOptions = append(dialOptions, opts...)
+
+	return grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
 }
 
 func (c *Client) SystemService() system.SystemServiceClient {
