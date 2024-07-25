@@ -30,6 +30,7 @@ type UserServiceClient interface {
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
+	RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error)
 	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error)
@@ -46,6 +47,7 @@ type UserServiceClient interface {
 	VerifyU2FRegistration(ctx context.Context, in *VerifyU2FRegistrationRequest, opts ...grpc.CallOption) (*VerifyU2FRegistrationResponse, error)
 	RegisterTOTP(ctx context.Context, in *RegisterTOTPRequest, opts ...grpc.CallOption) (*RegisterTOTPResponse, error)
 	VerifyTOTPRegistration(ctx context.Context, in *VerifyTOTPRegistrationRequest, opts ...grpc.CallOption) (*VerifyTOTPRegistrationResponse, error)
+	RemoveTOTP(ctx context.Context, in *RemoveTOTPRequest, opts ...grpc.CallOption) (*RemoveTOTPResponse, error)
 	AddOTPSMS(ctx context.Context, in *AddOTPSMSRequest, opts ...grpc.CallOption) (*AddOTPSMSResponse, error)
 	RemoveOTPSMS(ctx context.Context, in *RemoveOTPSMSRequest, opts ...grpc.CallOption) (*RemoveOTPSMSResponse, error)
 	AddOTPEmail(ctx context.Context, in *AddOTPEmailRequest, opts ...grpc.CallOption) (*AddOTPEmailResponse, error)
@@ -128,6 +130,15 @@ func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequ
 func (c *userServiceClient) SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error) {
 	out := new(SetPhoneResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/SetPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error) {
+	out := new(RemovePhoneResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/RemovePhone", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -269,6 +280,15 @@ func (c *userServiceClient) VerifyTOTPRegistration(ctx context.Context, in *Veri
 	return out, nil
 }
 
+func (c *userServiceClient) RemoveTOTP(ctx context.Context, in *RemoveTOTPRequest, opts ...grpc.CallOption) (*RemoveTOTPResponse, error) {
+	out := new(RemoveTOTPResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/RemoveTOTP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) AddOTPSMS(ctx context.Context, in *AddOTPSMSRequest, opts ...grpc.CallOption) (*AddOTPSMSResponse, error) {
 	out := new(AddOTPSMSResponse)
 	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/AddOTPSMS", in, out, opts...)
@@ -375,6 +395,7 @@ type UserServiceServer interface {
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
+	RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error)
 	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error)
@@ -391,6 +412,7 @@ type UserServiceServer interface {
 	VerifyU2FRegistration(context.Context, *VerifyU2FRegistrationRequest) (*VerifyU2FRegistrationResponse, error)
 	RegisterTOTP(context.Context, *RegisterTOTPRequest) (*RegisterTOTPResponse, error)
 	VerifyTOTPRegistration(context.Context, *VerifyTOTPRegistrationRequest) (*VerifyTOTPRegistrationResponse, error)
+	RemoveTOTP(context.Context, *RemoveTOTPRequest) (*RemoveTOTPResponse, error)
 	AddOTPSMS(context.Context, *AddOTPSMSRequest) (*AddOTPSMSResponse, error)
 	RemoveOTPSMS(context.Context, *RemoveOTPSMSRequest) (*RemoveOTPSMSResponse, error)
 	AddOTPEmail(context.Context, *AddOTPEmailRequest) (*AddOTPEmailResponse, error)
@@ -433,6 +455,9 @@ func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailR
 }
 func (UnimplementedUserServiceServer) SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPhone not implemented")
+}
+func (UnimplementedUserServiceServer) RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePhone not implemented")
 }
 func (UnimplementedUserServiceServer) ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendPhoneCode not implemented")
@@ -478,6 +503,9 @@ func (UnimplementedUserServiceServer) RegisterTOTP(context.Context, *RegisterTOT
 }
 func (UnimplementedUserServiceServer) VerifyTOTPRegistration(context.Context, *VerifyTOTPRegistrationRequest) (*VerifyTOTPRegistrationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyTOTPRegistration not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveTOTP(context.Context, *RemoveTOTPRequest) (*RemoveTOTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveTOTP not implemented")
 }
 func (UnimplementedUserServiceServer) AddOTPSMS(context.Context, *AddOTPSMSRequest) (*AddOTPSMSResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOTPSMS not implemented")
@@ -644,6 +672,24 @@ func _UserService_SetPhone_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).SetPhone(ctx, req.(*SetPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemovePhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemovePhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/RemovePhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemovePhone(ctx, req.(*RemovePhoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -918,6 +964,24 @@ func _UserService_VerifyTOTPRegistration_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_RemoveTOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveTOTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveTOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/RemoveTOTP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveTOTP(ctx, req.(*RemoveTOTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_AddOTPSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddOTPSMSRequest)
 	if err := dec(in); err != nil {
@@ -1134,6 +1198,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_SetPhone_Handler,
 		},
 		{
+			MethodName: "RemovePhone",
+			Handler:    _UserService_RemovePhone_Handler,
+		},
+		{
 			MethodName: "ResendPhoneCode",
 			Handler:    _UserService_ResendPhoneCode_Handler,
 		},
@@ -1192,6 +1260,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTOTPRegistration",
 			Handler:    _UserService_VerifyTOTPRegistration_Handler,
+		},
+		{
+			MethodName: "RemoveTOTP",
+			Handler:    _UserService_RemoveTOTP_Handler,
 		},
 		{
 			MethodName: "AddOTPSMS",
