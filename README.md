@@ -8,8 +8,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/zitadel/zitadel-go)](https://goreportcard.com/report/github.com/zitadel/zitadel-go)
 [![codecov](https://codecov.io/gh/zitadel/zitadel-go/branch/main/graph/badge.svg)](https://codecov.io/gh/zitadel/zitadel-go)
 
-> This branch is WIP. It can AND will continue breaking until version 3.0.0 is released
-
 Go library for [ZITADEL](https://github.com/zitadel/zitadel).
 
 ## Features 
@@ -28,9 +26,15 @@ go get -u github.com/zitadel/zitadel-go/v3
 
 ...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
 
-### V1
+### Versions
 
-If you're looking for Version 1, please check out the [main branch](https://github.com/zitadel/zitadel-go/tree/main).
+If you're looking for older version of this module, please check out the following tags:
+
+- v3.x.x is maintained on the [main](https://github.com/zitadel/zitadel-go/tree/main) branch
+- [v2.2.8](https://github.com/zitadel/zitadel-go/releases/tag/v2.2.8) is the last release for the v2 Go module
+- [v0.3.5](https://github.com/zitadel/zitadel-go/releases/tag/v0.3.5) is the last release for the v0/v1 Go module
+
+Currently only v3 is supported, due to some security updates that involve breaking changes. Therefore v2 and older will no longer be supported.
 
 ## Supported Go Versions
 
