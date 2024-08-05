@@ -321,20 +321,31 @@ type ManagementServiceClient interface {
 	GetOIDCInformation(ctx context.Context, in *GetOIDCInformationRequest, opts ...grpc.CallOption) (*GetOIDCInformationResponse, error)
 	GetIAM(ctx context.Context, in *GetIAMRequest, opts ...grpc.CallOption) (*GetIAMResponse, error)
 	GetSupportedLanguages(ctx context.Context, in *GetSupportedLanguagesRequest, opts ...grpc.CallOption) (*GetSupportedLanguagesResponse, error)
+	// Deprecated: please use user service v2 ListUsers, with InUserIDQuery
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
+	// Deprecated: please use user service v2 ListUsers, with LoginNameQuery
 	GetUserByLoginNameGlobal(ctx context.Context, in *GetUserByLoginNameGlobalRequest, opts ...grpc.CallOption) (*GetUserByLoginNameGlobalResponse, error)
+	// Deprecated: please use user service v2 ListUsers
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	ListUserChanges(ctx context.Context, in *ListUserChangesRequest, opts ...grpc.CallOption) (*ListUserChangesResponse, error)
+	// Deprecated: please use user service v2 ListUsers, is unique when no user is returned
 	IsUserUnique(ctx context.Context, in *IsUserUniqueRequest, opts ...grpc.CallOption) (*IsUserUniqueResponse, error)
-	// deprecated: use ImportHumanUser
+	// Deprecated: use ImportHumanUser
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
+	// Deprecated: please use user service v2 AddHumanUser
 	ImportHumanUser(ctx context.Context, in *ImportHumanUserRequest, opts ...grpc.CallOption) (*ImportHumanUserResponse, error)
 	AddMachineUser(ctx context.Context, in *AddMachineUserRequest, opts ...grpc.CallOption) (*AddMachineUserResponse, error)
+	// Deprecated: please use user service v2 DeactivateUser
 	DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*DeactivateUserResponse, error)
+	// Deprecated: please use user service v2 ReactivateUser
 	ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*ReactivateUserResponse, error)
+	// Deprecated: please use user service v2 LockUser
 	LockUser(ctx context.Context, in *LockUserRequest, opts ...grpc.CallOption) (*LockUserResponse, error)
+	// Deprecated: please use user service v2 UnlockUser
 	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error)
+	// Deprecated: please use user service v2 RemoveUser
 	RemoveUser(ctx context.Context, in *RemoveUserRequest, opts ...grpc.CallOption) (*RemoveUserResponse, error)
+	// Deprecated: please use user service v2 UpdateHumanUser
 	UpdateUserName(ctx context.Context, in *UpdateUserNameRequest, opts ...grpc.CallOption) (*UpdateUserNameResponse, error)
 	SetUserMetadata(ctx context.Context, in *SetUserMetadataRequest, opts ...grpc.CallOption) (*SetUserMetadataResponse, error)
 	BulkSetUserMetadata(ctx context.Context, in *BulkSetUserMetadataRequest, opts ...grpc.CallOption) (*BulkSetUserMetadataResponse, error)
@@ -342,29 +353,51 @@ type ManagementServiceClient interface {
 	GetUserMetadata(ctx context.Context, in *GetUserMetadataRequest, opts ...grpc.CallOption) (*GetUserMetadataResponse, error)
 	RemoveUserMetadata(ctx context.Context, in *RemoveUserMetadataRequest, opts ...grpc.CallOption) (*RemoveUserMetadataResponse, error)
 	BulkRemoveUserMetadata(ctx context.Context, in *BulkRemoveUserMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveUserMetadataResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanProfile(ctx context.Context, in *GetHumanProfileRequest, opts ...grpc.CallOption) (*GetHumanProfileResponse, error)
+	// Deprecated: please use user service v2 UpdateHumanUser
 	UpdateHumanProfile(ctx context.Context, in *UpdateHumanProfileRequest, opts ...grpc.CallOption) (*UpdateHumanProfileResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanEmail(ctx context.Context, in *GetHumanEmailRequest, opts ...grpc.CallOption) (*GetHumanEmailResponse, error)
+	// Deprecated: please use user service v2 SetEmail
 	UpdateHumanEmail(ctx context.Context, in *UpdateHumanEmailRequest, opts ...grpc.CallOption) (*UpdateHumanEmailResponse, error)
+	// Deprecated: not used anymore in user state
+	// To resend a verification email use the user service v2 ResendEmailCode
 	ResendHumanInitialization(ctx context.Context, in *ResendHumanInitializationRequest, opts ...grpc.CallOption) (*ResendHumanInitializationResponse, error)
+	// Deprecated: please use user service v2 ResendEmailCode
 	ResendHumanEmailVerification(ctx context.Context, in *ResendHumanEmailVerificationRequest, opts ...grpc.CallOption) (*ResendHumanEmailVerificationResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanPhone(ctx context.Context, in *GetHumanPhoneRequest, opts ...grpc.CallOption) (*GetHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 SetPhone
 	UpdateHumanPhone(ctx context.Context, in *UpdateHumanPhoneRequest, opts ...grpc.CallOption) (*UpdateHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 SetPhone
 	RemoveHumanPhone(ctx context.Context, in *RemoveHumanPhoneRequest, opts ...grpc.CallOption) (*RemoveHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 ResendPhoneCode
 	ResendHumanPhoneVerification(ctx context.Context, in *ResendHumanPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendHumanPhoneVerificationResponse, error)
 	RemoveHumanAvatar(ctx context.Context, in *RemoveHumanAvatarRequest, opts ...grpc.CallOption) (*RemoveHumanAvatarResponse, error)
-	// deprecated: use SetHumanPassword
+	// Deprecated: please use user service v2 SetPassword
 	SetHumanInitialPassword(ctx context.Context, in *SetHumanInitialPasswordRequest, opts ...grpc.CallOption) (*SetHumanInitialPasswordResponse, error)
+	// Deprecated: please use user service v2 SetPassword
 	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
+	// Deprecated: please use user service v2 PasswordReset
 	SendHumanResetPasswordNotification(ctx context.Context, in *SendHumanResetPasswordNotificationRequest, opts ...grpc.CallOption) (*SendHumanResetPasswordNotificationResponse, error)
+	// Deprecated: please use user service v2 ListAuthenticationMethodTypes
 	ListHumanAuthFactors(ctx context.Context, in *ListHumanAuthFactorsRequest, opts ...grpc.CallOption) (*ListHumanAuthFactorsResponse, error)
+	// Deprecated: please use user service v2 RemoveTOTP
 	RemoveHumanAuthFactorOTP(ctx context.Context, in *RemoveHumanAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPResponse, error)
+	// Deprecated: please use user service v2 RemoveU2F
 	RemoveHumanAuthFactorU2F(ctx context.Context, in *RemoveHumanAuthFactorU2FRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorU2FResponse, error)
+	// Deprecated: please use user service v2 RemoveOTPSMS
 	RemoveHumanAuthFactorOTPSMS(ctx context.Context, in *RemoveHumanAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPSMSResponse, error)
+	// Deprecated: please use user service v2 RemoveOTPEmail
 	RemoveHumanAuthFactorOTPEmail(ctx context.Context, in *RemoveHumanAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPEmailResponse, error)
+	// Deprecated: please use user service v2 ListPasskeys
 	ListHumanPasswordless(ctx context.Context, in *ListHumanPasswordlessRequest, opts ...grpc.CallOption) (*ListHumanPasswordlessResponse, error)
+	// Deprecated: please use user service v2 RegisterPasskey
 	AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error)
+	// Deprecated: please use user service v2 RegisterPasskey
 	SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error)
+	// Deprecated: please use user service v2 RemovePasskey
 	RemoveHumanPasswordless(ctx context.Context, in *RemoveHumanPasswordlessRequest, opts ...grpc.CallOption) (*RemoveHumanPasswordlessResponse, error)
 	UpdateMachine(ctx context.Context, in *UpdateMachineRequest, opts ...grpc.CallOption) (*UpdateMachineResponse, error)
 	GenerateMachineSecret(ctx context.Context, in *GenerateMachineSecretRequest, opts ...grpc.CallOption) (*GenerateMachineSecretResponse, error)
@@ -377,7 +410,9 @@ type ManagementServiceClient interface {
 	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
 	AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error)
 	RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error)
+	// Deprecated: please use user service v2 ListLinkedIDPs
 	ListHumanLinkedIDPs(ctx context.Context, in *ListHumanLinkedIDPsRequest, opts ...grpc.CallOption) (*ListHumanLinkedIDPsResponse, error)
+	// Deprecated: please use user service v2 RemoveLinkedIDP
 	RemoveHumanLinkedIDP(ctx context.Context, in *RemoveHumanLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveHumanLinkedIDPResponse, error)
 	ListUserMemberships(ctx context.Context, in *ListUserMembershipsRequest, opts ...grpc.CallOption) (*ListUserMembershipsResponse, error)
 	GetMyOrg(ctx context.Context, in *GetMyOrgRequest, opts ...grpc.CallOption) (*GetMyOrgResponse, error)
@@ -3290,20 +3325,31 @@ type ManagementServiceServer interface {
 	GetOIDCInformation(context.Context, *GetOIDCInformationRequest) (*GetOIDCInformationResponse, error)
 	GetIAM(context.Context, *GetIAMRequest) (*GetIAMResponse, error)
 	GetSupportedLanguages(context.Context, *GetSupportedLanguagesRequest) (*GetSupportedLanguagesResponse, error)
+	// Deprecated: please use user service v2 ListUsers, with InUserIDQuery
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
+	// Deprecated: please use user service v2 ListUsers, with LoginNameQuery
 	GetUserByLoginNameGlobal(context.Context, *GetUserByLoginNameGlobalRequest) (*GetUserByLoginNameGlobalResponse, error)
+	// Deprecated: please use user service v2 ListUsers
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	ListUserChanges(context.Context, *ListUserChangesRequest) (*ListUserChangesResponse, error)
+	// Deprecated: please use user service v2 ListUsers, is unique when no user is returned
 	IsUserUnique(context.Context, *IsUserUniqueRequest) (*IsUserUniqueResponse, error)
-	// deprecated: use ImportHumanUser
+	// Deprecated: use ImportHumanUser
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
+	// Deprecated: please use user service v2 AddHumanUser
 	ImportHumanUser(context.Context, *ImportHumanUserRequest) (*ImportHumanUserResponse, error)
 	AddMachineUser(context.Context, *AddMachineUserRequest) (*AddMachineUserResponse, error)
+	// Deprecated: please use user service v2 DeactivateUser
 	DeactivateUser(context.Context, *DeactivateUserRequest) (*DeactivateUserResponse, error)
+	// Deprecated: please use user service v2 ReactivateUser
 	ReactivateUser(context.Context, *ReactivateUserRequest) (*ReactivateUserResponse, error)
+	// Deprecated: please use user service v2 LockUser
 	LockUser(context.Context, *LockUserRequest) (*LockUserResponse, error)
+	// Deprecated: please use user service v2 UnlockUser
 	UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error)
+	// Deprecated: please use user service v2 RemoveUser
 	RemoveUser(context.Context, *RemoveUserRequest) (*RemoveUserResponse, error)
+	// Deprecated: please use user service v2 UpdateHumanUser
 	UpdateUserName(context.Context, *UpdateUserNameRequest) (*UpdateUserNameResponse, error)
 	SetUserMetadata(context.Context, *SetUserMetadataRequest) (*SetUserMetadataResponse, error)
 	BulkSetUserMetadata(context.Context, *BulkSetUserMetadataRequest) (*BulkSetUserMetadataResponse, error)
@@ -3311,29 +3357,51 @@ type ManagementServiceServer interface {
 	GetUserMetadata(context.Context, *GetUserMetadataRequest) (*GetUserMetadataResponse, error)
 	RemoveUserMetadata(context.Context, *RemoveUserMetadataRequest) (*RemoveUserMetadataResponse, error)
 	BulkRemoveUserMetadata(context.Context, *BulkRemoveUserMetadataRequest) (*BulkRemoveUserMetadataResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanProfile(context.Context, *GetHumanProfileRequest) (*GetHumanProfileResponse, error)
+	// Deprecated: please use user service v2 UpdateHumanUser
 	UpdateHumanProfile(context.Context, *UpdateHumanProfileRequest) (*UpdateHumanProfileResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanEmail(context.Context, *GetHumanEmailRequest) (*GetHumanEmailResponse, error)
+	// Deprecated: please use user service v2 SetEmail
 	UpdateHumanEmail(context.Context, *UpdateHumanEmailRequest) (*UpdateHumanEmailResponse, error)
+	// Deprecated: not used anymore in user state
+	// To resend a verification email use the user service v2 ResendEmailCode
 	ResendHumanInitialization(context.Context, *ResendHumanInitializationRequest) (*ResendHumanInitializationResponse, error)
+	// Deprecated: please use user service v2 ResendEmailCode
 	ResendHumanEmailVerification(context.Context, *ResendHumanEmailVerificationRequest) (*ResendHumanEmailVerificationResponse, error)
+	// Deprecated: please use user service v2 GetUserByID
 	GetHumanPhone(context.Context, *GetHumanPhoneRequest) (*GetHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 SetPhone
 	UpdateHumanPhone(context.Context, *UpdateHumanPhoneRequest) (*UpdateHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 SetPhone
 	RemoveHumanPhone(context.Context, *RemoveHumanPhoneRequest) (*RemoveHumanPhoneResponse, error)
+	// Deprecated: please use user service v2 ResendPhoneCode
 	ResendHumanPhoneVerification(context.Context, *ResendHumanPhoneVerificationRequest) (*ResendHumanPhoneVerificationResponse, error)
 	RemoveHumanAvatar(context.Context, *RemoveHumanAvatarRequest) (*RemoveHumanAvatarResponse, error)
-	// deprecated: use SetHumanPassword
+	// Deprecated: please use user service v2 SetPassword
 	SetHumanInitialPassword(context.Context, *SetHumanInitialPasswordRequest) (*SetHumanInitialPasswordResponse, error)
+	// Deprecated: please use user service v2 SetPassword
 	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
+	// Deprecated: please use user service v2 PasswordReset
 	SendHumanResetPasswordNotification(context.Context, *SendHumanResetPasswordNotificationRequest) (*SendHumanResetPasswordNotificationResponse, error)
+	// Deprecated: please use user service v2 ListAuthenticationMethodTypes
 	ListHumanAuthFactors(context.Context, *ListHumanAuthFactorsRequest) (*ListHumanAuthFactorsResponse, error)
+	// Deprecated: please use user service v2 RemoveTOTP
 	RemoveHumanAuthFactorOTP(context.Context, *RemoveHumanAuthFactorOTPRequest) (*RemoveHumanAuthFactorOTPResponse, error)
+	// Deprecated: please use user service v2 RemoveU2F
 	RemoveHumanAuthFactorU2F(context.Context, *RemoveHumanAuthFactorU2FRequest) (*RemoveHumanAuthFactorU2FResponse, error)
+	// Deprecated: please use user service v2 RemoveOTPSMS
 	RemoveHumanAuthFactorOTPSMS(context.Context, *RemoveHumanAuthFactorOTPSMSRequest) (*RemoveHumanAuthFactorOTPSMSResponse, error)
+	// Deprecated: please use user service v2 RemoveOTPEmail
 	RemoveHumanAuthFactorOTPEmail(context.Context, *RemoveHumanAuthFactorOTPEmailRequest) (*RemoveHumanAuthFactorOTPEmailResponse, error)
+	// Deprecated: please use user service v2 ListPasskeys
 	ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error)
+	// Deprecated: please use user service v2 RegisterPasskey
 	AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error)
+	// Deprecated: please use user service v2 RegisterPasskey
 	SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error)
+	// Deprecated: please use user service v2 RemovePasskey
 	RemoveHumanPasswordless(context.Context, *RemoveHumanPasswordlessRequest) (*RemoveHumanPasswordlessResponse, error)
 	UpdateMachine(context.Context, *UpdateMachineRequest) (*UpdateMachineResponse, error)
 	GenerateMachineSecret(context.Context, *GenerateMachineSecretRequest) (*GenerateMachineSecretResponse, error)
@@ -3346,7 +3414,9 @@ type ManagementServiceServer interface {
 	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
 	AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error)
 	RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error)
+	// Deprecated: please use user service v2 ListLinkedIDPs
 	ListHumanLinkedIDPs(context.Context, *ListHumanLinkedIDPsRequest) (*ListHumanLinkedIDPsResponse, error)
+	// Deprecated: please use user service v2 RemoveLinkedIDP
 	RemoveHumanLinkedIDP(context.Context, *RemoveHumanLinkedIDPRequest) (*RemoveHumanLinkedIDPResponse, error)
 	ListUserMemberships(context.Context, *ListUserMembershipsRequest) (*ListUserMembershipsResponse, error)
 	GetMyOrg(context.Context, *GetMyOrgRequest) (*GetMyOrgResponse, error)

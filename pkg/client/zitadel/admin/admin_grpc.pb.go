@@ -21,18 +21,28 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	AdminService_Healthz_FullMethodName                                                 = "/zitadel.admin.v1.AdminService/Healthz"
 	AdminService_GetSupportedLanguages_FullMethodName                                   = "/zitadel.admin.v1.AdminService/GetSupportedLanguages"
+	AdminService_GetAllowedLanguages_FullMethodName                                     = "/zitadel.admin.v1.AdminService/GetAllowedLanguages"
 	AdminService_SetDefaultLanguage_FullMethodName                                      = "/zitadel.admin.v1.AdminService/SetDefaultLanguage"
 	AdminService_GetDefaultLanguage_FullMethodName                                      = "/zitadel.admin.v1.AdminService/GetDefaultLanguage"
 	AdminService_GetMyInstance_FullMethodName                                           = "/zitadel.admin.v1.AdminService/GetMyInstance"
 	AdminService_ListInstanceDomains_FullMethodName                                     = "/zitadel.admin.v1.AdminService/ListInstanceDomains"
+	AdminService_ListInstanceTrustedDomains_FullMethodName                              = "/zitadel.admin.v1.AdminService/ListInstanceTrustedDomains"
+	AdminService_AddInstanceTrustedDomain_FullMethodName                                = "/zitadel.admin.v1.AdminService/AddInstanceTrustedDomain"
+	AdminService_RemoveInstanceTrustedDomain_FullMethodName                             = "/zitadel.admin.v1.AdminService/RemoveInstanceTrustedDomain"
 	AdminService_ListSecretGenerators_FullMethodName                                    = "/zitadel.admin.v1.AdminService/ListSecretGenerators"
 	AdminService_GetSecretGenerator_FullMethodName                                      = "/zitadel.admin.v1.AdminService/GetSecretGenerator"
 	AdminService_UpdateSecretGenerator_FullMethodName                                   = "/zitadel.admin.v1.AdminService/UpdateSecretGenerator"
 	AdminService_GetSMTPConfig_FullMethodName                                           = "/zitadel.admin.v1.AdminService/GetSMTPConfig"
+	AdminService_GetSMTPConfigById_FullMethodName                                       = "/zitadel.admin.v1.AdminService/GetSMTPConfigById"
 	AdminService_AddSMTPConfig_FullMethodName                                           = "/zitadel.admin.v1.AdminService/AddSMTPConfig"
 	AdminService_UpdateSMTPConfig_FullMethodName                                        = "/zitadel.admin.v1.AdminService/UpdateSMTPConfig"
 	AdminService_UpdateSMTPConfigPassword_FullMethodName                                = "/zitadel.admin.v1.AdminService/UpdateSMTPConfigPassword"
+	AdminService_ActivateSMTPConfig_FullMethodName                                      = "/zitadel.admin.v1.AdminService/ActivateSMTPConfig"
+	AdminService_DeactivateSMTPConfig_FullMethodName                                    = "/zitadel.admin.v1.AdminService/DeactivateSMTPConfig"
 	AdminService_RemoveSMTPConfig_FullMethodName                                        = "/zitadel.admin.v1.AdminService/RemoveSMTPConfig"
+	AdminService_TestSMTPConfigById_FullMethodName                                      = "/zitadel.admin.v1.AdminService/TestSMTPConfigById"
+	AdminService_TestSMTPConfig_FullMethodName                                          = "/zitadel.admin.v1.AdminService/TestSMTPConfig"
+	AdminService_ListSMTPConfigs_FullMethodName                                         = "/zitadel.admin.v1.AdminService/ListSMTPConfigs"
 	AdminService_ListSMSProviders_FullMethodName                                        = "/zitadel.admin.v1.AdminService/ListSMSProviders"
 	AdminService_GetSMSProvider_FullMethodName                                          = "/zitadel.admin.v1.AdminService/GetSMSProvider"
 	AdminService_AddSMSProviderTwilio_FullMethodName                                    = "/zitadel.admin.v1.AdminService/AddSMSProviderTwilio"
@@ -207,6 +217,9 @@ type AdminServiceClient interface {
 	GetDefaultLanguage(ctx context.Context, in *GetDefaultLanguageRequest, opts ...grpc.CallOption) (*GetDefaultLanguageResponse, error)
 	GetMyInstance(ctx context.Context, in *GetMyInstanceRequest, opts ...grpc.CallOption) (*GetMyInstanceResponse, error)
 	ListInstanceDomains(ctx context.Context, in *ListInstanceDomainsRequest, opts ...grpc.CallOption) (*ListInstanceDomainsResponse, error)
+	ListInstanceTrustedDomains(ctx context.Context, in *ListInstanceTrustedDomainsRequest, opts ...grpc.CallOption) (*ListInstanceTrustedDomainsResponse, error)
+	AddInstanceTrustedDomain(ctx context.Context, in *AddInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*AddInstanceTrustedDomainResponse, error)
+	RemoveInstanceTrustedDomain(ctx context.Context, in *RemoveInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*RemoveInstanceTrustedDomainResponse, error)
 	ListSecretGenerators(ctx context.Context, in *ListSecretGeneratorsRequest, opts ...grpc.CallOption) (*ListSecretGeneratorsResponse, error)
 	GetSecretGenerator(ctx context.Context, in *GetSecretGeneratorRequest, opts ...grpc.CallOption) (*GetSecretGeneratorResponse, error)
 	UpdateSecretGenerator(ctx context.Context, in *UpdateSecretGeneratorRequest, opts ...grpc.CallOption) (*UpdateSecretGeneratorResponse, error)
@@ -451,7 +464,7 @@ func (c *adminServiceClient) GetSupportedLanguages(ctx context.Context, in *GetS
 
 func (c *adminServiceClient) GetAllowedLanguages(ctx context.Context, in *GetAllowedLanguagesRequest, opts ...grpc.CallOption) (*GetAllowedLanguagesResponse, error) {
 	out := new(GetAllowedLanguagesResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetAllowedLanguages", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_GetAllowedLanguages_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -488,6 +501,33 @@ func (c *adminServiceClient) GetMyInstance(ctx context.Context, in *GetMyInstanc
 func (c *adminServiceClient) ListInstanceDomains(ctx context.Context, in *ListInstanceDomainsRequest, opts ...grpc.CallOption) (*ListInstanceDomainsResponse, error) {
 	out := new(ListInstanceDomainsResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListInstanceDomains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListInstanceTrustedDomains(ctx context.Context, in *ListInstanceTrustedDomainsRequest, opts ...grpc.CallOption) (*ListInstanceTrustedDomainsResponse, error) {
+	out := new(ListInstanceTrustedDomainsResponse)
+	err := c.cc.Invoke(ctx, AdminService_ListInstanceTrustedDomains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddInstanceTrustedDomain(ctx context.Context, in *AddInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*AddInstanceTrustedDomainResponse, error) {
+	out := new(AddInstanceTrustedDomainResponse)
+	err := c.cc.Invoke(ctx, AdminService_AddInstanceTrustedDomain_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RemoveInstanceTrustedDomain(ctx context.Context, in *RemoveInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*RemoveInstanceTrustedDomainResponse, error) {
+	out := new(RemoveInstanceTrustedDomainResponse)
+	err := c.cc.Invoke(ctx, AdminService_RemoveInstanceTrustedDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -532,7 +572,7 @@ func (c *adminServiceClient) GetSMTPConfig(ctx context.Context, in *GetSMTPConfi
 
 func (c *adminServiceClient) GetSMTPConfigById(ctx context.Context, in *GetSMTPConfigByIdRequest, opts ...grpc.CallOption) (*GetSMTPConfigByIdResponse, error) {
 	out := new(GetSMTPConfigByIdResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/GetSMTPConfigById", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_GetSMTPConfigById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -568,7 +608,7 @@ func (c *adminServiceClient) UpdateSMTPConfigPassword(ctx context.Context, in *U
 
 func (c *adminServiceClient) ActivateSMTPConfig(ctx context.Context, in *ActivateSMTPConfigRequest, opts ...grpc.CallOption) (*ActivateSMTPConfigResponse, error) {
 	out := new(ActivateSMTPConfigResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ActivateSMTPConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_ActivateSMTPConfig_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -577,7 +617,7 @@ func (c *adminServiceClient) ActivateSMTPConfig(ctx context.Context, in *Activat
 
 func (c *adminServiceClient) DeactivateSMTPConfig(ctx context.Context, in *DeactivateSMTPConfigRequest, opts ...grpc.CallOption) (*DeactivateSMTPConfigResponse, error) {
 	out := new(DeactivateSMTPConfigResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/DeactivateSMTPConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_DeactivateSMTPConfig_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -595,7 +635,7 @@ func (c *adminServiceClient) RemoveSMTPConfig(ctx context.Context, in *RemoveSMT
 
 func (c *adminServiceClient) TestSMTPConfigById(ctx context.Context, in *TestSMTPConfigByIdRequest, opts ...grpc.CallOption) (*TestSMTPConfigByIdResponse, error) {
 	out := new(TestSMTPConfigByIdResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/TestSMTPConfigById", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_TestSMTPConfigById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -604,7 +644,7 @@ func (c *adminServiceClient) TestSMTPConfigById(ctx context.Context, in *TestSMT
 
 func (c *adminServiceClient) TestSMTPConfig(ctx context.Context, in *TestSMTPConfigRequest, opts ...grpc.CallOption) (*TestSMTPConfigResponse, error) {
 	out := new(TestSMTPConfigResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/TestSMTPConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_TestSMTPConfig_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -613,7 +653,7 @@ func (c *adminServiceClient) TestSMTPConfig(ctx context.Context, in *TestSMTPCon
 
 func (c *adminServiceClient) ListSMTPConfigs(ctx context.Context, in *ListSMTPConfigsRequest, opts ...grpc.CallOption) (*ListSMTPConfigsResponse, error) {
 	out := new(ListSMTPConfigsResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.admin.v1.AdminService/ListSMTPConfigs", in, out, opts...)
+	err := c.cc.Invoke(ctx, AdminService_ListSMTPConfigs_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2080,6 +2120,9 @@ type AdminServiceServer interface {
 	GetDefaultLanguage(context.Context, *GetDefaultLanguageRequest) (*GetDefaultLanguageResponse, error)
 	GetMyInstance(context.Context, *GetMyInstanceRequest) (*GetMyInstanceResponse, error)
 	ListInstanceDomains(context.Context, *ListInstanceDomainsRequest) (*ListInstanceDomainsResponse, error)
+	ListInstanceTrustedDomains(context.Context, *ListInstanceTrustedDomainsRequest) (*ListInstanceTrustedDomainsResponse, error)
+	AddInstanceTrustedDomain(context.Context, *AddInstanceTrustedDomainRequest) (*AddInstanceTrustedDomainResponse, error)
+	RemoveInstanceTrustedDomain(context.Context, *RemoveInstanceTrustedDomainRequest) (*RemoveInstanceTrustedDomainResponse, error)
 	ListSecretGenerators(context.Context, *ListSecretGeneratorsRequest) (*ListSecretGeneratorsResponse, error)
 	GetSecretGenerator(context.Context, *GetSecretGeneratorRequest) (*GetSecretGeneratorResponse, error)
 	UpdateSecretGenerator(context.Context, *UpdateSecretGeneratorRequest) (*UpdateSecretGeneratorResponse, error)
@@ -2321,6 +2364,15 @@ func (UnimplementedAdminServiceServer) GetMyInstance(context.Context, *GetMyInst
 }
 func (UnimplementedAdminServiceServer) ListInstanceDomains(context.Context, *ListInstanceDomainsRequest) (*ListInstanceDomainsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInstanceDomains not implemented")
+}
+func (UnimplementedAdminServiceServer) ListInstanceTrustedDomains(context.Context, *ListInstanceTrustedDomainsRequest) (*ListInstanceTrustedDomainsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListInstanceTrustedDomains not implemented")
+}
+func (UnimplementedAdminServiceServer) AddInstanceTrustedDomain(context.Context, *AddInstanceTrustedDomainRequest) (*AddInstanceTrustedDomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddInstanceTrustedDomain not implemented")
+}
+func (UnimplementedAdminServiceServer) RemoveInstanceTrustedDomain(context.Context, *RemoveInstanceTrustedDomainRequest) (*RemoveInstanceTrustedDomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveInstanceTrustedDomain not implemented")
 }
 func (UnimplementedAdminServiceServer) ListSecretGenerators(context.Context, *ListSecretGeneratorsRequest) (*ListSecretGeneratorsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSecretGenerators not implemented")
@@ -2906,7 +2958,7 @@ func _AdminService_GetAllowedLanguages_Handler(srv interface{}, ctx context.Cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/GetAllowedLanguages",
+		FullMethod: AdminService_GetAllowedLanguages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetAllowedLanguages(ctx, req.(*GetAllowedLanguagesRequest))
@@ -2982,6 +3034,60 @@ func _AdminService_ListInstanceDomains_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ListInstanceDomains(ctx, req.(*ListInstanceDomainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListInstanceTrustedDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListInstanceTrustedDomainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListInstanceTrustedDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListInstanceTrustedDomains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListInstanceTrustedDomains(ctx, req.(*ListInstanceTrustedDomainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddInstanceTrustedDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddInstanceTrustedDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddInstanceTrustedDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddInstanceTrustedDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddInstanceTrustedDomain(ctx, req.(*AddInstanceTrustedDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RemoveInstanceTrustedDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveInstanceTrustedDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RemoveInstanceTrustedDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_RemoveInstanceTrustedDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RemoveInstanceTrustedDomain(ctx, req.(*RemoveInstanceTrustedDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3068,7 +3174,7 @@ func _AdminService_GetSMTPConfigById_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/GetSMTPConfigById",
+		FullMethod: AdminService_GetSMTPConfigById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetSMTPConfigById(ctx, req.(*GetSMTPConfigByIdRequest))
@@ -3140,7 +3246,7 @@ func _AdminService_ActivateSMTPConfig_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/ActivateSMTPConfig",
+		FullMethod: AdminService_ActivateSMTPConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ActivateSMTPConfig(ctx, req.(*ActivateSMTPConfigRequest))
@@ -3158,7 +3264,7 @@ func _AdminService_DeactivateSMTPConfig_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/DeactivateSMTPConfig",
+		FullMethod: AdminService_DeactivateSMTPConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).DeactivateSMTPConfig(ctx, req.(*DeactivateSMTPConfigRequest))
@@ -3194,7 +3300,7 @@ func _AdminService_TestSMTPConfigById_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/TestSMTPConfigById",
+		FullMethod: AdminService_TestSMTPConfigById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).TestSMTPConfigById(ctx, req.(*TestSMTPConfigByIdRequest))
@@ -3212,7 +3318,7 @@ func _AdminService_TestSMTPConfig_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/TestSMTPConfig",
+		FullMethod: AdminService_TestSMTPConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).TestSMTPConfig(ctx, req.(*TestSMTPConfigRequest))
@@ -3230,7 +3336,7 @@ func _AdminService_ListSMTPConfigs_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.admin.v1.AdminService/ListSMTPConfigs",
+		FullMethod: AdminService_ListSMTPConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ListSMTPConfigs(ctx, req.(*ListSMTPConfigsRequest))
@@ -6170,6 +6276,18 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListInstanceDomains",
 			Handler:    _AdminService_ListInstanceDomains_Handler,
+		},
+		{
+			MethodName: "ListInstanceTrustedDomains",
+			Handler:    _AdminService_ListInstanceTrustedDomains_Handler,
+		},
+		{
+			MethodName: "AddInstanceTrustedDomain",
+			Handler:    _AdminService_AddInstanceTrustedDomain_Handler,
+		},
+		{
+			MethodName: "RemoveInstanceTrustedDomain",
+			Handler:    _AdminService_RemoveInstanceTrustedDomain_Handler,
 		},
 		{
 			MethodName: "ListSecretGenerators",

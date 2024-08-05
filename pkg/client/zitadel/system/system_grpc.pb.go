@@ -41,6 +41,7 @@ const (
 	SystemService_RemoveQuota_FullMethodName        = "/zitadel.system.v1.SystemService/RemoveQuota"
 	SystemService_SetInstanceFeature_FullMethodName = "/zitadel.system.v1.SystemService/SetInstanceFeature"
 	SystemService_SetLimits_FullMethodName          = "/zitadel.system.v1.SystemService/SetLimits"
+	SystemService_BulkSetLimits_FullMethodName      = "/zitadel.system.v1.SystemService/BulkSetLimits"
 	SystemService_ResetLimits_FullMethodName        = "/zitadel.system.v1.SystemService/ResetLimits"
 )
 
@@ -329,7 +330,7 @@ func (c *systemServiceClient) SetLimits(ctx context.Context, in *SetLimitsReques
 
 func (c *systemServiceClient) BulkSetLimits(ctx context.Context, in *BulkSetLimitsRequest, opts ...grpc.CallOption) (*BulkSetLimitsResponse, error) {
 	out := new(BulkSetLimitsResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.system.v1.SystemService/BulkSetLimits", in, out, opts...)
+	err := c.cc.Invoke(ctx, SystemService_BulkSetLimits_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -918,7 +919,7 @@ func _SystemService_BulkSetLimits_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.system.v1.SystemService/BulkSetLimits",
+		FullMethod: SystemService_BulkSetLimits_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SystemServiceServer).BulkSetLimits(ctx, req.(*BulkSetLimitsRequest))

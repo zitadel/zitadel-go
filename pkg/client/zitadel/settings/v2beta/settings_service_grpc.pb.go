@@ -23,10 +23,13 @@ const (
 	SettingsService_GetLoginSettings_FullMethodName              = "/zitadel.settings.v2beta.SettingsService/GetLoginSettings"
 	SettingsService_GetActiveIdentityProviders_FullMethodName    = "/zitadel.settings.v2beta.SettingsService/GetActiveIdentityProviders"
 	SettingsService_GetPasswordComplexitySettings_FullMethodName = "/zitadel.settings.v2beta.SettingsService/GetPasswordComplexitySettings"
+	SettingsService_GetPasswordExpirySettings_FullMethodName     = "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings"
 	SettingsService_GetBrandingSettings_FullMethodName           = "/zitadel.settings.v2beta.SettingsService/GetBrandingSettings"
 	SettingsService_GetDomainSettings_FullMethodName             = "/zitadel.settings.v2beta.SettingsService/GetDomainSettings"
 	SettingsService_GetLegalAndSupportSettings_FullMethodName    = "/zitadel.settings.v2beta.SettingsService/GetLegalAndSupportSettings"
 	SettingsService_GetLockoutSettings_FullMethodName            = "/zitadel.settings.v2beta.SettingsService/GetLockoutSettings"
+	SettingsService_GetSecuritySettings_FullMethodName           = "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings"
+	SettingsService_SetSecuritySettings_FullMethodName           = "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings"
 )
 
 // SettingsServiceClient is the client API for SettingsService service.
@@ -103,7 +106,7 @@ func (c *settingsServiceClient) GetPasswordComplexitySettings(ctx context.Contex
 
 func (c *settingsServiceClient) GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error) {
 	out := new(GetPasswordExpirySettingsResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, SettingsService_GetPasswordExpirySettings_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +151,7 @@ func (c *settingsServiceClient) GetLockoutSettings(ctx context.Context, in *GetL
 
 func (c *settingsServiceClient) GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error) {
 	out := new(GetSecuritySettingsResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, SettingsService_GetSecuritySettings_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +160,7 @@ func (c *settingsServiceClient) GetSecuritySettings(ctx context.Context, in *Get
 
 func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error) {
 	out := new(SetSecuritySettingsResponse)
-	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, SettingsService_SetSecuritySettings_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -325,7 +328,7 @@ func _SettingsService_GetPasswordExpirySettings_Handler(srv interface{}, ctx con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings",
+		FullMethod: SettingsService_GetPasswordExpirySettings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SettingsServiceServer).GetPasswordExpirySettings(ctx, req.(*GetPasswordExpirySettingsRequest))
@@ -415,7 +418,7 @@ func _SettingsService_GetSecuritySettings_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings",
+		FullMethod: SettingsService_GetSecuritySettings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SettingsServiceServer).GetSecuritySettings(ctx, req.(*GetSecuritySettingsRequest))
@@ -433,7 +436,7 @@ func _SettingsService_SetSecuritySettings_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings",
+		FullMethod: SettingsService_SetSecuritySettings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SettingsServiceServer).SetSecuritySettings(ctx, req.(*SetSecuritySettingsRequest))
