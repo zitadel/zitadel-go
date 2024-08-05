@@ -49,14 +49,26 @@ const (
 type UserServiceClient interface {
 	// Create a new human user
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
+	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
+	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Change the email of a user
 	SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error)
+	// Resend code to verify user email
+	ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error)
 	// Verify the email with the provided code
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
+	RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error)
+	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error)
+	UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error)
+	DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*DeactivateUserResponse, error)
+	ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*ReactivateUserResponse, error)
+	LockUser(ctx context.Context, in *LockUserRequest, opts ...grpc.CallOption) (*LockUserResponse, error)
+	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	RegisterPasskey(ctx context.Context, in *RegisterPasskeyRequest, opts ...grpc.CallOption) (*RegisterPasskeyResponse, error)
 	VerifyPasskeyRegistration(ctx context.Context, in *VerifyPasskeyRegistrationRequest, opts ...grpc.CallOption) (*VerifyPasskeyRegistrationResponse, error)
 	CreatePasskeyRegistrationLink(ctx context.Context, in *CreatePasskeyRegistrationLinkRequest, opts ...grpc.CallOption) (*CreatePasskeyRegistrationLinkResponse, error)
@@ -64,6 +76,7 @@ type UserServiceClient interface {
 	VerifyU2FRegistration(ctx context.Context, in *VerifyU2FRegistrationRequest, opts ...grpc.CallOption) (*VerifyU2FRegistrationResponse, error)
 	RegisterTOTP(ctx context.Context, in *RegisterTOTPRequest, opts ...grpc.CallOption) (*RegisterTOTPResponse, error)
 	VerifyTOTPRegistration(ctx context.Context, in *VerifyTOTPRegistrationRequest, opts ...grpc.CallOption) (*VerifyTOTPRegistrationResponse, error)
+	RemoveTOTP(ctx context.Context, in *RemoveTOTPRequest, opts ...grpc.CallOption) (*RemoveTOTPResponse, error)
 	AddOTPSMS(ctx context.Context, in *AddOTPSMSRequest, opts ...grpc.CallOption) (*AddOTPSMSResponse, error)
 	RemoveOTPSMS(ctx context.Context, in *RemoveOTPSMSRequest, opts ...grpc.CallOption) (*RemoveOTPSMSResponse, error)
 	AddOTPEmail(ctx context.Context, in *AddOTPEmailRequest, opts ...grpc.CallOption) (*AddOTPEmailResponse, error)
@@ -98,9 +111,36 @@ func (c *userServiceClient) AddHumanUser(ctx context.Context, in *AddHumanUserRe
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error) {
+	out := new(GetUserByIDResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/GetUserByID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+	out := new(ListUsersResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ListUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error) {
 	out := new(SetEmailResponse)
 	err := c.cc.Invoke(ctx, UserService_SetEmail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error) {
+	out := new(ResendEmailCodeResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ResendEmailCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,9 +165,81 @@ func (c *userServiceClient) SetPhone(ctx context.Context, in *SetPhoneRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error) {
+	out := new(RemovePhoneResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/RemovePhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error) {
+	out := new(ResendPhoneCodeResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ResendPhoneCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error) {
 	out := new(VerifyPhoneResponse)
 	err := c.cc.Invoke(ctx, UserService_VerifyPhone_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error) {
+	out := new(UpdateHumanUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/UpdateHumanUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*DeactivateUserResponse, error) {
+	out := new(DeactivateUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/DeactivateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*ReactivateUserResponse, error) {
+	out := new(ReactivateUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/ReactivateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) LockUser(ctx context.Context, in *LockUserRequest, opts ...grpc.CallOption) (*LockUserResponse, error) {
+	out := new(LockUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/LockUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error) {
+	out := new(UnlockUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/UnlockUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
+	out := new(DeleteUserResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -191,6 +303,15 @@ func (c *userServiceClient) RegisterTOTP(ctx context.Context, in *RegisterTOTPRe
 func (c *userServiceClient) VerifyTOTPRegistration(ctx context.Context, in *VerifyTOTPRegistrationRequest, opts ...grpc.CallOption) (*VerifyTOTPRegistrationResponse, error) {
 	out := new(VerifyTOTPRegistrationResponse)
 	err := c.cc.Invoke(ctx, UserService_VerifyTOTPRegistration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveTOTP(ctx context.Context, in *RemoveTOTPRequest, opts ...grpc.CallOption) (*RemoveTOTPResponse, error) {
+	out := new(RemoveTOTPResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.user.v2beta.UserService/RemoveTOTP", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -293,14 +414,26 @@ func (c *userServiceClient) ListAuthenticationMethodTypes(ctx context.Context, i
 type UserServiceServer interface {
 	// Create a new human user
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
+	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
+	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Change the email of a user
 	SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error)
+	// Resend code to verify user email
+	ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error)
 	// Verify the email with the provided code
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Change the phone of a user
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
+	RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error)
+	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
 	// Verify the phone with the provided code
 	VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error)
+	UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error)
+	DeactivateUser(context.Context, *DeactivateUserRequest) (*DeactivateUserResponse, error)
+	ReactivateUser(context.Context, *ReactivateUserRequest) (*ReactivateUserResponse, error)
+	LockUser(context.Context, *LockUserRequest) (*LockUserResponse, error)
+	UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	RegisterPasskey(context.Context, *RegisterPasskeyRequest) (*RegisterPasskeyResponse, error)
 	VerifyPasskeyRegistration(context.Context, *VerifyPasskeyRegistrationRequest) (*VerifyPasskeyRegistrationResponse, error)
 	CreatePasskeyRegistrationLink(context.Context, *CreatePasskeyRegistrationLinkRequest) (*CreatePasskeyRegistrationLinkResponse, error)
@@ -308,6 +441,7 @@ type UserServiceServer interface {
 	VerifyU2FRegistration(context.Context, *VerifyU2FRegistrationRequest) (*VerifyU2FRegistrationResponse, error)
 	RegisterTOTP(context.Context, *RegisterTOTPRequest) (*RegisterTOTPResponse, error)
 	VerifyTOTPRegistration(context.Context, *VerifyTOTPRegistrationRequest) (*VerifyTOTPRegistrationResponse, error)
+	RemoveTOTP(context.Context, *RemoveTOTPRequest) (*RemoveTOTPResponse, error)
 	AddOTPSMS(context.Context, *AddOTPSMSRequest) (*AddOTPSMSResponse, error)
 	RemoveOTPSMS(context.Context, *RemoveOTPSMSRequest) (*RemoveOTPSMSResponse, error)
 	AddOTPEmail(context.Context, *AddOTPEmailRequest) (*AddOTPEmailResponse, error)
@@ -333,8 +467,17 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddHumanUser not implemented")
 }
+func (UnimplementedUserServiceServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
+}
+func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
 func (UnimplementedUserServiceServer) SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetEmail not implemented")
+}
+func (UnimplementedUserServiceServer) ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendEmailCode not implemented")
 }
 func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
@@ -342,8 +485,32 @@ func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailR
 func (UnimplementedUserServiceServer) SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPhone not implemented")
 }
+func (UnimplementedUserServiceServer) RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePhone not implemented")
+}
+func (UnimplementedUserServiceServer) ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendPhoneCode not implemented")
+}
 func (UnimplementedUserServiceServer) VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPhone not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateHumanUser not implemented")
+}
+func (UnimplementedUserServiceServer) DeactivateUser(context.Context, *DeactivateUserRequest) (*DeactivateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivateUser not implemented")
+}
+func (UnimplementedUserServiceServer) ReactivateUser(context.Context, *ReactivateUserRequest) (*ReactivateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReactivateUser not implemented")
+}
+func (UnimplementedUserServiceServer) LockUser(context.Context, *LockUserRequest) (*LockUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LockUser not implemented")
+}
+func (UnimplementedUserServiceServer) UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnlockUser not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedUserServiceServer) RegisterPasskey(context.Context, *RegisterPasskeyRequest) (*RegisterPasskeyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterPasskey not implemented")
@@ -365,6 +532,9 @@ func (UnimplementedUserServiceServer) RegisterTOTP(context.Context, *RegisterTOT
 }
 func (UnimplementedUserServiceServer) VerifyTOTPRegistration(context.Context, *VerifyTOTPRegistrationRequest) (*VerifyTOTPRegistrationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyTOTPRegistration not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveTOTP(context.Context, *RemoveTOTPRequest) (*RemoveTOTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveTOTP not implemented")
 }
 func (UnimplementedUserServiceServer) AddOTPSMS(context.Context, *AddOTPSMSRequest) (*AddOTPSMSResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOTPSMS not implemented")
@@ -427,6 +597,42 @@ func _UserService_AddHumanUser_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/GetUserByID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByID(ctx, req.(*GetUserByIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ListUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_SetEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetEmailRequest)
 	if err := dec(in); err != nil {
@@ -441,6 +647,24 @@ func _UserService_SetEmail_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).SetEmail(ctx, req.(*SetEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ResendEmailCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendEmailCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResendEmailCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ResendEmailCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResendEmailCode(ctx, req.(*ResendEmailCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -481,6 +705,42 @@ func _UserService_SetPhone_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_RemovePhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemovePhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/RemovePhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemovePhone(ctx, req.(*RemovePhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ResendPhoneCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendPhoneCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResendPhoneCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ResendPhoneCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResendPhoneCode(ctx, req.(*ResendPhoneCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_VerifyPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyPhoneRequest)
 	if err := dec(in); err != nil {
@@ -495,6 +755,114 @@ func _UserService_VerifyPhone_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).VerifyPhone(ctx, req.(*VerifyPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateHumanUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateHumanUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateHumanUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/UpdateHumanUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateHumanUser(ctx, req.(*UpdateHumanUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeactivateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeactivateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/DeactivateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeactivateUser(ctx, req.(*DeactivateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ReactivateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReactivateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ReactivateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/ReactivateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ReactivateUser(ctx, req.(*ReactivateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_LockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LockUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).LockUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/LockUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).LockUser(ctx, req.(*LockUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UnlockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlockUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UnlockUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/UnlockUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UnlockUser(ctx, req.(*UnlockUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/DeleteUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -621,6 +989,24 @@ func _UserService_VerifyTOTPRegistration_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).VerifyTOTPRegistration(ctx, req.(*VerifyTOTPRegistrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveTOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveTOTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveTOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.user.v2beta.UserService/RemoveTOTP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveTOTP(ctx, req.(*RemoveTOTPRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -817,8 +1203,20 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_AddHumanUser_Handler,
 		},
 		{
+			MethodName: "GetUserByID",
+			Handler:    _UserService_GetUserByID_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _UserService_ListUsers_Handler,
+		},
+		{
 			MethodName: "SetEmail",
 			Handler:    _UserService_SetEmail_Handler,
+		},
+		{
+			MethodName: "ResendEmailCode",
+			Handler:    _UserService_ResendEmailCode_Handler,
 		},
 		{
 			MethodName: "VerifyEmail",
@@ -829,8 +1227,40 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_SetPhone_Handler,
 		},
 		{
+			MethodName: "RemovePhone",
+			Handler:    _UserService_RemovePhone_Handler,
+		},
+		{
+			MethodName: "ResendPhoneCode",
+			Handler:    _UserService_ResendPhoneCode_Handler,
+		},
+		{
 			MethodName: "VerifyPhone",
 			Handler:    _UserService_VerifyPhone_Handler,
+		},
+		{
+			MethodName: "UpdateHumanUser",
+			Handler:    _UserService_UpdateHumanUser_Handler,
+		},
+		{
+			MethodName: "DeactivateUser",
+			Handler:    _UserService_DeactivateUser_Handler,
+		},
+		{
+			MethodName: "ReactivateUser",
+			Handler:    _UserService_ReactivateUser_Handler,
+		},
+		{
+			MethodName: "LockUser",
+			Handler:    _UserService_LockUser_Handler,
+		},
+		{
+			MethodName: "UnlockUser",
+			Handler:    _UserService_UnlockUser_Handler,
+		},
+		{
+			MethodName: "DeleteUser",
+			Handler:    _UserService_DeleteUser_Handler,
 		},
 		{
 			MethodName: "RegisterPasskey",
@@ -859,6 +1289,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTOTPRegistration",
 			Handler:    _UserService_VerifyTOTPRegistration_Handler,
+		},
+		{
+			MethodName: "RemoveTOTP",
+			Handler:    _UserService_RemoveTOTP_Handler,
 		},
 		{
 			MethodName: "AddOTPSMS",

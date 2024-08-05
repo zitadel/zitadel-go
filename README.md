@@ -26,7 +26,11 @@ Add the package to your go.mod by
 go get -u github.com/zitadel/zitadel-go/v3
 ```
 
-...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart).
+...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
+
+### V1
+
+If you're looking for Version 1, please check out the [main branch](https://github.com/zitadel/zitadel-go/tree/main).
 
 ## Supported Go Versions
 

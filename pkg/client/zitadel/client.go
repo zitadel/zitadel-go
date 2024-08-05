@@ -20,6 +20,7 @@ type Connection struct {
 	insecure              bool
 	unaryInterceptors     []grpc.UnaryClientInterceptor
 	streamInterceptors    []grpc.StreamClientInterceptor
+	dialOptions           []grpc.DialOption
 	*grpc.ClientConn
 }
 
@@ -49,7 +50,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 			c.streamInterceptors...,
 		),
 	}
-
+	dialOptions = append(dialOptions, c.dialOptions...)
 	opt, err := transportOption(c.api, c.insecure)
 	if err != nil {
 		return nil, err
@@ -154,6 +155,14 @@ func WithUnaryInterceptors(interceptors ...grpc.UnaryClientInterceptor) func(*Co
 func WithStreamInterceptors(interceptors ...grpc.StreamClientInterceptor) func(*Connection) error {
 	return func(client *Connection) error {
 		client.streamInterceptors = append(client.streamInterceptors, interceptors...)
+		return nil
+	}
+}
+
+// WithDialOptions adds non ZITADEL specific dial options to the connection
+func WithDialOptions(opts ...grpc.DialOption) func(*Connection) error {
+	return func(client *Connection) error {
+		client.dialOptions = append(client.dialOptions, opts...)
 		return nil
 	}
 }

@@ -41,6 +41,8 @@ type SettingsServiceClient interface {
 	GetActiveIdentityProviders(ctx context.Context, in *GetActiveIdentityProvidersRequest, opts ...grpc.CallOption) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
 	GetPasswordComplexitySettings(ctx context.Context, in *GetPasswordComplexitySettingsRequest, opts ...grpc.CallOption) (*GetPasswordComplexitySettingsResponse, error)
+	// Get the password expiry settings
+	GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
 	GetBrandingSettings(ctx context.Context, in *GetBrandingSettingsRequest, opts ...grpc.CallOption) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
@@ -49,6 +51,10 @@ type SettingsServiceClient interface {
 	GetLegalAndSupportSettings(ctx context.Context, in *GetLegalAndSupportSettingsRequest, opts ...grpc.CallOption) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
 	GetLockoutSettings(ctx context.Context, in *GetLockoutSettingsRequest, opts ...grpc.CallOption) (*GetLockoutSettingsResponse, error)
+	// Get the security settings
+	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
+	// Set the security settings
+	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
 }
 
 type settingsServiceClient struct {
@@ -95,6 +101,15 @@ func (c *settingsServiceClient) GetPasswordComplexitySettings(ctx context.Contex
 	return out, nil
 }
 
+func (c *settingsServiceClient) GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error) {
+	out := new(GetPasswordExpirySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *settingsServiceClient) GetBrandingSettings(ctx context.Context, in *GetBrandingSettingsRequest, opts ...grpc.CallOption) (*GetBrandingSettingsResponse, error) {
 	out := new(GetBrandingSettingsResponse)
 	err := c.cc.Invoke(ctx, SettingsService_GetBrandingSettings_FullMethodName, in, out, opts...)
@@ -131,6 +146,24 @@ func (c *settingsServiceClient) GetLockoutSettings(ctx context.Context, in *GetL
 	return out, nil
 }
 
+func (c *settingsServiceClient) GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error) {
+	out := new(GetSecuritySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error) {
+	out := new(SetSecuritySettingsResponse)
+	err := c.cc.Invoke(ctx, "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingsServiceServer is the server API for SettingsService service.
 // All implementations must embed UnimplementedSettingsServiceServer
 // for forward compatibility
@@ -143,6 +176,8 @@ type SettingsServiceServer interface {
 	GetActiveIdentityProviders(context.Context, *GetActiveIdentityProvidersRequest) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
 	GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error)
+	// Get the password expiry settings
+	GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
 	GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
@@ -151,6 +186,10 @@ type SettingsServiceServer interface {
 	GetLegalAndSupportSettings(context.Context, *GetLegalAndSupportSettingsRequest) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
 	GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error)
+	// Get the security settings
+	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
+	// Set the security settings
+	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
 	mustEmbedUnimplementedSettingsServiceServer()
 }
 
@@ -170,6 +209,9 @@ func (UnimplementedSettingsServiceServer) GetActiveIdentityProviders(context.Con
 func (UnimplementedSettingsServiceServer) GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPasswordComplexitySettings not implemented")
 }
+func (UnimplementedSettingsServiceServer) GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPasswordExpirySettings not implemented")
+}
 func (UnimplementedSettingsServiceServer) GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBrandingSettings not implemented")
 }
@@ -181,6 +223,12 @@ func (UnimplementedSettingsServiceServer) GetLegalAndSupportSettings(context.Con
 }
 func (UnimplementedSettingsServiceServer) GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLockoutSettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSecuritySettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetSecuritySettings not implemented")
 }
 func (UnimplementedSettingsServiceServer) mustEmbedUnimplementedSettingsServiceServer() {}
 
@@ -267,6 +315,24 @@ func _SettingsService_GetPasswordComplexitySettings_Handler(srv interface{}, ctx
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_GetPasswordExpirySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPasswordExpirySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).GetPasswordExpirySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetPasswordExpirySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).GetPasswordExpirySettings(ctx, req.(*GetPasswordExpirySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SettingsService_GetBrandingSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBrandingSettingsRequest)
 	if err := dec(in); err != nil {
@@ -339,6 +405,42 @@ func _SettingsService_GetLockoutSettings_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_GetSecuritySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSecuritySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).GetSecuritySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).GetSecuritySettings(ctx, req.(*GetSecuritySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_SetSecuritySettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetSecuritySettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).SetSecuritySettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).SetSecuritySettings(ctx, req.(*SetSecuritySettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SettingsService_ServiceDesc is the grpc.ServiceDesc for SettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -363,6 +465,10 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SettingsService_GetPasswordComplexitySettings_Handler,
 		},
 		{
+			MethodName: "GetPasswordExpirySettings",
+			Handler:    _SettingsService_GetPasswordExpirySettings_Handler,
+		},
+		{
 			MethodName: "GetBrandingSettings",
 			Handler:    _SettingsService_GetBrandingSettings_Handler,
 		},
@@ -377,6 +483,14 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLockoutSettings",
 			Handler:    _SettingsService_GetLockoutSettings_Handler,
+		},
+		{
+			MethodName: "GetSecuritySettings",
+			Handler:    _SettingsService_GetSecuritySettings_Handler,
+		},
+		{
+			MethodName: "SetSecuritySettings",
+			Handler:    _SettingsService_SetSecuritySettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
