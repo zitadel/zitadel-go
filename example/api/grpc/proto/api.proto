@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package zitadel.go.example.api.v3alpha;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/zitadel/zitadel-go/example/api/grpc/v3alpha";
+
+service ExampleService {
+
+  // Healthz is accessible by anyone and will always return "OK" to indicate the API is running
+  rpc Healthz (HealthzRequest) returns (HealthzResponse) {}
+
+  // ListTasks is only accessible with a valid authorization (in this case a valid access_token / PAT).
+  // It will list all stored tasks. In case the user is granted the `admin` role it will add a separate task telling him
+  // to add a new task.
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse) {}
+
+  // AddTask is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+  // It will add the provided task to the list of existing ones.
+  rpc AddTask (AddTaskRequest) returns (AddTaskResponse) {}
+
+  // AddTasks is only accessible with a valid authorization, which was granted the `admin` role (in any organization).
+  // It demonstrates that GRPC client Stream can be used the same way a standard RPC methods.
+  // It will also add the provided task(s) to the list of existing ones.
+  rpc AddTasks (stream AddTasksRequest) returns (AddTasksResponse) {}
+}
+
+message HealthzRequest {}
+
+message HealthzResponse {
+  string health = 1;
+}
+
+message ListTasksRequest {}
+
+message ListTasksResponse {
+  // current tasks stored on the server
+  repeated string tasks = 1;
+}
+
+message AddTaskRequest {
+  // the new task to be added
+  string task = 1;
+}
+
+message AddTaskResponse {
+  // confirmation of the added task by this call
+  string added = 1;
+}
+
+message AddTasksRequest {
+  // the new task to be added
+  string task = 1;
+}
+
+message AddTasksResponse {
+  // amount of added task by this call
+  uint32 added = 1;
+}

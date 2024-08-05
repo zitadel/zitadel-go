@@ -5,8 +5,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/system"
-	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/system"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/system"
+	pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/system"
 )
 
 var (
@@ -17,11 +17,14 @@ var (
 func main() {
 	flag.Parse()
 
+	ctx := context.Background()
+
 	//create a client for the system api providing:
 	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
 	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- a JWT Profile source token (e.g. path to your key.pem) and the corresponding userID from the `SystemAPIUsers` config in ZITADEL
 	client, err := system.NewClient(
+		ctx,
 		*issuer,
 		*api,
 		system.JWTProfileFromPath("system_user_1.pem", "system_user_1"),
@@ -36,7 +39,6 @@ func main() {
 		}
 	}()
 
-	ctx := context.Background()
 	//call ZITADEL and print the name and creation date of all instances
 	//the call was successful if no error occurred
 	resp, err := client.ListInstances(ctx, &pb.ListInstancesRequest{})

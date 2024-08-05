@@ -5,11 +5,12 @@ import (
 	"flag"
 	"log"
 
-	"github.com/zitadel/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/auth"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/auth"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/auth"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/auth"
 )
 
 var (
@@ -20,16 +21,19 @@ var (
 func main() {
 	flag.Parse()
 
+	ctx := context.Background()
+
 	//create a client for the auth api providing:
 	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
 	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- scopes (including the ZITADEL project ID),
 	//- a JWT Profile source token (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	client, err := auth.NewClient(
+		ctx,
 		*issuer,
 		*api,
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
+		zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath(ctx, "key.json")),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)
@@ -40,8 +44,6 @@ func main() {
 			log.Println("could not close grpc connection", err)
 		}
 	}()
-
-	ctx := context.Background()
 
 	//call ZITADEL and print the name and creation date of your service user
 	//the call was successful if no error occurred

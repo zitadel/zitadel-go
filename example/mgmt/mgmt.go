@@ -5,12 +5,12 @@ import (
 	"flag"
 	"log"
 
-	"github.com/zitadel/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/management"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
 )
 
 var (
@@ -22,6 +22,8 @@ var (
 func main() {
 	flag.Parse()
 
+	ctx := context.Background()
+
 	//create a client for the management api providing:
 	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
 	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
@@ -30,10 +32,11 @@ func main() {
 	//- id of the organisation where your calls will be executed
 	//(default is the resource owner / organisation of the calling user, can also be provided for every call separately)
 	client, err := management.NewClient(
+		ctx,
 		*issuer,
 		*api,
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
+		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath(ctx, "key.json")),
 		//zitadel.WithOrgID(*orgID),
 	)
 	if err != nil {
@@ -45,8 +48,6 @@ func main() {
 			log.Println("could not close grpc connection", err)
 		}
 	}()
-
-	ctx := context.Background()
 
 	//call ZITADEL and print the name and creation date of your organisation
 	//the call was successful if no error occurred
