@@ -5,11 +5,11 @@ import (
 	"flag"
 	"log"
 
-	"github.com/zitadel/oidc/pkg/oidc"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/admin"
-	"github.com/zitadel/zitadel-go/v2/pkg/client/zitadel"
-	pb "github.com/zitadel/zitadel-go/v2/pkg/client/zitadel/admin"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/admin"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
+	pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/admin"
 )
 
 var (
@@ -21,12 +21,15 @@ var (
 func main() {
 	flag.Parse()
 
+	ctx := context.Background()
+
 	//create a client for the admin api providing:
 	//- issuer (e.g. https://acme-dtfhdg.zitadel.cloud)
 	//- api (e.g. acme-dtfhdg.zitadel.cloud:443)
 	//- scopes (including the ZITADEL project ID),
 	//- a JWT Profile source token (e.g. path to your key json), if not provided, the file will be read from the path set in env var ZITADEL_KEY_PATH
 	client, err := admin.NewClient(
+		ctx,
 		*issuer,
 		*api,
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
@@ -42,7 +45,6 @@ func main() {
 		}
 	}()
 
-	ctx := context.Background()
 	//call ZITADEL and print the name and creation date of the requested organisation
 	//the call was successful if no error occurred
 	resp, err := client.GetOrgByID(ctx, &pb.GetOrgByIDRequest{
