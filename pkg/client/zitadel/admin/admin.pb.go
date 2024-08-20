@@ -9,7 +9,7 @@ package admin
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	_ "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/authoption" 
+	_ "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/authoption"
 	event "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/event"
 	idp "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/idp"
 	instance "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/instance"
