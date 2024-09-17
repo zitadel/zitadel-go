@@ -69,6 +69,14 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/query.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/user/v2/auth.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/email.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/idp.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/password.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/phone.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/query.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/user.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/user_service.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)

@@ -81,8 +81,10 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2beta/ \
-    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/
-    #######################
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2/
+
+#######################
 ## prepare generated files for output
 #######################
 FROM scratch as zitadel-copy
