@@ -14,7 +14,8 @@ import (
 	session "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/session/v2beta"
 	settings "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/settings/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/system"
-	user "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
+	userV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
+	userV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
@@ -47,7 +48,8 @@ type Client struct {
 	systemService       system.SystemServiceClient
 	adminService        admin.AdminServiceClient
 	managementService   management.ManagementServiceClient
-	userService         user.UserServiceClient
+	userService         userV2Beta.UserServiceClient
+	userServiceV2       userV2.UserServiceClient
 	authService         auth.AuthServiceClient
 	settingsService     settings.SettingsServiceClient
 	sessionService      session.SessionServiceClient
@@ -128,11 +130,18 @@ func (c *Client) AuthService() auth.AuthServiceClient {
 	return c.authService
 }
 
-func (c *Client) UserService() user.UserServiceClient {
+func (c *Client) UserService() userV2Beta.UserServiceClient {
 	if c.userService == nil {
-		c.userService = user.NewUserServiceClient(c.connection)
+		c.userService = userV2Beta.NewUserServiceClient(c.connection)
 	}
 	return c.userService
+}
+
+func (c *Client) UserServiceV2() userV2.UserServiceClient {
+	if c.userServiceV2 == nil {
+		c.userServiceV2 = userV2.NewUserServiceClient(c.connection)
+	}
+	return c.userServiceV2
 }
 
 func (c *Client) SettingsService() settings.SettingsServiceClient {

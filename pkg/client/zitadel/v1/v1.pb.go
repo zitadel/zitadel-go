@@ -271,6 +271,7 @@ type DataOrg struct {
 	Domains                          []*org.Domain                                                     `protobuf:"bytes,37,rep,name=domains,proto3" json:"domains,omitempty"`
 	AppKeys                          []*DataAppKey                                                     `protobuf:"bytes,38,rep,name=app_keys,json=appKeys,proto3" json:"app_keys,omitempty"`
 	MachineKeys                      []*DataMachineKey                                                 `protobuf:"bytes,39,rep,name=machine_keys,json=machineKeys,proto3" json:"machine_keys,omitempty"`
+	InviteUserMessages               []*management.SetCustomInviteUserMessageTextRequest               `protobuf:"bytes,40,rep,name=invite_user_messages,json=inviteUserMessages,proto3" json:"invite_user_messages,omitempty"`
 }
 
 func (x *DataOrg) Reset() {
@@ -567,6 +568,13 @@ func (x *DataOrg) GetAppKeys() []*DataAppKey {
 func (x *DataOrg) GetMachineKeys() []*DataMachineKey {
 	if x != nil {
 		return x.MachineKeys
+	}
+	return nil
+}
+
+func (x *DataOrg) GetInviteUserMessages() []*management.SetCustomInviteUserMessageTextRequest {
+	if x != nil {
+		return x.InviteUserMessages
 	}
 	return nil
 }
@@ -1704,7 +1712,7 @@ var file_zitadel_v1_proto_rawDesc = []byte{
 	0x72, 0x74, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x72, 0x67, 0x12, 0x2a, 0x0a, 0x04, 0x6f, 0x72, 0x67,
 	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
 	0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x72, 0x67, 0x52,
-	0x04, 0x6f, 0x72, 0x67, 0x73, 0x22, 0x9b, 0x18, 0x0a, 0x07, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x72,
+	0x04, 0x6f, 0x72, 0x67, 0x73, 0x22, 0x8b, 0x19, 0x0a, 0x07, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x72,
 	0x67, 0x12, 0x15, 0x0a, 0x06, 0x6f, 0x72, 0x67, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x05, 0x6f, 0x72, 0x67, 0x49, 0x64, 0x12, 0x36, 0x0a, 0x03, 0x6f, 0x72, 0x67, 0x18,
 	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e,
@@ -1898,7 +1906,14 @@ var file_zitadel_v1_proto_rawDesc = []byte{
 	0x73, 0x18, 0x27, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65,
 	0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x4d, 0x61, 0x63, 0x68,
 	0x69, 0x6e, 0x65, 0x4b, 0x65, 0x79, 0x52, 0x0b, 0x6d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x4b,
-	0x65, 0x79, 0x73, 0x22, 0x63, 0x0a, 0x0b, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x49, 0x44, 0x43, 0x49,
+	0x65, 0x79, 0x73, 0x12, 0x6e, 0x0a, 0x14, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x65, 0x5f, 0x75, 0x73,
+	0x65, 0x72, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x18, 0x28, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x3c, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x6d, 0x61, 0x6e, 0x61,
+	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x43, 0x75, 0x73,
+	0x74, 0x6f, 0x6d, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x54, 0x65, 0x78, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52,
+	0x12, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x73, 0x22, 0x63, 0x0a, 0x0b, 0x44, 0x61, 0x74, 0x61, 0x4f, 0x49, 0x44, 0x43, 0x49,
 	0x44, 0x50, 0x12, 0x15, 0x0a, 0x06, 0x69, 0x64, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x05, 0x69, 0x64, 0x70, 0x49, 0x64, 0x12, 0x3d, 0x0a, 0x03, 0x69, 0x64, 0x70,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c,
@@ -2148,18 +2163,19 @@ var file_zitadel_v1_proto_goTypes = []interface{}{
 	(*management.AddIDPToLoginPolicyRequest)(nil),                          // 43: zitadel.management.v1.AddIDPToLoginPolicyRequest
 	(*idp.IDPUserLink)(nil),                                                // 44: zitadel.idp.v1.IDPUserLink
 	(*org.Domain)(nil),                                                     // 45: zitadel.org.v1.Domain
-	(*management.AddOrgOIDCIDPRequest)(nil),                                // 46: zitadel.management.v1.AddOrgOIDCIDPRequest
-	(*management.AddOrgJWTIDPRequest)(nil),                                 // 47: zitadel.management.v1.AddOrgJWTIDPRequest
-	(authn.KeyType)(0),                                                     // 48: zitadel.authn.v1.KeyType
-	(*timestamppb.Timestamp)(nil),                                          // 49: google.protobuf.Timestamp
-	(*management.AddProjectRequest)(nil),                                   // 50: zitadel.management.v1.AddProjectRequest
-	(*management.AddAPIAppRequest)(nil),                                    // 51: zitadel.management.v1.AddAPIAppRequest
-	(*management.AddOIDCAppRequest)(nil),                                   // 52: zitadel.management.v1.AddOIDCAppRequest
-	(*management.ImportHumanUserRequest)(nil),                              // 53: zitadel.management.v1.ImportHumanUserRequest
-	(*management.AddMachineUserRequest)(nil),                               // 54: zitadel.management.v1.AddMachineUserRequest
-	(*management.CreateActionRequest)(nil),                                 // 55: zitadel.management.v1.CreateActionRequest
-	(*management.AddProjectGrantRequest)(nil),                              // 56: zitadel.management.v1.AddProjectGrantRequest
-	(user.Gender)(0),                                                       // 57: zitadel.user.v1.Gender
+	(*management.SetCustomInviteUserMessageTextRequest)(nil),               // 46: zitadel.management.v1.SetCustomInviteUserMessageTextRequest
+	(*management.AddOrgOIDCIDPRequest)(nil),                                // 47: zitadel.management.v1.AddOrgOIDCIDPRequest
+	(*management.AddOrgJWTIDPRequest)(nil),                                 // 48: zitadel.management.v1.AddOrgJWTIDPRequest
+	(authn.KeyType)(0),                                                     // 49: zitadel.authn.v1.KeyType
+	(*timestamppb.Timestamp)(nil),                                          // 50: google.protobuf.Timestamp
+	(*management.AddProjectRequest)(nil),                                   // 51: zitadel.management.v1.AddProjectRequest
+	(*management.AddAPIAppRequest)(nil),                                    // 52: zitadel.management.v1.AddAPIAppRequest
+	(*management.AddOIDCAppRequest)(nil),                                   // 53: zitadel.management.v1.AddOIDCAppRequest
+	(*management.ImportHumanUserRequest)(nil),                              // 54: zitadel.management.v1.ImportHumanUserRequest
+	(*management.AddMachineUserRequest)(nil),                               // 55: zitadel.management.v1.AddMachineUserRequest
+	(*management.CreateActionRequest)(nil),                                 // 56: zitadel.management.v1.CreateActionRequest
+	(*management.AddProjectGrantRequest)(nil),                              // 57: zitadel.management.v1.AddProjectGrantRequest
+	(user.Gender)(0),                                                       // 58: zitadel.user.v1.Gender
 }
 var file_zitadel_v1_proto_depIdxs = []int32{
 	4,  // 0: zitadel.v1.v1.ImportDataOrg.orgs:type_name -> zitadel.v1.v1.DataOrg
@@ -2200,31 +2216,32 @@ var file_zitadel_v1_proto_depIdxs = []int32{
 	45, // 35: zitadel.v1.v1.DataOrg.domains:type_name -> zitadel.org.v1.Domain
 	8,  // 36: zitadel.v1.v1.DataOrg.app_keys:type_name -> zitadel.v1.v1.DataAppKey
 	9,  // 37: zitadel.v1.v1.DataOrg.machine_keys:type_name -> zitadel.v1.v1.DataMachineKey
-	46, // 38: zitadel.v1.v1.DataOIDCIDP.idp:type_name -> zitadel.management.v1.AddOrgOIDCIDPRequest
-	47, // 39: zitadel.v1.v1.DataJWTIDP.idp:type_name -> zitadel.management.v1.AddOrgJWTIDPRequest
-	18, // 40: zitadel.v1.v1.ExportHumanUser.profile:type_name -> zitadel.v1.v1.ExportHumanUser.Profile
-	19, // 41: zitadel.v1.v1.ExportHumanUser.email:type_name -> zitadel.v1.v1.ExportHumanUser.Email
-	20, // 42: zitadel.v1.v1.ExportHumanUser.phone:type_name -> zitadel.v1.v1.ExportHumanUser.Phone
-	21, // 43: zitadel.v1.v1.ExportHumanUser.hashed_password:type_name -> zitadel.v1.v1.ExportHumanUser.HashedPassword
-	48, // 44: zitadel.v1.v1.DataAppKey.type:type_name -> zitadel.authn.v1.KeyType
-	49, // 45: zitadel.v1.v1.DataAppKey.expiration_date:type_name -> google.protobuf.Timestamp
-	48, // 46: zitadel.v1.v1.DataMachineKey.type:type_name -> zitadel.authn.v1.KeyType
-	49, // 47: zitadel.v1.v1.DataMachineKey.expiration_date:type_name -> google.protobuf.Timestamp
-	50, // 48: zitadel.v1.v1.DataProject.project:type_name -> zitadel.management.v1.AddProjectRequest
-	51, // 49: zitadel.v1.v1.DataAPIApplication.app:type_name -> zitadel.management.v1.AddAPIAppRequest
-	52, // 50: zitadel.v1.v1.DataOIDCApplication.app:type_name -> zitadel.management.v1.AddOIDCAppRequest
-	53, // 51: zitadel.v1.v1.DataHumanUser.user:type_name -> zitadel.management.v1.ImportHumanUserRequest
-	54, // 52: zitadel.v1.v1.DataMachineUser.user:type_name -> zitadel.management.v1.AddMachineUserRequest
-	55, // 53: zitadel.v1.v1.DataAction.action:type_name -> zitadel.management.v1.CreateActionRequest
-	56, // 54: zitadel.v1.v1.DataProjectGrant.project_grant:type_name -> zitadel.management.v1.AddProjectGrantRequest
-	0,  // 55: zitadel.v1.v1.SetTriggerActionsRequest.flow_type:type_name -> zitadel.v1.v1.FlowType
-	1,  // 56: zitadel.v1.v1.SetTriggerActionsRequest.trigger_type:type_name -> zitadel.v1.v1.TriggerType
-	57, // 57: zitadel.v1.v1.ExportHumanUser.Profile.gender:type_name -> zitadel.user.v1.Gender
-	58, // [58:58] is the sub-list for method output_type
-	58, // [58:58] is the sub-list for method input_type
-	58, // [58:58] is the sub-list for extension type_name
-	58, // [58:58] is the sub-list for extension extendee
-	0,  // [0:58] is the sub-list for field type_name
+	46, // 38: zitadel.v1.v1.DataOrg.invite_user_messages:type_name -> zitadel.management.v1.SetCustomInviteUserMessageTextRequest
+	47, // 39: zitadel.v1.v1.DataOIDCIDP.idp:type_name -> zitadel.management.v1.AddOrgOIDCIDPRequest
+	48, // 40: zitadel.v1.v1.DataJWTIDP.idp:type_name -> zitadel.management.v1.AddOrgJWTIDPRequest
+	18, // 41: zitadel.v1.v1.ExportHumanUser.profile:type_name -> zitadel.v1.v1.ExportHumanUser.Profile
+	19, // 42: zitadel.v1.v1.ExportHumanUser.email:type_name -> zitadel.v1.v1.ExportHumanUser.Email
+	20, // 43: zitadel.v1.v1.ExportHumanUser.phone:type_name -> zitadel.v1.v1.ExportHumanUser.Phone
+	21, // 44: zitadel.v1.v1.ExportHumanUser.hashed_password:type_name -> zitadel.v1.v1.ExportHumanUser.HashedPassword
+	49, // 45: zitadel.v1.v1.DataAppKey.type:type_name -> zitadel.authn.v1.KeyType
+	50, // 46: zitadel.v1.v1.DataAppKey.expiration_date:type_name -> google.protobuf.Timestamp
+	49, // 47: zitadel.v1.v1.DataMachineKey.type:type_name -> zitadel.authn.v1.KeyType
+	50, // 48: zitadel.v1.v1.DataMachineKey.expiration_date:type_name -> google.protobuf.Timestamp
+	51, // 49: zitadel.v1.v1.DataProject.project:type_name -> zitadel.management.v1.AddProjectRequest
+	52, // 50: zitadel.v1.v1.DataAPIApplication.app:type_name -> zitadel.management.v1.AddAPIAppRequest
+	53, // 51: zitadel.v1.v1.DataOIDCApplication.app:type_name -> zitadel.management.v1.AddOIDCAppRequest
+	54, // 52: zitadel.v1.v1.DataHumanUser.user:type_name -> zitadel.management.v1.ImportHumanUserRequest
+	55, // 53: zitadel.v1.v1.DataMachineUser.user:type_name -> zitadel.management.v1.AddMachineUserRequest
+	56, // 54: zitadel.v1.v1.DataAction.action:type_name -> zitadel.management.v1.CreateActionRequest
+	57, // 55: zitadel.v1.v1.DataProjectGrant.project_grant:type_name -> zitadel.management.v1.AddProjectGrantRequest
+	0,  // 56: zitadel.v1.v1.SetTriggerActionsRequest.flow_type:type_name -> zitadel.v1.v1.FlowType
+	1,  // 57: zitadel.v1.v1.SetTriggerActionsRequest.trigger_type:type_name -> zitadel.v1.v1.TriggerType
+	58, // 58: zitadel.v1.v1.ExportHumanUser.Profile.gender:type_name -> zitadel.user.v1.Gender
+	59, // [59:59] is the sub-list for method output_type
+	59, // [59:59] is the sub-list for method input_type
+	59, // [59:59] is the sub-list for extension type_name
+	59, // [59:59] is the sub-list for extension extendee
+	0,  // [0:59] is the sub-list for field type_name
 }
 
 func init() { file_zitadel_v1_proto_init() }
