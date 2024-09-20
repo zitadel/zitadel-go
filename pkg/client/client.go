@@ -9,10 +9,14 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/admin"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/auth"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
-	oidc_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
-	org "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/org/v2beta"
-	session "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/session/v2beta"
-	settings "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/settings/v2beta"
+	oidcV2_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2"
+	oidcV2Beta_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
+	orgV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/org/v2"
+	orgV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/org/v2beta"
+	sessionV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/session/v2"
+	sessionV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/session/v2beta"
+	settingsV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/settings/v2"
+	settingsV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/settings/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/system"
 	userV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
 	userV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
@@ -45,16 +49,20 @@ func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 type Client struct {
 	connection *grpc.ClientConn
 
-	systemService       system.SystemServiceClient
-	adminService        admin.AdminServiceClient
-	managementService   management.ManagementServiceClient
-	userService         userV2Beta.UserServiceClient
-	userServiceV2       userV2.UserServiceClient
-	authService         auth.AuthServiceClient
-	settingsService     settings.SettingsServiceClient
-	sessionService      session.SessionServiceClient
-	organizationService org.OrganizationServiceClient
-	oidcService         oidc_pb.OIDCServiceClient
+	systemService         system.SystemServiceClient
+	adminService          admin.AdminServiceClient
+	managementService     management.ManagementServiceClient
+	userService           userV2Beta.UserServiceClient
+	userServiceV2         userV2.UserServiceClient
+	authService           auth.AuthServiceClient
+	settingsService       settingsV2Beta.SettingsServiceClient
+	settingsServiceV2     settingsV2.SettingsServiceClient
+	sessionService        sessionV2Beta.SessionServiceClient
+	sessionServiceV2      sessionV2.SessionServiceClient
+	organizationService   orgV2Beta.OrganizationServiceClient
+	organizationServiceV2 orgV2.OrganizationServiceClient
+	oidcService           oidcV2Beta_pb.OIDCServiceClient
+	oidcServiceV2         oidcV2_pb.OIDCServiceClient
 }
 
 func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client, error) {
@@ -144,30 +152,58 @@ func (c *Client) UserServiceV2() userV2.UserServiceClient {
 	return c.userServiceV2
 }
 
-func (c *Client) SettingsService() settings.SettingsServiceClient {
+func (c *Client) SettingsService() settingsV2Beta.SettingsServiceClient {
 	if c.settingsService == nil {
-		c.settingsService = settings.NewSettingsServiceClient(c.connection)
+		c.settingsService = settingsV2Beta.NewSettingsServiceClient(c.connection)
 	}
 	return c.settingsService
 }
 
-func (c *Client) SessionService() session.SessionServiceClient {
+func (c *Client) SettingsServiceV2() settingsV2.SettingsServiceClient {
+	if c.settingsServiceV2 == nil {
+		c.settingsServiceV2 = settingsV2.NewSettingsServiceClient(c.connection)
+	}
+	return c.settingsServiceV2
+}
+
+func (c *Client) SessionService() sessionV2Beta.SessionServiceClient {
 	if c.sessionService == nil {
-		c.sessionService = session.NewSessionServiceClient(c.connection)
+		c.sessionService = sessionV2Beta.NewSessionServiceClient(c.connection)
 	}
 	return c.sessionService
 }
 
-func (c *Client) OIDCService() oidc_pb.OIDCServiceClient {
+func (c *Client) SessionServiceV2() sessionV2.SessionServiceClient {
+	if c.sessionServiceV2 == nil {
+		c.sessionServiceV2 = sessionV2.NewSessionServiceClient(c.connection)
+	}
+	return c.sessionServiceV2
+}
+
+func (c *Client) OIDCService() oidcV2Beta_pb.OIDCServiceClient {
 	if c.oidcService == nil {
-		c.oidcService = oidc_pb.NewOIDCServiceClient(c.connection)
+		c.oidcService = oidcV2Beta_pb.NewOIDCServiceClient(c.connection)
 	}
 	return c.oidcService
 }
 
-func (c *Client) OrganizationService() org.OrganizationServiceClient {
+func (c *Client) OIDCServiceV2() oidcV2_pb.OIDCServiceClient {
+	if c.oidcServiceV2 == nil {
+		c.oidcServiceV2 = oidcV2_pb.NewOIDCServiceClient(c.connection)
+	}
+	return c.oidcServiceV2
+}
+
+func (c *Client) OrganizationService() orgV2Beta.OrganizationServiceClient {
 	if c.organizationService == nil {
-		c.organizationService = org.NewOrganizationServiceClient(c.connection)
+		c.organizationService = orgV2Beta.NewOrganizationServiceClient(c.connection)
 	}
 	return c.organizationService
+}
+
+func (c *Client) OrganizationServiceV2() orgV2.OrganizationServiceClient {
+	if c.organizationServiceV2 == nil {
+		c.organizationServiceV2 = orgV2.NewOrganizationServiceClient(c.connection)
+	}
+	return c.organizationServiceV2
 }
