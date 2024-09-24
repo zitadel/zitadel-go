@@ -43,11 +43,26 @@ const (
 	AdminService_TestSMTPConfigById_FullMethodName                                      = "/zitadel.admin.v1.AdminService/TestSMTPConfigById"
 	AdminService_TestSMTPConfig_FullMethodName                                          = "/zitadel.admin.v1.AdminService/TestSMTPConfig"
 	AdminService_ListSMTPConfigs_FullMethodName                                         = "/zitadel.admin.v1.AdminService/ListSMTPConfigs"
+	AdminService_ListEmailProviders_FullMethodName                                      = "/zitadel.admin.v1.AdminService/ListEmailProviders"
+	AdminService_GetEmailProvider_FullMethodName                                        = "/zitadel.admin.v1.AdminService/GetEmailProvider"
+	AdminService_GetEmailProviderById_FullMethodName                                    = "/zitadel.admin.v1.AdminService/GetEmailProviderById"
+	AdminService_AddEmailProviderSMTP_FullMethodName                                    = "/zitadel.admin.v1.AdminService/AddEmailProviderSMTP"
+	AdminService_UpdateEmailProviderSMTP_FullMethodName                                 = "/zitadel.admin.v1.AdminService/UpdateEmailProviderSMTP"
+	AdminService_AddEmailProviderHTTP_FullMethodName                                    = "/zitadel.admin.v1.AdminService/AddEmailProviderHTTP"
+	AdminService_UpdateEmailProviderHTTP_FullMethodName                                 = "/zitadel.admin.v1.AdminService/UpdateEmailProviderHTTP"
+	AdminService_UpdateEmailProviderSMTPPassword_FullMethodName                         = "/zitadel.admin.v1.AdminService/UpdateEmailProviderSMTPPassword"
+	AdminService_ActivateEmailProvider_FullMethodName                                   = "/zitadel.admin.v1.AdminService/ActivateEmailProvider"
+	AdminService_DeactivateEmailProvider_FullMethodName                                 = "/zitadel.admin.v1.AdminService/DeactivateEmailProvider"
+	AdminService_RemoveEmailProvider_FullMethodName                                     = "/zitadel.admin.v1.AdminService/RemoveEmailProvider"
+	AdminService_TestEmailProviderSMTPById_FullMethodName                               = "/zitadel.admin.v1.AdminService/TestEmailProviderSMTPById"
+	AdminService_TestEmailProviderSMTP_FullMethodName                                   = "/zitadel.admin.v1.AdminService/TestEmailProviderSMTP"
 	AdminService_ListSMSProviders_FullMethodName                                        = "/zitadel.admin.v1.AdminService/ListSMSProviders"
 	AdminService_GetSMSProvider_FullMethodName                                          = "/zitadel.admin.v1.AdminService/GetSMSProvider"
 	AdminService_AddSMSProviderTwilio_FullMethodName                                    = "/zitadel.admin.v1.AdminService/AddSMSProviderTwilio"
 	AdminService_UpdateSMSProviderTwilio_FullMethodName                                 = "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilio"
 	AdminService_UpdateSMSProviderTwilioToken_FullMethodName                            = "/zitadel.admin.v1.AdminService/UpdateSMSProviderTwilioToken"
+	AdminService_AddSMSProviderHTTP_FullMethodName                                      = "/zitadel.admin.v1.AdminService/AddSMSProviderHTTP"
+	AdminService_UpdateSMSProviderHTTP_FullMethodName                                   = "/zitadel.admin.v1.AdminService/UpdateSMSProviderHTTP"
 	AdminService_ActivateSMSProvider_FullMethodName                                     = "/zitadel.admin.v1.AdminService/ActivateSMSProvider"
 	AdminService_DeactivateSMSProvider_FullMethodName                                   = "/zitadel.admin.v1.AdminService/DeactivateSMSProvider"
 	AdminService_RemoveSMSProvider_FullMethodName                                       = "/zitadel.admin.v1.AdminService/RemoveSMSProvider"
@@ -183,6 +198,10 @@ const (
 	AdminService_GetCustomPasswordChangeMessageText_FullMethodName                      = "/zitadel.admin.v1.AdminService/GetCustomPasswordChangeMessageText"
 	AdminService_SetDefaultPasswordChangeMessageText_FullMethodName                     = "/zitadel.admin.v1.AdminService/SetDefaultPasswordChangeMessageText"
 	AdminService_ResetCustomPasswordChangeMessageTextToDefault_FullMethodName           = "/zitadel.admin.v1.AdminService/ResetCustomPasswordChangeMessageTextToDefault"
+	AdminService_GetDefaultInviteUserMessageText_FullMethodName                         = "/zitadel.admin.v1.AdminService/GetDefaultInviteUserMessageText"
+	AdminService_GetCustomInviteUserMessageText_FullMethodName                          = "/zitadel.admin.v1.AdminService/GetCustomInviteUserMessageText"
+	AdminService_SetDefaultInviteUserMessageText_FullMethodName                         = "/zitadel.admin.v1.AdminService/SetDefaultInviteUserMessageText"
+	AdminService_ResetCustomInviteUserMessageTextToDefault_FullMethodName               = "/zitadel.admin.v1.AdminService/ResetCustomInviteUserMessageTextToDefault"
 	AdminService_GetDefaultLoginTexts_FullMethodName                                    = "/zitadel.admin.v1.AdminService/GetDefaultLoginTexts"
 	AdminService_GetCustomLoginTexts_FullMethodName                                     = "/zitadel.admin.v1.AdminService/GetCustomLoginTexts"
 	AdminService_SetCustomLoginText_FullMethodName                                      = "/zitadel.admin.v1.AdminService/SetCustomLoginText"
@@ -223,22 +242,92 @@ type AdminServiceClient interface {
 	ListSecretGenerators(ctx context.Context, in *ListSecretGeneratorsRequest, opts ...grpc.CallOption) (*ListSecretGeneratorsResponse, error)
 	GetSecretGenerator(ctx context.Context, in *GetSecretGeneratorRequest, opts ...grpc.CallOption) (*GetSecretGeneratorResponse, error)
 	UpdateSecretGenerator(ctx context.Context, in *UpdateSecretGeneratorRequest, opts ...grpc.CallOption) (*UpdateSecretGeneratorResponse, error)
+	// Deprecated: Get active SMTP Configuration
+	//
+	// Returns the active SMTP configuration from the system. This is used to send E-Mails to the users.
+	//
+	// Deprecated: please move to the new endpoint GetEmailProvider.
 	GetSMTPConfig(ctx context.Context, in *GetSMTPConfigRequest, opts ...grpc.CallOption) (*GetSMTPConfigResponse, error)
+	// Deprecated: Get SMTP provider configuration by its id
+	//
+	// Get a specific SMTP provider configuration by its ID.
+	//
+	// Deprecated: please move to the new endpoint GetEmailProviderById.
 	GetSMTPConfigById(ctx context.Context, in *GetSMTPConfigByIdRequest, opts ...grpc.CallOption) (*GetSMTPConfigByIdResponse, error)
+	// Deprecated: Add SMTP Configuration
+	//
+	// Add a new SMTP configuration if nothing is set yet.
+	//
+	// Deprecated: please move to the new endpoint AddEmailProviderSMTP.
 	AddSMTPConfig(ctx context.Context, in *AddSMTPConfigRequest, opts ...grpc.CallOption) (*AddSMTPConfigResponse, error)
+	// Deprecated: Update SMTP Configuration
+	//
+	// Update the SMTP configuration, be aware that this will be activated as soon as it is saved. So the users will get notifications from the newly configured SMTP.
+	//
+	// Deprecated: please move to the new endpoint UpdateEmailProviderSMTP.
 	UpdateSMTPConfig(ctx context.Context, in *UpdateSMTPConfigRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigResponse, error)
+	// Deprecated: Update SMTP Password
+	//
+	// Update the SMTP password that is used for the host, be aware that this will be activated as soon as it is saved. So the users will get notifications from the newly configured SMTP.
+	//
+	// Deprecated: please move to the new endpoint UpdateEmailProviderSMTPPassword.
 	UpdateSMTPConfigPassword(ctx context.Context, in *UpdateSMTPConfigPasswordRequest, opts ...grpc.CallOption) (*UpdateSMTPConfigPasswordResponse, error)
+	// Deprecated: Activate SMTP Provider
+	//
+	// Activate an SMTP provider.
+	//
+	// Deprecated: please move to the new endpoint ActivateEmailProvider.
 	ActivateSMTPConfig(ctx context.Context, in *ActivateSMTPConfigRequest, opts ...grpc.CallOption) (*ActivateSMTPConfigResponse, error)
+	// Deprecated: Deactivate SMTP Provider
+	//
+	// Deactivate an SMTP provider. After deactivating the provider, the users will not be able to receive SMTP notifications from that provider anymore.
+	//
+	// Deprecated: please move to the new endpoint DeactivateEmailProvider.
 	DeactivateSMTPConfig(ctx context.Context, in *DeactivateSMTPConfigRequest, opts ...grpc.CallOption) (*DeactivateSMTPConfigResponse, error)
+	// Deprecated: Remove SMTP Configuration
+	//
+	// Remove the SMTP configuration, be aware that the users will not get an E-Mail if no SMTP is set.
+	//
+	// Deprecated: please move to the new endpoint RemoveEmailProvider.
 	RemoveSMTPConfig(ctx context.Context, in *RemoveSMTPConfigRequest, opts ...grpc.CallOption) (*RemoveSMTPConfigResponse, error)
+	// Deprecated: Test SMTP Provider
+	//
+	// Test an SMTP provider identified by its ID. After testing the provider, the users will receive information about the test results.
+	//
+	// Deprecated: please move to the new endpoint TestEmailProviderSMTPById.
 	TestSMTPConfigById(ctx context.Context, in *TestSMTPConfigByIdRequest, opts ...grpc.CallOption) (*TestSMTPConfigByIdResponse, error)
+	// Deprecated: Test SMTP Provider
+	//
+	// Test an SMTP provider. After testing the provider, the users will receive information about the test results.
+	//
+	// Deprecated: please move to the new endpoint TestEmailProviderSMTP.
 	TestSMTPConfig(ctx context.Context, in *TestSMTPConfigRequest, opts ...grpc.CallOption) (*TestSMTPConfigResponse, error)
+	// Deprecated: List SMTP Configs
+	//
+	// Returns a list of SMTP configurations.
+	//
+	// Deprecated: please move to the new endpoint ListEmailProviders.
 	ListSMTPConfigs(ctx context.Context, in *ListSMTPConfigsRequest, opts ...grpc.CallOption) (*ListSMTPConfigsResponse, error)
+	ListEmailProviders(ctx context.Context, in *ListEmailProvidersRequest, opts ...grpc.CallOption) (*ListEmailProvidersResponse, error)
+	GetEmailProvider(ctx context.Context, in *GetEmailProviderRequest, opts ...grpc.CallOption) (*GetEmailProviderResponse, error)
+	GetEmailProviderById(ctx context.Context, in *GetEmailProviderByIdRequest, opts ...grpc.CallOption) (*GetEmailProviderByIdResponse, error)
+	AddEmailProviderSMTP(ctx context.Context, in *AddEmailProviderSMTPRequest, opts ...grpc.CallOption) (*AddEmailProviderSMTPResponse, error)
+	UpdateEmailProviderSMTP(ctx context.Context, in *UpdateEmailProviderSMTPRequest, opts ...grpc.CallOption) (*UpdateEmailProviderSMTPResponse, error)
+	AddEmailProviderHTTP(ctx context.Context, in *AddEmailProviderHTTPRequest, opts ...grpc.CallOption) (*AddEmailProviderHTTPResponse, error)
+	UpdateEmailProviderHTTP(ctx context.Context, in *UpdateEmailProviderHTTPRequest, opts ...grpc.CallOption) (*UpdateEmailProviderHTTPResponse, error)
+	UpdateEmailProviderSMTPPassword(ctx context.Context, in *UpdateEmailProviderSMTPPasswordRequest, opts ...grpc.CallOption) (*UpdateEmailProviderSMTPPasswordResponse, error)
+	ActivateEmailProvider(ctx context.Context, in *ActivateEmailProviderRequest, opts ...grpc.CallOption) (*ActivateEmailProviderResponse, error)
+	DeactivateEmailProvider(ctx context.Context, in *DeactivateEmailProviderRequest, opts ...grpc.CallOption) (*DeactivateEmailProviderResponse, error)
+	RemoveEmailProvider(ctx context.Context, in *RemoveEmailProviderRequest, opts ...grpc.CallOption) (*RemoveEmailProviderResponse, error)
+	TestEmailProviderSMTPById(ctx context.Context, in *TestEmailProviderSMTPByIdRequest, opts ...grpc.CallOption) (*TestEmailProviderSMTPByIdResponse, error)
+	TestEmailProviderSMTP(ctx context.Context, in *TestEmailProviderSMTPRequest, opts ...grpc.CallOption) (*TestEmailProviderSMTPResponse, error)
 	ListSMSProviders(ctx context.Context, in *ListSMSProvidersRequest, opts ...grpc.CallOption) (*ListSMSProvidersResponse, error)
 	GetSMSProvider(ctx context.Context, in *GetSMSProviderRequest, opts ...grpc.CallOption) (*GetSMSProviderResponse, error)
 	AddSMSProviderTwilio(ctx context.Context, in *AddSMSProviderTwilioRequest, opts ...grpc.CallOption) (*AddSMSProviderTwilioResponse, error)
 	UpdateSMSProviderTwilio(ctx context.Context, in *UpdateSMSProviderTwilioRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioResponse, error)
 	UpdateSMSProviderTwilioToken(ctx context.Context, in *UpdateSMSProviderTwilioTokenRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioTokenResponse, error)
+	AddSMSProviderHTTP(ctx context.Context, in *AddSMSProviderHTTPRequest, opts ...grpc.CallOption) (*AddSMSProviderHTTPResponse, error)
+	UpdateSMSProviderHTTP(ctx context.Context, in *UpdateSMSProviderHTTPRequest, opts ...grpc.CallOption) (*UpdateSMSProviderHTTPResponse, error)
 	ActivateSMSProvider(ctx context.Context, in *ActivateSMSProviderRequest, opts ...grpc.CallOption) (*ActivateSMSProviderResponse, error)
 	DeactivateSMSProvider(ctx context.Context, in *DeactivateSMSProviderRequest, opts ...grpc.CallOption) (*DeactivateSMSProviderResponse, error)
 	RemoveSMSProvider(ctx context.Context, in *RemoveSMSProviderRequest, opts ...grpc.CallOption) (*RemoveSMSProviderResponse, error)
@@ -405,6 +494,10 @@ type AdminServiceClient interface {
 	GetCustomPasswordChangeMessageText(ctx context.Context, in *GetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetCustomPasswordChangeMessageTextResponse, error)
 	SetDefaultPasswordChangeMessageText(ctx context.Context, in *SetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultPasswordChangeMessageTextResponse, error)
 	ResetCustomPasswordChangeMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordChangeMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
+	GetDefaultInviteUserMessageText(ctx context.Context, in *GetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInviteUserMessageTextResponse, error)
+	GetCustomInviteUserMessageText(ctx context.Context, in *GetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInviteUserMessageTextResponse, error)
+	SetDefaultInviteUserMessageText(ctx context.Context, in *SetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultInviteUserMessageTextResponse, error)
+	ResetCustomInviteUserMessageTextToDefault(ctx context.Context, in *ResetCustomInviteUserMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInviteUserMessageTextToDefaultResponse, error)
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
 	GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error)
 	SetCustomLoginText(ctx context.Context, in *SetCustomLoginTextsRequest, opts ...grpc.CallOption) (*SetCustomLoginTextsResponse, error)
@@ -660,6 +753,123 @@ func (c *adminServiceClient) ListSMTPConfigs(ctx context.Context, in *ListSMTPCo
 	return out, nil
 }
 
+func (c *adminServiceClient) ListEmailProviders(ctx context.Context, in *ListEmailProvidersRequest, opts ...grpc.CallOption) (*ListEmailProvidersResponse, error) {
+	out := new(ListEmailProvidersResponse)
+	err := c.cc.Invoke(ctx, AdminService_ListEmailProviders_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetEmailProvider(ctx context.Context, in *GetEmailProviderRequest, opts ...grpc.CallOption) (*GetEmailProviderResponse, error) {
+	out := new(GetEmailProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_GetEmailProvider_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetEmailProviderById(ctx context.Context, in *GetEmailProviderByIdRequest, opts ...grpc.CallOption) (*GetEmailProviderByIdResponse, error) {
+	out := new(GetEmailProviderByIdResponse)
+	err := c.cc.Invoke(ctx, AdminService_GetEmailProviderById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddEmailProviderSMTP(ctx context.Context, in *AddEmailProviderSMTPRequest, opts ...grpc.CallOption) (*AddEmailProviderSMTPResponse, error) {
+	out := new(AddEmailProviderSMTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_AddEmailProviderSMTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateEmailProviderSMTP(ctx context.Context, in *UpdateEmailProviderSMTPRequest, opts ...grpc.CallOption) (*UpdateEmailProviderSMTPResponse, error) {
+	out := new(UpdateEmailProviderSMTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateEmailProviderSMTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddEmailProviderHTTP(ctx context.Context, in *AddEmailProviderHTTPRequest, opts ...grpc.CallOption) (*AddEmailProviderHTTPResponse, error) {
+	out := new(AddEmailProviderHTTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_AddEmailProviderHTTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateEmailProviderHTTP(ctx context.Context, in *UpdateEmailProviderHTTPRequest, opts ...grpc.CallOption) (*UpdateEmailProviderHTTPResponse, error) {
+	out := new(UpdateEmailProviderHTTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateEmailProviderHTTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateEmailProviderSMTPPassword(ctx context.Context, in *UpdateEmailProviderSMTPPasswordRequest, opts ...grpc.CallOption) (*UpdateEmailProviderSMTPPasswordResponse, error) {
+	out := new(UpdateEmailProviderSMTPPasswordResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateEmailProviderSMTPPassword_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ActivateEmailProvider(ctx context.Context, in *ActivateEmailProviderRequest, opts ...grpc.CallOption) (*ActivateEmailProviderResponse, error) {
+	out := new(ActivateEmailProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_ActivateEmailProvider_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeactivateEmailProvider(ctx context.Context, in *DeactivateEmailProviderRequest, opts ...grpc.CallOption) (*DeactivateEmailProviderResponse, error) {
+	out := new(DeactivateEmailProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_DeactivateEmailProvider_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) RemoveEmailProvider(ctx context.Context, in *RemoveEmailProviderRequest, opts ...grpc.CallOption) (*RemoveEmailProviderResponse, error) {
+	out := new(RemoveEmailProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_RemoveEmailProvider_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) TestEmailProviderSMTPById(ctx context.Context, in *TestEmailProviderSMTPByIdRequest, opts ...grpc.CallOption) (*TestEmailProviderSMTPByIdResponse, error) {
+	out := new(TestEmailProviderSMTPByIdResponse)
+	err := c.cc.Invoke(ctx, AdminService_TestEmailProviderSMTPById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) TestEmailProviderSMTP(ctx context.Context, in *TestEmailProviderSMTPRequest, opts ...grpc.CallOption) (*TestEmailProviderSMTPResponse, error) {
+	out := new(TestEmailProviderSMTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_TestEmailProviderSMTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) ListSMSProviders(ctx context.Context, in *ListSMSProvidersRequest, opts ...grpc.CallOption) (*ListSMSProvidersResponse, error) {
 	out := new(ListSMSProvidersResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListSMSProviders_FullMethodName, in, out, opts...)
@@ -699,6 +909,24 @@ func (c *adminServiceClient) UpdateSMSProviderTwilio(ctx context.Context, in *Up
 func (c *adminServiceClient) UpdateSMSProviderTwilioToken(ctx context.Context, in *UpdateSMSProviderTwilioTokenRequest, opts ...grpc.CallOption) (*UpdateSMSProviderTwilioTokenResponse, error) {
 	out := new(UpdateSMSProviderTwilioTokenResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateSMSProviderTwilioToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddSMSProviderHTTP(ctx context.Context, in *AddSMSProviderHTTPRequest, opts ...grpc.CallOption) (*AddSMSProviderHTTPResponse, error) {
+	out := new(AddSMSProviderHTTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_AddSMSProviderHTTP_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateSMSProviderHTTP(ctx context.Context, in *UpdateSMSProviderHTTPRequest, opts ...grpc.CallOption) (*UpdateSMSProviderHTTPResponse, error) {
+	out := new(UpdateSMSProviderHTTPResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateSMSProviderHTTP_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1920,6 +2148,42 @@ func (c *adminServiceClient) ResetCustomPasswordChangeMessageTextToDefault(ctx c
 	return out, nil
 }
 
+func (c *adminServiceClient) GetDefaultInviteUserMessageText(ctx context.Context, in *GetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInviteUserMessageTextResponse, error) {
+	out := new(GetDefaultInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, AdminService_GetDefaultInviteUserMessageText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCustomInviteUserMessageText(ctx context.Context, in *GetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInviteUserMessageTextResponse, error) {
+	out := new(GetCustomInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, AdminService_GetCustomInviteUserMessageText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SetDefaultInviteUserMessageText(ctx context.Context, in *SetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*SetDefaultInviteUserMessageTextResponse, error) {
+	out := new(SetDefaultInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, AdminService_SetDefaultInviteUserMessageText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResetCustomInviteUserMessageTextToDefault(ctx context.Context, in *ResetCustomInviteUserMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInviteUserMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomInviteUserMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, AdminService_ResetCustomInviteUserMessageTextToDefault_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error) {
 	out := new(GetDefaultLoginTextsResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetDefaultLoginTexts_FullMethodName, in, out, opts...)
@@ -2126,22 +2390,92 @@ type AdminServiceServer interface {
 	ListSecretGenerators(context.Context, *ListSecretGeneratorsRequest) (*ListSecretGeneratorsResponse, error)
 	GetSecretGenerator(context.Context, *GetSecretGeneratorRequest) (*GetSecretGeneratorResponse, error)
 	UpdateSecretGenerator(context.Context, *UpdateSecretGeneratorRequest) (*UpdateSecretGeneratorResponse, error)
+	// Deprecated: Get active SMTP Configuration
+	//
+	// Returns the active SMTP configuration from the system. This is used to send E-Mails to the users.
+	//
+	// Deprecated: please move to the new endpoint GetEmailProvider.
 	GetSMTPConfig(context.Context, *GetSMTPConfigRequest) (*GetSMTPConfigResponse, error)
+	// Deprecated: Get SMTP provider configuration by its id
+	//
+	// Get a specific SMTP provider configuration by its ID.
+	//
+	// Deprecated: please move to the new endpoint GetEmailProviderById.
 	GetSMTPConfigById(context.Context, *GetSMTPConfigByIdRequest) (*GetSMTPConfigByIdResponse, error)
+	// Deprecated: Add SMTP Configuration
+	//
+	// Add a new SMTP configuration if nothing is set yet.
+	//
+	// Deprecated: please move to the new endpoint AddEmailProviderSMTP.
 	AddSMTPConfig(context.Context, *AddSMTPConfigRequest) (*AddSMTPConfigResponse, error)
+	// Deprecated: Update SMTP Configuration
+	//
+	// Update the SMTP configuration, be aware that this will be activated as soon as it is saved. So the users will get notifications from the newly configured SMTP.
+	//
+	// Deprecated: please move to the new endpoint UpdateEmailProviderSMTP.
 	UpdateSMTPConfig(context.Context, *UpdateSMTPConfigRequest) (*UpdateSMTPConfigResponse, error)
+	// Deprecated: Update SMTP Password
+	//
+	// Update the SMTP password that is used for the host, be aware that this will be activated as soon as it is saved. So the users will get notifications from the newly configured SMTP.
+	//
+	// Deprecated: please move to the new endpoint UpdateEmailProviderSMTPPassword.
 	UpdateSMTPConfigPassword(context.Context, *UpdateSMTPConfigPasswordRequest) (*UpdateSMTPConfigPasswordResponse, error)
+	// Deprecated: Activate SMTP Provider
+	//
+	// Activate an SMTP provider.
+	//
+	// Deprecated: please move to the new endpoint ActivateEmailProvider.
 	ActivateSMTPConfig(context.Context, *ActivateSMTPConfigRequest) (*ActivateSMTPConfigResponse, error)
+	// Deprecated: Deactivate SMTP Provider
+	//
+	// Deactivate an SMTP provider. After deactivating the provider, the users will not be able to receive SMTP notifications from that provider anymore.
+	//
+	// Deprecated: please move to the new endpoint DeactivateEmailProvider.
 	DeactivateSMTPConfig(context.Context, *DeactivateSMTPConfigRequest) (*DeactivateSMTPConfigResponse, error)
+	// Deprecated: Remove SMTP Configuration
+	//
+	// Remove the SMTP configuration, be aware that the users will not get an E-Mail if no SMTP is set.
+	//
+	// Deprecated: please move to the new endpoint RemoveEmailProvider.
 	RemoveSMTPConfig(context.Context, *RemoveSMTPConfigRequest) (*RemoveSMTPConfigResponse, error)
+	// Deprecated: Test SMTP Provider
+	//
+	// Test an SMTP provider identified by its ID. After testing the provider, the users will receive information about the test results.
+	//
+	// Deprecated: please move to the new endpoint TestEmailProviderSMTPById.
 	TestSMTPConfigById(context.Context, *TestSMTPConfigByIdRequest) (*TestSMTPConfigByIdResponse, error)
+	// Deprecated: Test SMTP Provider
+	//
+	// Test an SMTP provider. After testing the provider, the users will receive information about the test results.
+	//
+	// Deprecated: please move to the new endpoint TestEmailProviderSMTP.
 	TestSMTPConfig(context.Context, *TestSMTPConfigRequest) (*TestSMTPConfigResponse, error)
+	// Deprecated: List SMTP Configs
+	//
+	// Returns a list of SMTP configurations.
+	//
+	// Deprecated: please move to the new endpoint ListEmailProviders.
 	ListSMTPConfigs(context.Context, *ListSMTPConfigsRequest) (*ListSMTPConfigsResponse, error)
+	ListEmailProviders(context.Context, *ListEmailProvidersRequest) (*ListEmailProvidersResponse, error)
+	GetEmailProvider(context.Context, *GetEmailProviderRequest) (*GetEmailProviderResponse, error)
+	GetEmailProviderById(context.Context, *GetEmailProviderByIdRequest) (*GetEmailProviderByIdResponse, error)
+	AddEmailProviderSMTP(context.Context, *AddEmailProviderSMTPRequest) (*AddEmailProviderSMTPResponse, error)
+	UpdateEmailProviderSMTP(context.Context, *UpdateEmailProviderSMTPRequest) (*UpdateEmailProviderSMTPResponse, error)
+	AddEmailProviderHTTP(context.Context, *AddEmailProviderHTTPRequest) (*AddEmailProviderHTTPResponse, error)
+	UpdateEmailProviderHTTP(context.Context, *UpdateEmailProviderHTTPRequest) (*UpdateEmailProviderHTTPResponse, error)
+	UpdateEmailProviderSMTPPassword(context.Context, *UpdateEmailProviderSMTPPasswordRequest) (*UpdateEmailProviderSMTPPasswordResponse, error)
+	ActivateEmailProvider(context.Context, *ActivateEmailProviderRequest) (*ActivateEmailProviderResponse, error)
+	DeactivateEmailProvider(context.Context, *DeactivateEmailProviderRequest) (*DeactivateEmailProviderResponse, error)
+	RemoveEmailProvider(context.Context, *RemoveEmailProviderRequest) (*RemoveEmailProviderResponse, error)
+	TestEmailProviderSMTPById(context.Context, *TestEmailProviderSMTPByIdRequest) (*TestEmailProviderSMTPByIdResponse, error)
+	TestEmailProviderSMTP(context.Context, *TestEmailProviderSMTPRequest) (*TestEmailProviderSMTPResponse, error)
 	ListSMSProviders(context.Context, *ListSMSProvidersRequest) (*ListSMSProvidersResponse, error)
 	GetSMSProvider(context.Context, *GetSMSProviderRequest) (*GetSMSProviderResponse, error)
 	AddSMSProviderTwilio(context.Context, *AddSMSProviderTwilioRequest) (*AddSMSProviderTwilioResponse, error)
 	UpdateSMSProviderTwilio(context.Context, *UpdateSMSProviderTwilioRequest) (*UpdateSMSProviderTwilioResponse, error)
 	UpdateSMSProviderTwilioToken(context.Context, *UpdateSMSProviderTwilioTokenRequest) (*UpdateSMSProviderTwilioTokenResponse, error)
+	AddSMSProviderHTTP(context.Context, *AddSMSProviderHTTPRequest) (*AddSMSProviderHTTPResponse, error)
+	UpdateSMSProviderHTTP(context.Context, *UpdateSMSProviderHTTPRequest) (*UpdateSMSProviderHTTPResponse, error)
 	ActivateSMSProvider(context.Context, *ActivateSMSProviderRequest) (*ActivateSMSProviderResponse, error)
 	DeactivateSMSProvider(context.Context, *DeactivateSMSProviderRequest) (*DeactivateSMSProviderResponse, error)
 	RemoveSMSProvider(context.Context, *RemoveSMSProviderRequest) (*RemoveSMSProviderResponse, error)
@@ -2308,6 +2642,10 @@ type AdminServiceServer interface {
 	GetCustomPasswordChangeMessageText(context.Context, *GetCustomPasswordChangeMessageTextRequest) (*GetCustomPasswordChangeMessageTextResponse, error)
 	SetDefaultPasswordChangeMessageText(context.Context, *SetDefaultPasswordChangeMessageTextRequest) (*SetDefaultPasswordChangeMessageTextResponse, error)
 	ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
+	GetDefaultInviteUserMessageText(context.Context, *GetDefaultInviteUserMessageTextRequest) (*GetDefaultInviteUserMessageTextResponse, error)
+	GetCustomInviteUserMessageText(context.Context, *GetCustomInviteUserMessageTextRequest) (*GetCustomInviteUserMessageTextResponse, error)
+	SetDefaultInviteUserMessageText(context.Context, *SetDefaultInviteUserMessageTextRequest) (*SetDefaultInviteUserMessageTextResponse, error)
+	ResetCustomInviteUserMessageTextToDefault(context.Context, *ResetCustomInviteUserMessageTextToDefaultRequest) (*ResetCustomInviteUserMessageTextToDefaultResponse, error)
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
 	GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error)
 	SetCustomLoginText(context.Context, *SetCustomLoginTextsRequest) (*SetCustomLoginTextsResponse, error)
@@ -2416,6 +2754,45 @@ func (UnimplementedAdminServiceServer) TestSMTPConfig(context.Context, *TestSMTP
 func (UnimplementedAdminServiceServer) ListSMTPConfigs(context.Context, *ListSMTPConfigsRequest) (*ListSMTPConfigsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSMTPConfigs not implemented")
 }
+func (UnimplementedAdminServiceServer) ListEmailProviders(context.Context, *ListEmailProvidersRequest) (*ListEmailProvidersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEmailProviders not implemented")
+}
+func (UnimplementedAdminServiceServer) GetEmailProvider(context.Context, *GetEmailProviderRequest) (*GetEmailProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmailProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) GetEmailProviderById(context.Context, *GetEmailProviderByIdRequest) (*GetEmailProviderByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmailProviderById not implemented")
+}
+func (UnimplementedAdminServiceServer) AddEmailProviderSMTP(context.Context, *AddEmailProviderSMTPRequest) (*AddEmailProviderSMTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEmailProviderSMTP not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateEmailProviderSMTP(context.Context, *UpdateEmailProviderSMTPRequest) (*UpdateEmailProviderSMTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEmailProviderSMTP not implemented")
+}
+func (UnimplementedAdminServiceServer) AddEmailProviderHTTP(context.Context, *AddEmailProviderHTTPRequest) (*AddEmailProviderHTTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEmailProviderHTTP not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateEmailProviderHTTP(context.Context, *UpdateEmailProviderHTTPRequest) (*UpdateEmailProviderHTTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEmailProviderHTTP not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateEmailProviderSMTPPassword(context.Context, *UpdateEmailProviderSMTPPasswordRequest) (*UpdateEmailProviderSMTPPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEmailProviderSMTPPassword not implemented")
+}
+func (UnimplementedAdminServiceServer) ActivateEmailProvider(context.Context, *ActivateEmailProviderRequest) (*ActivateEmailProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateEmailProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) DeactivateEmailProvider(context.Context, *DeactivateEmailProviderRequest) (*DeactivateEmailProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivateEmailProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) RemoveEmailProvider(context.Context, *RemoveEmailProviderRequest) (*RemoveEmailProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveEmailProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) TestEmailProviderSMTPById(context.Context, *TestEmailProviderSMTPByIdRequest) (*TestEmailProviderSMTPByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestEmailProviderSMTPById not implemented")
+}
+func (UnimplementedAdminServiceServer) TestEmailProviderSMTP(context.Context, *TestEmailProviderSMTPRequest) (*TestEmailProviderSMTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestEmailProviderSMTP not implemented")
+}
 func (UnimplementedAdminServiceServer) ListSMSProviders(context.Context, *ListSMSProvidersRequest) (*ListSMSProvidersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSMSProviders not implemented")
 }
@@ -2430,6 +2807,12 @@ func (UnimplementedAdminServiceServer) UpdateSMSProviderTwilio(context.Context, 
 }
 func (UnimplementedAdminServiceServer) UpdateSMSProviderTwilioToken(context.Context, *UpdateSMSProviderTwilioTokenRequest) (*UpdateSMSProviderTwilioTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMSProviderTwilioToken not implemented")
+}
+func (UnimplementedAdminServiceServer) AddSMSProviderHTTP(context.Context, *AddSMSProviderHTTPRequest) (*AddSMSProviderHTTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSMSProviderHTTP not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateSMSProviderHTTP(context.Context, *UpdateSMSProviderHTTPRequest) (*UpdateSMSProviderHTTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSMSProviderHTTP not implemented")
 }
 func (UnimplementedAdminServiceServer) ActivateSMSProvider(context.Context, *ActivateSMSProviderRequest) (*ActivateSMSProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateSMSProvider not implemented")
@@ -2835,6 +3218,18 @@ func (UnimplementedAdminServiceServer) SetDefaultPasswordChangeMessageText(conte
 }
 func (UnimplementedAdminServiceServer) ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomPasswordChangeMessageTextToDefault not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDefaultInviteUserMessageText(context.Context, *GetDefaultInviteUserMessageTextRequest) (*GetDefaultInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultInviteUserMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCustomInviteUserMessageText(context.Context, *GetCustomInviteUserMessageTextRequest) (*GetCustomInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomInviteUserMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) SetDefaultInviteUserMessageText(context.Context, *SetDefaultInviteUserMessageTextRequest) (*SetDefaultInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetDefaultInviteUserMessageText not implemented")
+}
+func (UnimplementedAdminServiceServer) ResetCustomInviteUserMessageTextToDefault(context.Context, *ResetCustomInviteUserMessageTextToDefaultRequest) (*ResetCustomInviteUserMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomInviteUserMessageTextToDefault not implemented")
 }
 func (UnimplementedAdminServiceServer) GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultLoginTexts not implemented")
@@ -3344,6 +3739,240 @@ func _AdminService_ListSMTPConfigs_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_ListEmailProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEmailProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListEmailProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListEmailProviders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListEmailProviders(ctx, req.(*ListEmailProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetEmailProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetEmailProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetEmailProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetEmailProvider(ctx, req.(*GetEmailProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetEmailProviderById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailProviderByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetEmailProviderById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetEmailProviderById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetEmailProviderById(ctx, req.(*GetEmailProviderByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddEmailProviderSMTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEmailProviderSMTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddEmailProviderSMTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddEmailProviderSMTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddEmailProviderSMTP(ctx, req.(*AddEmailProviderSMTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateEmailProviderSMTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEmailProviderSMTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateEmailProviderSMTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateEmailProviderSMTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateEmailProviderSMTP(ctx, req.(*UpdateEmailProviderSMTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddEmailProviderHTTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEmailProviderHTTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddEmailProviderHTTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddEmailProviderHTTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddEmailProviderHTTP(ctx, req.(*AddEmailProviderHTTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateEmailProviderHTTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEmailProviderHTTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateEmailProviderHTTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateEmailProviderHTTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateEmailProviderHTTP(ctx, req.(*UpdateEmailProviderHTTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateEmailProviderSMTPPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEmailProviderSMTPPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateEmailProviderSMTPPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateEmailProviderSMTPPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateEmailProviderSMTPPassword(ctx, req.(*UpdateEmailProviderSMTPPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ActivateEmailProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateEmailProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ActivateEmailProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ActivateEmailProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ActivateEmailProvider(ctx, req.(*ActivateEmailProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeactivateEmailProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivateEmailProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeactivateEmailProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeactivateEmailProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeactivateEmailProvider(ctx, req.(*DeactivateEmailProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_RemoveEmailProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveEmailProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RemoveEmailProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_RemoveEmailProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RemoveEmailProvider(ctx, req.(*RemoveEmailProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_TestEmailProviderSMTPById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestEmailProviderSMTPByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).TestEmailProviderSMTPById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_TestEmailProviderSMTPById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).TestEmailProviderSMTPById(ctx, req.(*TestEmailProviderSMTPByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_TestEmailProviderSMTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestEmailProviderSMTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).TestEmailProviderSMTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_TestEmailProviderSMTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).TestEmailProviderSMTP(ctx, req.(*TestEmailProviderSMTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_ListSMSProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListSMSProvidersRequest)
 	if err := dec(in); err != nil {
@@ -3430,6 +4059,42 @@ func _AdminService_UpdateSMSProviderTwilioToken_Handler(srv interface{}, ctx con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).UpdateSMSProviderTwilioToken(ctx, req.(*UpdateSMSProviderTwilioTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddSMSProviderHTTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSMSProviderHTTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddSMSProviderHTTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddSMSProviderHTTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddSMSProviderHTTP(ctx, req.(*AddSMSProviderHTTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateSMSProviderHTTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSMSProviderHTTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateSMSProviderHTTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateSMSProviderHTTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateSMSProviderHTTP(ctx, req.(*UpdateSMSProviderHTTPRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5864,6 +6529,78 @@ func _AdminService_ResetCustomPasswordChangeMessageTextToDefault_Handler(srv int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_GetDefaultInviteUserMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDefaultInviteUserMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetDefaultInviteUserMessageText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDefaultInviteUserMessageText(ctx, req.(*GetDefaultInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCustomInviteUserMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCustomInviteUserMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetCustomInviteUserMessageText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCustomInviteUserMessageText(ctx, req.(*GetCustomInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SetDefaultInviteUserMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SetDefaultInviteUserMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_SetDefaultInviteUserMessageText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SetDefaultInviteUserMessageText(ctx, req.(*SetDefaultInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResetCustomInviteUserMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomInviteUserMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResetCustomInviteUserMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ResetCustomInviteUserMessageTextToDefault_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResetCustomInviteUserMessageTextToDefault(ctx, req.(*ResetCustomInviteUserMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetDefaultLoginTexts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDefaultLoginTextsRequest)
 	if err := dec(in); err != nil {
@@ -6346,6 +7083,58 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_ListSMTPConfigs_Handler,
 		},
 		{
+			MethodName: "ListEmailProviders",
+			Handler:    _AdminService_ListEmailProviders_Handler,
+		},
+		{
+			MethodName: "GetEmailProvider",
+			Handler:    _AdminService_GetEmailProvider_Handler,
+		},
+		{
+			MethodName: "GetEmailProviderById",
+			Handler:    _AdminService_GetEmailProviderById_Handler,
+		},
+		{
+			MethodName: "AddEmailProviderSMTP",
+			Handler:    _AdminService_AddEmailProviderSMTP_Handler,
+		},
+		{
+			MethodName: "UpdateEmailProviderSMTP",
+			Handler:    _AdminService_UpdateEmailProviderSMTP_Handler,
+		},
+		{
+			MethodName: "AddEmailProviderHTTP",
+			Handler:    _AdminService_AddEmailProviderHTTP_Handler,
+		},
+		{
+			MethodName: "UpdateEmailProviderHTTP",
+			Handler:    _AdminService_UpdateEmailProviderHTTP_Handler,
+		},
+		{
+			MethodName: "UpdateEmailProviderSMTPPassword",
+			Handler:    _AdminService_UpdateEmailProviderSMTPPassword_Handler,
+		},
+		{
+			MethodName: "ActivateEmailProvider",
+			Handler:    _AdminService_ActivateEmailProvider_Handler,
+		},
+		{
+			MethodName: "DeactivateEmailProvider",
+			Handler:    _AdminService_DeactivateEmailProvider_Handler,
+		},
+		{
+			MethodName: "RemoveEmailProvider",
+			Handler:    _AdminService_RemoveEmailProvider_Handler,
+		},
+		{
+			MethodName: "TestEmailProviderSMTPById",
+			Handler:    _AdminService_TestEmailProviderSMTPById_Handler,
+		},
+		{
+			MethodName: "TestEmailProviderSMTP",
+			Handler:    _AdminService_TestEmailProviderSMTP_Handler,
+		},
+		{
 			MethodName: "ListSMSProviders",
 			Handler:    _AdminService_ListSMSProviders_Handler,
 		},
@@ -6364,6 +7153,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateSMSProviderTwilioToken",
 			Handler:    _AdminService_UpdateSMSProviderTwilioToken_Handler,
+		},
+		{
+			MethodName: "AddSMSProviderHTTP",
+			Handler:    _AdminService_AddSMSProviderHTTP_Handler,
+		},
+		{
+			MethodName: "UpdateSMSProviderHTTP",
+			Handler:    _AdminService_UpdateSMSProviderHTTP_Handler,
 		},
 		{
 			MethodName: "ActivateSMSProvider",
@@ -6904,6 +7701,22 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetCustomPasswordChangeMessageTextToDefault",
 			Handler:    _AdminService_ResetCustomPasswordChangeMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetDefaultInviteUserMessageText",
+			Handler:    _AdminService_GetDefaultInviteUserMessageText_Handler,
+		},
+		{
+			MethodName: "GetCustomInviteUserMessageText",
+			Handler:    _AdminService_GetCustomInviteUserMessageText_Handler,
+		},
+		{
+			MethodName: "SetDefaultInviteUserMessageText",
+			Handler:    _AdminService_SetDefaultInviteUserMessageText_Handler,
+		},
+		{
+			MethodName: "ResetCustomInviteUserMessageTextToDefault",
+			Handler:    _AdminService_ResetCustomInviteUserMessageTextToDefault_Handler,
 		},
 		{
 			MethodName: "GetDefaultLoginTexts",
