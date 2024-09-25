@@ -75,6 +75,8 @@ protoc \
     --go_opt=Mzitadel/session/v2/session.proto=${ZITADEL_IMPORT}/session/v2 \
     --go_opt=Mzitadel/oidc/v2/authorization.proto=${ZITADEL_IMPORT}/oidc/v2 \
     --go_opt=Mzitadel/oidc/v2/oidc_service.proto=${ZITADEL_IMPORT}/oidc/v2 \
+    --go_opt=Mzitadel/org/v2/org.proto=${ZITADEL_IMPORT}/org/v2 \
+    --go_opt=Mzitadel/org/v2/query.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/org/v2/org_service.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/settings/v2/branding_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/domain_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
