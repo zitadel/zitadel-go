@@ -11,7 +11,7 @@ import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/object/v2"
 	_ "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/protoc/v2"
-	v22 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
+	v21 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -202,7 +202,7 @@ func (x *ListOrganizationsRequest) GetSortingColumn() OrganizationFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return OrganizationFieldName(0)
+	return OrganizationFieldName_ORGANIZATION_FIELD_NAME_UNSPECIFIED
 }
 
 func (x *ListOrganizationsRequest) GetQueries() []*SearchQuery {
@@ -217,7 +217,7 @@ type ListOrganizationsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Details       *v2.ListDetails           `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
+	Details       *v2.ListDetails       `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
 	SortingColumn OrganizationFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v2.OrganizationFieldName" json:"sorting_column,omitempty"`
 	Result        []*Organization       `protobuf:"bytes,3,rep,name=result,proto3" json:"result,omitempty"`
 }
@@ -265,7 +265,7 @@ func (x *ListOrganizationsResponse) GetSortingColumn() OrganizationFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return OrganizationFieldName(0)
+	return OrganizationFieldName_ORGANIZATION_FIELD_NAME_UNSPECIFIED
 }
 
 func (x *ListOrganizationsResponse) GetResult() []*Organization {
@@ -335,7 +335,7 @@ func (x *AddOrganizationRequest_Admin) GetUserId() string {
 	return ""
 }
 
-func (x *AddOrganizationRequest_Admin) GetHuman() *v22.AddHumanUserRequest {
+func (x *AddOrganizationRequest_Admin) GetHuman() *v21.AddHumanUserRequest {
 	if x, ok := x.GetUserType().(*AddOrganizationRequest_Admin_Human); ok {
 		return x.Human
 	}
@@ -358,7 +358,7 @@ type AddOrganizationRequest_Admin_UserId struct {
 }
 
 type AddOrganizationRequest_Admin_Human struct {
-	Human *v22.AddHumanUserRequest `protobuf:"bytes,2,opt,name=human,proto3,oneof"`
+	Human *v21.AddHumanUserRequest `protobuf:"bytes,2,opt,name=human,proto3,oneof"`
 }
 
 func (*AddOrganizationRequest_Admin_UserId) isAddOrganizationRequest_Admin_UserType() {}
@@ -649,11 +649,11 @@ var file_zitadel_org_v2_org_service_proto_goTypes = []interface{}{
 	(*AddOrganizationResponse_CreatedAdmin)(nil), // 5: zitadel.org.v2.AddOrganizationResponse.CreatedAdmin
 	(*v2.Details)(nil),                           // 6: zitadel.object.v2.Details
 	(*v2.ListQuery)(nil),                         // 7: zitadel.object.v2.ListQuery
-	(OrganizationFieldName)(0),               // 8: zitadel.org.v2.OrganizationFieldName
-	(*SearchQuery)(nil),                      // 9: zitadel.org.v2.SearchQuery
+	(OrganizationFieldName)(0),                   // 8: zitadel.org.v2.OrganizationFieldName
+	(*SearchQuery)(nil),                          // 9: zitadel.org.v2.SearchQuery
 	(*v2.ListDetails)(nil),                       // 10: zitadel.object.v2.ListDetails
-	(*Organization)(nil),                     // 11: zitadel.org.v2.Organization
-	(*v22.AddHumanUserRequest)(nil),              // 12: zitadel.user.v2.AddHumanUserRequest
+	(*Organization)(nil),                         // 11: zitadel.org.v2.Organization
+	(*v21.AddHumanUserRequest)(nil),              // 12: zitadel.user.v2.AddHumanUserRequest
 }
 var file_zitadel_org_v2_org_service_proto_depIdxs = []int32{
 	4,  // 0: zitadel.org.v2.AddOrganizationRequest.admins:type_name -> zitadel.org.v2.AddOrganizationRequest.Admin
@@ -682,6 +682,8 @@ func file_zitadel_org_v2_org_service_proto_init() {
 	if File_zitadel_org_v2_org_service_proto != nil {
 		return
 	}
+	file_zitadel_org_v2_org_proto_init()
+	file_zitadel_org_v2_query_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_zitadel_org_v2_org_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddOrganizationRequest); i {
