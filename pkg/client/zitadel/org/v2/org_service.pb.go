@@ -12,6 +12,7 @@ import (
 	v2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/object/v2"
 	_ "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/protoc/v2"
 	v22 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
+	v21 "github.com/zitadel/zitadel/pkg/grpc/org/v2"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -154,9 +155,9 @@ type ListOrganizationsRequest struct {
 	// list limitations and ordering
 	Query *v2.ListQuery `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	// the field the result is sorted
-	SortingColumn OrganizationFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v2.OrganizationFieldName" json:"sorting_column,omitempty"`
+	SortingColumn v21.OrganizationFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v2.OrganizationFieldName" json:"sorting_column,omitempty"`
 	// criteria the client is looking for
-	Queries []*SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
+	Queries []*v21.SearchQuery `protobuf:"bytes,3,rep,name=queries,proto3" json:"queries,omitempty"`
 }
 
 func (x *ListOrganizationsRequest) Reset() {
@@ -198,14 +199,14 @@ func (x *ListOrganizationsRequest) GetQuery() *v2.ListQuery {
 	return nil
 }
 
-func (x *ListOrganizationsRequest) GetSortingColumn() OrganizationFieldName {
+func (x *ListOrganizationsRequest) GetSortingColumn() v21.OrganizationFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return OrganizationFieldName(0)
+	return v21.OrganizationFieldName(0)
 }
 
-func (x *ListOrganizationsRequest) GetQueries() []*SearchQuery {
+func (x *ListOrganizationsRequest) GetQueries() []*v21.SearchQuery {
 	if x != nil {
 		return x.Queries
 	}
@@ -218,8 +219,8 @@ type ListOrganizationsResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Details       *v2.ListDetails           `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
-	SortingColumn OrganizationFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v2.OrganizationFieldName" json:"sorting_column,omitempty"`
-	Result        []*Organization       `protobuf:"bytes,3,rep,name=result,proto3" json:"result,omitempty"`
+	SortingColumn v21.OrganizationFieldName `protobuf:"varint,2,opt,name=sorting_column,json=sortingColumn,proto3,enum=zitadel.org.v2.OrganizationFieldName" json:"sorting_column,omitempty"`
+	Result        []*v21.Organization       `protobuf:"bytes,3,rep,name=result,proto3" json:"result,omitempty"`
 }
 
 func (x *ListOrganizationsResponse) Reset() {
@@ -261,14 +262,14 @@ func (x *ListOrganizationsResponse) GetDetails() *v2.ListDetails {
 	return nil
 }
 
-func (x *ListOrganizationsResponse) GetSortingColumn() OrganizationFieldName {
+func (x *ListOrganizationsResponse) GetSortingColumn() v21.OrganizationFieldName {
 	if x != nil {
 		return x.SortingColumn
 	}
-	return OrganizationFieldName(0)
+	return v21.OrganizationFieldName(0)
 }
 
-func (x *ListOrganizationsResponse) GetResult() []*Organization {
+func (x *ListOrganizationsResponse) GetResult() []*v21.Organization {
 	if x != nil {
 		return x.Result
 	}
@@ -649,10 +650,10 @@ var file_zitadel_org_v2_org_service_proto_goTypes = []interface{}{
 	(*AddOrganizationResponse_CreatedAdmin)(nil), // 5: zitadel.org.v2.AddOrganizationResponse.CreatedAdmin
 	(*v2.Details)(nil),                           // 6: zitadel.object.v2.Details
 	(*v2.ListQuery)(nil),                         // 7: zitadel.object.v2.ListQuery
-	(OrganizationFieldName)(0),               // 8: zitadel.org.v2.OrganizationFieldName
-	(*SearchQuery)(nil),                      // 9: zitadel.org.v2.SearchQuery
+	(v21.OrganizationFieldName)(0),               // 8: zitadel.org.v2.OrganizationFieldName
+	(*v21.SearchQuery)(nil),                      // 9: zitadel.org.v2.SearchQuery
 	(*v2.ListDetails)(nil),                       // 10: zitadel.object.v2.ListDetails
-	(*Organization)(nil),                     // 11: zitadel.org.v2.Organization
+	(*v21.Organization)(nil),                     // 11: zitadel.org.v2.Organization
 	(*v22.AddHumanUserRequest)(nil),              // 12: zitadel.user.v2.AddHumanUserRequest
 }
 var file_zitadel_org_v2_org_service_proto_depIdxs = []int32{
