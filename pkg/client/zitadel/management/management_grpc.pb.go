@@ -256,6 +256,10 @@ const (
 	ManagementService_GetDefaultPasswordChangeMessageText_FullMethodName                     = "/zitadel.management.v1.ManagementService/GetDefaultPasswordChangeMessageText"
 	ManagementService_SetCustomPasswordChangeMessageCustomText_FullMethodName                = "/zitadel.management.v1.ManagementService/SetCustomPasswordChangeMessageCustomText"
 	ManagementService_ResetCustomPasswordChangeMessageTextToDefault_FullMethodName           = "/zitadel.management.v1.ManagementService/ResetCustomPasswordChangeMessageTextToDefault"
+	ManagementService_GetCustomInviteUserMessageText_FullMethodName                          = "/zitadel.management.v1.ManagementService/GetCustomInviteUserMessageText"
+	ManagementService_GetDefaultInviteUserMessageText_FullMethodName                         = "/zitadel.management.v1.ManagementService/GetDefaultInviteUserMessageText"
+	ManagementService_SetCustomInviteUserMessageCustomText_FullMethodName                    = "/zitadel.management.v1.ManagementService/SetCustomInviteUserMessageCustomText"
+	ManagementService_ResetCustomInviteUserMessageTextToDefault_FullMethodName               = "/zitadel.management.v1.ManagementService/ResetCustomInviteUserMessageTextToDefault"
 	ManagementService_GetCustomLoginTexts_FullMethodName                                     = "/zitadel.management.v1.ManagementService/GetCustomLoginTexts"
 	ManagementService_GetDefaultLoginTexts_FullMethodName                                    = "/zitadel.management.v1.ManagementService/GetDefaultLoginTexts"
 	ManagementService_SetCustomLoginText_FullMethodName                                      = "/zitadel.management.v1.ManagementService/SetCustomLoginText"
@@ -593,6 +597,10 @@ type ManagementServiceClient interface {
 	GetDefaultPasswordChangeMessageText(ctx context.Context, in *GetDefaultPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultPasswordChangeMessageTextResponse, error)
 	SetCustomPasswordChangeMessageCustomText(ctx context.Context, in *SetCustomPasswordChangeMessageTextRequest, opts ...grpc.CallOption) (*SetCustomPasswordChangeMessageTextResponse, error)
 	ResetCustomPasswordChangeMessageTextToDefault(ctx context.Context, in *ResetCustomPasswordChangeMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
+	GetCustomInviteUserMessageText(ctx context.Context, in *GetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInviteUserMessageTextResponse, error)
+	GetDefaultInviteUserMessageText(ctx context.Context, in *GetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInviteUserMessageTextResponse, error)
+	SetCustomInviteUserMessageCustomText(ctx context.Context, in *SetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*SetCustomInviteUserMessageTextResponse, error)
+	ResetCustomInviteUserMessageTextToDefault(ctx context.Context, in *ResetCustomInviteUserMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInviteUserMessageTextToDefaultResponse, error)
 	GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error)
 	GetDefaultLoginTexts(ctx context.Context, in *GetDefaultLoginTextsRequest, opts ...grpc.CallOption) (*GetDefaultLoginTextsResponse, error)
 	SetCustomLoginText(ctx context.Context, in *SetCustomLoginTextsRequest, opts ...grpc.CallOption) (*SetCustomLoginTextsResponse, error)
@@ -2822,6 +2830,42 @@ func (c *managementServiceClient) ResetCustomPasswordChangeMessageTextToDefault(
 	return out, nil
 }
 
+func (c *managementServiceClient) GetCustomInviteUserMessageText(ctx context.Context, in *GetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetCustomInviteUserMessageTextResponse, error) {
+	out := new(GetCustomInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, ManagementService_GetCustomInviteUserMessageText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) GetDefaultInviteUserMessageText(ctx context.Context, in *GetDefaultInviteUserMessageTextRequest, opts ...grpc.CallOption) (*GetDefaultInviteUserMessageTextResponse, error) {
+	out := new(GetDefaultInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, ManagementService_GetDefaultInviteUserMessageText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) SetCustomInviteUserMessageCustomText(ctx context.Context, in *SetCustomInviteUserMessageTextRequest, opts ...grpc.CallOption) (*SetCustomInviteUserMessageTextResponse, error) {
+	out := new(SetCustomInviteUserMessageTextResponse)
+	err := c.cc.Invoke(ctx, ManagementService_SetCustomInviteUserMessageCustomText_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) ResetCustomInviteUserMessageTextToDefault(ctx context.Context, in *ResetCustomInviteUserMessageTextToDefaultRequest, opts ...grpc.CallOption) (*ResetCustomInviteUserMessageTextToDefaultResponse, error) {
+	out := new(ResetCustomInviteUserMessageTextToDefaultResponse)
+	err := c.cc.Invoke(ctx, ManagementService_ResetCustomInviteUserMessageTextToDefault_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) GetCustomLoginTexts(ctx context.Context, in *GetCustomLoginTextsRequest, opts ...grpc.CallOption) (*GetCustomLoginTextsResponse, error) {
 	out := new(GetCustomLoginTextsResponse)
 	err := c.cc.Invoke(ctx, ManagementService_GetCustomLoginTexts_FullMethodName, in, out, opts...)
@@ -3597,6 +3641,10 @@ type ManagementServiceServer interface {
 	GetDefaultPasswordChangeMessageText(context.Context, *GetDefaultPasswordChangeMessageTextRequest) (*GetDefaultPasswordChangeMessageTextResponse, error)
 	SetCustomPasswordChangeMessageCustomText(context.Context, *SetCustomPasswordChangeMessageTextRequest) (*SetCustomPasswordChangeMessageTextResponse, error)
 	ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error)
+	GetCustomInviteUserMessageText(context.Context, *GetCustomInviteUserMessageTextRequest) (*GetCustomInviteUserMessageTextResponse, error)
+	GetDefaultInviteUserMessageText(context.Context, *GetDefaultInviteUserMessageTextRequest) (*GetDefaultInviteUserMessageTextResponse, error)
+	SetCustomInviteUserMessageCustomText(context.Context, *SetCustomInviteUserMessageTextRequest) (*SetCustomInviteUserMessageTextResponse, error)
+	ResetCustomInviteUserMessageTextToDefault(context.Context, *ResetCustomInviteUserMessageTextToDefaultRequest) (*ResetCustomInviteUserMessageTextToDefaultResponse, error)
 	GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error)
 	GetDefaultLoginTexts(context.Context, *GetDefaultLoginTextsRequest) (*GetDefaultLoginTextsResponse, error)
 	SetCustomLoginText(context.Context, *SetCustomLoginTextsRequest) (*SetCustomLoginTextsResponse, error)
@@ -4400,6 +4448,18 @@ func (UnimplementedManagementServiceServer) SetCustomPasswordChangeMessageCustom
 }
 func (UnimplementedManagementServiceServer) ResetCustomPasswordChangeMessageTextToDefault(context.Context, *ResetCustomPasswordChangeMessageTextToDefaultRequest) (*ResetCustomPasswordChangeMessageTextToDefaultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomPasswordChangeMessageTextToDefault not implemented")
+}
+func (UnimplementedManagementServiceServer) GetCustomInviteUserMessageText(context.Context, *GetCustomInviteUserMessageTextRequest) (*GetCustomInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomInviteUserMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) GetDefaultInviteUserMessageText(context.Context, *GetDefaultInviteUserMessageTextRequest) (*GetDefaultInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDefaultInviteUserMessageText not implemented")
+}
+func (UnimplementedManagementServiceServer) SetCustomInviteUserMessageCustomText(context.Context, *SetCustomInviteUserMessageTextRequest) (*SetCustomInviteUserMessageTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCustomInviteUserMessageCustomText not implemented")
+}
+func (UnimplementedManagementServiceServer) ResetCustomInviteUserMessageTextToDefault(context.Context, *ResetCustomInviteUserMessageTextToDefaultRequest) (*ResetCustomInviteUserMessageTextToDefaultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetCustomInviteUserMessageTextToDefault not implemented")
 }
 func (UnimplementedManagementServiceServer) GetCustomLoginTexts(context.Context, *GetCustomLoginTextsRequest) (*GetCustomLoginTextsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCustomLoginTexts not implemented")
@@ -8845,6 +8905,78 @@ func _ManagementService_ResetCustomPasswordChangeMessageTextToDefault_Handler(sr
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_GetCustomInviteUserMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetCustomInviteUserMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagementService_GetCustomInviteUserMessageText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetCustomInviteUserMessageText(ctx, req.(*GetCustomInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_GetDefaultInviteUserMessageText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).GetDefaultInviteUserMessageText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagementService_GetDefaultInviteUserMessageText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).GetDefaultInviteUserMessageText(ctx, req.(*GetDefaultInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_SetCustomInviteUserMessageCustomText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCustomInviteUserMessageTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).SetCustomInviteUserMessageCustomText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagementService_SetCustomInviteUserMessageCustomText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).SetCustomInviteUserMessageCustomText(ctx, req.(*SetCustomInviteUserMessageTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ResetCustomInviteUserMessageTextToDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetCustomInviteUserMessageTextToDefaultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ResetCustomInviteUserMessageTextToDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagementService_ResetCustomInviteUserMessageTextToDefault_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ResetCustomInviteUserMessageTextToDefault(ctx, req.(*ResetCustomInviteUserMessageTextToDefaultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_GetCustomLoginTexts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCustomLoginTextsRequest)
 	if err := dec(in); err != nil {
@@ -10789,6 +10921,22 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetCustomPasswordChangeMessageTextToDefault",
 			Handler:    _ManagementService_ResetCustomPasswordChangeMessageTextToDefault_Handler,
+		},
+		{
+			MethodName: "GetCustomInviteUserMessageText",
+			Handler:    _ManagementService_GetCustomInviteUserMessageText_Handler,
+		},
+		{
+			MethodName: "GetDefaultInviteUserMessageText",
+			Handler:    _ManagementService_GetDefaultInviteUserMessageText_Handler,
+		},
+		{
+			MethodName: "SetCustomInviteUserMessageCustomText",
+			Handler:    _ManagementService_SetCustomInviteUserMessageCustomText_Handler,
+		},
+		{
+			MethodName: "ResetCustomInviteUserMessageTextToDefault",
+			Handler:    _ManagementService_ResetCustomInviteUserMessageTextToDefault_Handler,
 		},
 		{
 			MethodName: "GetCustomLoginTexts",
