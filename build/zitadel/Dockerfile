@@ -77,12 +77,20 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/auth/auth_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/auth/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/management/management_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/management/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/system/system_grpc.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/system/ \
+    # v2beta packages
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2beta/ \
-    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/
-    #######################
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/ \
+    # v2 packages
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2/
+
+#######################
 ## prepare generated files for output
 #######################
 FROM scratch as zitadel-copy
