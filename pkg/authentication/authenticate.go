@@ -56,6 +56,7 @@ func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
 	}
 }
 
+// WithExternalSecure allows using https redirects when the service is behind a reverse proxy.
 func WithExternalSecure[T Ctx](externalSecure bool) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.externalSecure = externalSecure
