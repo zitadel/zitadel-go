@@ -27,6 +27,7 @@ type Authenticator[T Ctx] struct {
 	sessions          Sessions[T]
 	encryptionKey     string
 	sessionCookieName string
+	externalSecure    bool
 }
 
 // Option allows customization of the [Authenticator] such as logging and more.
@@ -52,6 +53,13 @@ func WithSessionStore[T Ctx](sessions Sessions[T]) Option[T] {
 func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.sessionCookieName = cookieName
+	}
+}
+
+// WithExternalSecure allows using https redirects when the service is behind a reverse proxy.
+func WithExternalSecure[T Ctx](externalSecure bool) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.externalSecure = externalSecure
 	}
 }
 
@@ -143,7 +151,7 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 	a.deleteSessionCookie(w)
 
 	proto := "http"
-	if req.TLS != nil {
+	if req.TLS != nil || a.externalSecure {
 		proto = "https"
 	}
 	postLogout := fmt.Sprintf("%s://%s/", proto, req.Host)
