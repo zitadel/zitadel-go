@@ -1,6 +1,9 @@
 package zitadel
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Zitadel provides the ability to interact with your ZITADEL instance.
 // This includes authentication, authorization as well as explicit API interaction
@@ -31,6 +34,13 @@ func WithInsecure(port string) Option {
 	return func(z *Zitadel) {
 		z.port = port
 		z.tls = false
+	}
+}
+
+// WithPort allows to connect to a ZITADEL instance running on a different port
+func WithPort(port uint16) Option {
+	return func(z *Zitadel) {
+		z.port = strconv.Itoa(int(port))
 	}
 }
 
