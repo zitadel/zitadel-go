@@ -96,7 +96,7 @@ func newConnection(
 	tokenSource oauth2.TokenSource,
 	opts ...grpc.DialOption,
 ) (*grpc.ClientConn, error) {
-	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS())
+	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS())
 	if err != nil {
 		return nil, err
 	}

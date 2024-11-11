@@ -9,16 +9,18 @@ import (
 // This includes authentication, authorization as well as explicit API interaction
 // and is dependent of the provided information and initialization of such.
 type Zitadel struct {
-	domain string
-	port   string
-	tls    bool
+	domain                string
+	port                  string
+	tls                   bool
+	insecureSkipVerifyTLS bool
 }
 
 func New(domain string, options ...Option) *Zitadel {
 	zitadel := &Zitadel{
-		domain: domain,
-		port:   "443",
-		tls:    true,
+		domain:                domain,
+		port:                  "443",
+		tls:                   true,
+		insecureSkipVerifyTLS: false,
 	}
 	for _, option := range options {
 		option(zitadel)
@@ -30,10 +32,19 @@ func New(domain string, options ...Option) *Zitadel {
 type Option func(*Zitadel)
 
 // WithInsecure allows to connect to a ZITADEL instance running without TLS
+// Do not use in production
 func WithInsecure(port string) Option {
 	return func(z *Zitadel) {
 		z.port = port
 		z.tls = false
+	}
+}
+
+// WithInsecureSkipVerifyTLS allows to connect to a ZITADEL instance running with TLS but has an untrusted certificate
+// Do not use in production
+func WithInsecureSkipVerifyTLS() Option {
+	return func(z *Zitadel) {
+		z.insecureSkipVerifyTLS = true
 	}
 }
 
@@ -59,6 +70,10 @@ func (z *Zitadel) Host() string {
 
 func (z *Zitadel) IsTLS() bool {
 	return z.tls
+}
+
+func (z *Zitadel) IsInsecureSkipVerifyTLS() bool {
+	return z.insecureSkipVerifyTLS
 }
 
 func (z *Zitadel) Domain() string {
