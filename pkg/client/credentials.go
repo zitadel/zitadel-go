@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
 	"crypto/x509"
 
 	"golang.org/x/oauth2"
@@ -55,9 +56,16 @@ func requestMetadataFromToken(token *oauth2.Token) map[string]string {
 	}
 }
 
-func transportCredentials(domain string, tls bool) (credentials.TransportCredentials, error) {
-	if !tls {
+func transportCredentials(domain string, withTLS bool, insecureSkipVerifyTLS bool) (credentials.TransportCredentials, error) {
+	if !withTLS {
 		return insecure.NewCredentials(), nil
+	}
+	tlsConfig := &tls.Config{
+		ServerName:         domain,
+		InsecureSkipVerify: insecureSkipVerifyTLS,
+	}
+	if insecureSkipVerifyTLS {
+		return credentials.NewTLS(tlsConfig), nil
 	}
 	ca, err := x509.SystemCertPool()
 	if err != nil {
@@ -66,5 +74,6 @@ func transportCredentials(domain string, tls bool) (credentials.TransportCredent
 	if ca == nil {
 		ca = x509.NewCertPool()
 	}
-	return credentials.NewClientTLSFromCert(ca, domain), nil
+	tlsConfig.RootCAs = ca
+	return credentials.NewTLS(tlsConfig), nil
 }
