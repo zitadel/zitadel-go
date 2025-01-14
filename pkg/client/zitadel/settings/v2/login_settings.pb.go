@@ -8,7 +8,7 @@ package settings
 
 import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	v2 "github.com/zitadel/zitadel/pkg/grpc/idp/v2"
+	v2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/idp/v2"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
