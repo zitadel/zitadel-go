@@ -70,6 +70,7 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/query.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/idp/v2/idp.proto=${ZITADEL_IMPORT}/idp/v2 \
     --go_opt=Mzitadel/object/v2/object.proto=${ZITADEL_IMPORT}/object/v2 \
     --go_opt=Mzitadel/session/v2/challenge.proto=${ZITADEL_IMPORT}/session/v2 \
     --go_opt=Mzitadel/session/v2/session.proto=${ZITADEL_IMPORT}/session/v2 \
@@ -78,6 +79,8 @@ protoc \
     --go_opt=Mzitadel/org/v2/org.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/org/v2/query.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/org/v2/org_service.proto=${ZITADEL_IMPORT}/org/v2 \
+    --go_opt=Mzitadel/saml/v2/authorization.proto=${ZITADEL_IMPORT}/saml/v2 \
+    --go_opt=Mzitadel/saml/v2/saml_service.proto=${ZITADEL_IMPORT}/saml/v2 \
     --go_opt=Mzitadel/settings/v2/branding_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/domain_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/legal_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
