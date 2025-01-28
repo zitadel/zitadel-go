@@ -23,6 +23,7 @@ type AuthInterceptor struct {
 }
 
 type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSource, error)
+type JWTDirectTokenSource func() (oauth2.TokenSource, error)
 
 func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
@@ -47,6 +48,16 @@ func JWTProfileFromKeyAndUserID(ctx context.Context, key []byte, keyID, userID s
 // if expired, the token will be automatically refreshed
 func NewAuthenticator(issuer string, jwtProfileTokenSource JWTProfileTokenSource, scopes ...string) (*AuthInterceptor, error) {
 	ts, err := jwtProfileTokenSource(issuer, scopes)
+	if err != nil {
+		return nil, err
+	}
+	return &AuthInterceptor{
+		TokenSource: oauth2.ReuseTokenSource(nil, ts),
+	}, nil
+}
+
+func NewPresignedJWTAuthenticator(jwtDirectTokenSource JWTDirectTokenSource) (*AuthInterceptor, error) {
+	ts, err := jwtDirectTokenSource()
 	if err != nil {
 		return nil, err
 	}
