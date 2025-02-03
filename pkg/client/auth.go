@@ -96,3 +96,15 @@ func ScopeProjectID(projectID string) string {
 func ScopeZitadelAPI() string {
 	return ScopeProjectID(scopeZITADELProjectID)
 }
+
+// PreSignedJWT allows using a pre-signed JWT token for authorization.
+// This is useful when you already have a valid JWT token and don't want the client
+// to generate and sign a new one.
+func PreSignedJWT(token string) TokenSourceInitializer {
+	return func(ctx context.Context, _ string) (oauth2.TokenSource, error) {
+		return oauth2.StaticTokenSource(&oauth2.Token{
+			AccessToken: token,
+			TokenType:   oidc.BearerToken,
+		}), nil
+	}
+}

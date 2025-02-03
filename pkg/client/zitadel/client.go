@@ -5,6 +5,9 @@ import (
 	"crypto/x509"
 	"strings"
 
+	"github.com/zitadel/oidc/v3/pkg/oidc"
+	"golang.org/x/oauth2"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
@@ -15,6 +18,7 @@ type Connection struct {
 	issuer                string
 	api                   string
 	jwtProfileTokenSource middleware.JWTProfileTokenSource
+	jwtDirectTokenSource  middleware.JWTDirectTokenSource
 	scopes                []string
 	orgID                 string
 	insecure              bool
@@ -66,7 +70,13 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 }
 
 func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
-	auth, err := middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+	var auth *middleware.AuthInterceptor
+	var err error
+	if c.jwtDirectTokenSource != nil {
+		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
+	} else {
+		auth, err = middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+	}
 	if err != nil {
 		return err
 	}
@@ -121,6 +131,19 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = provider
+		return nil
+	}
+}
+
+// Use a pre-signed JWT for authentication
+func WithJWTDirectTokenSource(jwt string) func(*Connection) error {
+	return func(client *Connection) error {
+		client.jwtDirectTokenSource = func() (oauth2.TokenSource, error) {
+			return oauth2.StaticTokenSource(&oauth2.Token{
+				AccessToken: jwt,
+				TokenType:   oidc.BearerToken,
+			}), nil
+		}
 		return nil
 	}
 }
