@@ -63,6 +63,7 @@ const (
 	UserService_CreateInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/CreateInviteCode"
 	UserService_ResendInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/ResendInviteCode"
 	UserService_VerifyInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/VerifyInviteCode"
+	UserService_HumanMFAInitSkipped_FullMethodName            = "/zitadel.user.v2.UserService/HumanMFAInitSkipped"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -244,6 +245,10 @@ type UserServiceClient interface {
 	// Verify the invite code of a user previously issued. This will set their email to a verified state and
 	// allow the user to set up their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	VerifyInviteCode(ctx context.Context, in *VerifyInviteCodeRequest, opts ...grpc.CallOption) (*VerifyInviteCodeResponse, error)
+	// MFA Init Skipped
+	//
+	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
+	HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error)
 }
 
 type userServiceClient struct {
@@ -650,6 +655,15 @@ func (c *userServiceClient) VerifyInviteCode(ctx context.Context, in *VerifyInvi
 	return out, nil
 }
 
+func (c *userServiceClient) HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error) {
+	out := new(HumanMFAInitSkippedResponse)
+	err := c.cc.Invoke(ctx, UserService_HumanMFAInitSkipped_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -829,6 +843,10 @@ type UserServiceServer interface {
 	// Verify the invite code of a user previously issued. This will set their email to a verified state and
 	// allow the user to set up their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	VerifyInviteCode(context.Context, *VerifyInviteCodeRequest) (*VerifyInviteCodeResponse, error)
+	// MFA Init Skipped
+	//
+	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
+	HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -967,6 +985,9 @@ func (UnimplementedUserServiceServer) ResendInviteCode(context.Context, *ResendI
 }
 func (UnimplementedUserServiceServer) VerifyInviteCode(context.Context, *VerifyInviteCodeRequest) (*VerifyInviteCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyInviteCode not implemented")
+}
+func (UnimplementedUserServiceServer) HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HumanMFAInitSkipped not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1773,6 +1794,24 @@ func _UserService_VerifyInviteCode_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_HumanMFAInitSkipped_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HumanMFAInitSkippedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).HumanMFAInitSkipped(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_HumanMFAInitSkipped_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).HumanMFAInitSkipped(ctx, req.(*HumanMFAInitSkippedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1955,6 +1994,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyInviteCode",
 			Handler:    _UserService_VerifyInviteCode_Handler,
+		},
+		{
+			MethodName: "HumanMFAInitSkipped",
+			Handler:    _UserService_HumanMFAInitSkipped_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
