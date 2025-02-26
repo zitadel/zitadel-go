@@ -1,21 +1,24 @@
 package zitadel
 
 import (
+	"context"
 	"crypto/x509"
 	"strings"
 
-	"github.com/zitadel/oidc/pkg/client/profile"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
 type Connection struct {
 	issuer                string
 	api                   string
 	jwtProfileTokenSource middleware.JWTProfileTokenSource
+	jwtDirectTokenSource  middleware.JWTDirectTokenSource
 	scopes                []string
 	orgID                 string
 	insecure              bool
@@ -25,11 +28,11 @@ type Connection struct {
 	*grpc.ClientConn
 }
 
-func NewConnection(issuer, api string, scopes []string, options ...Option) (*Connection, error) {
+func NewConnection(ctx context.Context, issuer, api string, scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
 		issuer:                issuer,
 		api:                   api,
-		jwtProfileTokenSource: middleware.JWTProfileFromPath(middleware.OSKeyPath()),
+		jwtProfileTokenSource: middleware.JWTProfileFromPath(ctx, middleware.OSKeyPath()),
 		scopes:                scopes,
 	}
 
@@ -67,7 +70,13 @@ func NewConnection(issuer, api string, scopes []string, options ...Option) (*Con
 }
 
 func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
-	auth, err := middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+	var auth *middleware.AuthInterceptor
+	var err error
+	if c.jwtDirectTokenSource != nil {
+		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
+	} else {
+		auth, err = middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+	}
 	if err != nil {
 		return err
 	}
@@ -117,19 +126,6 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 	}
 }
 
-// WithKeyPath sets the path to the key.json used for the authentication
-// if not set env var ZITADEL_KEY_PATH will be used
-//
-// Deprecated: use WithJWTProfileTokenSource(middleware.JWTProfileFromPath(keyPath)) instead
-func WithKeyPath(keyPath string) func(*Connection) error {
-	return func(client *Connection) error {
-		client.jwtProfileTokenSource = func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-			return profile.NewJWTProfileTokenSourceFromKeyFile(issuer, keyPath, scopes)
-		}
-		return nil
-	}
-}
-
 // WithJWTProfileTokenSource sets the provider used for the authentication
 // if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
@@ -139,8 +135,21 @@ func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*
 	}
 }
 
+// Use a pre-signed JWT for authentication
+func WithJWTDirectTokenSource(jwt string) func(*Connection) error {
+	return func(client *Connection) error {
+		client.jwtDirectTokenSource = func() (oauth2.TokenSource, error) {
+			return oauth2.StaticTokenSource(&oauth2.Token{
+				AccessToken: jwt,
+				TokenType:   oidc.BearerToken,
+			}), nil
+		}
+		return nil
+	}
+}
+
 // WithOrgID sets the organization context (where the api calls are executed)
-// if not set the resource owner (organisation) of the calling user will be used
+// if not set the resource owner (organization) of the calling user will be used
 func WithOrgID(orgID string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.orgID = orgID
