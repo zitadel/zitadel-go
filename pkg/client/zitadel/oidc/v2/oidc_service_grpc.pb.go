@@ -19,8 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OIDCService_GetAuthRequest_FullMethodName = "/zitadel.oidc.v2.OIDCService/GetAuthRequest"
-	OIDCService_CreateCallback_FullMethodName = "/zitadel.oidc.v2.OIDCService/CreateCallback"
+	OIDCService_GetAuthRequest_FullMethodName                     = "/zitadel.oidc.v2.OIDCService/GetAuthRequest"
+	OIDCService_CreateCallback_FullMethodName                     = "/zitadel.oidc.v2.OIDCService/CreateCallback"
+	OIDCService_GetDeviceAuthorizationRequest_FullMethodName      = "/zitadel.oidc.v2.OIDCService/GetDeviceAuthorizationRequest"
+	OIDCService_AuthorizeOrDenyDeviceAuthorization_FullMethodName = "/zitadel.oidc.v2.OIDCService/AuthorizeOrDenyDeviceAuthorization"
 )
 
 // OIDCServiceClient is the client API for OIDCService service.
@@ -29,6 +31,16 @@ const (
 type OIDCServiceClient interface {
 	GetAuthRequest(ctx context.Context, in *GetAuthRequestRequest, opts ...grpc.CallOption) (*GetAuthRequestResponse, error)
 	CreateCallback(ctx context.Context, in *CreateCallbackRequest, opts ...grpc.CallOption) (*CreateCallbackResponse, error)
+	// Get device authorization request
+	//
+	// Get the device authorization based on the provided "user code".
+	// This will return the device authorization request, which contains the device authorization id
+	// that is required to authorize the request once the user signed in or to deny it.
+	GetDeviceAuthorizationRequest(ctx context.Context, in *GetDeviceAuthorizationRequestRequest, opts ...grpc.CallOption) (*GetDeviceAuthorizationRequestResponse, error)
+	// Authorize or deny device authorization
+	//
+	// Authorize or deny the device authorization request based on the provided device authorization id.
+	AuthorizeOrDenyDeviceAuthorization(ctx context.Context, in *AuthorizeOrDenyDeviceAuthorizationRequest, opts ...grpc.CallOption) (*AuthorizeOrDenyDeviceAuthorizationResponse, error)
 }
 
 type oIDCServiceClient struct {
@@ -57,12 +69,40 @@ func (c *oIDCServiceClient) CreateCallback(ctx context.Context, in *CreateCallba
 	return out, nil
 }
 
+func (c *oIDCServiceClient) GetDeviceAuthorizationRequest(ctx context.Context, in *GetDeviceAuthorizationRequestRequest, opts ...grpc.CallOption) (*GetDeviceAuthorizationRequestResponse, error) {
+	out := new(GetDeviceAuthorizationRequestResponse)
+	err := c.cc.Invoke(ctx, OIDCService_GetDeviceAuthorizationRequest_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *oIDCServiceClient) AuthorizeOrDenyDeviceAuthorization(ctx context.Context, in *AuthorizeOrDenyDeviceAuthorizationRequest, opts ...grpc.CallOption) (*AuthorizeOrDenyDeviceAuthorizationResponse, error) {
+	out := new(AuthorizeOrDenyDeviceAuthorizationResponse)
+	err := c.cc.Invoke(ctx, OIDCService_AuthorizeOrDenyDeviceAuthorization_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OIDCServiceServer is the server API for OIDCService service.
 // All implementations must embed UnimplementedOIDCServiceServer
 // for forward compatibility
 type OIDCServiceServer interface {
 	GetAuthRequest(context.Context, *GetAuthRequestRequest) (*GetAuthRequestResponse, error)
 	CreateCallback(context.Context, *CreateCallbackRequest) (*CreateCallbackResponse, error)
+	// Get device authorization request
+	//
+	// Get the device authorization based on the provided "user code".
+	// This will return the device authorization request, which contains the device authorization id
+	// that is required to authorize the request once the user signed in or to deny it.
+	GetDeviceAuthorizationRequest(context.Context, *GetDeviceAuthorizationRequestRequest) (*GetDeviceAuthorizationRequestResponse, error)
+	// Authorize or deny device authorization
+	//
+	// Authorize or deny the device authorization request based on the provided device authorization id.
+	AuthorizeOrDenyDeviceAuthorization(context.Context, *AuthorizeOrDenyDeviceAuthorizationRequest) (*AuthorizeOrDenyDeviceAuthorizationResponse, error)
 	mustEmbedUnimplementedOIDCServiceServer()
 }
 
@@ -75,6 +115,12 @@ func (UnimplementedOIDCServiceServer) GetAuthRequest(context.Context, *GetAuthRe
 }
 func (UnimplementedOIDCServiceServer) CreateCallback(context.Context, *CreateCallbackRequest) (*CreateCallbackResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCallback not implemented")
+}
+func (UnimplementedOIDCServiceServer) GetDeviceAuthorizationRequest(context.Context, *GetDeviceAuthorizationRequestRequest) (*GetDeviceAuthorizationRequestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeviceAuthorizationRequest not implemented")
+}
+func (UnimplementedOIDCServiceServer) AuthorizeOrDenyDeviceAuthorization(context.Context, *AuthorizeOrDenyDeviceAuthorizationRequest) (*AuthorizeOrDenyDeviceAuthorizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeOrDenyDeviceAuthorization not implemented")
 }
 func (UnimplementedOIDCServiceServer) mustEmbedUnimplementedOIDCServiceServer() {}
 
@@ -125,6 +171,42 @@ func _OIDCService_CreateCallback_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OIDCService_GetDeviceAuthorizationRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceAuthorizationRequestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OIDCServiceServer).GetDeviceAuthorizationRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OIDCService_GetDeviceAuthorizationRequest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OIDCServiceServer).GetDeviceAuthorizationRequest(ctx, req.(*GetDeviceAuthorizationRequestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OIDCService_AuthorizeOrDenyDeviceAuthorization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthorizeOrDenyDeviceAuthorizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OIDCServiceServer).AuthorizeOrDenyDeviceAuthorization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OIDCService_AuthorizeOrDenyDeviceAuthorization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OIDCServiceServer).AuthorizeOrDenyDeviceAuthorization(ctx, req.(*AuthorizeOrDenyDeviceAuthorizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OIDCService_ServiceDesc is the grpc.ServiceDesc for OIDCService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +221,14 @@ var OIDCService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateCallback",
 			Handler:    _OIDCService_CreateCallback_Handler,
+		},
+		{
+			MethodName: "GetDeviceAuthorizationRequest",
+			Handler:    _OIDCService_GetDeviceAuthorizationRequest_Handler,
+		},
+		{
+			MethodName: "AuthorizeOrDenyDeviceAuthorization",
+			Handler:    _OIDCService_AuthorizeOrDenyDeviceAuthorization_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
