@@ -126,6 +126,7 @@ func (t *testVerifier[T]) CheckAuthorization(_ context.Context, _ string) (T, er
 
 type testCtx struct {
 	isAuthorized                bool
+	organizationID              string
 	userID                      string
 	isGrantedRole               bool
 	isGrantedRoleInOrganization bool
@@ -145,6 +146,13 @@ func (t *testCtx) IsAuthorized() bool {
 		return false
 	}
 	return t.isAuthorized
+}
+
+func (t *testCtx) OrganizationID() string {
+	if t == nil {
+		return ""
+	}
+	return t.organizationID
 }
 
 func (t *testCtx) UserID() string {
