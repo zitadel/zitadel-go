@@ -11,6 +11,7 @@ const (
 // Ctx represents the authorization context with information about the authorized user.
 type Ctx interface {
 	IsAuthorized() bool
+	OrganizationID() string
 	UserID() string
 	IsGrantedRole(role string) bool
 	IsGrantedRoleInOrganization(role, organizationID string) bool
@@ -31,6 +32,11 @@ func Context[T Ctx](ctx context.Context) (t T) {
 // IsAuthorized returns if the caller is authorized
 func IsAuthorized(ctx context.Context) bool {
 	return Context[Ctx](ctx).IsAuthorized()
+}
+
+// OrganizationID returns the ID of the organization the authorized user belongs to.
+func OrganizationID(ctx context.Context) string {
+	return Context[Ctx](ctx).OrganizationID()
 }
 
 // UserID returns if the ID of the authorized user.
