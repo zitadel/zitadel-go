@@ -16,20 +16,15 @@ func (c *IntrospectionContext) IsAuthorized() bool {
 	return c.IntrospectionResponse.Active
 }
 
-// OrganizationID implements [authorization.Ctx] by returning the `urn:zitadel:iam:user:resourceowner:id` claim or the `urn:zitadel:iam:org:id:{id}` claim of the [oidc.IntrospectionResponse].
+// OrganizationID implements [authorization.Ctx] by returning the `urn:zitadel:iam:user:resourceowner:id` claim
+// or the `urn:zitadel:iam:org:id:{id}` claim of the [oidc.IntrospectionResponse].
 func (c *IntrospectionContext) OrganizationID() string {
 	if c == nil {
 		return ""
 	}
 	// check for organization ID when using scope "urn:zitadel:iam:user:resourceowner"
-	if orgID, ok := c.IntrospectionResponse.Claims["urn:zitadel:iam:user:resourceowner:id"].(string); ok {
-		return orgID
-	}
-	// check for organization ID when using scope "urn:zitadel:iam:org:id:{id}"
-	if orgID, ok := c.IntrospectionResponse.Claims["urn:zitadel:iam:org:id"].(string); ok {
-		return orgID
-	}
-	return ""
+	orgID, _ := c.IntrospectionResponse.Claims["urn:zitadel:iam:user:resourceowner:id"].(string)
+	return orgID
 }
 
 // UserID implements [authorization.Ctx] by returning the `sub` claim of the [oidc.IntrospectionResponse].
