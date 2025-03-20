@@ -17,7 +17,7 @@ func (c *IntrospectionContext) IsAuthorized() bool {
 }
 
 // OrganizationID implements [authorization.Ctx] by returning the `urn:zitadel:iam:user:resourceowner:id` claim
-// or the `urn:zitadel:iam:org:id:{id}` claim of the [oidc.IntrospectionResponse].
+// of the [oidc.IntrospectionResponse].
 func (c *IntrospectionContext) OrganizationID() string {
 	if c == nil {
 		return ""
