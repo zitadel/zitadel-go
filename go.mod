@@ -1,6 +1,7 @@
 module github.com/zitadel/zitadel-go/v3
 
 go 1.23
+toolchain go1.24.1
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
@@ -11,7 +12,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/zitadel/oidc/v3 v3.36.1
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
-	golang.org/x/oauth2 v0.26.0
+	golang.org/x/oauth2 v0.28.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250106144421-5f5ef82da422
 	google.golang.org/grpc v1.71.0
 	google.golang.org/protobuf v1.36.4
