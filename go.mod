@@ -1,7 +1,6 @@
 module github.com/zitadel/zitadel-go/v3
 
-go 1.23
-toolchain go1.24.1
+go 1.23.7
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
