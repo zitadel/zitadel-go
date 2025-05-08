@@ -45,6 +45,17 @@ protoc \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
     --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
     --go_opt=Mzitadel/protoc_gen_zitadel/v2/options.proto=${ZITADEL_IMPORT}/protoc/v2 \
+    --go_opt=Mzitadel/action/v2beta/action_service.proto=${ZITADEL_IMPORT}/action/v2beta \
+    --go_opt=Mzitadel/action/v2beta/execution.proto=${ZITADEL_IMPORT}/action/v2beta \
+    --go_opt=Mzitadel/action/v2beta/query.proto=${ZITADEL_IMPORT}/action/v2beta \
+    --go_opt=Mzitadel/action/v2beta/target.proto=${ZITADEL_IMPORT}/action/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/feature.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/feature_service.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/instance.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/organization.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/system.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/user.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/filter/v2beta/filter.proto=${ZITADEL_IMPORT}/filter/v2beta \
     --go_opt=Mzitadel/object/v2beta/object.proto=${ZITADEL_IMPORT}/object/v2beta \
     --go_opt=Mzitadel/session/v2beta/challenge.proto=${ZITADEL_IMPORT}/session/v2beta \
     --go_opt=Mzitadel/session/v2beta/session.proto=${ZITADEL_IMPORT}/session/v2beta \
@@ -70,6 +81,14 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/query.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
+    --go_opt=Mzitadel/webkey/v2beta/key.proto=${ZITADEL_IMPORT}/webkey/v2beta \
+    --go_opt=Mzitadel/webkey/v2beta/webkey_service.proto=${ZITADEL_IMPORT}/webkey/v2beta \
+    --go_opt=Mzitadel/feature/v2/feature.proto=${ZITADEL_IMPORT}/feature/v2 \
+    --go_opt=Mzitadel/feature/v2/feature_service.proto=${ZITADEL_IMPORT}/feature/v2 \
+    --go_opt=Mzitadel/feature/v2/instance.proto=${ZITADEL_IMPORT}/feature/v2 \
+    --go_opt=Mzitadel/feature/v2/organization.proto=${ZITADEL_IMPORT}/feature/v2 \
+    --go_opt=Mzitadel/feature/v2/system.proto=${ZITADEL_IMPORT}/feature/v2 \
+    --go_opt=Mzitadel/feature/v2/user.proto=${ZITADEL_IMPORT}/feature/v2 \
     --go_opt=Mzitadel/idp/v2/idp.proto=${ZITADEL_IMPORT}/idp/v2 \
     --go_opt=Mzitadel/object/v2/object.proto=${ZITADEL_IMPORT}/object/v2 \
     --go_opt=Mzitadel/session/v2/challenge.proto=${ZITADEL_IMPORT}/session/v2 \
@@ -98,6 +117,7 @@ protoc \
     --go_opt=Mzitadel/user/v2/query.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/user.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/user_service.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/object/v3alpha/object.proto=${ZITADEL_IMPORT}/object/v3lapha \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)
