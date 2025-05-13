@@ -73,7 +73,7 @@ type UserServiceClient interface {
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 	// Search Users
 	//
-	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
+	// Search for users. By default, we will return users of your organization. Make sure to include a limit and sorting for pagination.
 	//
 	// Deprecated: please move to the corresponding endpoint under user service v2 (GA).
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
@@ -597,7 +597,7 @@ type UserServiceServer interface {
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	// Search Users
 	//
-	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
+	// Search for users. By default, we will return users of your organization. Make sure to include a limit and sorting for pagination.
 	//
 	// Deprecated: please move to the corresponding endpoint under user service v2 (GA).
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)

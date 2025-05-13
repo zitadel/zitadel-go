@@ -24,7 +24,6 @@ const (
 	UserService_ListUsers_FullMethodName                      = "/zitadel.user.v2.UserService/ListUsers"
 	UserService_SetEmail_FullMethodName                       = "/zitadel.user.v2.UserService/SetEmail"
 	UserService_ResendEmailCode_FullMethodName                = "/zitadel.user.v2.UserService/ResendEmailCode"
-	UserService_SendEmailCode_FullMethodName                  = "/zitadel.user.v2.UserService/SendEmailCode"
 	UserService_VerifyEmail_FullMethodName                    = "/zitadel.user.v2.UserService/VerifyEmail"
 	UserService_SetPhone_FullMethodName                       = "/zitadel.user.v2.UserService/SetPhone"
 	UserService_RemovePhone_FullMethodName                    = "/zitadel.user.v2.UserService/RemovePhone"
@@ -59,11 +58,9 @@ const (
 	UserService_PasswordReset_FullMethodName                  = "/zitadel.user.v2.UserService/PasswordReset"
 	UserService_SetPassword_FullMethodName                    = "/zitadel.user.v2.UserService/SetPassword"
 	UserService_ListAuthenticationMethodTypes_FullMethodName  = "/zitadel.user.v2.UserService/ListAuthenticationMethodTypes"
-	UserService_ListAuthenticationFactors_FullMethodName      = "/zitadel.user.v2.UserService/ListAuthenticationFactors"
 	UserService_CreateInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/CreateInviteCode"
 	UserService_ResendInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/ResendInviteCode"
 	UserService_VerifyInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/VerifyInviteCode"
-	UserService_HumanMFAInitSkipped_FullMethodName            = "/zitadel.user.v2.UserService/HumanMFAInitSkipped"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -80,7 +77,7 @@ type UserServiceClient interface {
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 	// Search Users
 	//
-	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
+	// Search for users. By default, we will return users of your organization. Make sure to include a limit and sorting for pagination..
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Change the user email
 	//
@@ -90,13 +87,9 @@ type UserServiceClient interface {
 	//
 	// Resend code to verify user email.
 	ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error)
-	// Send code to verify user email
-	//
-	// Send code to verify user email.
-	SendEmailCode(ctx context.Context, in *SendEmailCodeRequest, opts ...grpc.CallOption) (*SendEmailCodeResponse, error)
 	// Verify the email
 	//
-	// Verify the email with the generated code.
+	// Verify the email with the generated code..
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
@@ -230,7 +223,6 @@ type UserServiceClient interface {
 	//
 	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
 	ListAuthenticationMethodTypes(ctx context.Context, in *ListAuthenticationMethodTypesRequest, opts ...grpc.CallOption) (*ListAuthenticationMethodTypesResponse, error)
-	ListAuthenticationFactors(ctx context.Context, in *ListAuthenticationFactorsRequest, opts ...grpc.CallOption) (*ListAuthenticationFactorsResponse, error)
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
@@ -245,10 +237,6 @@ type UserServiceClient interface {
 	// Verify the invite code of a user previously issued. This will set their email to a verified state and
 	// allow the user to set up their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	VerifyInviteCode(ctx context.Context, in *VerifyInviteCodeRequest, opts ...grpc.CallOption) (*VerifyInviteCodeResponse, error)
-	// MFA Init Skipped
-	//
-	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
-	HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error)
 }
 
 type userServiceClient struct {
@@ -298,15 +286,6 @@ func (c *userServiceClient) SetEmail(ctx context.Context, in *SetEmailRequest, o
 func (c *userServiceClient) ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error) {
 	out := new(ResendEmailCodeResponse)
 	err := c.cc.Invoke(ctx, UserService_ResendEmailCode_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) SendEmailCode(ctx context.Context, in *SendEmailCodeRequest, opts ...grpc.CallOption) (*SendEmailCodeResponse, error) {
-	out := new(SendEmailCodeResponse)
-	err := c.cc.Invoke(ctx, UserService_SendEmailCode_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -619,15 +598,6 @@ func (c *userServiceClient) ListAuthenticationMethodTypes(ctx context.Context, i
 	return out, nil
 }
 
-func (c *userServiceClient) ListAuthenticationFactors(ctx context.Context, in *ListAuthenticationFactorsRequest, opts ...grpc.CallOption) (*ListAuthenticationFactorsResponse, error) {
-	out := new(ListAuthenticationFactorsResponse)
-	err := c.cc.Invoke(ctx, UserService_ListAuthenticationFactors_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) CreateInviteCode(ctx context.Context, in *CreateInviteCodeRequest, opts ...grpc.CallOption) (*CreateInviteCodeResponse, error) {
 	out := new(CreateInviteCodeResponse)
 	err := c.cc.Invoke(ctx, UserService_CreateInviteCode_FullMethodName, in, out, opts...)
@@ -655,15 +625,6 @@ func (c *userServiceClient) VerifyInviteCode(ctx context.Context, in *VerifyInvi
 	return out, nil
 }
 
-func (c *userServiceClient) HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error) {
-	out := new(HumanMFAInitSkippedResponse)
-	err := c.cc.Invoke(ctx, UserService_HumanMFAInitSkipped_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -678,7 +639,7 @@ type UserServiceServer interface {
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	// Search Users
 	//
-	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
+	// Search for users. By default, we will return users of your organization. Make sure to include a limit and sorting for pagination..
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Change the user email
 	//
@@ -688,13 +649,9 @@ type UserServiceServer interface {
 	//
 	// Resend code to verify user email.
 	ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error)
-	// Send code to verify user email
-	//
-	// Send code to verify user email.
-	SendEmailCode(context.Context, *SendEmailCodeRequest) (*SendEmailCodeResponse, error)
 	// Verify the email
 	//
-	// Verify the email with the generated code.
+	// Verify the email with the generated code..
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
@@ -828,7 +785,6 @@ type UserServiceServer interface {
 	//
 	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
 	ListAuthenticationMethodTypes(context.Context, *ListAuthenticationMethodTypesRequest) (*ListAuthenticationMethodTypesResponse, error)
-	ListAuthenticationFactors(context.Context, *ListAuthenticationFactorsRequest) (*ListAuthenticationFactorsResponse, error)
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
@@ -843,10 +799,6 @@ type UserServiceServer interface {
 	// Verify the invite code of a user previously issued. This will set their email to a verified state and
 	// allow the user to set up their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	VerifyInviteCode(context.Context, *VerifyInviteCodeRequest) (*VerifyInviteCodeResponse, error)
-	// MFA Init Skipped
-	//
-	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
-	HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -868,9 +820,6 @@ func (UnimplementedUserServiceServer) SetEmail(context.Context, *SetEmailRequest
 }
 func (UnimplementedUserServiceServer) ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendEmailCode not implemented")
-}
-func (UnimplementedUserServiceServer) SendEmailCode(context.Context, *SendEmailCodeRequest) (*SendEmailCodeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendEmailCode not implemented")
 }
 func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
@@ -974,9 +923,6 @@ func (UnimplementedUserServiceServer) SetPassword(context.Context, *SetPasswordR
 func (UnimplementedUserServiceServer) ListAuthenticationMethodTypes(context.Context, *ListAuthenticationMethodTypesRequest) (*ListAuthenticationMethodTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuthenticationMethodTypes not implemented")
 }
-func (UnimplementedUserServiceServer) ListAuthenticationFactors(context.Context, *ListAuthenticationFactorsRequest) (*ListAuthenticationFactorsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthenticationFactors not implemented")
-}
 func (UnimplementedUserServiceServer) CreateInviteCode(context.Context, *CreateInviteCodeRequest) (*CreateInviteCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateInviteCode not implemented")
 }
@@ -985,9 +931,6 @@ func (UnimplementedUserServiceServer) ResendInviteCode(context.Context, *ResendI
 }
 func (UnimplementedUserServiceServer) VerifyInviteCode(context.Context, *VerifyInviteCodeRequest) (*VerifyInviteCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyInviteCode not implemented")
-}
-func (UnimplementedUserServiceServer) HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HumanMFAInitSkipped not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1088,24 +1031,6 @@ func _UserService_ResendEmailCode_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ResendEmailCode(ctx, req.(*ResendEmailCodeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_SendEmailCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendEmailCodeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).SendEmailCode(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_SendEmailCode_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).SendEmailCode(ctx, req.(*SendEmailCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1722,24 +1647,6 @@ func _UserService_ListAuthenticationMethodTypes_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ListAuthenticationFactors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAuthenticationFactorsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListAuthenticationFactors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListAuthenticationFactors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListAuthenticationFactors(ctx, req.(*ListAuthenticationFactorsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_CreateInviteCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateInviteCodeRequest)
 	if err := dec(in); err != nil {
@@ -1794,24 +1701,6 @@ func _UserService_VerifyInviteCode_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_HumanMFAInitSkipped_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HumanMFAInitSkippedRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).HumanMFAInitSkipped(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_HumanMFAInitSkipped_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).HumanMFAInitSkipped(ctx, req.(*HumanMFAInitSkippedRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1838,10 +1727,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResendEmailCode",
 			Handler:    _UserService_ResendEmailCode_Handler,
-		},
-		{
-			MethodName: "SendEmailCode",
-			Handler:    _UserService_SendEmailCode_Handler,
 		},
 		{
 			MethodName: "VerifyEmail",
@@ -1980,10 +1865,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ListAuthenticationMethodTypes_Handler,
 		},
 		{
-			MethodName: "ListAuthenticationFactors",
-			Handler:    _UserService_ListAuthenticationFactors_Handler,
-		},
-		{
 			MethodName: "CreateInviteCode",
 			Handler:    _UserService_CreateInviteCode_Handler,
 		},
@@ -1994,10 +1875,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyInviteCode",
 			Handler:    _UserService_VerifyInviteCode_Handler,
-		},
-		{
-			MethodName: "HumanMFAInitSkipped",
-			Handler:    _UserService_HumanMFAInitSkipped_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
