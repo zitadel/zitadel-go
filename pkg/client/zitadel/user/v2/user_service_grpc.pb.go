@@ -234,8 +234,12 @@ type UserServiceClient interface {
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
+	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
+	// The new code will overwrite the previous one and make it invalid.
 	CreateInviteCode(ctx context.Context, in *CreateInviteCodeRequest, opts ...grpc.CallOption) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
+	//
+	// Deprecated: Use [CreateInviteCode](apis/resources/user_service_v2/user-service-create-invite-code.api.mdx) instead.
 	//
 	// Resend an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// A resend is only possible if a code has been created previously and sent to the user. If there is no code or it was directly returned, an error will be returned.
@@ -832,8 +836,12 @@ type UserServiceServer interface {
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
+	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
+	// The new code will overwrite the previous one and make it invalid.
 	CreateInviteCode(context.Context, *CreateInviteCodeRequest) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
+	//
+	// Deprecated: Use [CreateInviteCode](apis/resources/user_service_v2/user-service-create-invite-code.api.mdx) instead.
 	//
 	// Resend an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// A resend is only possible if a code has been created previously and sent to the user. If there is no code or it was directly returned, an error will be returned.
