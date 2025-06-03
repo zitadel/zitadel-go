@@ -24,61 +24,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type MemberFieldColumnName int32
-
-const (
-	MemberFieldColumnName_MEMBER_FIELD_NAME_UNSPECIFIED         MemberFieldColumnName = 0
-	MemberFieldColumnName_MEMBER_FIELD_NAME_USER_ID             MemberFieldColumnName = 1
-	MemberFieldColumnName_MEMBER_FIELD_NAME_CREATION_DATE       MemberFieldColumnName = 2
-	MemberFieldColumnName_MEMBER_FIELD_NAME_CHANGE_DATE         MemberFieldColumnName = 3
-	MemberFieldColumnName_MEMBER_FIELD_NAME_USER_RESOURCE_OWNER MemberFieldColumnName = 4
-)
-
-// Enum value maps for MemberFieldColumnName.
-var (
-	MemberFieldColumnName_name = map[int32]string{
-		0: "MEMBER_FIELD_NAME_UNSPECIFIED",
-		1: "MEMBER_FIELD_NAME_USER_ID",
-		2: "MEMBER_FIELD_NAME_CREATION_DATE",
-		3: "MEMBER_FIELD_NAME_CHANGE_DATE",
-		4: "MEMBER_FIELD_NAME_USER_RESOURCE_OWNER",
-	}
-	MemberFieldColumnName_value = map[string]int32{
-		"MEMBER_FIELD_NAME_UNSPECIFIED":         0,
-		"MEMBER_FIELD_NAME_USER_ID":             1,
-		"MEMBER_FIELD_NAME_CREATION_DATE":       2,
-		"MEMBER_FIELD_NAME_CHANGE_DATE":         3,
-		"MEMBER_FIELD_NAME_USER_RESOURCE_OWNER": 4,
-	}
-)
-
-func (x MemberFieldColumnName) Enum() *MemberFieldColumnName {
-	p := new(MemberFieldColumnName)
-	*p = x
-	return p
-}
-
-func (x MemberFieldColumnName) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (MemberFieldColumnName) Descriptor() protoreflect.EnumDescriptor {
-	return file_zitadel_member_proto_enumTypes[0].Descriptor()
-}
-
-func (MemberFieldColumnName) Type() protoreflect.EnumType {
-	return &file_zitadel_member_proto_enumTypes[0]
-}
-
-func (x MemberFieldColumnName) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use MemberFieldColumnName.Descriptor instead.
-func (MemberFieldColumnName) EnumDescriptor() ([]byte, []int) {
-	return file_zitadel_member_proto_rawDescGZIP(), []int{0}
-}
-
 type Member struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -658,23 +603,10 @@ var file_zitadel_member_proto_rawDesc = []byte{
 	0x65, 0x20, 0x69, 0x64, 0x20, 0x6f, 0x66, 0x20, 0x74, 0x68, 0x65, 0x20, 0x75, 0x73, 0x65, 0x72,
 	0x4a, 0x13, 0x22, 0x36, 0x39, 0x36, 0x32, 0x39, 0x30, 0x32, 0x33, 0x39, 0x30, 0x36, 0x34, 0x38,
 	0x38, 0x33, 0x33, 0x34, 0x22, 0x78, 0xc8, 0x01, 0xfa, 0x42, 0x05, 0x72, 0x03, 0x18, 0xc8, 0x01,
-	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x2a, 0xcc, 0x01, 0x0a, 0x15, 0x4d, 0x65, 0x6d,
-	0x62, 0x65, 0x72, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x6f, 0x6c, 0x75, 0x6d, 0x6e, 0x4e, 0x61,
-	0x6d, 0x65, 0x12, 0x21, 0x0a, 0x1d, 0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x5f, 0x46, 0x49, 0x45,
-	0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46,
-	0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x1d, 0x0a, 0x19, 0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x5f,
-	0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x55, 0x53, 0x45, 0x52, 0x5f,
-	0x49, 0x44, 0x10, 0x01, 0x12, 0x23, 0x0a, 0x1f, 0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x5f, 0x46,
-	0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x43, 0x52, 0x45, 0x41, 0x54, 0x49,
-	0x4f, 0x4e, 0x5f, 0x44, 0x41, 0x54, 0x45, 0x10, 0x02, 0x12, 0x21, 0x0a, 0x1d, 0x4d, 0x45, 0x4d,
-	0x42, 0x45, 0x52, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x43,
-	0x48, 0x41, 0x4e, 0x47, 0x45, 0x5f, 0x44, 0x41, 0x54, 0x45, 0x10, 0x03, 0x12, 0x29, 0x0a, 0x25,
-	0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d,
-	0x45, 0x5f, 0x55, 0x53, 0x45, 0x52, 0x5f, 0x52, 0x45, 0x53, 0x4f, 0x55, 0x52, 0x43, 0x45, 0x5f,
-	0x4f, 0x57, 0x4e, 0x45, 0x52, 0x10, 0x04, 0x42, 0x2c, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69,
-	0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x6d,
-	0x65, 0x6d, 0x62, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x42, 0x2c, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a,
+	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f,
+	0x6d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -689,30 +621,28 @@ func file_zitadel_member_proto_rawDescGZIP() []byte {
 	return file_zitadel_member_proto_rawDescData
 }
 
-var file_zitadel_member_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_zitadel_member_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_zitadel_member_proto_goTypes = []interface{}{
-	(MemberFieldColumnName)(0),   // 0: zitadel.member.v1.MemberFieldColumnName
-	(*Member)(nil),               // 1: zitadel.member.v1.Member
-	(*SearchQuery)(nil),          // 2: zitadel.member.v1.SearchQuery
-	(*FirstNameQuery)(nil),       // 3: zitadel.member.v1.FirstNameQuery
-	(*LastNameQuery)(nil),        // 4: zitadel.member.v1.LastNameQuery
-	(*EmailQuery)(nil),           // 5: zitadel.member.v1.EmailQuery
-	(*UserIDQuery)(nil),          // 6: zitadel.member.v1.UserIDQuery
-	(*object.ObjectDetails)(nil), // 7: zitadel.v1.ObjectDetails
-	(user.Type)(0),               // 8: zitadel.user.v1.Type
-	(object.TextQueryMethod)(0),  // 9: zitadel.v1.TextQueryMethod
+	(*Member)(nil),               // 0: zitadel.member.v1.Member
+	(*SearchQuery)(nil),          // 1: zitadel.member.v1.SearchQuery
+	(*FirstNameQuery)(nil),       // 2: zitadel.member.v1.FirstNameQuery
+	(*LastNameQuery)(nil),        // 3: zitadel.member.v1.LastNameQuery
+	(*EmailQuery)(nil),           // 4: zitadel.member.v1.EmailQuery
+	(*UserIDQuery)(nil),          // 5: zitadel.member.v1.UserIDQuery
+	(*object.ObjectDetails)(nil), // 6: zitadel.v1.ObjectDetails
+	(user.Type)(0),               // 7: zitadel.user.v1.Type
+	(object.TextQueryMethod)(0),  // 8: zitadel.v1.TextQueryMethod
 }
 var file_zitadel_member_proto_depIdxs = []int32{
-	7, // 0: zitadel.member.v1.Member.details:type_name -> zitadel.v1.ObjectDetails
-	8, // 1: zitadel.member.v1.Member.user_type:type_name -> zitadel.user.v1.Type
-	3, // 2: zitadel.member.v1.SearchQuery.first_name_query:type_name -> zitadel.member.v1.FirstNameQuery
-	4, // 3: zitadel.member.v1.SearchQuery.last_name_query:type_name -> zitadel.member.v1.LastNameQuery
-	5, // 4: zitadel.member.v1.SearchQuery.email_query:type_name -> zitadel.member.v1.EmailQuery
-	6, // 5: zitadel.member.v1.SearchQuery.user_id_query:type_name -> zitadel.member.v1.UserIDQuery
-	9, // 6: zitadel.member.v1.FirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	9, // 7: zitadel.member.v1.LastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
-	9, // 8: zitadel.member.v1.EmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	6, // 0: zitadel.member.v1.Member.details:type_name -> zitadel.v1.ObjectDetails
+	7, // 1: zitadel.member.v1.Member.user_type:type_name -> zitadel.user.v1.Type
+	2, // 2: zitadel.member.v1.SearchQuery.first_name_query:type_name -> zitadel.member.v1.FirstNameQuery
+	3, // 3: zitadel.member.v1.SearchQuery.last_name_query:type_name -> zitadel.member.v1.LastNameQuery
+	4, // 4: zitadel.member.v1.SearchQuery.email_query:type_name -> zitadel.member.v1.EmailQuery
+	5, // 5: zitadel.member.v1.SearchQuery.user_id_query:type_name -> zitadel.member.v1.UserIDQuery
+	8, // 6: zitadel.member.v1.FirstNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	8, // 7: zitadel.member.v1.LastNameQuery.method:type_name -> zitadel.v1.TextQueryMethod
+	8, // 8: zitadel.member.v1.EmailQuery.method:type_name -> zitadel.v1.TextQueryMethod
 	9, // [9:9] is the sub-list for method output_type
 	9, // [9:9] is the sub-list for method input_type
 	9, // [9:9] is the sub-list for extension type_name
@@ -810,14 +740,13 @@ func file_zitadel_member_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_member_proto_rawDesc,
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_zitadel_member_proto_goTypes,
 		DependencyIndexes: file_zitadel_member_proto_depIdxs,
-		EnumInfos:         file_zitadel_member_proto_enumTypes,
 		MessageInfos:      file_zitadel_member_proto_msgTypes,
 	}.Build()
 	File_zitadel_member_proto = out.File
