@@ -8,6 +8,7 @@ import (
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/admin"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/auth"
+	featureV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/feature/v2"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
 	oidcV2_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2"
 	oidcV2Beta_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
@@ -20,6 +21,7 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/system"
 	userV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2"
 	userV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/user/v2beta"
+	webkeyV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/webkey/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
@@ -63,6 +65,8 @@ type Client struct {
 	organizationServiceV2 orgV2.OrganizationServiceClient
 	oidcService           oidcV2Beta_pb.OIDCServiceClient
 	oidcServiceV2         oidcV2_pb.OIDCServiceClient
+	featureV2             featureV2.FeatureServiceClient
+	webkeyV2Beta          webkeyV2Beta.WebKeyServiceClient
 }
 
 func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client, error) {
@@ -206,4 +210,18 @@ func (c *Client) OrganizationServiceV2() orgV2.OrganizationServiceClient {
 		c.organizationServiceV2 = orgV2.NewOrganizationServiceClient(c.connection)
 	}
 	return c.organizationServiceV2
+}
+
+func (c *Client) FeatureServiceV2() featureV2.FeatureServiceClient {
+	if c.featureV2 == nil {
+		c.featureV2 = featureV2.NewFeatureServiceClient(c.connection)
+	}
+	return c.featureV2
+}
+
+func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
+	if c.webkeyV2Beta == nil {
+		c.webkeyV2Beta = webkeyV2Beta.NewWebKeyServiceClient(c.connection)
+	}
+	return c.webkeyV2Beta
 }
