@@ -21,13 +21,14 @@ var (
 // Authenticator provides the functionality to handle authentication including check for existing session,
 // starting a new authentication by redirecting the user to the Login UI and more.
 type Authenticator[T Ctx] struct {
-	authN             Handler[T]
-	logger            *slog.Logger
-	router            *http.ServeMux
-	sessions          Sessions[T]
-	encryptionKey     string
-	sessionCookieName string
-	externalSecure    bool
+	authN                 Handler[T]
+	logger                *slog.Logger
+	router                *http.ServeMux
+	sessions              Sessions[T]
+	encryptionKey         string
+	sessionCookieName     string
+	externalSecure        bool
+	postLogoutRedirectURI string
 }
 
 // Option allows customization of the [Authenticator] such as logging and more.
@@ -60,6 +61,13 @@ func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
 func WithExternalSecure[T Ctx](externalSecure bool) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.externalSecure = externalSecure
+	}
+}
+
+// WithPostLogoutRedirectURI allows specifying the URL the user is redirected to after a successful logout.
+func WithPostLogoutRedirectURI[T Ctx](uri string) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.postLogoutRedirectURI = uri
 	}
 }
 
@@ -150,12 +158,19 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 	}
 	a.deleteSessionCookie(w)
 
-	proto := "http"
-	if req.TLS != nil || a.externalSecure {
-		proto = "https"
+	if a.postLogoutRedirectURI == "" {
+		// If no custom URI is set, use the original, default logic
+		proto := "http"
+		if req.TLS != nil || a.externalSecure {
+			proto = "https"
+		}
+		postLogout := fmt.Sprintf("%s://%s/", proto, req.Host)
+		a.authN.Logout(w, req, ctx, stateParam, postLogout)
+	} else {
+		// If a custom URI IS set, use it directly
+		postLogout := a.postLogoutRedirectURI
+		a.authN.Logout(w, req, ctx, stateParam, postLogout)
 	}
-	postLogout := fmt.Sprintf("%s://%s/", proto, req.Host)
-	a.authN.Logout(w, req, ctx, stateParam, postLogout)
 }
 
 // IsAuthenticated checks whether there is an existing session of not.
