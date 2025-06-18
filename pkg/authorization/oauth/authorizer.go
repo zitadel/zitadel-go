@@ -43,16 +43,16 @@ func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) au
 
 type IntrospectionAuthentication func(ctx context.Context, issuer string) (rs.ResourceServer, error)
 
-// JWTProfileIntrospectionAuthentication allows to authenticate the introspection request with JWT Profile
-// using a key.json provided by ZITADEL.
+// JWTProfileIntrospectionAuthentication allows you to authenticate the introspection
+// request with JWT Profile using a key.json provided by ZITADEL.
 func JWTProfileIntrospectionAuthentication(file *client.KeyFile) IntrospectionAuthentication {
 	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
 		return rs.NewResourceServerJWTProfile(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key))
 	}
 }
 
-// ClientIDSecretIntrospectionAuthentication allows to authenticate the introspection request with
-// the client_id and client_secret provided by ZITADEL.
+// ClientIDSecretIntrospectionAuthentication allows you to authenticate the introspection
+// request with the client_id and client_secret provided by Zitadel.
 func ClientIDSecretIntrospectionAuthentication(clientID, clientSecret string) IntrospectionAuthentication {
 	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
 		return rs.NewResourceServerClientCredentials(ctx, issuer, clientID, clientSecret)
@@ -71,8 +71,8 @@ func DefaultAuthorization(path string) authorization.VerifierInitializer[*Intros
 	return WithIntrospection[*IntrospectionContext](JWTProfileIntrospectionAuthentication(c))
 }
 
-// CheckAuthorization implements the [authorization.Verifier] interface by checking the authorizationToken
-// on the OAuth2 introspection endpoint.
+// CheckAuthorization implements the [authorization.Verifier] interface by
+// checking the authorizationToken on the OAuth2 introspection endpoint.
 // On success, it will return a generic struct of type [T] of the [IntrospectionVerification].
 func (i *IntrospectionVerification[T]) CheckAuthorization(ctx context.Context, authorizationToken string) (resp T, err error) {
 	accessToken, ok := strings.CutPrefix(authorizationToken, oidc.BearerToken)
