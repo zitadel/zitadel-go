@@ -53,6 +53,8 @@ func JWTProfileIntrospectionAuthentication(file *client.KeyFile) IntrospectionAu
 
 // ClientIDSecretIntrospectionAuthentication allows you to authenticate the introspection
 // request with the client_id and client_secret provided by Zitadel.
+//
+//goland:noinspection GoUnusedExportedFunction
 func ClientIDSecretIntrospectionAuthentication(clientID, clientSecret string) IntrospectionAuthentication {
 	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
 		return rs.NewResourceServerClientCredentials(ctx, issuer, clientID, clientSecret)
