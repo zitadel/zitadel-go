@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"sync"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -48,25 +49,37 @@ func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 	}
 }
 
+type Lazy[T any] struct {
+	once  sync.Once
+	value T
+}
+
+func (l *Lazy[T]) Get(init func() T) T {
+	l.once.Do(func() {
+		l.value = init()
+	})
+	return l.value
+}
+
 type Client struct {
 	connection *grpc.ClientConn
 
-	systemService         system.SystemServiceClient
-	adminService          admin.AdminServiceClient
-	managementService     management.ManagementServiceClient
-	userService           userV2Beta.UserServiceClient
-	userServiceV2         userV2.UserServiceClient
-	authService           auth.AuthServiceClient
-	settingsService       settingsV2Beta.SettingsServiceClient
-	settingsServiceV2     settingsV2.SettingsServiceClient
-	sessionService        sessionV2Beta.SessionServiceClient
-	sessionServiceV2      sessionV2.SessionServiceClient
-	organizationService   orgV2Beta.OrganizationServiceClient
-	organizationServiceV2 orgV2.OrganizationServiceClient
-	oidcService           oidcV2Beta_pb.OIDCServiceClient
-	oidcServiceV2         oidcV2_pb.OIDCServiceClient
-	featureV2             featureV2.FeatureServiceClient
-	webkeyV2Beta          webkeyV2Beta.WebKeyServiceClient
+	systemService         Lazy[system.SystemServiceClient]
+	adminService          Lazy[admin.AdminServiceClient]
+	managementService     Lazy[management.ManagementServiceClient]
+	userService           Lazy[userV2Beta.UserServiceClient]
+	userServiceV2         Lazy[userV2.UserServiceClient]
+	authService           Lazy[auth.AuthServiceClient]
+	settingsService       Lazy[settingsV2Beta.SettingsServiceClient]
+	settingsServiceV2     Lazy[settingsV2.SettingsServiceClient]
+	sessionService        Lazy[sessionV2Beta.SessionServiceClient]
+	sessionServiceV2      Lazy[sessionV2.SessionServiceClient]
+	organizationService   Lazy[orgV2Beta.OrganizationServiceClient]
+	organizationServiceV2 Lazy[orgV2.OrganizationServiceClient]
+	oidcService           Lazy[oidcV2Beta_pb.OIDCServiceClient]
+	oidcServiceV2         Lazy[oidcV2_pb.OIDCServiceClient]
+	featureV2             Lazy[featureV2.FeatureServiceClient]
+	webkeyV2Beta          Lazy[webkeyV2Beta.WebKeyServiceClient]
 }
 
 func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client, error) {
@@ -115,113 +128,97 @@ func newConnection(
 }
 
 func (c *Client) SystemService() system.SystemServiceClient {
-	if c.systemService == nil {
-		c.systemService = system.NewSystemServiceClient(c.connection)
-	}
-	return c.systemService
+	return c.systemService.Get(func() system.SystemServiceClient {
+		return system.NewSystemServiceClient(c.connection)
+	})
 }
 
 func (c *Client) AdminService() admin.AdminServiceClient {
-	if c.adminService == nil {
-		c.adminService = admin.NewAdminServiceClient(c.connection)
-	}
-	return c.adminService
+	return c.adminService.Get(func() admin.AdminServiceClient {
+		return admin.NewAdminServiceClient(c.connection)
+	})
 }
 
 func (c *Client) ManagementService() management.ManagementServiceClient {
-	if c.managementService == nil {
-		c.managementService = management.NewManagementServiceClient(c.connection)
-	}
-	return c.managementService
+	return c.managementService.Get(func() management.ManagementServiceClient {
+		return management.NewManagementServiceClient(c.connection)
+	})
 }
 
 func (c *Client) AuthService() auth.AuthServiceClient {
-	if c.authService == nil {
-		c.authService = auth.NewAuthServiceClient(c.connection)
-	}
-	return c.authService
+	return c.authService.Get(func() auth.AuthServiceClient {
+		return auth.NewAuthServiceClient(c.connection)
+	})
 }
 
 func (c *Client) UserService() userV2Beta.UserServiceClient {
-	if c.userService == nil {
-		c.userService = userV2Beta.NewUserServiceClient(c.connection)
-	}
-	return c.userService
+	return c.userService.Get(func() userV2Beta.UserServiceClient {
+		return userV2Beta.NewUserServiceClient(c.connection)
+	})
 }
 
 func (c *Client) UserServiceV2() userV2.UserServiceClient {
-	if c.userServiceV2 == nil {
-		c.userServiceV2 = userV2.NewUserServiceClient(c.connection)
-	}
-	return c.userServiceV2
+	return c.userServiceV2.Get(func() userV2.UserServiceClient {
+		return userV2.NewUserServiceClient(c.connection)
+	})
 }
 
 func (c *Client) SettingsService() settingsV2Beta.SettingsServiceClient {
-	if c.settingsService == nil {
-		c.settingsService = settingsV2Beta.NewSettingsServiceClient(c.connection)
-	}
-	return c.settingsService
+	return c.settingsService.Get(func() settingsV2Beta.SettingsServiceClient {
+		return settingsV2Beta.NewSettingsServiceClient(c.connection)
+	})
 }
 
 func (c *Client) SettingsServiceV2() settingsV2.SettingsServiceClient {
-	if c.settingsServiceV2 == nil {
-		c.settingsServiceV2 = settingsV2.NewSettingsServiceClient(c.connection)
-	}
-	return c.settingsServiceV2
+	return c.settingsServiceV2.Get(func() settingsV2.SettingsServiceClient {
+		return settingsV2.NewSettingsServiceClient(c.connection)
+	})
 }
 
 func (c *Client) SessionService() sessionV2Beta.SessionServiceClient {
-	if c.sessionService == nil {
-		c.sessionService = sessionV2Beta.NewSessionServiceClient(c.connection)
-	}
-	return c.sessionService
+	return c.sessionService.Get(func() sessionV2Beta.SessionServiceClient {
+		return sessionV2Beta.NewSessionServiceClient(c.connection)
+	})
 }
 
 func (c *Client) SessionServiceV2() sessionV2.SessionServiceClient {
-	if c.sessionServiceV2 == nil {
-		c.sessionServiceV2 = sessionV2.NewSessionServiceClient(c.connection)
-	}
-	return c.sessionServiceV2
+	return c.sessionServiceV2.Get(func() sessionV2.SessionServiceClient {
+		return sessionV2.NewSessionServiceClient(c.connection)
+	})
 }
 
 func (c *Client) OIDCService() oidcV2Beta_pb.OIDCServiceClient {
-	if c.oidcService == nil {
-		c.oidcService = oidcV2Beta_pb.NewOIDCServiceClient(c.connection)
-	}
-	return c.oidcService
+	return c.oidcService.Get(func() oidcV2Beta_pb.OIDCServiceClient {
+		return oidcV2Beta_pb.NewOIDCServiceClient(c.connection)
+	})
 }
 
 func (c *Client) OIDCServiceV2() oidcV2_pb.OIDCServiceClient {
-	if c.oidcServiceV2 == nil {
-		c.oidcServiceV2 = oidcV2_pb.NewOIDCServiceClient(c.connection)
-	}
-	return c.oidcServiceV2
+	return c.oidcServiceV2.Get(func() oidcV2_pb.OIDCServiceClient {
+		return oidcV2_pb.NewOIDCServiceClient(c.connection)
+	})
 }
 
 func (c *Client) OrganizationService() orgV2Beta.OrganizationServiceClient {
-	if c.organizationService == nil {
-		c.organizationService = orgV2Beta.NewOrganizationServiceClient(c.connection)
-	}
-	return c.organizationService
+	return c.organizationService.Get(func() orgV2Beta.OrganizationServiceClient {
+		return orgV2Beta.NewOrganizationServiceClient(c.connection)
+	})
 }
 
 func (c *Client) OrganizationServiceV2() orgV2.OrganizationServiceClient {
-	if c.organizationServiceV2 == nil {
-		c.organizationServiceV2 = orgV2.NewOrganizationServiceClient(c.connection)
-	}
-	return c.organizationServiceV2
+	return c.organizationServiceV2.Get(func() orgV2.OrganizationServiceClient {
+		return orgV2.NewOrganizationServiceClient(c.connection)
+	})
 }
 
 func (c *Client) FeatureServiceV2() featureV2.FeatureServiceClient {
-	if c.featureV2 == nil {
-		c.featureV2 = featureV2.NewFeatureServiceClient(c.connection)
-	}
-	return c.featureV2
+	return c.featureV2.Get(func() featureV2.FeatureServiceClient {
+		return featureV2.NewFeatureServiceClient(c.connection)
+	})
 }
 
 func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
-	if c.webkeyV2Beta == nil {
-		c.webkeyV2Beta = webkeyV2Beta.NewWebKeyServiceClient(c.connection)
-	}
-	return c.webkeyV2Beta
+	return c.webkeyV2Beta.Get(func() webkeyV2Beta.WebKeyServiceClient {
+		return webkeyV2Beta.NewWebKeyServiceClient(c.connection)
+	})
 }
