@@ -4,10 +4,10 @@ ARG GO_VERSION=1.21
 ## These steps set platform / arch type specific variables
 #######################
 FROM alpine AS arm64-base
-ENV PROTOC_ARCH aarch_64
+ENV PROTOC_ARCH=aarch_64
 
 FROM alpine AS amd64-base
-ENV PROTOC_ARCH x86_64
+ENV PROTOC_ARCH=x86_64
 
 #######################
 ## This step sets up the folder structure,
@@ -49,7 +49,7 @@ RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/zitadel/zitadel . \
 ## Go dependencies
 ## Speed up this step by mounting your local go mod pkg directory
 #######################
-FROM golang:${GO_VERSION} as go-dep
+FROM golang:${GO_VERSION} AS go-dep
 COPY --from=base /proto/include /proto/include
 ARG PROTOC_GEN_GO_GRPC_VERSION=1.3.0
 ARG PROTOC_GEN_GO_VERSION=1.31.0
@@ -61,7 +61,7 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v${PROTOC_GEN_GO_VER
 #######################
 ## Go base build
 #######################
-FROM go-dep as zitadel-client
+FROM go-dep AS zitadel-client
 ARG PROJECT_PATH=github.com/zitadel/zitadel-go/v3/pkg/client
 
 COPY --from=base /proto /proto
@@ -96,6 +96,6 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
 #######################
 ## prepare generated files for output
 #######################
-FROM scratch as zitadel-copy
+FROM scratch AS zitadel-copy
 ARG PROJECT_PATH=github.com/zitadel/zitadel-go/v3/pkg/client
 COPY --from=zitadel-client /zitadel-api/go/src/${PROJECT_PATH}/zitadel /zitadel

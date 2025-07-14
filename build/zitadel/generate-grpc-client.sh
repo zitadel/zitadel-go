@@ -83,6 +83,10 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/webkey/v2beta/key.proto=${ZITADEL_IMPORT}/webkey/v2beta \
     --go_opt=Mzitadel/webkey/v2beta/webkey_service.proto=${ZITADEL_IMPORT}/webkey/v2beta \
+    --go_opt=Mzitadel/filter/v2/filter.proto=${ZITADEL_IMPORT}/filter/v2 \
+    --go_opt=Mzitadel/metadata/v2/metadata.proto=${ZITADEL_IMPORT}/metadata/v2 \
+    --go_opt=Mzitadel/metadata/v2beta/metadata.proto=${ZITADEL_IMPORT}/metadata/v2beta \
+    --go_opt=Mzitadel/org/v2beta/org.proto=${ZITADEL_IMPORT}/org/v2beta \
     --go_opt=Mzitadel/feature/v2/feature.proto=${ZITADEL_IMPORT}/feature/v2 \
     --go_opt=Mzitadel/feature/v2/feature_service.proto=${ZITADEL_IMPORT}/feature/v2 \
     --go_opt=Mzitadel/feature/v2/instance.proto=${ZITADEL_IMPORT}/feature/v2 \
@@ -112,7 +116,9 @@ protoc \
     --go_opt=Mzitadel/user/v2/auth.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/email.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/idp.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/key.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/password.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/user/v2/pat.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/phone.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/query.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/user.proto=${ZITADEL_IMPORT}/user/v2 \

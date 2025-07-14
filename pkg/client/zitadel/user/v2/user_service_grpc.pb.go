@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	UserService_CreateUser_FullMethodName                     = "/zitadel.user.v2.UserService/CreateUser"
 	UserService_AddHumanUser_FullMethodName                   = "/zitadel.user.v2.UserService/AddHumanUser"
 	UserService_GetUserByID_FullMethodName                    = "/zitadel.user.v2.UserService/GetUserByID"
 	UserService_ListUsers_FullMethodName                      = "/zitadel.user.v2.UserService/ListUsers"
@@ -30,6 +31,7 @@ const (
 	UserService_RemovePhone_FullMethodName                    = "/zitadel.user.v2.UserService/RemovePhone"
 	UserService_ResendPhoneCode_FullMethodName                = "/zitadel.user.v2.UserService/ResendPhoneCode"
 	UserService_VerifyPhone_FullMethodName                    = "/zitadel.user.v2.UserService/VerifyPhone"
+	UserService_UpdateUser_FullMethodName                     = "/zitadel.user.v2.UserService/UpdateUser"
 	UserService_UpdateHumanUser_FullMethodName                = "/zitadel.user.v2.UserService/UpdateHumanUser"
 	UserService_DeactivateUser_FullMethodName                 = "/zitadel.user.v2.UserService/DeactivateUser"
 	UserService_ReactivateUser_FullMethodName                 = "/zitadel.user.v2.UserService/ReactivateUser"
@@ -58,18 +60,36 @@ const (
 	UserService_RemoveIDPLink_FullMethodName                  = "/zitadel.user.v2.UserService/RemoveIDPLink"
 	UserService_PasswordReset_FullMethodName                  = "/zitadel.user.v2.UserService/PasswordReset"
 	UserService_SetPassword_FullMethodName                    = "/zitadel.user.v2.UserService/SetPassword"
+	UserService_AddSecret_FullMethodName                      = "/zitadel.user.v2.UserService/AddSecret"
+	UserService_RemoveSecret_FullMethodName                   = "/zitadel.user.v2.UserService/RemoveSecret"
+	UserService_AddKey_FullMethodName                         = "/zitadel.user.v2.UserService/AddKey"
+	UserService_RemoveKey_FullMethodName                      = "/zitadel.user.v2.UserService/RemoveKey"
+	UserService_ListKeys_FullMethodName                       = "/zitadel.user.v2.UserService/ListKeys"
+	UserService_AddPersonalAccessToken_FullMethodName         = "/zitadel.user.v2.UserService/AddPersonalAccessToken"
+	UserService_RemovePersonalAccessToken_FullMethodName      = "/zitadel.user.v2.UserService/RemovePersonalAccessToken"
+	UserService_ListPersonalAccessTokens_FullMethodName       = "/zitadel.user.v2.UserService/ListPersonalAccessTokens"
 	UserService_ListAuthenticationMethodTypes_FullMethodName  = "/zitadel.user.v2.UserService/ListAuthenticationMethodTypes"
 	UserService_ListAuthenticationFactors_FullMethodName      = "/zitadel.user.v2.UserService/ListAuthenticationFactors"
 	UserService_CreateInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/CreateInviteCode"
 	UserService_ResendInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/ResendInviteCode"
 	UserService_VerifyInviteCode_FullMethodName               = "/zitadel.user.v2.UserService/VerifyInviteCode"
 	UserService_HumanMFAInitSkipped_FullMethodName            = "/zitadel.user.v2.UserService/HumanMFAInitSkipped"
+	UserService_SetUserMetadata_FullMethodName                = "/zitadel.user.v2.UserService/SetUserMetadata"
+	UserService_ListUserMetadata_FullMethodName               = "/zitadel.user.v2.UserService/ListUserMetadata"
+	UserService_DeleteUserMetadata_FullMethodName             = "/zitadel.user.v2.UserService/DeleteUserMetadata"
 )
 
 // UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	// Create a User
+	//
+	// Create a new human or machine user in the specified organization.
+	//
+	// Required permission:
+	//   - user.write
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// Create a new human user
 	//
 	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
@@ -87,12 +107,8 @@ type UserServiceClient interface {
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error)
 	// Resend code to verify user email
-	//
-	// Resend code to verify user email.
 	ResendEmailCode(ctx context.Context, in *ResendEmailCodeRequest, opts ...grpc.CallOption) (*ResendEmailCodeResponse, error)
 	// Send code to verify user email
-	//
-	// Send code to verify user email.
 	SendEmailCode(ctx context.Context, in *SendEmailCodeRequest, opts ...grpc.CallOption) (*SendEmailCodeResponse, error)
 	// Verify the email
 	//
@@ -102,19 +118,26 @@ type UserServiceClient interface {
 	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
-	// Remove the user phone
+	// Delete the user phone
 	//
-	// Remove the user phone
+	// Delete the phone number of a user.
 	RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error)
 	// Resend code to verify user phone
-	//
-	// Resend code to verify user phone.
 	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
 	// Verify the phone
 	//
 	// Verify the phone with the generated code..
 	VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error)
-	// Update User
+	// Update a User
+	//
+	// Partially update an existing user.
+	// If you change the users email or phone, you can specify how the ownership should be verified.
+	// If you change the users password, you can specify if the password should be changed again on the users next login.
+	//
+	// Required permission:
+	//   - user.write
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	// Update Human User
 	//
 	// Update all information from a user..
 	UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error)
@@ -132,7 +155,7 @@ type UserServiceClient interface {
 	LockUser(ctx context.Context, in *LockUserRequest, opts ...grpc.CallOption) (*LockUserResponse, error)
 	// Unlock user
 	//
-	// The state of the user will be changed to 'locked'. The user will not be able to log in anymore. The endpoint returns an error if the user is already in the state 'locked'. Use this endpoint if the user should not be able to log in temporarily because of an event that happened (wrong password, etc.)..
+	// The state of the user will be changed to 'active'. The user will be able to log in again. The endpoint returns an error if the user is not in the state 'locked'.
 	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error)
 	// Delete user
 	//
@@ -226,6 +249,71 @@ type UserServiceClient interface {
 	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*SetPasswordResponse, error)
+	// Add a Users Secret
+	//
+	// Generates a client secret for the user.
+	// The client id is the users username.
+	// If the user already has a secret, it is overwritten.
+	// Only users of type machine can have a secret.
+	//
+	// Required permission:
+	//   - user.write
+	AddSecret(ctx context.Context, in *AddSecretRequest, opts ...grpc.CallOption) (*AddSecretResponse, error)
+	// Remove a Users Secret
+	//
+	// Remove the current client ID and client secret from a machine user.
+	//
+	// Required permission:
+	//   - user.write
+	RemoveSecret(ctx context.Context, in *RemoveSecretRequest, opts ...grpc.CallOption) (*RemoveSecretResponse, error)
+	// Add a Key
+	//
+	// Add a keys that can be used to securely authenticate at the Zitadel APIs using JWT profile authentication using short-lived tokens.
+	// Make sure you store the returned key safely, as you won't be able to read it from the Zitadel API anymore.
+	// Only users of type machine can have keys.
+	//
+	// Required permission:
+	//   - user.write
+	AddKey(ctx context.Context, in *AddKeyRequest, opts ...grpc.CallOption) (*AddKeyResponse, error)
+	// Remove a Key
+	//
+	// Remove a machine users key by the given key ID and an optionally given user ID.
+	//
+	// Required permission:
+	//   - user.write
+	RemoveKey(ctx context.Context, in *RemoveKeyRequest, opts ...grpc.CallOption) (*RemoveKeyResponse, error)
+	// Search Keys
+	//
+	// List all matching keys. By default all keys of the instance on which the caller has permission to read the owning users are returned.
+	// Make sure to include a limit and sorting for pagination.
+	//
+	// Required permission:
+	//   - user.read
+	ListKeys(ctx context.Context, in *ListKeysRequest, opts ...grpc.CallOption) (*ListKeysResponse, error)
+	// Add a Personal Access Token
+	//
+	// Personal access tokens (PAT) are the easiest way to authenticate to the Zitadel APIs.
+	// Make sure you store the returned PAT safely, as you won't be able to read it from the Zitadel API anymore.
+	// Only users of type machine can have personal access tokens.
+	//
+	// Required permission:
+	//   - user.write
+	AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error)
+	// Remove a Personal Access Token
+	//
+	// Removes a machine users personal access token by the given token ID and an optionally given user ID.
+	//
+	// Required permission:
+	//   - user.write
+	RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error)
+	// Search Personal Access Tokens
+	//
+	// List all personal access tokens. By default all personal access tokens of the instance on which the caller has permission to read the owning users are returned.
+	// Make sure to include a limit and sorting for pagination.
+	//
+	// Required permission:
+	//   - user.read
+	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
 	// List all possible authentication methods of a user
 	//
 	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
@@ -253,6 +341,27 @@ type UserServiceClient interface {
 	//
 	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
 	HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error)
+	// Set User Metadata
+	//
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](apis/resources/user_service_v2/user-service-delete-user-metadata.api.mdx). For HTTP requests, make sure the bytes array value is base64 encoded.
+	//
+	// Required permission:
+	//   - `user.write`
+	SetUserMetadata(ctx context.Context, in *SetUserMetadataRequest, opts ...grpc.CallOption) (*SetUserMetadataResponse, error)
+	// List User Metadata
+	//
+	// List metadata of an user filtered by query.
+	//
+	// Required permission:
+	//   - `user.read`
+	ListUserMetadata(ctx context.Context, in *ListUserMetadataRequest, opts ...grpc.CallOption) (*ListUserMetadataResponse, error)
+	// Delete User Metadata
+	//
+	// Delete metadata objects from an user with a specific key.
+	//
+	// Required permission:
+	//   - `user.write`
+	DeleteUserMetadata(ctx context.Context, in *DeleteUserMetadataRequest, opts ...grpc.CallOption) (*DeleteUserMetadataResponse, error)
 }
 
 type userServiceClient struct {
@@ -261,6 +370,15 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_CreateUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error) {
@@ -356,6 +474,15 @@ func (c *userServiceClient) ResendPhoneCode(ctx context.Context, in *ResendPhone
 func (c *userServiceClient) VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error) {
 	out := new(VerifyPhoneResponse)
 	err := c.cc.Invoke(ctx, UserService_VerifyPhone_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_UpdateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -614,6 +741,78 @@ func (c *userServiceClient) SetPassword(ctx context.Context, in *SetPasswordRequ
 	return out, nil
 }
 
+func (c *userServiceClient) AddSecret(ctx context.Context, in *AddSecretRequest, opts ...grpc.CallOption) (*AddSecretResponse, error) {
+	out := new(AddSecretResponse)
+	err := c.cc.Invoke(ctx, UserService_AddSecret_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveSecret(ctx context.Context, in *RemoveSecretRequest, opts ...grpc.CallOption) (*RemoveSecretResponse, error) {
+	out := new(RemoveSecretResponse)
+	err := c.cc.Invoke(ctx, UserService_RemoveSecret_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddKey(ctx context.Context, in *AddKeyRequest, opts ...grpc.CallOption) (*AddKeyResponse, error) {
+	out := new(AddKeyResponse)
+	err := c.cc.Invoke(ctx, UserService_AddKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveKey(ctx context.Context, in *RemoveKeyRequest, opts ...grpc.CallOption) (*RemoveKeyResponse, error) {
+	out := new(RemoveKeyResponse)
+	err := c.cc.Invoke(ctx, UserService_RemoveKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListKeys(ctx context.Context, in *ListKeysRequest, opts ...grpc.CallOption) (*ListKeysResponse, error) {
+	out := new(ListKeysResponse)
+	err := c.cc.Invoke(ctx, UserService_ListKeys_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error) {
+	out := new(AddPersonalAccessTokenResponse)
+	err := c.cc.Invoke(ctx, UserService_AddPersonalAccessToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error) {
+	out := new(RemovePersonalAccessTokenResponse)
+	err := c.cc.Invoke(ctx, UserService_RemovePersonalAccessToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error) {
+	out := new(ListPersonalAccessTokensResponse)
+	err := c.cc.Invoke(ctx, UserService_ListPersonalAccessTokens_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) ListAuthenticationMethodTypes(ctx context.Context, in *ListAuthenticationMethodTypesRequest, opts ...grpc.CallOption) (*ListAuthenticationMethodTypesResponse, error) {
 	out := new(ListAuthenticationMethodTypesResponse)
 	err := c.cc.Invoke(ctx, UserService_ListAuthenticationMethodTypes_FullMethodName, in, out, opts...)
@@ -668,10 +867,44 @@ func (c *userServiceClient) HumanMFAInitSkipped(ctx context.Context, in *HumanMF
 	return out, nil
 }
 
+func (c *userServiceClient) SetUserMetadata(ctx context.Context, in *SetUserMetadataRequest, opts ...grpc.CallOption) (*SetUserMetadataResponse, error) {
+	out := new(SetUserMetadataResponse)
+	err := c.cc.Invoke(ctx, UserService_SetUserMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserMetadata(ctx context.Context, in *ListUserMetadataRequest, opts ...grpc.CallOption) (*ListUserMetadataResponse, error) {
+	out := new(ListUserMetadataResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUserMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteUserMetadata(ctx context.Context, in *DeleteUserMetadataRequest, opts ...grpc.CallOption) (*DeleteUserMetadataResponse, error) {
+	out := new(DeleteUserMetadataResponse)
+	err := c.cc.Invoke(ctx, UserService_DeleteUserMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	// Create a User
+	//
+	// Create a new human or machine user in the specified organization.
+	//
+	// Required permission:
+	//   - user.write
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// Create a new human user
 	//
 	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
@@ -689,12 +922,8 @@ type UserServiceServer interface {
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error)
 	// Resend code to verify user email
-	//
-	// Resend code to verify user email.
 	ResendEmailCode(context.Context, *ResendEmailCodeRequest) (*ResendEmailCodeResponse, error)
 	// Send code to verify user email
-	//
-	// Send code to verify user email.
 	SendEmailCode(context.Context, *SendEmailCodeRequest) (*SendEmailCodeResponse, error)
 	// Verify the email
 	//
@@ -704,19 +933,26 @@ type UserServiceServer interface {
 	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
-	// Remove the user phone
+	// Delete the user phone
 	//
-	// Remove the user phone
+	// Delete the phone number of a user.
 	RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error)
 	// Resend code to verify user phone
-	//
-	// Resend code to verify user phone.
 	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
 	// Verify the phone
 	//
 	// Verify the phone with the generated code..
 	VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error)
-	// Update User
+	// Update a User
+	//
+	// Partially update an existing user.
+	// If you change the users email or phone, you can specify how the ownership should be verified.
+	// If you change the users password, you can specify if the password should be changed again on the users next login.
+	//
+	// Required permission:
+	//   - user.write
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// Update Human User
 	//
 	// Update all information from a user..
 	UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error)
@@ -734,7 +970,7 @@ type UserServiceServer interface {
 	LockUser(context.Context, *LockUserRequest) (*LockUserResponse, error)
 	// Unlock user
 	//
-	// The state of the user will be changed to 'locked'. The user will not be able to log in anymore. The endpoint returns an error if the user is already in the state 'locked'. Use this endpoint if the user should not be able to log in temporarily because of an event that happened (wrong password, etc.)..
+	// The state of the user will be changed to 'active'. The user will be able to log in again. The endpoint returns an error if the user is not in the state 'locked'.
 	UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error)
 	// Delete user
 	//
@@ -828,6 +1064,71 @@ type UserServiceServer interface {
 	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error)
+	// Add a Users Secret
+	//
+	// Generates a client secret for the user.
+	// The client id is the users username.
+	// If the user already has a secret, it is overwritten.
+	// Only users of type machine can have a secret.
+	//
+	// Required permission:
+	//   - user.write
+	AddSecret(context.Context, *AddSecretRequest) (*AddSecretResponse, error)
+	// Remove a Users Secret
+	//
+	// Remove the current client ID and client secret from a machine user.
+	//
+	// Required permission:
+	//   - user.write
+	RemoveSecret(context.Context, *RemoveSecretRequest) (*RemoveSecretResponse, error)
+	// Add a Key
+	//
+	// Add a keys that can be used to securely authenticate at the Zitadel APIs using JWT profile authentication using short-lived tokens.
+	// Make sure you store the returned key safely, as you won't be able to read it from the Zitadel API anymore.
+	// Only users of type machine can have keys.
+	//
+	// Required permission:
+	//   - user.write
+	AddKey(context.Context, *AddKeyRequest) (*AddKeyResponse, error)
+	// Remove a Key
+	//
+	// Remove a machine users key by the given key ID and an optionally given user ID.
+	//
+	// Required permission:
+	//   - user.write
+	RemoveKey(context.Context, *RemoveKeyRequest) (*RemoveKeyResponse, error)
+	// Search Keys
+	//
+	// List all matching keys. By default all keys of the instance on which the caller has permission to read the owning users are returned.
+	// Make sure to include a limit and sorting for pagination.
+	//
+	// Required permission:
+	//   - user.read
+	ListKeys(context.Context, *ListKeysRequest) (*ListKeysResponse, error)
+	// Add a Personal Access Token
+	//
+	// Personal access tokens (PAT) are the easiest way to authenticate to the Zitadel APIs.
+	// Make sure you store the returned PAT safely, as you won't be able to read it from the Zitadel API anymore.
+	// Only users of type machine can have personal access tokens.
+	//
+	// Required permission:
+	//   - user.write
+	AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error)
+	// Remove a Personal Access Token
+	//
+	// Removes a machine users personal access token by the given token ID and an optionally given user ID.
+	//
+	// Required permission:
+	//   - user.write
+	RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error)
+	// Search Personal Access Tokens
+	//
+	// List all personal access tokens. By default all personal access tokens of the instance on which the caller has permission to read the owning users are returned.
+	// Make sure to include a limit and sorting for pagination.
+	//
+	// Required permission:
+	//   - user.read
+	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
 	// List all possible authentication methods of a user
 	//
 	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
@@ -855,6 +1156,27 @@ type UserServiceServer interface {
 	//
 	// Update the last time the user has skipped MFA initialization. The server timestamp is used.
 	HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error)
+	// Set User Metadata
+	//
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](apis/resources/user_service_v2/user-service-delete-user-metadata.api.mdx). For HTTP requests, make sure the bytes array value is base64 encoded.
+	//
+	// Required permission:
+	//   - `user.write`
+	SetUserMetadata(context.Context, *SetUserMetadataRequest) (*SetUserMetadataResponse, error)
+	// List User Metadata
+	//
+	// List metadata of an user filtered by query.
+	//
+	// Required permission:
+	//   - `user.read`
+	ListUserMetadata(context.Context, *ListUserMetadataRequest) (*ListUserMetadataResponse, error)
+	// Delete User Metadata
+	//
+	// Delete metadata objects from an user with a specific key.
+	//
+	// Required permission:
+	//   - `user.write`
+	DeleteUserMetadata(context.Context, *DeleteUserMetadataRequest) (*DeleteUserMetadataResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -862,6 +1184,9 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
+func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
 func (UnimplementedUserServiceServer) AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddHumanUser not implemented")
 }
@@ -894,6 +1219,9 @@ func (UnimplementedUserServiceServer) ResendPhoneCode(context.Context, *ResendPh
 }
 func (UnimplementedUserServiceServer) VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPhone not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateHumanUser not implemented")
@@ -979,6 +1307,30 @@ func (UnimplementedUserServiceServer) PasswordReset(context.Context, *PasswordRe
 func (UnimplementedUserServiceServer) SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPassword not implemented")
 }
+func (UnimplementedUserServiceServer) AddSecret(context.Context, *AddSecretRequest) (*AddSecretResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSecret not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveSecret(context.Context, *RemoveSecretRequest) (*RemoveSecretResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveSecret not implemented")
+}
+func (UnimplementedUserServiceServer) AddKey(context.Context, *AddKeyRequest) (*AddKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddKey not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveKey(context.Context, *RemoveKeyRequest) (*RemoveKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveKey not implemented")
+}
+func (UnimplementedUserServiceServer) ListKeys(context.Context, *ListKeysRequest) (*ListKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListKeys not implemented")
+}
+func (UnimplementedUserServiceServer) AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddPersonalAccessToken not implemented")
+}
+func (UnimplementedUserServiceServer) RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePersonalAccessToken not implemented")
+}
+func (UnimplementedUserServiceServer) ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPersonalAccessTokens not implemented")
+}
 func (UnimplementedUserServiceServer) ListAuthenticationMethodTypes(context.Context, *ListAuthenticationMethodTypesRequest) (*ListAuthenticationMethodTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuthenticationMethodTypes not implemented")
 }
@@ -997,6 +1349,15 @@ func (UnimplementedUserServiceServer) VerifyInviteCode(context.Context, *VerifyI
 func (UnimplementedUserServiceServer) HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HumanMFAInitSkipped not implemented")
 }
+func (UnimplementedUserServiceServer) SetUserMetadata(context.Context, *SetUserMetadataRequest) (*SetUserMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserMetadata not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserMetadata(context.Context, *ListUserMetadataRequest) (*ListUserMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserMetadata not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteUserMetadata(context.Context, *DeleteUserMetadataRequest) (*DeleteUserMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserMetadata not implemented")
+}
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -1008,6 +1369,24 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
+}
+
+func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_CreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_AddHumanUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1204,6 +1583,24 @@ func _UserService_VerifyPhone_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).VerifyPhone(ctx, req.(*VerifyPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1712,6 +2109,150 @@ func _UserService_SetPassword_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_AddSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddSecret(ctx, req.(*AddSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_RemoveSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveSecret(ctx, req.(*RemoveSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_AddKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddKey(ctx, req.(*AddKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_RemoveKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveKey(ctx, req.(*RemoveKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListKeys_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListKeys(ctx, req.(*ListKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddPersonalAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddPersonalAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddPersonalAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_AddPersonalAccessToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddPersonalAccessToken(ctx, req.(*AddPersonalAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemovePersonalAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePersonalAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemovePersonalAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_RemovePersonalAccessToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemovePersonalAccessToken(ctx, req.(*RemovePersonalAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListPersonalAccessTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPersonalAccessTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListPersonalAccessTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListPersonalAccessTokens_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListPersonalAccessTokens(ctx, req.(*ListPersonalAccessTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_ListAuthenticationMethodTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAuthenticationMethodTypesRequest)
 	if err := dec(in); err != nil {
@@ -1820,6 +2361,60 @@ func _UserService_HumanMFAInitSkipped_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_SetUserMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).SetUserMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_SetUserMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).SetUserMetadata(ctx, req.(*SetUserMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListUserMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserMetadata(ctx, req.(*ListUserMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteUserMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteUserMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_DeleteUserMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteUserMetadata(ctx, req.(*DeleteUserMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1827,6 +2422,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "zitadel.user.v2.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUser",
+			Handler:    _UserService_CreateUser_Handler,
+		},
 		{
 			MethodName: "AddHumanUser",
 			Handler:    _UserService_AddHumanUser_Handler,
@@ -1870,6 +2469,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyPhone",
 			Handler:    _UserService_VerifyPhone_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _UserService_UpdateUser_Handler,
 		},
 		{
 			MethodName: "UpdateHumanUser",
@@ -1984,6 +2587,38 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_SetPassword_Handler,
 		},
 		{
+			MethodName: "AddSecret",
+			Handler:    _UserService_AddSecret_Handler,
+		},
+		{
+			MethodName: "RemoveSecret",
+			Handler:    _UserService_RemoveSecret_Handler,
+		},
+		{
+			MethodName: "AddKey",
+			Handler:    _UserService_AddKey_Handler,
+		},
+		{
+			MethodName: "RemoveKey",
+			Handler:    _UserService_RemoveKey_Handler,
+		},
+		{
+			MethodName: "ListKeys",
+			Handler:    _UserService_ListKeys_Handler,
+		},
+		{
+			MethodName: "AddPersonalAccessToken",
+			Handler:    _UserService_AddPersonalAccessToken_Handler,
+		},
+		{
+			MethodName: "RemovePersonalAccessToken",
+			Handler:    _UserService_RemovePersonalAccessToken_Handler,
+		},
+		{
+			MethodName: "ListPersonalAccessTokens",
+			Handler:    _UserService_ListPersonalAccessTokens_Handler,
+		},
+		{
 			MethodName: "ListAuthenticationMethodTypes",
 			Handler:    _UserService_ListAuthenticationMethodTypes_Handler,
 		},
@@ -2006,6 +2641,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HumanMFAInitSkipped",
 			Handler:    _UserService_HumanMFAInitSkipped_Handler,
+		},
+		{
+			MethodName: "SetUserMetadata",
+			Handler:    _UserService_SetUserMetadata_Handler,
+		},
+		{
+			MethodName: "ListUserMetadata",
+			Handler:    _UserService_ListUserMetadata_Handler,
+		},
+		{
+			MethodName: "DeleteUserMetadata",
+			Handler:    _UserService_DeleteUserMetadata_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
