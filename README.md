@@ -10,11 +10,11 @@
 
 Go library for [ZITADEL](https://github.com/zitadel/zitadel).
 
-## Features 
+## Features
 
- - Authentication
- - Authorization checks
- - Client for ZITADEL API
+- Authentication
+- Authorization checks
+- Client for ZITADEL API
 
 ## Usage
 
@@ -24,7 +24,202 @@ Add the package to your go.mod by
 go get -u github.com/zitadel/zitadel-go/v3
 ```
 
-...and check out the [examples](./example) in this repo or head over to our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
+...and check out the [examples](./example) in this repo or head over to
+our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
+
+### Authentication Methods
+
+The SDK offers three ways to authenticate with Zitadel. Each method has its
+own benefits—choose the one that fits your situation best.
+
+#### 1. Private Key JWT Authentication
+
+**What is it?**
+You use a JSON Web Token (JWT) that you sign with a private key stored in a
+JSON file. This process creates a secure token.
+
+**When should you use it?**
+
+- **Best for production:** It offers strong security.
+- **Advanced control:** You can adjust token settings like expiration.
+
+**How do you use it?**
+
+1. Save your private key in a JSON file.
+2. Build the client
+
+**Example:**
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/zitadel/oidc/v3/pkg/oidc"
+	"golang.org/x/exp/slog"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
+)
+
+func main() {
+	domain := "https://example.us1.zitadel.cloud"
+	keyPath := "path/to/jwt-key.json"
+
+	ctx := context.Background()
+
+	authOption := client.DefaultServiceUserAuthentication(
+		keyPath,
+		oidc.ScopeOpenID,
+		client.ScopeZitadelAPI(),
+	)
+
+	api, err := client.New(ctx, zitadel.New(domain), client.WithAuth(authOption))
+	if err != nil {
+		slog.Error("could not create api client", "error", err)
+		os.Exit(1)
+	}
+
+	resp, err := api.ManagementService().GetMyOrg(ctx, &management.GetMyOrgRequest{})
+	if err != nil {
+		slog.Error("gRPC call failed", "error", err)
+		os.Exit(1)
+	}
+
+	log.Printf("Successfully called API: Your organization is %s", resp.GetOrg().GetName())
+}
+```
+
+#### 2. Client Credentials Grant
+
+**What is it?**
+This method uses a client ID and client secret to get a secure access token,
+which is then used to authenticate.
+
+**When should you use it?**
+
+- **Simple and straightforward:** Good for server-to-server communication.
+- **Trusted environments:** Use it when both servers are owned or trusted.
+
+**How do you use it?**
+
+1. Provide your client ID and client secret.
+2. Build the client
+
+**Example:**
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/zitadel/oidc/v3/pkg/oidc"
+	"golang.org/x/exp/slog"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
+)
+
+func main() {
+	domain := "https://example.us1.zitadel.cloud"
+	clientID := "id"
+	clientSecret := "secret"
+
+	ctx := context.Background()
+
+	authOption := client.PasswordAuthentication(
+		clientID,
+		clientSecret,
+		oidc.ScopeOpenID,
+		client.ScopeZitadelAPI(),
+	)
+
+	api, err := client.New(ctx, zitadel.New(domain), client.WithAuth(authOption))
+	if err != nil {
+		slog.Error("could not create api client", "error", err)
+		os.Exit(1)
+	}
+
+	resp, err := api.ManagementService().GetMyOrg(ctx, &management.GetMyOrgRequest{})
+	if err != nil {
+		slog.Error("gRPC call failed", "error", err)
+		os.Exit(1)
+	}
+
+	log.Printf("Successfully called API: Your organization is %s", resp.GetOrg().GetName())
+}
+```
+
+#### 3. Personal Access Tokens (PATs)
+
+**What is it?**
+A Personal Access Token (PAT) is a pre-generated token that you can use to
+authenticate without exchanging credentials every time.
+
+**When should you use it?**
+
+- **Easy to use:** Great for development or testing scenarios.
+- **Quick setup:** No need for dynamic token generation.
+
+**How do you use it?**
+
+1. Obtain a valid personal access token from your account.
+2. Build the client
+
+**Example:**
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"golang.org/x/exp/slog"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
+)
+
+func main() {
+	domain := "https://example.us1.zitadel.cloud"
+	token := "token"
+
+	ctx := context.Background()
+
+	authOption := client.PAT(token)
+
+	api, err := client.New(ctx, zitadel.New(domain), client.WithAuth(authOption))
+	if err != nil {
+		slog.Error("could not create api client", "error", err)
+		os.Exit(1)
+	}
+
+	resp, err := api.ManagementService().GetMyOrg(ctx, &management.GetMyOrgRequest{})
+	if err != nil {
+		slog.Error("gRPC call failed", "error", err)
+		os.Exit(1)
+	}
+
+	log.Printf("Successfully called API: Your organization is %s", resp.GetOrg().GetName())
+}
+```
+
+---
+
+Choose the authentication method that best suits your needs based on your
+environment and security requirements. For more details, please refer to the
+[Zitadel documentation on authenticating service users](https://zitadel.com/docs/guides/integrate/service-users/authenticate-service-users).
 
 ### Versions
 
@@ -34,11 +229,12 @@ If you're looking for older version of this module, please check out the followi
 - [v2.2.8](https://github.com/zitadel/zitadel-go/releases/tag/v2.2.8) is the last release for the v2 Go module
 - [v0.3.5](https://github.com/zitadel/zitadel-go/releases/tag/v0.3.5) is the last release for the v0/v1 Go module
 
-Currently only v3 is supported, due to some security updates that involve breaking changes. Therefore v2 and older will no longer be supported.
+Currently only v3 is supported, due to some security updates that involve breaking changes. Therefore v2 and older will
+no longer be supported.
 
 ## Supported Go Versions
 
-For security reasons, we only support and recommend the use of one of the latest two Go versions (:white_check_mark:).  
+For security reasons, we only support and recommend the use of one of the latest two Go versions (:white_check_mark:).
 Versions that also build are marked with :warning:.
 
 | Version | Supported          |
@@ -49,11 +245,14 @@ Versions that also build are marked with :warning:.
 
 ## License
 
-The full functionality of this library is and stays open source and free to use for everyone. Visit our [website](https://zitadel.com) and get in touch.
+The full functionality of this library is and stays open source and free to use for everyone. Visit
+our [website](https://zitadel.com) and get in touch.
 
 See the exact licensing terms [here](./LICENSE)
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "
+AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+language governing permissions and limitations under the License.
 
 ## Contributors
 
