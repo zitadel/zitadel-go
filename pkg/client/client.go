@@ -14,11 +14,12 @@ import (
 	authorizationV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/authorization/v2beta"
 	featureV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/feature/v2"
 	featureV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/feature/v2beta"
+	idpV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/idp/v2"
 	instanceV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/instance/v2beta"
 	internalPermissionV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/internal_permission/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
-	oidcV2_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2"
-	oidcV2Beta_pb "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
+	oidcV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2"
+	oidcV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/oidc/v2beta"
 	orgV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/org/v2"
 	orgV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/org/v2beta"
 	projectV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/project/v2beta"
@@ -74,8 +75,8 @@ type Client struct {
 	sessionServiceV2                sessionV2.SessionServiceClient
 	organizationService             orgV2Beta.OrganizationServiceClient
 	organizationServiceV2           orgV2.OrganizationServiceClient
-	oidcService                     oidcV2Beta_pb.OIDCServiceClient
-	oidcServiceV2                   oidcV2_pb.OIDCServiceClient
+	oidcService                     oidcV2Beta.OIDCServiceClient
+	oidcServiceV2                   oidcV2.OIDCServiceClient
 	featureV2                       featureV2.FeatureServiceClient
 	userService                     userV2Beta.UserServiceClient
 	userServiceV2                   userV2.UserServiceClient
@@ -85,6 +86,7 @@ type Client struct {
 	telemetryServiceV2Beta          analyticsV2Beta.TelemetryServiceClient
 	featureServiceV2                featureV2.FeatureServiceClient
 	featureServiceV2Beta            featureV2Beta.FeatureServiceClient
+	idpServiceV2                    idpV2.IdentityProviderServiceClient
 	instanceServiceV2Beta           instanceV2Beta.InstanceServiceClient
 	projectServiceV2Beta            projectV2Beta.ProjectServiceClient
 	samlServiceV2                   samlV2.SAMLServiceClient
@@ -212,16 +214,23 @@ func (c *Client) ManagementService() management.ManagementServiceClient {
 	return c.managementService
 }
 
-func (c *Client) OIDCService() oidcV2Beta_pb.OIDCServiceClient {
+func (c *Client) IdpServiceV2() idpV2.IdentityProviderServiceClient {
+	if c.idpServiceV2 == nil {
+		c.idpServiceV2 = idpV2.NewIdentityProviderServiceClient(c.connection)
+	}
+	return c.idpServiceV2
+}
+
+func (c *Client) OIDCService() oidcV2Beta.OIDCServiceClient {
 	if c.oidcService == nil {
-		c.oidcService = oidcV2Beta_pb.NewOIDCServiceClient(c.connection)
+		c.oidcService = oidcV2Beta.NewOIDCServiceClient(c.connection)
 	}
 	return c.oidcService
 }
 
-func (c *Client) OIDCServiceV2() oidcV2_pb.OIDCServiceClient {
+func (c *Client) OIDCServiceV2() oidcV2.OIDCServiceClient {
 	if c.oidcServiceV2 == nil {
-		c.oidcServiceV2 = oidcV2_pb.NewOIDCServiceClient(c.connection)
+		c.oidcServiceV2 = oidcV2.NewOIDCServiceClient(c.connection)
 	}
 	return c.oidcServiceV2
 }

@@ -116,6 +116,7 @@ protoc \
     --go_opt=Mzitadel/feature/v2/system.proto=${ZITADEL_IMPORT}/feature/v2 \
     --go_opt=Mzitadel/feature/v2/user.proto=${ZITADEL_IMPORT}/feature/v2 \
     --go_opt=Mzitadel/idp/v2/idp.proto=${ZITADEL_IMPORT}/idp/v2 \
+    --go_opt=Mzitadel/idp/v2/idp_service.proto=${ZITADEL_IMPORT}/idp/v2 \
     --go_opt=Mzitadel/object/v2/object.proto=${ZITADEL_IMPORT}/object/v2 \
     --go_opt=Mzitadel/session/v2/challenge.proto=${ZITADEL_IMPORT}/session/v2 \
     --go_opt=Mzitadel/session/v2/session.proto=${ZITADEL_IMPORT}/session/v2 \
