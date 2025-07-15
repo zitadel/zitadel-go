@@ -85,12 +85,22 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/analytics/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/analytics/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/app/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/app/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/authorization/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/authorization/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/instance/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/instance/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/internal_permission/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/internal_permission/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/project/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/project/v2beta/ \
     # v2 packages
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/saml/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/saml/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2/ \
+    #&& mv /go/src/github.com/zitadel/zitadel/pkg/grpc/idp/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/idp/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2/
 
 #######################

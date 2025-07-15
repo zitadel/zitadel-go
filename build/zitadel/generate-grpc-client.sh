@@ -83,6 +83,28 @@ protoc \
     --go_opt=Mzitadel/user/v2beta/user_service.proto=${ZITADEL_IMPORT}/user/v2beta \
     --go_opt=Mzitadel/webkey/v2beta/key.proto=${ZITADEL_IMPORT}/webkey/v2beta \
     --go_opt=Mzitadel/webkey/v2beta/webkey_service.proto=${ZITADEL_IMPORT}/webkey/v2beta \
+    --go_opt=Mzitadel/analytics/v2beta/telemetry.proto=${ZITADEL_IMPORT}/analytics/v2beta \
+    --go_opt=Mzitadel/analytics/v2beta/telemetry_service.proto=${ZITADEL_IMPORT}/analytics/v2beta \
+    --go_opt=Mzitadel/app/v2beta/api.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/app/v2beta/app.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/app/v2beta/app_service.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/app/v2beta/login.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/app/v2beta/oidc.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/app/v2beta/saml.proto=${ZITADEL_IMPORT}/app/v2beta \
+    --go_opt=Mzitadel/authorization/v2beta/authorization.proto=${ZITADEL_IMPORT}/authorization/v2beta \
+    --go_opt=Mzitadel/authorization/v2beta/authorization_service.proto=${ZITADEL_IMPORT}/authorization/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/feature.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/feature_service.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/instance.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/organization.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/system.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/feature/v2beta/user.proto=${ZITADEL_IMPORT}/feature/v2beta \
+    --go_opt=Mzitadel/instance/v2beta/instance.proto=${ZITADEL_IMPORT}/instance/v2beta \
+    --go_opt=Mzitadel/instance/v2beta/instance_service.proto=${ZITADEL_IMPORT}/instance/v2beta \
+    --go_opt=Mzitadel/internal_permission/v2beta/internal_permission_service.proto=${ZITADEL_IMPORT}/internal_permission/v2beta \
+    --go_opt=Mzitadel/internal_permission/v2beta/query.proto=${ZITADEL_IMPORT}/internal_permission/v2beta \
+    --go_opt=Mzitadel/project/v2beta/project_service.proto=${ZITADEL_IMPORT}/project/v2beta \
+    --go_opt=Mzitadel/project/v2beta/query.proto=${ZITADEL_IMPORT}/project/v2beta \
     --go_opt=Mzitadel/filter/v2/filter.proto=${ZITADEL_IMPORT}/filter/v2 \
     --go_opt=Mzitadel/metadata/v2/metadata.proto=${ZITADEL_IMPORT}/metadata/v2 \
     --go_opt=Mzitadel/metadata/v2beta/metadata.proto=${ZITADEL_IMPORT}/metadata/v2beta \
@@ -123,6 +145,8 @@ protoc \
     --go_opt=Mzitadel/user/v2/query.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/user.proto=${ZITADEL_IMPORT}/user/v2 \
     --go_opt=Mzitadel/user/v2/user_service.proto=${ZITADEL_IMPORT}/user/v2 \
+    --go_opt=Mzitadel/webkey/v2/key.proto=${ZITADEL_IMPORT}/webkey/v2 \
+    --go_opt=Mzitadel/webkey/v2/webkey_service.proto=${ZITADEL_IMPORT}/webkey/v2 \
     --go_opt=Mzitadel/object/v3alpha/object.proto=${ZITADEL_IMPORT}/object/v3lapha \
     --go_out /go/src \
     --go-grpc_out /go/src \
