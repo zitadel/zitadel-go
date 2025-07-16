@@ -1,4 +1,4 @@
-# ZITADEL GO
+# Go SDK for Zitadel
 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Release](https://github.com/zitadel/zitadel-go/workflows/Release/badge.svg)](https://github.com/zitadel/zitadel-go/actions)
@@ -8,26 +8,57 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/zitadel/zitadel-go)](https://goreportcard.com/report/github.com/zitadel/zitadel-go)
 [![codecov](https://codecov.io/gh/zitadel/zitadel-go/branch/main/graph/badge.svg)](https://codecov.io/gh/zitadel/zitadel-go)
 
-Go library for [ZITADEL](https://github.com/zitadel/zitadel).
+This is the Zitadel Go SDK, designed to provide a convenient and idiomatic way to interact with the Zitadel APIs in Go. The SDK provides a seamless wrapping of the Zitadel API, making it easy to authenticate service users and perform API operations.
+
+The SDK enables efficient integration with the Zitadel API, allowing you to manage resources and execute actions.
+
+Additionally, zitadel-go includes a powerful set of Authentication Helpers designed to secure your own Go web applications. This part of the SDK provides convenient HTTP middleware and wrappers that abstract away the complexities of OIDC, making it simple to add an "Login with Zitadel" flow, manage user sessions, and handle callbacks.
+
+These helpers are built as a convenient wrapper around our powerful, low-level [zitadel/oidc](https://github.com/zitadel/oidc) library. For most developers looking to add user login to a Go web application, using these helpers is the recommended approach and should be sufficient.
 
 ## Features
 
 - Authentication
 - Authorization checks
-- Client for ZITADEL API
+- Client for Zitadel API
 
 ## Usage
 
-Add the package to your go.mod by
+Add the package to your `go.mod` by
 
-```
+```bash
 go get -u github.com/zitadel/zitadel-go/v3
 ```
-
 ...and check out the [examples](./example) in this repo or head over to
 our [docs website](https://zitadel.com/docs/guides/start/quickstart#introduction).
 
-### Authentication Methods
+### Implementing Authentication
+
+When adding user authentication to your Go web application, we recommend using the helpers provided directly in this SDK. These helpers are a convenient, high-level wrapper around our powerful, low-level `zitadel/oidc` library and are designed to handle most common use cases, like login flows and session management, right out of the box.
+
+Since we are actively expanding our formal documentation for this feature, the best way to get started is by exploring the working examples we've provided in this repository.
+
+**Web Application Example**
+
+[This example](./example/app) demonstrates how to add a complete OIDC login flow to a standard Go web application. It includes:
+
+-   A home page with a login button.
+-   User authentication using the OIDC PKCE Flow.
+-   A public page accessible without login.
+-   A private page showing user info after login.
+-   A logout function.
+
+**API Application Example**
+
+[This example](./example/api) shows how to secure a REST API, where different endpoints require a valid ZITADEL token for access. It includes:
+
+-   A public endpoint accessible without a token.
+-   A private endpoint accessible with any valid token.
+-   An administrator endpoint accessible only by users with a specific role.
+
+---
+
+### Accessing APIs
 
 The SDK offers three ways to authenticate with Zitadel. Each method has its
 own benefits—choose the one that fits your situation best.
