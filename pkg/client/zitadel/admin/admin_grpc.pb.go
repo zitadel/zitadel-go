@@ -342,8 +342,11 @@ type AdminServiceClient interface {
 	IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error)
 	SetDefaultOrg(ctx context.Context, in *SetDefaultOrgRequest, opts ...grpc.CallOption) (*SetDefaultOrgResponse, error)
 	GetDefaultOrg(ctx context.Context, in *GetDefaultOrgRequest, opts ...grpc.CallOption) (*GetDefaultOrgResponse, error)
+	// Deprecated: use ListOrganization [apis/resources/org_service_v2beta/organization-service-list-organizations.api.mdx] API instead
 	ListOrgs(ctx context.Context, in *ListOrgsRequest, opts ...grpc.CallOption) (*ListOrgsResponse, error)
+	// Deprecated: use CreateOrganization [apis/resources/org_service_v2beta/organization-service-create-organization.api.mdx] API instead
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
+	// Deprecated: use DeleteOrganization [apis/resources/org_service_v2beta/organization-service-delete-organization.api.mdx] API instead
 	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
 	GetIDPByID(ctx context.Context, in *GetIDPByIDRequest, opts ...grpc.CallOption) (*GetIDPByIDResponse, error)
 	ListIDPs(ctx context.Context, in *ListIDPsRequest, opts ...grpc.CallOption) (*ListIDPsResponse, error)
@@ -2490,8 +2493,11 @@ type AdminServiceServer interface {
 	IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error)
 	SetDefaultOrg(context.Context, *SetDefaultOrgRequest) (*SetDefaultOrgResponse, error)
 	GetDefaultOrg(context.Context, *GetDefaultOrgRequest) (*GetDefaultOrgResponse, error)
+	// Deprecated: use ListOrganization [apis/resources/org_service_v2beta/organization-service-list-organizations.api.mdx] API instead
 	ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error)
+	// Deprecated: use CreateOrganization [apis/resources/org_service_v2beta/organization-service-create-organization.api.mdx] API instead
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
+	// Deprecated: use DeleteOrganization [apis/resources/org_service_v2beta/organization-service-delete-organization.api.mdx] API instead
 	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
 	GetIDPByID(context.Context, *GetIDPByIDRequest) (*GetIDPByIDResponse, error)
 	ListIDPs(context.Context, *ListIDPsRequest) (*ListIDPsResponse, error)

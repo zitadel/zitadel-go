@@ -30,6 +30,8 @@ const (
 	SettingsService_GetLockoutSettings_FullMethodName            = "/zitadel.settings.v2.SettingsService/GetLockoutSettings"
 	SettingsService_GetSecuritySettings_FullMethodName           = "/zitadel.settings.v2.SettingsService/GetSecuritySettings"
 	SettingsService_SetSecuritySettings_FullMethodName           = "/zitadel.settings.v2.SettingsService/SetSecuritySettings"
+	SettingsService_GetHostedLoginTranslation_FullMethodName     = "/zitadel.settings.v2.SettingsService/GetHostedLoginTranslation"
+	SettingsService_SetHostedLoginTranslation_FullMethodName     = "/zitadel.settings.v2.SettingsService/SetHostedLoginTranslation"
 )
 
 // SettingsServiceClient is the client API for SettingsService service.
@@ -58,6 +60,28 @@ type SettingsServiceClient interface {
 	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
 	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
+	// Get Hosted Login Translation
+	//
+	// Returns the translations in the requested locale for the hosted login.
+	// The translations returned are based on the input level specified (system, instance or organization).
+	//
+	// If the requested level doesn't contain all translations, and ignore_inheritance is set to false,
+	// a merging process fallbacks onto the higher levels ensuring all keys in the file have a translation,
+	// which could be in the default language if the one of the locale is missing on all levels.
+	//
+	// The etag returned in the response represents the hash of the translations as they are stored on DB
+	// and its reliable only if ignore_inheritance = true.
+	//
+	// Required permissions:
+	//   - `iam.policy.read`
+	GetHostedLoginTranslation(ctx context.Context, in *GetHostedLoginTranslationRequest, opts ...grpc.CallOption) (*GetHostedLoginTranslationResponse, error)
+	// Set Hosted Login Translation
+	//
+	// Sets the input translations at the specified level (instance or organization) for the input language.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
+	SetHostedLoginTranslation(ctx context.Context, in *SetHostedLoginTranslationRequest, opts ...grpc.CallOption) (*SetHostedLoginTranslationResponse, error)
 }
 
 type settingsServiceClient struct {
@@ -167,6 +191,24 @@ func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *Set
 	return out, nil
 }
 
+func (c *settingsServiceClient) GetHostedLoginTranslation(ctx context.Context, in *GetHostedLoginTranslationRequest, opts ...grpc.CallOption) (*GetHostedLoginTranslationResponse, error) {
+	out := new(GetHostedLoginTranslationResponse)
+	err := c.cc.Invoke(ctx, SettingsService_GetHostedLoginTranslation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) SetHostedLoginTranslation(ctx context.Context, in *SetHostedLoginTranslationRequest, opts ...grpc.CallOption) (*SetHostedLoginTranslationResponse, error) {
+	out := new(SetHostedLoginTranslationResponse)
+	err := c.cc.Invoke(ctx, SettingsService_SetHostedLoginTranslation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingsServiceServer is the server API for SettingsService service.
 // All implementations must embed UnimplementedSettingsServiceServer
 // for forward compatibility
@@ -193,6 +235,28 @@ type SettingsServiceServer interface {
 	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
 	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
+	// Get Hosted Login Translation
+	//
+	// Returns the translations in the requested locale for the hosted login.
+	// The translations returned are based on the input level specified (system, instance or organization).
+	//
+	// If the requested level doesn't contain all translations, and ignore_inheritance is set to false,
+	// a merging process fallbacks onto the higher levels ensuring all keys in the file have a translation,
+	// which could be in the default language if the one of the locale is missing on all levels.
+	//
+	// The etag returned in the response represents the hash of the translations as they are stored on DB
+	// and its reliable only if ignore_inheritance = true.
+	//
+	// Required permissions:
+	//   - `iam.policy.read`
+	GetHostedLoginTranslation(context.Context, *GetHostedLoginTranslationRequest) (*GetHostedLoginTranslationResponse, error)
+	// Set Hosted Login Translation
+	//
+	// Sets the input translations at the specified level (instance or organization) for the input language.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
+	SetHostedLoginTranslation(context.Context, *SetHostedLoginTranslationRequest) (*SetHostedLoginTranslationResponse, error)
 	mustEmbedUnimplementedSettingsServiceServer()
 }
 
@@ -232,6 +296,12 @@ func (UnimplementedSettingsServiceServer) GetSecuritySettings(context.Context, *
 }
 func (UnimplementedSettingsServiceServer) SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetSecuritySettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) GetHostedLoginTranslation(context.Context, *GetHostedLoginTranslationRequest) (*GetHostedLoginTranslationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHostedLoginTranslation not implemented")
+}
+func (UnimplementedSettingsServiceServer) SetHostedLoginTranslation(context.Context, *SetHostedLoginTranslationRequest) (*SetHostedLoginTranslationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetHostedLoginTranslation not implemented")
 }
 func (UnimplementedSettingsServiceServer) mustEmbedUnimplementedSettingsServiceServer() {}
 
@@ -444,6 +514,42 @@ func _SettingsService_SetSecuritySettings_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_GetHostedLoginTranslation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHostedLoginTranslationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).GetHostedLoginTranslation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_GetHostedLoginTranslation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).GetHostedLoginTranslation(ctx, req.(*GetHostedLoginTranslationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_SetHostedLoginTranslation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetHostedLoginTranslationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).SetHostedLoginTranslation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_SetHostedLoginTranslation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).SetHostedLoginTranslation(ctx, req.(*SetHostedLoginTranslationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SettingsService_ServiceDesc is the grpc.ServiceDesc for SettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +600,14 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetSecuritySettings",
 			Handler:    _SettingsService_SetSecuritySettings_Handler,
+		},
+		{
+			MethodName: "GetHostedLoginTranslation",
+			Handler:    _SettingsService_GetHostedLoginTranslation_Handler,
+		},
+		{
+			MethodName: "SetHostedLoginTranslation",
+			Handler:    _SettingsService_SetHostedLoginTranslation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
