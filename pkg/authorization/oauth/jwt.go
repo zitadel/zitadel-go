@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
-	"github.com/zitadel/oidc/v3/pkg/http"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
@@ -99,6 +98,5 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 // It takes the clientID of the protected resource server and optional
 // [rp.VerifierOption] to customize the validation behavior.
 func DefaultJWTAuthorization(clientID string, options ...rp.VerifierOption) authorization.VerifierInitializer[*IntrospectionContext] {
-	var httpClient = http.DefaultHTTPClient
-	return WithJWT(clientID, httpClient, options...)
+	return WithJWT(clientID, nil, options...)
 }
