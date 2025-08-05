@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
-	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
