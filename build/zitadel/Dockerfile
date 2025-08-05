@@ -4,10 +4,10 @@ ARG GO_VERSION=1.21
 ## These steps set platform / arch type specific variables
 #######################
 FROM alpine AS arm64-base
-ENV PROTOC_ARCH aarch_64
+ENV PROTOC_ARCH=aarch_64
 
 FROM alpine AS amd64-base
-ENV PROTOC_ARCH x86_64
+ENV PROTOC_ARCH=x86_64
 
 #######################
 ## This step sets up the folder structure,
@@ -49,7 +49,7 @@ RUN git clone --depth 1 -b ${TAG_NAME} https://github.com/zitadel/zitadel . \
 ## Go dependencies
 ## Speed up this step by mounting your local go mod pkg directory
 #######################
-FROM golang:${GO_VERSION} as go-dep
+FROM golang:${GO_VERSION} AS go-dep
 COPY --from=base /proto/include /proto/include
 ARG PROTOC_GEN_GO_GRPC_VERSION=1.3.0
 ARG PROTOC_GEN_GO_VERSION=1.31.0
@@ -61,7 +61,7 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v${PROTOC_GEN_GO_VER
 #######################
 ## Go base build
 #######################
-FROM go-dep as zitadel-client
+FROM go-dep AS zitadel-client
 ARG PROJECT_PATH=github.com/zitadel/zitadel-go/v3/pkg/client
 
 COPY --from=base /proto /proto
@@ -85,17 +85,27 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/analytics/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/analytics/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/app/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/app/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/authorization/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/authorization/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/instance/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/instance/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/internal_permission/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/internal_permission/v2beta/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/project/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/project/v2beta/ \
     # v2 packages
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/saml/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/saml/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/settings/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/settings/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/idp/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/idp/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2/
 
 #######################
 ## prepare generated files for output
 #######################
-FROM scratch as zitadel-copy
+FROM scratch AS zitadel-copy
 ARG PROJECT_PATH=github.com/zitadel/zitadel-go/v3/pkg/client
 COPY --from=zitadel-client /zitadel-api/go/src/${PROJECT_PATH}/zitadel /zitadel

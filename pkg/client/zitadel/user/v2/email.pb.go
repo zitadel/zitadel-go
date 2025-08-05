@@ -29,7 +29,7 @@ type SetHumanEmail struct {
 	unknownFields protoimpl.UnknownFields
 
 	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	// if no verification is specified, an email is sent with the default url
+	// If no verification is specified, an email is sent with the default url
 	//
 	// Types that are assignable to Verification:
 	//
