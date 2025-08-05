@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
@@ -83,10 +84,7 @@ func TestAuthenticator_Logout(t *testing.T) {
 
 			sessions := authentication.NewInMemorySessions[CtxType]()
 			sessionID := uuid.Must(uuid.NewRandom()).String()
-			err := sessions.Set(sessionID, &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{})
-			if err != nil {
-				t.Fatalf("test setup failed: could not set session: %v", err)
-			}
+			require.NoError(t, sessions.Set(sessionID, &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{}))
 
 			// Build options based on test case
 			options := []authentication.Option[CtxType]{
