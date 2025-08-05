@@ -60,7 +60,7 @@ Since we are actively expanding our formal documentation for this feature, the b
 
 ### Accessing APIs
 
-The SDK offers three ways to authenticate with Zitadel. Each method has its
+The SDK offers [three ways to authenticate with Zitadel](https://zitadel.com/docs/apis/openidoauth/authn-methods). Each method has its
 own benefits—choose the one that fits your situation best.
 
 #### 1. Private Key JWT Authentication
@@ -68,6 +68,8 @@ own benefits—choose the one that fits your situation best.
 **What is it?**
 You use a JSON Web Token (JWT) that you sign with a private key stored in a
 JSON file. This process creates a secure token.
+
+https://zitadel.com/docs/apis/openidoauth/endpoints#jwt-profile-grant
 
 **When should you use it?**
 
@@ -88,9 +90,9 @@ import (
 	"context"
 	"log"
 	"os"
+	"log/slog"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
-	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
@@ -131,6 +133,8 @@ func main() {
 This method uses a client ID and client secret to get a secure access token,
 which is then used to authenticate.
 
+https://zitadel.com/docs/apis/openidoauth/endpoints#client-credentials-grant
+
 **When should you use it?**
 
 - **Simple and straightforward:** Good for server-to-server communication.
@@ -150,9 +154,9 @@ import (
 	"context"
 	"log"
 	"os"
+	"log/slog"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
-	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
@@ -214,8 +218,7 @@ import (
 	"context"
 	"log"
 	"os"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
