@@ -2,6 +2,7 @@ package oauth_test
 
 import (
 	"context"
+	"crypto/rsa"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -20,12 +21,17 @@ import (
 func TestWithJWT(t *testing.T) {
 	keyPair, err := NewTestKey(2048)
 	require.NoError(t, err, "failed to generate rsa key")
+	wrongKeyPair, err := NewTestKey(2048)
+	require.NoError(t, err, "failed to generate second rsa key")
 
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/keys" {
 			jwks := map[string]interface{}{"keys": []map[string]interface{}{{
-				"kty": "RSA", "kid": keyPair.KID(), "use": "sig",
-				"n": keyPair.ModulusString(), "e": keyPair.ExponentString(),
+				"kty": "RSA",
+				"kid": keyPair.KID(),
+				"use": "sig",
+				"n":   keyPair.ModulusString(),
+				"e":   keyPair.ExponentString(),
 			}}}
 			if err := json.NewEncoder(w).Encode(jwks); err != nil {
 				http.Error(w, "failed to encode jwks", http.StatusInternalServerError)
@@ -56,28 +62,63 @@ func TestWithJWT(t *testing.T) {
 	testCases := []struct {
 		name          string
 		ttl           time.Duration
+		issuer        string
+		audience      []string
+		signingKey    *rsa.PrivateKey
 		expectSuccess bool
 	}{
 		{
 			name:          "Success: valid token",
 			ttl:           time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{"test-client-id"},
+			signingKey:    keyPair.Private(),
 			expectSuccess: true,
 		},
 		{
 			name:          "Failure: expired token",
 			ttl:           -time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{"test-client-id"},
+			signingKey:    keyPair.Private(),
+			expectSuccess: false,
+		},
+		{
+			name:          "Failure: token signed with wrong key",
+			ttl:           time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{"test-client-id"},
+			signingKey:    wrongKeyPair.Private(),
+			expectSuccess: false,
+		},
+		{
+			name:          "Failure: wrong issuer",
+			ttl:           time.Hour,
+			issuer:        "http://wrong-issuer.com",
+			audience:      []string{"test-client-id"},
+			signingKey:    keyPair.Private(),
+			expectSuccess: false,
+		},
+		{
+			name:          "Failure: wrong audience",
+			ttl:           time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{"wrong-aud"},
+			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			// Note: The KeyID in the header is always from the *valid* keyPair.
+			// This is to correctly simulate a signature mismatch vs. a key-not-found scenario.
 			signedToken, err := signTestJWT(signParams{
 				KeyID:      keyPair.KID(),
-				PrivateKey: keyPair.Private(),
-				Issuer:     mockServer.URL,
+				PrivateKey: tc.signingKey,
+				Issuer:     tc.issuer,
 				Subject:    "test-user-id",
-				Audience:   []string{"test-client-id"},
+				Audience:   tc.audience,
 				TTL:        tc.ttl,
 			})
 			require.NoError(t, err, "failed to create test JWT")
