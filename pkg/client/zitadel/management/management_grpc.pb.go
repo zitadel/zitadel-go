@@ -94,8 +94,8 @@ const (
 	ManagementService_GetOrgMetadata_FullMethodName                                          = "/zitadel.management.v1.ManagementService/GetOrgMetadata"
 	ManagementService_RemoveOrgMetadata_FullMethodName                                       = "/zitadel.management.v1.ManagementService/RemoveOrgMetadata"
 	ManagementService_BulkRemoveOrgMetadata_FullMethodName                                   = "/zitadel.management.v1.ManagementService/BulkRemoveOrgMetadata"
-	ManagementService_ListOrgDomains_FullMethodName                                          = "/zitadel.management.v1.ManagementService/ListOrgDomains"
 	ManagementService_AddOrgDomain_FullMethodName                                            = "/zitadel.management.v1.ManagementService/AddOrgDomain"
+	ManagementService_ListOrgDomains_FullMethodName                                          = "/zitadel.management.v1.ManagementService/ListOrgDomains"
 	ManagementService_RemoveOrgDomain_FullMethodName                                         = "/zitadel.management.v1.ManagementService/RemoveOrgDomain"
 	ManagementService_GenerateOrgDomainValidation_FullMethodName                             = "/zitadel.management.v1.ManagementService/GenerateOrgDomainValidation"
 	ManagementService_ValidateOrgDomain_FullMethodName                                       = "/zitadel.management.v1.ManagementService/ValidateOrgDomain"
@@ -334,10 +334,21 @@ type ManagementServiceClient interface {
 	ListUserChanges(ctx context.Context, in *ListUserChangesRequest, opts ...grpc.CallOption) (*ListUserChangesResponse, error)
 	// Deprecated: please use user service v2 ListUsers, is unique when no user is returned
 	IsUserUnique(ctx context.Context, in *IsUserUniqueRequest, opts ...grpc.CallOption) (*IsUserUniqueResponse, error)
-	// Deprecated: use ImportHumanUser
+	// Create User (Human)
+	//
+	// Deprecated: use [ImportHumanUser](apis/resources/mgmt/management-service-import-human-user.api.mdx) instead.
+	//
+	// Create a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
-	// Deprecated: please use user service v2 AddHumanUser
+	// Create/Import User (Human)
+	//
+	// Deprecated: use [UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
+	//
+	// Create/import a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	ImportHumanUser(ctx context.Context, in *ImportHumanUserRequest, opts ...grpc.CallOption) (*ImportHumanUserResponse, error)
+	// Create User (Machine)
+	//
+	// Create a new user with the type machine for your API, service or device. These users are used for non-interactive authentication flows.
 	AddMachineUser(ctx context.Context, in *AddMachineUserRequest, opts ...grpc.CallOption) (*AddMachineUserResponse, error)
 	// Deprecated: please use user service v2 DeactivateUser
 	DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*DeactivateUserResponse, error)
@@ -349,7 +360,9 @@ type ManagementServiceClient interface {
 	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*UnlockUserResponse, error)
 	// Deprecated: please use user service v2 RemoveUser
 	RemoveUser(ctx context.Context, in *RemoveUserRequest, opts ...grpc.CallOption) (*RemoveUserResponse, error)
-	// Deprecated: please use user service v2 UpdateHumanUser
+	// Change user name
+	//
+	// Change the username of the user. Be aware that the user has to log in with the newly added username afterward
 	UpdateUserName(ctx context.Context, in *UpdateUserNameRequest, opts ...grpc.CallOption) (*UpdateUserNameResponse, error)
 	SetUserMetadata(ctx context.Context, in *SetUserMetadataRequest, opts ...grpc.CallOption) (*SetUserMetadataResponse, error)
 	BulkSetUserMetadata(ctx context.Context, in *BulkSetUserMetadataRequest, opts ...grpc.CallOption) (*BulkSetUserMetadataResponse, error)
@@ -359,31 +372,61 @@ type ManagementServiceClient interface {
 	BulkRemoveUserMetadata(ctx context.Context, in *BulkRemoveUserMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveUserMetadataResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanProfile(ctx context.Context, in *GetHumanProfileRequest, opts ...grpc.CallOption) (*GetHumanProfileResponse, error)
-	// Deprecated: please use user service v2 UpdateHumanUser
+	// Update User Profile (Human)
+	//
+	// Deprecated: use [user service v2 UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
+	//
+	// Update the profile information from a user. The profile includes basic information like first_name and last_name.
 	UpdateHumanProfile(ctx context.Context, in *UpdateHumanProfileRequest, opts ...grpc.CallOption) (*UpdateHumanProfileResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanEmail(ctx context.Context, in *GetHumanEmailRequest, opts ...grpc.CallOption) (*GetHumanEmailResponse, error)
-	// Deprecated: please use user service v2 SetEmail
+	// Update User Email (Human)
+	//
+	// Deprecated: use [user service v2 SetEmail](apis/resources/user_service_v2/user-service-set-email.api.mdx) instead.
+	//
+	// Change the email address of a user. If the state is set to not verified, the user will get a verification email.
 	UpdateHumanEmail(ctx context.Context, in *UpdateHumanEmailRequest, opts ...grpc.CallOption) (*UpdateHumanEmailResponse, error)
 	// Deprecated: not used anymore in user state
 	// To resend a verification email use the user service v2 ResendEmailCode
 	ResendHumanInitialization(ctx context.Context, in *ResendHumanInitializationRequest, opts ...grpc.CallOption) (*ResendHumanInitializationResponse, error)
-	// Deprecated: please use user service v2 ResendEmailCode
+	// Resend User Email Verification
+	//
+	// Deprecated: use [user service v2 ResendEmailCode](apis/resources/user_service_v2/user-service-resend-email-code.api.mdx) instead.
+	//
+	// Resend the email verification notification to the given email address of the user.
 	ResendHumanEmailVerification(ctx context.Context, in *ResendHumanEmailVerificationRequest, opts ...grpc.CallOption) (*ResendHumanEmailVerificationResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanPhone(ctx context.Context, in *GetHumanPhoneRequest, opts ...grpc.CallOption) (*GetHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 SetPhone
+	// Update User Phone (Human)
+	//
+	// Change the phone number of a user. If the state is set to not verified, the user will get an SMS to verify (if a notification provider is configured). The phone number is only for informational purposes and to send messages, not for Authentication (2FA).
 	UpdateHumanPhone(ctx context.Context, in *UpdateHumanPhoneRequest, opts ...grpc.CallOption) (*UpdateHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 SetPhone
+	// Remove User Phone (Human)
+	//
+	// Deprecated: use user service v2 [user service v2 SetPhone](apis/resources/user_service_v2/user-service-set-phone.api.mdx) instead.
+	//
+	// Remove the configured phone number of a user.
 	RemoveHumanPhone(ctx context.Context, in *RemoveHumanPhoneRequest, opts ...grpc.CallOption) (*RemoveHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 ResendPhoneCode
+	// Resend User Phone Verification
+	//
+	// Deprecated: use user service v2 [user service v2 ResendPhoneCode](apis/resources/user_service_v2/user-service-resend-phone-code.api.mdx) instead.
+	//
+	// Resend the notification for the verification of the phone number, to the number stored on the user.
 	ResendHumanPhoneVerification(ctx context.Context, in *ResendHumanPhoneVerificationRequest, opts ...grpc.CallOption) (*ResendHumanPhoneVerificationResponse, error)
 	RemoveHumanAvatar(ctx context.Context, in *RemoveHumanAvatarRequest, opts ...grpc.CallOption) (*RemoveHumanAvatarResponse, error)
-	// Deprecated: please use user service v2 SetPassword
+	// Set Human Initial Password
+	//
+	// Deprecated: use [user service v2 SetPassword](apis/resources/user_service_v2/user-service-set-password.api.mdx) instead.
 	SetHumanInitialPassword(ctx context.Context, in *SetHumanInitialPasswordRequest, opts ...grpc.CallOption) (*SetHumanInitialPasswordResponse, error)
-	// Deprecated: please use user service v2 SetPassword
+	// Set User Password
+	//
+	// Deprecated: use [user service v2 SetPassword](apis/resources/user_service_v2/user-service-set-password.api.mdx) instead.
 	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
-	// Deprecated: please use user service v2 PasswordReset
+	// Send Reset Password Notification
+	//
+	// Deprecated: use [user service v2 PasswordReset](apis/resources/user_service_v2/user-service-password-reset.api.mdx) instead.
+	//
+	// The user will receive an email with a link to change the password.
 	SendHumanResetPasswordNotification(ctx context.Context, in *SendHumanResetPasswordNotificationRequest, opts ...grpc.CallOption) (*SendHumanResetPasswordNotificationResponse, error)
 	// Deprecated: please use user service v2 ListAuthenticationMethodTypes
 	ListHumanAuthFactors(ctx context.Context, in *ListHumanAuthFactorsRequest, opts ...grpc.CallOption) (*ListHumanAuthFactorsResponse, error)
@@ -403,40 +446,95 @@ type ManagementServiceClient interface {
 	SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error)
 	// Deprecated: please use user service v2 RemovePasskey
 	RemoveHumanPasswordless(ctx context.Context, in *RemoveHumanPasswordlessRequest, opts ...grpc.CallOption) (*RemoveHumanPasswordlessResponse, error)
+	// Update Machine User
+	//
+	// Change a service account/machine user. It is used for accounts with non-interactive authentication possibilities.
 	UpdateMachine(ctx context.Context, in *UpdateMachineRequest, opts ...grpc.CallOption) (*UpdateMachineResponse, error)
+	// Create Secret for Machine User
+	//
+	// Create a new secret for a machine user/service account. It is used to authenticate the user (client credential grant).
 	GenerateMachineSecret(ctx context.Context, in *GenerateMachineSecretRequest, opts ...grpc.CallOption) (*GenerateMachineSecretResponse, error)
+	// Delete Secret of Machine User
+	//
+	// Delete a secret of a machine user/service account. The user will not be able to authenticate with the secret afterward.
 	RemoveMachineSecret(ctx context.Context, in *RemoveMachineSecretRequest, opts ...grpc.CallOption) (*RemoveMachineSecretResponse, error)
+	// Get Machine user Key By ID
+	//
+	// Get a specific Key of a machine user by its id. Machine keys are used to authenticate with jwt profile authentication.
 	GetMachineKeyByIDs(ctx context.Context, in *GetMachineKeyByIDsRequest, opts ...grpc.CallOption) (*GetMachineKeyByIDsResponse, error)
+	// List Machine Keys
+	//
+	// Get the list of keys of a machine user. Machine keys are used to authenticate with jwt profile authentication.
 	ListMachineKeys(ctx context.Context, in *ListMachineKeysRequest, opts ...grpc.CallOption) (*ListMachineKeysResponse, error)
+	// Create Key for machine user
+	//
+	// If a public key is not supplied, a new key is generated and will be returned in the response.
+	// Make sure to store the returned key.
+	// If an RSA public key is supplied, the private key is omitted from the response.
+	// Machine keys are used to authenticate with jwt profile.
 	AddMachineKey(ctx context.Context, in *AddMachineKeyRequest, opts ...grpc.CallOption) (*AddMachineKeyResponse, error)
+	// Delete Key for machine user
+	//
+	// Delete a specific key from a user.
+	// The user will not be able to authenticate with that key afterward.
 	RemoveMachineKey(ctx context.Context, in *RemoveMachineKeyRequest, opts ...grpc.CallOption) (*RemoveMachineKeyResponse, error)
+	// Get Personal-Access-Token (PAT) by ID
+	//
+	// Returns the PAT for a user, currently only available for machine users/service accounts. PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	GetPersonalAccessTokenByIDs(ctx context.Context, in *GetPersonalAccessTokenByIDsRequest, opts ...grpc.CallOption) (*GetPersonalAccessTokenByIDsResponse, error)
+	// List Personal-Access-Tokens (PATs)
+	//
+	// Returns a list of PATs for a user, currently only available for machine users/service accounts. PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
+	// Create a Personal-Access-Token (PAT)
+	//
+	// Generates a new PAT for the user. Currently only available for machine users.
+	// The token will be returned in the response, make sure to store it.
+	// PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	AddPersonalAccessToken(ctx context.Context, in *AddPersonalAccessTokenRequest, opts ...grpc.CallOption) (*AddPersonalAccessTokenResponse, error)
+	// Remove a Personal-Access-Token (PAT) by ID
+	//
+	// Delete a PAT from a user. Afterward, the user will not be able to authenticate with that token anymore.
 	RemovePersonalAccessToken(ctx context.Context, in *RemovePersonalAccessTokenRequest, opts ...grpc.CallOption) (*RemovePersonalAccessTokenResponse, error)
 	// Deprecated: please use user service v2 ListLinkedIDPs
 	ListHumanLinkedIDPs(ctx context.Context, in *ListHumanLinkedIDPsRequest, opts ...grpc.CallOption) (*ListHumanLinkedIDPsResponse, error)
-	// Deprecated: please use user service v2 RemoveLinkedIDP
+	// Deprecated: please use [user service v2 RemoveIDPLink](apis/resources/user_service_v2/user-service-remove-idp-link.api.mdx)
 	RemoveHumanLinkedIDP(ctx context.Context, in *RemoveHumanLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveHumanLinkedIDPResponse, error)
 	ListUserMemberships(ctx context.Context, in *ListUserMembershipsRequest, opts ...grpc.CallOption) (*ListUserMembershipsResponse, error)
 	GetMyOrg(ctx context.Context, in *GetMyOrgRequest, opts ...grpc.CallOption) (*GetMyOrgResponse, error)
 	GetOrgByDomainGlobal(ctx context.Context, in *GetOrgByDomainGlobalRequest, opts ...grpc.CallOption) (*GetOrgByDomainGlobalResponse, error)
 	ListOrgChanges(ctx context.Context, in *ListOrgChangesRequest, opts ...grpc.CallOption) (*ListOrgChangesResponse, error)
+	// Deprecated: use CreateOrganization [apis/resources/org_service_v2beta/organization-service-create-organization.api.mdx] API instead
 	AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error)
+	// Deprecated: use UpdateOrganization [apis/resources/org_service_v2beta/organization-service-update-organization.api.mdx] API instead
 	UpdateOrg(ctx context.Context, in *UpdateOrgRequest, opts ...grpc.CallOption) (*UpdateOrgResponse, error)
+	// Deprecated: use DeactivateOrganization [apis/resources/org_service_v2beta/organization-service-deactivate-organization.api.mdx] API instead
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
+	// Deprecated: use ActivateOrganization [apis/resources/org_service_v2beta/organization-service-activate-organization.api.mdx] API instead
 	ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error)
+	// Deprecated: use DeleteOrganization [apis/resources/org_service_v2beta/organization-service-delete-organization.api.mdx] API instead
 	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
+	// Deprecated: use SetOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-set-organization-metadata.api.mdx] API instead
 	SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error)
+	// Deprecated: use SetOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-set-organization-metadata.api.mdx] API instead
 	BulkSetOrgMetadata(ctx context.Context, in *BulkSetOrgMetadataRequest, opts ...grpc.CallOption) (*BulkSetOrgMetadataResponse, error)
+	// Deprecated: use ListOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-list-organization-metadata.api.mdx] API instead
 	ListOrgMetadata(ctx context.Context, in *ListOrgMetadataRequest, opts ...grpc.CallOption) (*ListOrgMetadataResponse, error)
+	// Deprecated: use ListOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-list-organization-metadata.api.mdx] API instead
 	GetOrgMetadata(ctx context.Context, in *GetOrgMetadataRequest, opts ...grpc.CallOption) (*GetOrgMetadataResponse, error)
+	// Deprecated: use DeleteOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-delete-organization-metadata.api.mdx] API instead
 	RemoveOrgMetadata(ctx context.Context, in *RemoveOrgMetadataRequest, opts ...grpc.CallOption) (*RemoveOrgMetadataResponse, error)
+	// Deprecated: use DeleteOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-delete-organization-metadata.api.mdx] API instead
 	BulkRemoveOrgMetadata(ctx context.Context, in *BulkRemoveOrgMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveOrgMetadataResponse, error)
-	ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error)
+	// Deprecated: use AddOrganizationDomain [apis/resources/org_service_v2beta/organization-service-add-organization-domain.api.mdx] API instead
 	AddOrgDomain(ctx context.Context, in *AddOrgDomainRequest, opts ...grpc.CallOption) (*AddOrgDomainResponse, error)
+	// Deprecated: use ListOrganizationDomains [apis/resources/org_service_v2beta/organization-service-list-organization-domains.api.mdx] API instead
+	ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error)
+	// Deprecated: use DeleteOrganizationDomain [apis/resources/org_service_v2beta/organization-service-delete-organization-domain.api.mdx] API instead
 	RemoveOrgDomain(ctx context.Context, in *RemoveOrgDomainRequest, opts ...grpc.CallOption) (*RemoveOrgDomainResponse, error)
+	// Deprecated: use GenerateOrganizationDomainValidation [apis/resources/org_service_v2beta/organization-service-generate-organization-domain-validation.api.mdx] API instead
 	GenerateOrgDomainValidation(ctx context.Context, in *GenerateOrgDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrgDomainValidationResponse, error)
+	// Deprecated: use VerifyOrganizationDomain [apis/resources/org_service_v2beta/organization-service-verify-organization-domain.api.mdx] API instead
 	ValidateOrgDomain(ctx context.Context, in *ValidateOrgDomainRequest, opts ...grpc.CallOption) (*ValidateOrgDomainResponse, error)
 	SetPrimaryOrgDomain(ctx context.Context, in *SetPrimaryOrgDomainRequest, opts ...grpc.CallOption) (*SetPrimaryOrgDomainResponse, error)
 	ListOrgMemberRoles(ctx context.Context, in *ListOrgMemberRolesRequest, opts ...grpc.CallOption) (*ListOrgMemberRolesResponse, error)
@@ -465,25 +563,51 @@ type ManagementServiceClient interface {
 	AddProjectMember(ctx context.Context, in *AddProjectMemberRequest, opts ...grpc.CallOption) (*AddProjectMemberResponse, error)
 	UpdateProjectMember(ctx context.Context, in *UpdateProjectMemberRequest, opts ...grpc.CallOption) (*UpdateProjectMemberResponse, error)
 	RemoveProjectMember(ctx context.Context, in *RemoveProjectMemberRequest, opts ...grpc.CallOption) (*RemoveProjectMemberResponse, error)
+	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/application-service-get-application.api.mdx) instead to fetch an app
 	GetAppByID(ctx context.Context, in *GetAppByIDRequest, opts ...grpc.CallOption) (*GetAppByIDResponse, error)
+	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/application-service-list-applications.api.mdx) instead to list applications
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	ListAppChanges(ctx context.Context, in *ListAppChangesRequest, opts ...grpc.CallOption) (*ListAppChangesResponse, error)
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create an OIDC application
 	AddOIDCApp(ctx context.Context, in *AddOIDCAppRequest, opts ...grpc.CallOption) (*AddOIDCAppResponse, error)
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create a SAML application
 	AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error)
+	// Create Application (API)
+	//
+	// Create a new API client. The client id will be generated and returned in the response.
+	// Depending on the chosen configuration also a secret will be generated and returned.
+	//
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create an API application
 	AddAPIApp(ctx context.Context, in *AddAPIAppRequest, opts ...grpc.CallOption) (*AddAPIAppResponse, error)
 	// Changes application
+	//
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the generic params of an app
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of an OIDC app
 	UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of a SAML app
 	UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of an API app
 	UpdateAPIAppConfig(ctx context.Context, in *UpdateAPIAppConfigRequest, opts ...grpc.CallOption) (*UpdateAPIAppConfigResponse, error)
+	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/application-service-deactivate-application.api.mdx) instead to deactivate an app
 	DeactivateApp(ctx context.Context, in *DeactivateAppRequest, opts ...grpc.CallOption) (*DeactivateAppResponse, error)
+	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/application-service-reactivate-application.api.mdx) instead to reactivate an app
 	ReactivateApp(ctx context.Context, in *ReactivateAppRequest, opts ...grpc.CallOption) (*ReactivateAppResponse, error)
+	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/application-service-delete-application.api.mdx) instead to delete an app
 	RemoveApp(ctx context.Context, in *RemoveAppRequest, opts ...grpc.CallOption) (*RemoveAppResponse, error)
+	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/application-service-regenerate-client-secret.api.mdx) instead to regenerate an OIDC app client secret
 	RegenerateOIDCClientSecret(ctx context.Context, in *RegenerateOIDCClientSecretRequest, opts ...grpc.CallOption) (*RegenerateOIDCClientSecretResponse, error)
+	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/application-service-regenerate-client-secret.api.mdx) instead to regenerate an API app client secret
 	RegenerateAPIClientSecret(ctx context.Context, in *RegenerateAPIClientSecretRequest, opts ...grpc.CallOption) (*RegenerateAPIClientSecretResponse, error)
+	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/application-service-get-application-key.api.mdx) instead to get an application key
 	GetAppKey(ctx context.Context, in *GetAppKeyRequest, opts ...grpc.CallOption) (*GetAppKeyResponse, error)
+	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/application-service-list-application-keys.api.mdx) instead to list application keys
 	ListAppKeys(ctx context.Context, in *ListAppKeysRequest, opts ...grpc.CallOption) (*ListAppKeysResponse, error)
+	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/application-service-create-application-key.api.mdx) instead to
+	// create an application key
 	AddAppKey(ctx context.Context, in *AddAppKeyRequest, opts ...grpc.CallOption) (*AddAppKeyResponse, error)
+	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/application-service-delete-application-key.api.mdx) instead to
+	// delete an application key
 	RemoveAppKey(ctx context.Context, in *RemoveAppKeyRequest, opts ...grpc.CallOption) (*RemoveAppKeyResponse, error)
 	ListProjectGrantChanges(ctx context.Context, in *ListProjectGrantChangesRequest, opts ...grpc.CallOption) (*ListProjectGrantChangesResponse, error)
 	GetProjectGrantByID(ctx context.Context, in *GetProjectGrantByIDRequest, opts ...grpc.CallOption) (*GetProjectGrantByIDResponse, error)
@@ -499,13 +623,53 @@ type ManagementServiceClient interface {
 	AddProjectGrantMember(ctx context.Context, in *AddProjectGrantMemberRequest, opts ...grpc.CallOption) (*AddProjectGrantMemberResponse, error)
 	UpdateProjectGrantMember(ctx context.Context, in *UpdateProjectGrantMemberRequest, opts ...grpc.CallOption) (*UpdateProjectGrantMemberResponse, error)
 	RemoveProjectGrantMember(ctx context.Context, in *RemoveProjectGrantMemberRequest, opts ...grpc.CallOption) (*RemoveProjectGrantMemberResponse, error)
+	// Get User Grant By ID
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and filter by its ID.
+	//
+	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
 	GetUserGrantByID(ctx context.Context, in *GetUserGrantByIDRequest, opts ...grpc.CallOption) (*GetUserGrantByIDResponse, error)
+	// Search User Grants
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
+	//
+	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
 	ListUserGrants(ctx context.Context, in *ListUserGrantRequest, opts ...grpc.CallOption) (*ListUserGrantResponse, error)
+	// Add User Grant
+	//
+	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
+	//
+	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
 	AddUserGrant(ctx context.Context, in *AddUserGrantRequest, opts ...grpc.CallOption) (*AddUserGrantResponse, error)
+	// Update User Grant
+	//
+	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
+	//
+	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
 	UpdateUserGrant(ctx context.Context, in *UpdateUserGrantRequest, opts ...grpc.CallOption) (*UpdateUserGrantResponse, error)
+	// Deactivate User Grant
+	//
+	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
+	//
+	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
 	DeactivateUserGrant(ctx context.Context, in *DeactivateUserGrantRequest, opts ...grpc.CallOption) (*DeactivateUserGrantResponse, error)
+	// Reactivate User Grant
+	//
+	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
+	//
+	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
 	ReactivateUserGrant(ctx context.Context, in *ReactivateUserGrantRequest, opts ...grpc.CallOption) (*ReactivateUserGrantResponse, error)
+	// Remove User Grant
+	//
+	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
+	//
+	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
+	// Bulk Remove User Grants
+	//
+	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
+	//
+	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
@@ -1372,18 +1536,18 @@ func (c *managementServiceClient) BulkRemoveOrgMetadata(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *managementServiceClient) ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error) {
-	out := new(ListOrgDomainsResponse)
-	err := c.cc.Invoke(ctx, ManagementService_ListOrgDomains_FullMethodName, in, out, opts...)
+func (c *managementServiceClient) AddOrgDomain(ctx context.Context, in *AddOrgDomainRequest, opts ...grpc.CallOption) (*AddOrgDomainResponse, error) {
+	out := new(AddOrgDomainResponse)
+	err := c.cc.Invoke(ctx, ManagementService_AddOrgDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementServiceClient) AddOrgDomain(ctx context.Context, in *AddOrgDomainRequest, opts ...grpc.CallOption) (*AddOrgDomainResponse, error) {
-	out := new(AddOrgDomainResponse)
-	err := c.cc.Invoke(ctx, ManagementService_AddOrgDomain_FullMethodName, in, out, opts...)
+func (c *managementServiceClient) ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error) {
+	out := new(ListOrgDomainsResponse)
+	err := c.cc.Invoke(ctx, ManagementService_ListOrgDomains_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3378,10 +3542,21 @@ type ManagementServiceServer interface {
 	ListUserChanges(context.Context, *ListUserChangesRequest) (*ListUserChangesResponse, error)
 	// Deprecated: please use user service v2 ListUsers, is unique when no user is returned
 	IsUserUnique(context.Context, *IsUserUniqueRequest) (*IsUserUniqueResponse, error)
-	// Deprecated: use ImportHumanUser
+	// Create User (Human)
+	//
+	// Deprecated: use [ImportHumanUser](apis/resources/mgmt/management-service-import-human-user.api.mdx) instead.
+	//
+	// Create a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
-	// Deprecated: please use user service v2 AddHumanUser
+	// Create/Import User (Human)
+	//
+	// Deprecated: use [UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
+	//
+	// Create/import a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	ImportHumanUser(context.Context, *ImportHumanUserRequest) (*ImportHumanUserResponse, error)
+	// Create User (Machine)
+	//
+	// Create a new user with the type machine for your API, service or device. These users are used for non-interactive authentication flows.
 	AddMachineUser(context.Context, *AddMachineUserRequest) (*AddMachineUserResponse, error)
 	// Deprecated: please use user service v2 DeactivateUser
 	DeactivateUser(context.Context, *DeactivateUserRequest) (*DeactivateUserResponse, error)
@@ -3393,7 +3568,9 @@ type ManagementServiceServer interface {
 	UnlockUser(context.Context, *UnlockUserRequest) (*UnlockUserResponse, error)
 	// Deprecated: please use user service v2 RemoveUser
 	RemoveUser(context.Context, *RemoveUserRequest) (*RemoveUserResponse, error)
-	// Deprecated: please use user service v2 UpdateHumanUser
+	// Change user name
+	//
+	// Change the username of the user. Be aware that the user has to log in with the newly added username afterward
 	UpdateUserName(context.Context, *UpdateUserNameRequest) (*UpdateUserNameResponse, error)
 	SetUserMetadata(context.Context, *SetUserMetadataRequest) (*SetUserMetadataResponse, error)
 	BulkSetUserMetadata(context.Context, *BulkSetUserMetadataRequest) (*BulkSetUserMetadataResponse, error)
@@ -3403,31 +3580,61 @@ type ManagementServiceServer interface {
 	BulkRemoveUserMetadata(context.Context, *BulkRemoveUserMetadataRequest) (*BulkRemoveUserMetadataResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanProfile(context.Context, *GetHumanProfileRequest) (*GetHumanProfileResponse, error)
-	// Deprecated: please use user service v2 UpdateHumanUser
+	// Update User Profile (Human)
+	//
+	// Deprecated: use [user service v2 UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
+	//
+	// Update the profile information from a user. The profile includes basic information like first_name and last_name.
 	UpdateHumanProfile(context.Context, *UpdateHumanProfileRequest) (*UpdateHumanProfileResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanEmail(context.Context, *GetHumanEmailRequest) (*GetHumanEmailResponse, error)
-	// Deprecated: please use user service v2 SetEmail
+	// Update User Email (Human)
+	//
+	// Deprecated: use [user service v2 SetEmail](apis/resources/user_service_v2/user-service-set-email.api.mdx) instead.
+	//
+	// Change the email address of a user. If the state is set to not verified, the user will get a verification email.
 	UpdateHumanEmail(context.Context, *UpdateHumanEmailRequest) (*UpdateHumanEmailResponse, error)
 	// Deprecated: not used anymore in user state
 	// To resend a verification email use the user service v2 ResendEmailCode
 	ResendHumanInitialization(context.Context, *ResendHumanInitializationRequest) (*ResendHumanInitializationResponse, error)
-	// Deprecated: please use user service v2 ResendEmailCode
+	// Resend User Email Verification
+	//
+	// Deprecated: use [user service v2 ResendEmailCode](apis/resources/user_service_v2/user-service-resend-email-code.api.mdx) instead.
+	//
+	// Resend the email verification notification to the given email address of the user.
 	ResendHumanEmailVerification(context.Context, *ResendHumanEmailVerificationRequest) (*ResendHumanEmailVerificationResponse, error)
 	// Deprecated: please use user service v2 GetUserByID
 	GetHumanPhone(context.Context, *GetHumanPhoneRequest) (*GetHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 SetPhone
+	// Update User Phone (Human)
+	//
+	// Change the phone number of a user. If the state is set to not verified, the user will get an SMS to verify (if a notification provider is configured). The phone number is only for informational purposes and to send messages, not for Authentication (2FA).
 	UpdateHumanPhone(context.Context, *UpdateHumanPhoneRequest) (*UpdateHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 SetPhone
+	// Remove User Phone (Human)
+	//
+	// Deprecated: use user service v2 [user service v2 SetPhone](apis/resources/user_service_v2/user-service-set-phone.api.mdx) instead.
+	//
+	// Remove the configured phone number of a user.
 	RemoveHumanPhone(context.Context, *RemoveHumanPhoneRequest) (*RemoveHumanPhoneResponse, error)
-	// Deprecated: please use user service v2 ResendPhoneCode
+	// Resend User Phone Verification
+	//
+	// Deprecated: use user service v2 [user service v2 ResendPhoneCode](apis/resources/user_service_v2/user-service-resend-phone-code.api.mdx) instead.
+	//
+	// Resend the notification for the verification of the phone number, to the number stored on the user.
 	ResendHumanPhoneVerification(context.Context, *ResendHumanPhoneVerificationRequest) (*ResendHumanPhoneVerificationResponse, error)
 	RemoveHumanAvatar(context.Context, *RemoveHumanAvatarRequest) (*RemoveHumanAvatarResponse, error)
-	// Deprecated: please use user service v2 SetPassword
+	// Set Human Initial Password
+	//
+	// Deprecated: use [user service v2 SetPassword](apis/resources/user_service_v2/user-service-set-password.api.mdx) instead.
 	SetHumanInitialPassword(context.Context, *SetHumanInitialPasswordRequest) (*SetHumanInitialPasswordResponse, error)
-	// Deprecated: please use user service v2 SetPassword
+	// Set User Password
+	//
+	// Deprecated: use [user service v2 SetPassword](apis/resources/user_service_v2/user-service-set-password.api.mdx) instead.
 	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
-	// Deprecated: please use user service v2 PasswordReset
+	// Send Reset Password Notification
+	//
+	// Deprecated: use [user service v2 PasswordReset](apis/resources/user_service_v2/user-service-password-reset.api.mdx) instead.
+	//
+	// The user will receive an email with a link to change the password.
 	SendHumanResetPasswordNotification(context.Context, *SendHumanResetPasswordNotificationRequest) (*SendHumanResetPasswordNotificationResponse, error)
 	// Deprecated: please use user service v2 ListAuthenticationMethodTypes
 	ListHumanAuthFactors(context.Context, *ListHumanAuthFactorsRequest) (*ListHumanAuthFactorsResponse, error)
@@ -3447,40 +3654,95 @@ type ManagementServiceServer interface {
 	SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error)
 	// Deprecated: please use user service v2 RemovePasskey
 	RemoveHumanPasswordless(context.Context, *RemoveHumanPasswordlessRequest) (*RemoveHumanPasswordlessResponse, error)
+	// Update Machine User
+	//
+	// Change a service account/machine user. It is used for accounts with non-interactive authentication possibilities.
 	UpdateMachine(context.Context, *UpdateMachineRequest) (*UpdateMachineResponse, error)
+	// Create Secret for Machine User
+	//
+	// Create a new secret for a machine user/service account. It is used to authenticate the user (client credential grant).
 	GenerateMachineSecret(context.Context, *GenerateMachineSecretRequest) (*GenerateMachineSecretResponse, error)
+	// Delete Secret of Machine User
+	//
+	// Delete a secret of a machine user/service account. The user will not be able to authenticate with the secret afterward.
 	RemoveMachineSecret(context.Context, *RemoveMachineSecretRequest) (*RemoveMachineSecretResponse, error)
+	// Get Machine user Key By ID
+	//
+	// Get a specific Key of a machine user by its id. Machine keys are used to authenticate with jwt profile authentication.
 	GetMachineKeyByIDs(context.Context, *GetMachineKeyByIDsRequest) (*GetMachineKeyByIDsResponse, error)
+	// List Machine Keys
+	//
+	// Get the list of keys of a machine user. Machine keys are used to authenticate with jwt profile authentication.
 	ListMachineKeys(context.Context, *ListMachineKeysRequest) (*ListMachineKeysResponse, error)
+	// Create Key for machine user
+	//
+	// If a public key is not supplied, a new key is generated and will be returned in the response.
+	// Make sure to store the returned key.
+	// If an RSA public key is supplied, the private key is omitted from the response.
+	// Machine keys are used to authenticate with jwt profile.
 	AddMachineKey(context.Context, *AddMachineKeyRequest) (*AddMachineKeyResponse, error)
+	// Delete Key for machine user
+	//
+	// Delete a specific key from a user.
+	// The user will not be able to authenticate with that key afterward.
 	RemoveMachineKey(context.Context, *RemoveMachineKeyRequest) (*RemoveMachineKeyResponse, error)
+	// Get Personal-Access-Token (PAT) by ID
+	//
+	// Returns the PAT for a user, currently only available for machine users/service accounts. PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	GetPersonalAccessTokenByIDs(context.Context, *GetPersonalAccessTokenByIDsRequest) (*GetPersonalAccessTokenByIDsResponse, error)
+	// List Personal-Access-Tokens (PATs)
+	//
+	// Returns a list of PATs for a user, currently only available for machine users/service accounts. PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
+	// Create a Personal-Access-Token (PAT)
+	//
+	// Generates a new PAT for the user. Currently only available for machine users.
+	// The token will be returned in the response, make sure to store it.
+	// PATs are ready-to-use tokens and can be sent directly in the authentication header.
 	AddPersonalAccessToken(context.Context, *AddPersonalAccessTokenRequest) (*AddPersonalAccessTokenResponse, error)
+	// Remove a Personal-Access-Token (PAT) by ID
+	//
+	// Delete a PAT from a user. Afterward, the user will not be able to authenticate with that token anymore.
 	RemovePersonalAccessToken(context.Context, *RemovePersonalAccessTokenRequest) (*RemovePersonalAccessTokenResponse, error)
 	// Deprecated: please use user service v2 ListLinkedIDPs
 	ListHumanLinkedIDPs(context.Context, *ListHumanLinkedIDPsRequest) (*ListHumanLinkedIDPsResponse, error)
-	// Deprecated: please use user service v2 RemoveLinkedIDP
+	// Deprecated: please use [user service v2 RemoveIDPLink](apis/resources/user_service_v2/user-service-remove-idp-link.api.mdx)
 	RemoveHumanLinkedIDP(context.Context, *RemoveHumanLinkedIDPRequest) (*RemoveHumanLinkedIDPResponse, error)
 	ListUserMemberships(context.Context, *ListUserMembershipsRequest) (*ListUserMembershipsResponse, error)
 	GetMyOrg(context.Context, *GetMyOrgRequest) (*GetMyOrgResponse, error)
 	GetOrgByDomainGlobal(context.Context, *GetOrgByDomainGlobalRequest) (*GetOrgByDomainGlobalResponse, error)
 	ListOrgChanges(context.Context, *ListOrgChangesRequest) (*ListOrgChangesResponse, error)
+	// Deprecated: use CreateOrganization [apis/resources/org_service_v2beta/organization-service-create-organization.api.mdx] API instead
 	AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error)
+	// Deprecated: use UpdateOrganization [apis/resources/org_service_v2beta/organization-service-update-organization.api.mdx] API instead
 	UpdateOrg(context.Context, *UpdateOrgRequest) (*UpdateOrgResponse, error)
+	// Deprecated: use DeactivateOrganization [apis/resources/org_service_v2beta/organization-service-deactivate-organization.api.mdx] API instead
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
+	// Deprecated: use ActivateOrganization [apis/resources/org_service_v2beta/organization-service-activate-organization.api.mdx] API instead
 	ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error)
+	// Deprecated: use DeleteOrganization [apis/resources/org_service_v2beta/organization-service-delete-organization.api.mdx] API instead
 	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
+	// Deprecated: use SetOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-set-organization-metadata.api.mdx] API instead
 	SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error)
+	// Deprecated: use SetOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-set-organization-metadata.api.mdx] API instead
 	BulkSetOrgMetadata(context.Context, *BulkSetOrgMetadataRequest) (*BulkSetOrgMetadataResponse, error)
+	// Deprecated: use ListOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-list-organization-metadata.api.mdx] API instead
 	ListOrgMetadata(context.Context, *ListOrgMetadataRequest) (*ListOrgMetadataResponse, error)
+	// Deprecated: use ListOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-list-organization-metadata.api.mdx] API instead
 	GetOrgMetadata(context.Context, *GetOrgMetadataRequest) (*GetOrgMetadataResponse, error)
+	// Deprecated: use DeleteOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-delete-organization-metadata.api.mdx] API instead
 	RemoveOrgMetadata(context.Context, *RemoveOrgMetadataRequest) (*RemoveOrgMetadataResponse, error)
+	// Deprecated: use DeleteOrganizationMetadata [apis/resources/org_service_v2beta/organization-service-delete-organization-metadata.api.mdx] API instead
 	BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error)
-	ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error)
+	// Deprecated: use AddOrganizationDomain [apis/resources/org_service_v2beta/organization-service-add-organization-domain.api.mdx] API instead
 	AddOrgDomain(context.Context, *AddOrgDomainRequest) (*AddOrgDomainResponse, error)
+	// Deprecated: use ListOrganizationDomains [apis/resources/org_service_v2beta/organization-service-list-organization-domains.api.mdx] API instead
+	ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error)
+	// Deprecated: use DeleteOrganizationDomain [apis/resources/org_service_v2beta/organization-service-delete-organization-domain.api.mdx] API instead
 	RemoveOrgDomain(context.Context, *RemoveOrgDomainRequest) (*RemoveOrgDomainResponse, error)
+	// Deprecated: use GenerateOrganizationDomainValidation [apis/resources/org_service_v2beta/organization-service-generate-organization-domain-validation.api.mdx] API instead
 	GenerateOrgDomainValidation(context.Context, *GenerateOrgDomainValidationRequest) (*GenerateOrgDomainValidationResponse, error)
+	// Deprecated: use VerifyOrganizationDomain [apis/resources/org_service_v2beta/organization-service-verify-organization-domain.api.mdx] API instead
 	ValidateOrgDomain(context.Context, *ValidateOrgDomainRequest) (*ValidateOrgDomainResponse, error)
 	SetPrimaryOrgDomain(context.Context, *SetPrimaryOrgDomainRequest) (*SetPrimaryOrgDomainResponse, error)
 	ListOrgMemberRoles(context.Context, *ListOrgMemberRolesRequest) (*ListOrgMemberRolesResponse, error)
@@ -3509,25 +3771,51 @@ type ManagementServiceServer interface {
 	AddProjectMember(context.Context, *AddProjectMemberRequest) (*AddProjectMemberResponse, error)
 	UpdateProjectMember(context.Context, *UpdateProjectMemberRequest) (*UpdateProjectMemberResponse, error)
 	RemoveProjectMember(context.Context, *RemoveProjectMemberRequest) (*RemoveProjectMemberResponse, error)
+	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/application-service-get-application.api.mdx) instead to fetch an app
 	GetAppByID(context.Context, *GetAppByIDRequest) (*GetAppByIDResponse, error)
+	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/application-service-list-applications.api.mdx) instead to list applications
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	ListAppChanges(context.Context, *ListAppChangesRequest) (*ListAppChangesResponse, error)
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create an OIDC application
 	AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error)
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create a SAML application
 	AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error)
+	// Create Application (API)
+	//
+	// Create a new API client. The client id will be generated and returned in the response.
+	// Depending on the chosen configuration also a secret will be generated and returned.
+	//
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/application-service-create-application.api.mdx) instead to create an API application
 	AddAPIApp(context.Context, *AddAPIAppRequest) (*AddAPIAppResponse, error)
 	// Changes application
+	//
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the generic params of an app
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of an OIDC app
 	UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of a SAML app
 	UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error)
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/application-service-patch-application.api.mdx) instead to update the config of an API app
 	UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error)
+	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/application-service-deactivate-application.api.mdx) instead to deactivate an app
 	DeactivateApp(context.Context, *DeactivateAppRequest) (*DeactivateAppResponse, error)
+	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/application-service-reactivate-application.api.mdx) instead to reactivate an app
 	ReactivateApp(context.Context, *ReactivateAppRequest) (*ReactivateAppResponse, error)
+	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/application-service-delete-application.api.mdx) instead to delete an app
 	RemoveApp(context.Context, *RemoveAppRequest) (*RemoveAppResponse, error)
+	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/application-service-regenerate-client-secret.api.mdx) instead to regenerate an OIDC app client secret
 	RegenerateOIDCClientSecret(context.Context, *RegenerateOIDCClientSecretRequest) (*RegenerateOIDCClientSecretResponse, error)
+	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/application-service-regenerate-client-secret.api.mdx) instead to regenerate an API app client secret
 	RegenerateAPIClientSecret(context.Context, *RegenerateAPIClientSecretRequest) (*RegenerateAPIClientSecretResponse, error)
+	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/application-service-get-application-key.api.mdx) instead to get an application key
 	GetAppKey(context.Context, *GetAppKeyRequest) (*GetAppKeyResponse, error)
+	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/application-service-list-application-keys.api.mdx) instead to list application keys
 	ListAppKeys(context.Context, *ListAppKeysRequest) (*ListAppKeysResponse, error)
+	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/application-service-create-application-key.api.mdx) instead to
+	// create an application key
 	AddAppKey(context.Context, *AddAppKeyRequest) (*AddAppKeyResponse, error)
+	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/application-service-delete-application-key.api.mdx) instead to
+	// delete an application key
 	RemoveAppKey(context.Context, *RemoveAppKeyRequest) (*RemoveAppKeyResponse, error)
 	ListProjectGrantChanges(context.Context, *ListProjectGrantChangesRequest) (*ListProjectGrantChangesResponse, error)
 	GetProjectGrantByID(context.Context, *GetProjectGrantByIDRequest) (*GetProjectGrantByIDResponse, error)
@@ -3543,13 +3831,53 @@ type ManagementServiceServer interface {
 	AddProjectGrantMember(context.Context, *AddProjectGrantMemberRequest) (*AddProjectGrantMemberResponse, error)
 	UpdateProjectGrantMember(context.Context, *UpdateProjectGrantMemberRequest) (*UpdateProjectGrantMemberResponse, error)
 	RemoveProjectGrantMember(context.Context, *RemoveProjectGrantMemberRequest) (*RemoveProjectGrantMemberResponse, error)
+	// Get User Grant By ID
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and filter by its ID.
+	//
+	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
 	GetUserGrantByID(context.Context, *GetUserGrantByIDRequest) (*GetUserGrantByIDResponse, error)
+	// Search User Grants
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
+	//
+	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
 	ListUserGrants(context.Context, *ListUserGrantRequest) (*ListUserGrantResponse, error)
+	// Add User Grant
+	//
+	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
+	//
+	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
 	AddUserGrant(context.Context, *AddUserGrantRequest) (*AddUserGrantResponse, error)
+	// Update User Grant
+	//
+	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
+	//
+	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
 	UpdateUserGrant(context.Context, *UpdateUserGrantRequest) (*UpdateUserGrantResponse, error)
+	// Deactivate User Grant
+	//
+	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
+	//
+	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
 	DeactivateUserGrant(context.Context, *DeactivateUserGrantRequest) (*DeactivateUserGrantResponse, error)
+	// Reactivate User Grant
+	//
+	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
+	//
+	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
 	ReactivateUserGrant(context.Context, *ReactivateUserGrantRequest) (*ReactivateUserGrantResponse, error)
+	// Remove User Grant
+	//
+	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
+	//
+	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
+	// Bulk Remove User Grants
+	//
+	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
+	//
+	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)
@@ -3963,11 +4291,11 @@ func (UnimplementedManagementServiceServer) RemoveOrgMetadata(context.Context, *
 func (UnimplementedManagementServiceServer) BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BulkRemoveOrgMetadata not implemented")
 }
-func (UnimplementedManagementServiceServer) ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListOrgDomains not implemented")
-}
 func (UnimplementedManagementServiceServer) AddOrgDomain(context.Context, *AddOrgDomainRequest) (*AddOrgDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOrgDomain not implemented")
+}
+func (UnimplementedManagementServiceServer) ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrgDomains not implemented")
 }
 func (UnimplementedManagementServiceServer) RemoveOrgDomain(context.Context, *RemoveOrgDomainRequest) (*RemoveOrgDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveOrgDomain not implemented")
@@ -5989,24 +6317,6 @@ func _ManagementService_BulkRemoveOrgMetadata_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ManagementService_ListOrgDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOrgDomainsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServiceServer).ListOrgDomains(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ManagementService_ListOrgDomains_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServiceServer).ListOrgDomains(ctx, req.(*ListOrgDomainsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ManagementService_AddOrgDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddOrgDomainRequest)
 	if err := dec(in); err != nil {
@@ -6021,6 +6331,24 @@ func _ManagementService_AddOrgDomain_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServiceServer).AddOrgDomain(ctx, req.(*AddOrgDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_ListOrgDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrgDomainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).ListOrgDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ManagementService_ListOrgDomains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).ListOrgDomains(ctx, req.(*ListOrgDomainsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -10275,12 +10603,12 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ManagementService_BulkRemoveOrgMetadata_Handler,
 		},
 		{
-			MethodName: "ListOrgDomains",
-			Handler:    _ManagementService_ListOrgDomains_Handler,
-		},
-		{
 			MethodName: "AddOrgDomain",
 			Handler:    _ManagementService_AddOrgDomain_Handler,
+		},
+		{
+			MethodName: "ListOrgDomains",
+			Handler:    _ManagementService_ListOrgDomains_Handler,
 		},
 		{
 			MethodName: "RemoveOrgDomain",
