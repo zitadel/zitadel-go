@@ -1,104 +1,27 @@
 version: 2
 updates:
-    -   package-ecosystem: "gomod"
-        directory: "/"
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-        commit-message:
-            prefix: "chore"
-            include: "scope"
-        groups:
-            gomod-version-updates:
-                patterns:
-                    - "*"
-                applies-to: "version-updates"
-    -   package-ecosystem: "gomod"
-        directory: "/"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
-            gomod-security-updates:
-                patterns:
-                    - "*"
-                applies-to: "security-updates"
-    -   package-ecosystem: "docker"
-        directory: "/build/zitadel"
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-        commit-message:
-            prefix: "chore"
-            include: "scope"
-        groups:
-            docker-version-updates:
-                patterns:
-                    - "*"
-                applies-to: "version-updates"
-    -   package-ecosystem: "docker"
-        directory: "/build/zitadel"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
-            docker-security-updates:
-                patterns:
-                    - "*"
-                applies-to: "security-updates"
-    -   package-ecosystem: "github-actions"
-        directory: "/"
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-        commit-message:
-            prefix: "chore"
-            include: "scope"
-        groups:
-            actions-version-updates:
-                patterns:
-                    - "*"
-                applies-to: "version-updates"
-    -   package-ecosystem: "github-actions"
-        directory: "/"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
-            actions-security-updates:
-                patterns:
-                    - "*"
-                applies-to: "security-updates"
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: chore
+    include: scope
+- package-ecosystem: "docker"
+  directory: "/build/zitadel"
+  schedule:
+    interval: "weekly"
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: chore
+    include: scope
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "02:00"
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: chore
+    include: scope
