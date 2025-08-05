@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

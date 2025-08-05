@@ -4,9 +4,8 @@ import (
 	"context"
 	"flag"
 	"log"
+	"log/slog"
 	"os"
-
-	"golang.org/x/exp/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/management"
