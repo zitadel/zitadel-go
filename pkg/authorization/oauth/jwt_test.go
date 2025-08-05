@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
@@ -62,9 +63,11 @@ func TestWithJWT(t *testing.T) {
 	testCases := []struct {
 		name          string
 		ttl           time.Duration
+		notBefore     time.Duration
 		issuer        string
 		audience      []string
 		signingKey    *rsa.PrivateKey
+		algorithm     jwt.SigningMethod
 		expectSuccess bool
 	}{
 		{
@@ -83,6 +86,16 @@ func TestWithJWT(t *testing.T) {
 			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},
+		// nbf is not yet supported. Intentionally left here
+		//{
+		//	name:          "Failure: token not yet valid (nbf)",
+		//	ttl:           time.Hour,
+		//	notBefore:     time.Minute * 5,
+		//	issuer:        mockServer.URL,
+		//	audience:      []string{"test-client-id"},
+		//	signingKey:    keyPair.Private(),
+		//	expectSuccess: false,
+		//},
 		{
 			name:          "Failure: token signed with wrong key",
 			ttl:           time.Hour,
@@ -107,12 +120,18 @@ func TestWithJWT(t *testing.T) {
 			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},
+		{
+			name:          "Failure: algorithm is 'none'",
+			ttl:           time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{"test-client-id"},
+			algorithm:     jwt.SigningMethodNone,
+			expectSuccess: false,
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// Note: The KeyID in the header is always from the *valid* keyPair.
-			// This is to correctly simulate a signature mismatch vs. a key-not-found scenario.
 			signedToken, err := signTestJWT(signParams{
 				KeyID:      keyPair.KID(),
 				PrivateKey: tc.signingKey,
@@ -120,6 +139,8 @@ func TestWithJWT(t *testing.T) {
 				Subject:    "test-user-id",
 				Audience:   tc.audience,
 				TTL:        tc.ttl,
+				NotBefore:  tc.notBefore,
+				Algorithm:  tc.algorithm,
 			})
 			require.NoError(t, err, "failed to create test JWT")
 
