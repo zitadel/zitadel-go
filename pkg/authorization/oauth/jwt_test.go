@@ -86,16 +86,6 @@ func TestWithJWT(t *testing.T) {
 			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},
-		// nbf is not yet supported. Intentionally left here
-		//{
-		//	name:          "Failure: token not yet valid (nbf)",
-		//	ttl:           time.Hour,
-		//	notBefore:     time.Minute * 5,
-		//	issuer:        mockServer.URL,
-		//	audience:      []string{"test-client-id"},
-		//	signingKey:    keyPair.Private(),
-		//	expectSuccess: false,
-		//},
 		{
 			name:          "Failure: token signed with wrong key",
 			ttl:           time.Hour,
