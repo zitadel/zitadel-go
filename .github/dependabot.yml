@@ -16,20 +16,6 @@ updates:
                 patterns:
                     - "*"
                 applies-to: "version-updates"
-    -   package-ecosystem: "gomod"
-        directory: "/"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
             gomod-security-updates:
                 patterns:
                     - "*"
@@ -50,20 +36,6 @@ updates:
                 patterns:
                     - "*"
                 applies-to: "version-updates"
-    -   package-ecosystem: "docker"
-        directory: "/build/zitadel"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
             docker-security-updates:
                 patterns:
                     - "*"
@@ -84,20 +56,6 @@ updates:
                 patterns:
                     - "*"
                 applies-to: "version-updates"
-    -   package-ecosystem: "github-actions"
-        directory: "/"
-        security-updates: true
-        schedule:
-            interval: "weekly"
-        open-pull-requests-limit: 10
-        rebase-strategy: "auto"
-        labels:
-            - "dependencies"
-            - "security"
-        commit-message:
-            prefix: "fix"
-            include: "scope"
-        groups:
             actions-security-updates:
                 patterns:
                     - "*"
