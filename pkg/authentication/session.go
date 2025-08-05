@@ -14,6 +14,14 @@ type InMemorySessions[T Ctx] struct {
 	sessions map[string]T
 }
 
+// NewInMemorySessions creates a new in-memory session store.
+// It is exported to allow for easier testing.
+func NewInMemorySessions[T Ctx]() Sessions[T] {
+	return &InMemorySessions[T]{
+		sessions: make(map[string]T),
+	}
+}
+
 func (s *InMemorySessions[T]) Get(id string) (T, error) {
 	t, ok := s.sessions[id]
 	if !ok {
@@ -21,6 +29,7 @@ func (s *InMemorySessions[T]) Get(id string) (T, error) {
 	}
 	return t, nil
 }
+
 func (s *InMemorySessions[T]) Set(id string, session T) error {
 	s.sessions[id] = session
 	return nil
