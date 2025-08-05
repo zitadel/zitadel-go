@@ -59,7 +59,7 @@ func TestAuthenticator_Logout_WithCustomURI(t *testing.T) {
 	authenticator, _ := authentication.New(
 		context.Background(), nil, key, mockInitializer,
 		authentication.WithPostLogoutRedirectURI[CtxType](customLogoutURL),
-		authentication.WithSessionStore[CtxType](sessions),
+		authentication.WithSessionStore(sessions),
 		authentication.WithSessionCookieName[CtxType]("sid"),
 	)
 
@@ -95,7 +95,7 @@ func TestAuthenticator_Logout_WithDefaultURI(t *testing.T) {
 
 	authenticator, _ := authentication.New(
 		context.Background(), nil, key, mockInitializer,
-		authentication.WithSessionStore[CtxType](sessions),
+		authentication.WithSessionStore(sessions),
 		authentication.WithSessionCookieName[CtxType]("sid"),
 	)
 

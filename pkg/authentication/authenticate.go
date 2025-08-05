@@ -158,19 +158,17 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 	}
 	a.deleteSessionCookie(w)
 
-	if a.postLogoutRedirectURI == "" {
+	postLogout := a.postLogoutRedirectURI
+	if postLogout == "" {
 		// If no custom URI is set, use the original, default logic
 		proto := "http"
 		if req.TLS != nil || a.externalSecure {
 			proto = "https"
 		}
-		postLogout := fmt.Sprintf("%s://%s/", proto, req.Host)
-		a.authN.Logout(w, req, ctx, stateParam, postLogout)
-	} else {
-		// If a custom URI IS set, use it directly
-		postLogout := a.postLogoutRedirectURI
-		a.authN.Logout(w, req, ctx, stateParam, postLogout)
+		postLogout = fmt.Sprintf("%s://%s/", proto, req.Host)
 	}
+
+	a.authN.Logout(w, req, ctx, stateParam, postLogout)
 }
 
 // IsAuthenticated checks whether there is an existing session of not.
