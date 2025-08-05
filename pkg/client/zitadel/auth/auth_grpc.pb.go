@@ -124,9 +124,19 @@ type AuthServiceClient interface {
 	SendMyPasswordlessLink(ctx context.Context, in *SendMyPasswordlessLinkRequest, opts ...grpc.CallOption) (*SendMyPasswordlessLinkResponse, error)
 	VerifyMyPasswordless(ctx context.Context, in *VerifyMyPasswordlessRequest, opts ...grpc.CallOption) (*VerifyMyPasswordlessResponse, error)
 	RemoveMyPasswordless(ctx context.Context, in *RemoveMyPasswordlessRequest, opts ...grpc.CallOption) (*RemoveMyPasswordlessResponse, error)
+	// List My Authorizations / User Grants
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter with your users ID to search for your authorizations on granted and owned projects.
+	//
+	// Returns a list of the authorizations/user grants the authenticated user has. User grants consist of an organization, a project and 1-n roles.
 	ListMyUserGrants(ctx context.Context, in *ListMyUserGrantsRequest, opts ...grpc.CallOption) (*ListMyUserGrantsResponse, error)
 	ListMyProjectOrgs(ctx context.Context, in *ListMyProjectOrgsRequest, opts ...grpc.CallOption) (*ListMyProjectOrgsResponse, error)
 	ListMyZitadelPermissions(ctx context.Context, in *ListMyZitadelPermissionsRequest, opts ...grpc.CallOption) (*ListMyZitadelPermissionsResponse, error)
+	// List My Project Roles
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter with your users ID and the project ID filter to search for your authorizations on a granted and an owned project.
+	//
+	// Returns a list of roles for the authenticated user and for the requesting project.
 	ListMyProjectPermissions(ctx context.Context, in *ListMyProjectPermissionsRequest, opts ...grpc.CallOption) (*ListMyProjectPermissionsResponse, error)
 	ListMyMemberships(ctx context.Context, in *ListMyMembershipsRequest, opts ...grpc.CallOption) (*ListMyMembershipsResponse, error)
 	GetMyLabelPolicy(ctx context.Context, in *GetMyLabelPolicyRequest, opts ...grpc.CallOption) (*GetMyLabelPolicyResponse, error)
@@ -669,9 +679,19 @@ type AuthServiceServer interface {
 	SendMyPasswordlessLink(context.Context, *SendMyPasswordlessLinkRequest) (*SendMyPasswordlessLinkResponse, error)
 	VerifyMyPasswordless(context.Context, *VerifyMyPasswordlessRequest) (*VerifyMyPasswordlessResponse, error)
 	RemoveMyPasswordless(context.Context, *RemoveMyPasswordlessRequest) (*RemoveMyPasswordlessResponse, error)
+	// List My Authorizations / User Grants
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter with your users ID to search for your authorizations on granted and owned projects.
+	//
+	// Returns a list of the authorizations/user grants the authenticated user has. User grants consist of an organization, a project and 1-n roles.
 	ListMyUserGrants(context.Context, *ListMyUserGrantsRequest) (*ListMyUserGrantsResponse, error)
 	ListMyProjectOrgs(context.Context, *ListMyProjectOrgsRequest) (*ListMyProjectOrgsResponse, error)
 	ListMyZitadelPermissions(context.Context, *ListMyZitadelPermissionsRequest) (*ListMyZitadelPermissionsResponse, error)
+	// List My Project Roles
+	//
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter with your users ID and the project ID filter to search for your authorizations on a granted and an owned project.
+	//
+	// Returns a list of roles for the authenticated user and for the requesting project.
 	ListMyProjectPermissions(context.Context, *ListMyProjectPermissionsRequest) (*ListMyProjectPermissionsResponse, error)
 	ListMyMemberships(context.Context, *ListMyMembershipsRequest) (*ListMyMembershipsResponse, error)
 	GetMyLabelPolicy(context.Context, *GetMyLabelPolicyRequest) (*GetMyLabelPolicyResponse, error)

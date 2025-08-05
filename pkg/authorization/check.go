@@ -4,8 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )

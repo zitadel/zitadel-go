@@ -19,15 +19,124 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrganizationService_AddOrganization_FullMethodName = "/zitadel.org.v2beta.OrganizationService/AddOrganization"
+	OrganizationService_CreateOrganization_FullMethodName                   = "/zitadel.org.v2beta.OrganizationService/CreateOrganization"
+	OrganizationService_UpdateOrganization_FullMethodName                   = "/zitadel.org.v2beta.OrganizationService/UpdateOrganization"
+	OrganizationService_ListOrganizations_FullMethodName                    = "/zitadel.org.v2beta.OrganizationService/ListOrganizations"
+	OrganizationService_DeleteOrganization_FullMethodName                   = "/zitadel.org.v2beta.OrganizationService/DeleteOrganization"
+	OrganizationService_SetOrganizationMetadata_FullMethodName              = "/zitadel.org.v2beta.OrganizationService/SetOrganizationMetadata"
+	OrganizationService_ListOrganizationMetadata_FullMethodName             = "/zitadel.org.v2beta.OrganizationService/ListOrganizationMetadata"
+	OrganizationService_DeleteOrganizationMetadata_FullMethodName           = "/zitadel.org.v2beta.OrganizationService/DeleteOrganizationMetadata"
+	OrganizationService_AddOrganizationDomain_FullMethodName                = "/zitadel.org.v2beta.OrganizationService/AddOrganizationDomain"
+	OrganizationService_ListOrganizationDomains_FullMethodName              = "/zitadel.org.v2beta.OrganizationService/ListOrganizationDomains"
+	OrganizationService_DeleteOrganizationDomain_FullMethodName             = "/zitadel.org.v2beta.OrganizationService/DeleteOrganizationDomain"
+	OrganizationService_GenerateOrganizationDomainValidation_FullMethodName = "/zitadel.org.v2beta.OrganizationService/GenerateOrganizationDomainValidation"
+	OrganizationService_VerifyOrganizationDomain_FullMethodName             = "/zitadel.org.v2beta.OrganizationService/VerifyOrganizationDomain"
+	OrganizationService_DeactivateOrganization_FullMethodName               = "/zitadel.org.v2beta.OrganizationService/DeactivateOrganization"
+	OrganizationService_ActivateOrganization_FullMethodName                 = "/zitadel.org.v2beta.OrganizationService/ActivateOrganization"
 )
 
 // OrganizationServiceClient is the client API for OrganizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrganizationServiceClient interface {
-	// Create a new organization and grant the user(s) permission to manage it
-	AddOrganization(ctx context.Context, in *AddOrganizationRequest, opts ...grpc.CallOption) (*AddOrganizationResponse, error)
+	// Create Organization
+	//
+	// Create a new organization with an administrative user. If no specific roles are sent for the users, they will be granted the role ORG_OWNER.
+	//
+	// Required permission:
+	//   - `org.create`
+	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error)
+	// Update Organization
+	//
+	// Change the name of the organization.
+	//
+	// Required permission:
+	//   - `org.write`
+	UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*UpdateOrganizationResponse, error)
+	// List Organizations
+	//
+	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
+	//
+	// Required permission:
+	//   - `iam.read`
+	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	// Delete Organization
+	//
+	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
+	//
+	// Required permission:
+	//   - `org.delete`
+	DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*DeleteOrganizationResponse, error)
+	// Set Organization Metadata
+	//
+	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
+	//
+	// Required permission:
+	//   - `org.write`
+	SetOrganizationMetadata(ctx context.Context, in *SetOrganizationMetadataRequest, opts ...grpc.CallOption) (*SetOrganizationMetadataResponse, error)
+	// List Organization Metadata
+	//
+	// List metadata of an organization filtered by query.
+	//
+	// Required permission:
+	//   - `org.read`
+	ListOrganizationMetadata(ctx context.Context, in *ListOrganizationMetadataRequest, opts ...grpc.CallOption) (*ListOrganizationMetadataResponse, error)
+	// Delete Organization Metadata
+	//
+	// Delete metadata objects from an organization with a specific key.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeleteOrganizationMetadata(ctx context.Context, in *DeleteOrganizationMetadataRequest, opts ...grpc.CallOption) (*DeleteOrganizationMetadataResponse, error)
+	// Add Organization Domain
+	//
+	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
+	//
+	// Required permission:
+	//   - `org.write`
+	AddOrganizationDomain(ctx context.Context, in *AddOrganizationDomainRequest, opts ...grpc.CallOption) (*AddOrganizationDomainResponse, error)
+	// List Organization Domains
+	//
+	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
+	//
+	// Required permission:
+	//   - `org.read`
+	ListOrganizationDomains(ctx context.Context, in *ListOrganizationDomainsRequest, opts ...grpc.CallOption) (*ListOrganizationDomainsResponse, error)
+	// Delete Organization Domain
+	//
+	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeleteOrganizationDomain(ctx context.Context, in *DeleteOrganizationDomainRequest, opts ...grpc.CallOption) (*DeleteOrganizationDomainResponse, error)
+	// Generate Organization Domain Validation
+	//
+	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
+	//
+	// Required permission:
+	//   - `org.write`
+	GenerateOrganizationDomainValidation(ctx context.Context, in *GenerateOrganizationDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrganizationDomainValidationResponse, error)
+	// Verify Organization Domain
+	//
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	//
+	// Required permission:
+	//   - `org.write`
+	VerifyOrganizationDomain(ctx context.Context, in *VerifyOrganizationDomainRequest, opts ...grpc.CallOption) (*VerifyOrganizationDomainResponse, error)
+	// Deactivate Organization
+	//
+	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeactivateOrganization(ctx context.Context, in *DeactivateOrganizationRequest, opts ...grpc.CallOption) (*DeactivateOrganizationResponse, error)
+	// Activate Organization
+	//
+	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
+	//
+	// Required permission:
+	//   - `org.write`
+	ActivateOrganization(ctx context.Context, in *ActivateOrganizationRequest, opts ...grpc.CallOption) (*ActivateOrganizationResponse, error)
 }
 
 type organizationServiceClient struct {
@@ -38,9 +147,126 @@ func NewOrganizationServiceClient(cc grpc.ClientConnInterface) OrganizationServi
 	return &organizationServiceClient{cc}
 }
 
-func (c *organizationServiceClient) AddOrganization(ctx context.Context, in *AddOrganizationRequest, opts ...grpc.CallOption) (*AddOrganizationResponse, error) {
-	out := new(AddOrganizationResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_AddOrganization_FullMethodName, in, out, opts...)
+func (c *organizationServiceClient) CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error) {
+	out := new(CreateOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_CreateOrganization_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*UpdateOrganizationResponse, error) {
+	out := new(UpdateOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_UpdateOrganization_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
+	out := new(ListOrganizationsResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_ListOrganizations_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*DeleteOrganizationResponse, error) {
+	out := new(DeleteOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_DeleteOrganization_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) SetOrganizationMetadata(ctx context.Context, in *SetOrganizationMetadataRequest, opts ...grpc.CallOption) (*SetOrganizationMetadataResponse, error) {
+	out := new(SetOrganizationMetadataResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_SetOrganizationMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) ListOrganizationMetadata(ctx context.Context, in *ListOrganizationMetadataRequest, opts ...grpc.CallOption) (*ListOrganizationMetadataResponse, error) {
+	out := new(ListOrganizationMetadataResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_ListOrganizationMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) DeleteOrganizationMetadata(ctx context.Context, in *DeleteOrganizationMetadataRequest, opts ...grpc.CallOption) (*DeleteOrganizationMetadataResponse, error) {
+	out := new(DeleteOrganizationMetadataResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_DeleteOrganizationMetadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) AddOrganizationDomain(ctx context.Context, in *AddOrganizationDomainRequest, opts ...grpc.CallOption) (*AddOrganizationDomainResponse, error) {
+	out := new(AddOrganizationDomainResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_AddOrganizationDomain_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) ListOrganizationDomains(ctx context.Context, in *ListOrganizationDomainsRequest, opts ...grpc.CallOption) (*ListOrganizationDomainsResponse, error) {
+	out := new(ListOrganizationDomainsResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_ListOrganizationDomains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) DeleteOrganizationDomain(ctx context.Context, in *DeleteOrganizationDomainRequest, opts ...grpc.CallOption) (*DeleteOrganizationDomainResponse, error) {
+	out := new(DeleteOrganizationDomainResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_DeleteOrganizationDomain_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) GenerateOrganizationDomainValidation(ctx context.Context, in *GenerateOrganizationDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrganizationDomainValidationResponse, error) {
+	out := new(GenerateOrganizationDomainValidationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_GenerateOrganizationDomainValidation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) VerifyOrganizationDomain(ctx context.Context, in *VerifyOrganizationDomainRequest, opts ...grpc.CallOption) (*VerifyOrganizationDomainResponse, error) {
+	out := new(VerifyOrganizationDomainResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_VerifyOrganizationDomain_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) DeactivateOrganization(ctx context.Context, in *DeactivateOrganizationRequest, opts ...grpc.CallOption) (*DeactivateOrganizationResponse, error) {
+	out := new(DeactivateOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_DeactivateOrganization_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) ActivateOrganization(ctx context.Context, in *ActivateOrganizationRequest, opts ...grpc.CallOption) (*ActivateOrganizationResponse, error) {
+	out := new(ActivateOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_ActivateOrganization_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +277,104 @@ func (c *organizationServiceClient) AddOrganization(ctx context.Context, in *Add
 // All implementations must embed UnimplementedOrganizationServiceServer
 // for forward compatibility
 type OrganizationServiceServer interface {
-	// Create a new organization and grant the user(s) permission to manage it
-	AddOrganization(context.Context, *AddOrganizationRequest) (*AddOrganizationResponse, error)
+	// Create Organization
+	//
+	// Create a new organization with an administrative user. If no specific roles are sent for the users, they will be granted the role ORG_OWNER.
+	//
+	// Required permission:
+	//   - `org.create`
+	CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error)
+	// Update Organization
+	//
+	// Change the name of the organization.
+	//
+	// Required permission:
+	//   - `org.write`
+	UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*UpdateOrganizationResponse, error)
+	// List Organizations
+	//
+	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
+	//
+	// Required permission:
+	//   - `iam.read`
+	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
+	// Delete Organization
+	//
+	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
+	//
+	// Required permission:
+	//   - `org.delete`
+	DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*DeleteOrganizationResponse, error)
+	// Set Organization Metadata
+	//
+	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
+	//
+	// Required permission:
+	//   - `org.write`
+	SetOrganizationMetadata(context.Context, *SetOrganizationMetadataRequest) (*SetOrganizationMetadataResponse, error)
+	// List Organization Metadata
+	//
+	// List metadata of an organization filtered by query.
+	//
+	// Required permission:
+	//   - `org.read`
+	ListOrganizationMetadata(context.Context, *ListOrganizationMetadataRequest) (*ListOrganizationMetadataResponse, error)
+	// Delete Organization Metadata
+	//
+	// Delete metadata objects from an organization with a specific key.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeleteOrganizationMetadata(context.Context, *DeleteOrganizationMetadataRequest) (*DeleteOrganizationMetadataResponse, error)
+	// Add Organization Domain
+	//
+	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
+	//
+	// Required permission:
+	//   - `org.write`
+	AddOrganizationDomain(context.Context, *AddOrganizationDomainRequest) (*AddOrganizationDomainResponse, error)
+	// List Organization Domains
+	//
+	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
+	//
+	// Required permission:
+	//   - `org.read`
+	ListOrganizationDomains(context.Context, *ListOrganizationDomainsRequest) (*ListOrganizationDomainsResponse, error)
+	// Delete Organization Domain
+	//
+	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeleteOrganizationDomain(context.Context, *DeleteOrganizationDomainRequest) (*DeleteOrganizationDomainResponse, error)
+	// Generate Organization Domain Validation
+	//
+	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
+	//
+	// Required permission:
+	//   - `org.write`
+	GenerateOrganizationDomainValidation(context.Context, *GenerateOrganizationDomainValidationRequest) (*GenerateOrganizationDomainValidationResponse, error)
+	// Verify Organization Domain
+	//
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	//
+	// Required permission:
+	//   - `org.write`
+	VerifyOrganizationDomain(context.Context, *VerifyOrganizationDomainRequest) (*VerifyOrganizationDomainResponse, error)
+	// Deactivate Organization
+	//
+	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
+	//
+	// Required permission:
+	//   - `org.write`
+	DeactivateOrganization(context.Context, *DeactivateOrganizationRequest) (*DeactivateOrganizationResponse, error)
+	// Activate Organization
+	//
+	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
+	//
+	// Required permission:
+	//   - `org.write`
+	ActivateOrganization(context.Context, *ActivateOrganizationRequest) (*ActivateOrganizationResponse, error)
 	mustEmbedUnimplementedOrganizationServiceServer()
 }
 
@@ -60,8 +382,47 @@ type OrganizationServiceServer interface {
 type UnimplementedOrganizationServiceServer struct {
 }
 
-func (UnimplementedOrganizationServiceServer) AddOrganization(context.Context, *AddOrganizationRequest) (*AddOrganizationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddOrganization not implemented")
+func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrganization not implemented")
+}
+func (UnimplementedOrganizationServiceServer) UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*UpdateOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganization not implemented")
+}
+func (UnimplementedOrganizationServiceServer) ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
+}
+func (UnimplementedOrganizationServiceServer) DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*DeleteOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganization not implemented")
+}
+func (UnimplementedOrganizationServiceServer) SetOrganizationMetadata(context.Context, *SetOrganizationMetadataRequest) (*SetOrganizationMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationMetadata not implemented")
+}
+func (UnimplementedOrganizationServiceServer) ListOrganizationMetadata(context.Context, *ListOrganizationMetadataRequest) (*ListOrganizationMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizationMetadata not implemented")
+}
+func (UnimplementedOrganizationServiceServer) DeleteOrganizationMetadata(context.Context, *DeleteOrganizationMetadataRequest) (*DeleteOrganizationMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganizationMetadata not implemented")
+}
+func (UnimplementedOrganizationServiceServer) AddOrganizationDomain(context.Context, *AddOrganizationDomainRequest) (*AddOrganizationDomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOrganizationDomain not implemented")
+}
+func (UnimplementedOrganizationServiceServer) ListOrganizationDomains(context.Context, *ListOrganizationDomainsRequest) (*ListOrganizationDomainsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizationDomains not implemented")
+}
+func (UnimplementedOrganizationServiceServer) DeleteOrganizationDomain(context.Context, *DeleteOrganizationDomainRequest) (*DeleteOrganizationDomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganizationDomain not implemented")
+}
+func (UnimplementedOrganizationServiceServer) GenerateOrganizationDomainValidation(context.Context, *GenerateOrganizationDomainValidationRequest) (*GenerateOrganizationDomainValidationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateOrganizationDomainValidation not implemented")
+}
+func (UnimplementedOrganizationServiceServer) VerifyOrganizationDomain(context.Context, *VerifyOrganizationDomainRequest) (*VerifyOrganizationDomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyOrganizationDomain not implemented")
+}
+func (UnimplementedOrganizationServiceServer) DeactivateOrganization(context.Context, *DeactivateOrganizationRequest) (*DeactivateOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivateOrganization not implemented")
+}
+func (UnimplementedOrganizationServiceServer) ActivateOrganization(context.Context, *ActivateOrganizationRequest) (*ActivateOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateOrganization not implemented")
 }
 func (UnimplementedOrganizationServiceServer) mustEmbedUnimplementedOrganizationServiceServer() {}
 
@@ -76,20 +437,254 @@ func RegisterOrganizationServiceServer(s grpc.ServiceRegistrar, srv Organization
 	s.RegisterService(&OrganizationService_ServiceDesc, srv)
 }
 
-func _OrganizationService_AddOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddOrganizationRequest)
+func _OrganizationService_CreateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOrganizationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServiceServer).AddOrganization(ctx, in)
+		return srv.(OrganizationServiceServer).CreateOrganization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OrganizationService_AddOrganization_FullMethodName,
+		FullMethod: OrganizationService_CreateOrganization_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).AddOrganization(ctx, req.(*AddOrganizationRequest))
+		return srv.(OrganizationServiceServer).CreateOrganization(ctx, req.(*CreateOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_UpdateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).UpdateOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_UpdateOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).UpdateOrganization(ctx, req.(*UpdateOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).ListOrganizations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_ListOrganizations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_DeleteOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).DeleteOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_DeleteOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).DeleteOrganization(ctx, req.(*DeleteOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_SetOrganizationMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetOrganizationMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).SetOrganizationMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_SetOrganizationMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).SetOrganizationMetadata(ctx, req.(*SetOrganizationMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_ListOrganizationMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).ListOrganizationMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_ListOrganizationMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).ListOrganizationMetadata(ctx, req.(*ListOrganizationMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_DeleteOrganizationMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).DeleteOrganizationMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_DeleteOrganizationMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).DeleteOrganizationMetadata(ctx, req.(*DeleteOrganizationMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_AddOrganizationDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddOrganizationDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).AddOrganizationDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_AddOrganizationDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).AddOrganizationDomain(ctx, req.(*AddOrganizationDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_ListOrganizationDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationDomainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).ListOrganizationDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_ListOrganizationDomains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).ListOrganizationDomains(ctx, req.(*ListOrganizationDomainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_DeleteOrganizationDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).DeleteOrganizationDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_DeleteOrganizationDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).DeleteOrganizationDomain(ctx, req.(*DeleteOrganizationDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_GenerateOrganizationDomainValidation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateOrganizationDomainValidationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).GenerateOrganizationDomainValidation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_GenerateOrganizationDomainValidation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).GenerateOrganizationDomainValidation(ctx, req.(*GenerateOrganizationDomainValidationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_VerifyOrganizationDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyOrganizationDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).VerifyOrganizationDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_VerifyOrganizationDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).VerifyOrganizationDomain(ctx, req.(*VerifyOrganizationDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_DeactivateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivateOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).DeactivateOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_DeactivateOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).DeactivateOrganization(ctx, req.(*DeactivateOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_ActivateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).ActivateOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_ActivateOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).ActivateOrganization(ctx, req.(*ActivateOrganizationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -102,8 +697,60 @@ var OrganizationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrganizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddOrganization",
-			Handler:    _OrganizationService_AddOrganization_Handler,
+			MethodName: "CreateOrganization",
+			Handler:    _OrganizationService_CreateOrganization_Handler,
+		},
+		{
+			MethodName: "UpdateOrganization",
+			Handler:    _OrganizationService_UpdateOrganization_Handler,
+		},
+		{
+			MethodName: "ListOrganizations",
+			Handler:    _OrganizationService_ListOrganizations_Handler,
+		},
+		{
+			MethodName: "DeleteOrganization",
+			Handler:    _OrganizationService_DeleteOrganization_Handler,
+		},
+		{
+			MethodName: "SetOrganizationMetadata",
+			Handler:    _OrganizationService_SetOrganizationMetadata_Handler,
+		},
+		{
+			MethodName: "ListOrganizationMetadata",
+			Handler:    _OrganizationService_ListOrganizationMetadata_Handler,
+		},
+		{
+			MethodName: "DeleteOrganizationMetadata",
+			Handler:    _OrganizationService_DeleteOrganizationMetadata_Handler,
+		},
+		{
+			MethodName: "AddOrganizationDomain",
+			Handler:    _OrganizationService_AddOrganizationDomain_Handler,
+		},
+		{
+			MethodName: "ListOrganizationDomains",
+			Handler:    _OrganizationService_ListOrganizationDomains_Handler,
+		},
+		{
+			MethodName: "DeleteOrganizationDomain",
+			Handler:    _OrganizationService_DeleteOrganizationDomain_Handler,
+		},
+		{
+			MethodName: "GenerateOrganizationDomainValidation",
+			Handler:    _OrganizationService_GenerateOrganizationDomainValidation_Handler,
+		},
+		{
+			MethodName: "VerifyOrganizationDomain",
+			Handler:    _OrganizationService_VerifyOrganizationDomain_Handler,
+		},
+		{
+			MethodName: "DeactivateOrganization",
+			Handler:    _OrganizationService_DeactivateOrganization_Handler,
+		},
+		{
+			MethodName: "ActivateOrganization",
+			Handler:    _OrganizationService_ActivateOrganization_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

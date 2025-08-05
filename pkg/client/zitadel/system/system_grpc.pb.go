@@ -53,34 +53,48 @@ type SystemServiceClient interface {
 	// It respondes as soon as ZITADEL started
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
 	// Returns a list of ZITADEL instances
+	//
+	// Deprecated: Use [ListInstances](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-instances.api.mdx) instead to list instances
 	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesResponse, error)
 	// Returns the detail of an instance
+	//
+	// Deprecated: Use [GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead to get the details of the instance in context
 	GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...grpc.CallOption) (*GetInstanceResponse, error)
 	// Deprecated: Use CreateInstance instead
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	AddInstance(ctx context.Context, in *AddInstanceRequest, opts ...grpc.CallOption) (*AddInstanceResponse, error)
 	// Updates name of an existing instance
+	//
+	// Deprecated: Use [UpdateInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-update-instance.api.mdx) instead to update the name of the instance in context
 	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceResponse, error)
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	CreateInstance(ctx context.Context, in *CreateInstanceRequest, opts ...grpc.CallOption) (*CreateInstanceResponse, error)
 	// Removes an instance
 	// This might take some time
+	//
+	// Deprecated: Use [DeleteInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-delete-instance.api.mdx) instead to delete an instance
 	RemoveInstance(ctx context.Context, in *RemoveInstanceRequest, opts ...grpc.CallOption) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
 	// all queries need to match (ANDed)
 	// Deprecated: Use the Admin APIs ListIAMMembers instead
 	ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
+	//
+	// Deprecated: Use [ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead to check existence of an instance
 	ExistsDomain(ctx context.Context, in *ExistsDomainRequest, opts ...grpc.CallOption) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
 	// Checks if a domain exists
 	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
 	ListDomains(ctx context.Context, in *ListDomainsRequest, opts ...grpc.CallOption) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
+	//
+	// Deprecated: Use [AddCustomDomain](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-add-custom-domain.api.mdx) instead to add a custom domain to the instance in context
 	AddDomain(ctx context.Context, in *AddDomainRequest, opts ...grpc.CallOption) (*AddDomainResponse, error)
 	// Removes the domain of an instance
+	//
+	// Deprecated: Use [RemoveDomain](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-remove-custom-domain.api.mdx) instead to remove a custom domain from the instance in context
 	RemoveDomain(ctx context.Context, in *RemoveDomainRequest, opts ...grpc.CallOption) (*RemoveDomainResponse, error)
 	// Sets the primary domain of an instance
 	SetPrimaryDomain(ctx context.Context, in *SetPrimaryDomainRequest, opts ...grpc.CallOption) (*SetPrimaryDomainResponse, error)
@@ -354,34 +368,48 @@ type SystemServiceServer interface {
 	// It respondes as soon as ZITADEL started
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
 	// Returns a list of ZITADEL instances
+	//
+	// Deprecated: Use [ListInstances](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-instances.api.mdx) instead to list instances
 	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesResponse, error)
 	// Returns the detail of an instance
+	//
+	// Deprecated: Use [GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead to get the details of the instance in context
 	GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceResponse, error)
 	// Deprecated: Use CreateInstance instead
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	AddInstance(context.Context, *AddInstanceRequest) (*AddInstanceResponse, error)
 	// Updates name of an existing instance
+	//
+	// Deprecated: Use [UpdateInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-update-instance.api.mdx) instead to update the name of the instance in context
 	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceResponse, error)
 	// Creates a new instance with all needed setup data
 	// This might take some time
 	CreateInstance(context.Context, *CreateInstanceRequest) (*CreateInstanceResponse, error)
 	// Removes an instance
 	// This might take some time
+	//
+	// Deprecated: Use [DeleteInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-delete-instance.api.mdx) instead to delete an instance
 	RemoveInstance(context.Context, *RemoveInstanceRequest) (*RemoveInstanceResponse, error)
 	// Returns all instance members matching the request
 	// all queries need to match (ANDed)
 	// Deprecated: Use the Admin APIs ListIAMMembers instead
 	ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error)
 	// Checks if a domain exists
+	//
+	// Deprecated: Use [ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead to check existence of an instance
 	ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error)
 	// Returns the custom domains of an instance
 	// Checks if a domain exists
 	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
 	ListDomains(context.Context, *ListDomainsRequest) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
+	//
+	// Deprecated: Use [AddCustomDomain](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-add-custom-domain.api.mdx) instead to add a custom domain to the instance in context
 	AddDomain(context.Context, *AddDomainRequest) (*AddDomainResponse, error)
 	// Removes the domain of an instance
+	//
+	// Deprecated: Use [RemoveDomain](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-remove-custom-domain.api.mdx) instead to remove a custom domain from the instance in context
 	RemoveDomain(context.Context, *RemoveDomainRequest) (*RemoveDomainResponse, error)
 	// Sets the primary domain of an instance
 	SetPrimaryDomain(context.Context, *SetPrimaryDomainRequest) (*SetPrimaryDomainResponse, error)
