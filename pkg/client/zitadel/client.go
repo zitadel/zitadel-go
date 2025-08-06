@@ -19,6 +19,7 @@ type Connection struct {
 	api                   string
 	jwtProfileTokenSource middleware.JWTProfileTokenSource
 	jwtDirectTokenSource  middleware.JWTDirectTokenSource
+	tokenSource           oauth2.TokenSource
 	scopes                []string
 	orgID                 string
 	insecure              bool
@@ -72,10 +73,12 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
 	var auth *middleware.AuthInterceptor
 	var err error
-	if c.jwtDirectTokenSource != nil {
+	if c.tokenSource != nil {
+		auth, err = middleware.NewGenericAuthenticator(c.tokenSource)
+	} else if c.jwtDirectTokenSource != nil {
 		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
 	} else {
-		auth, err = middleware.NewAuthenticator(issuer, jwtProfileTokenSource, scopes...)
+		auth, err = middleware.NewAuthenticator(c.issuer, c.jwtProfileTokenSource, c.scopes...)
 	}
 	if err != nil {
 		return err
@@ -122,6 +125,16 @@ func WithCustomURL(issuer, api string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.issuer = issuer
 		client.api = api
+		return nil
+	}
+}
+
+// WithTokenSource sets a generic oauth2.TokenSource for authentication.
+// This is the most flexible option and should be preferred.
+// If set, it will be used over WithJWTProfileTokenSource or WithJWTDirectTokenSource.
+func WithTokenSource(ts oauth2.TokenSource) Option {
+	return func(c *Connection) error {
+		c.tokenSource = ts
 		return nil
 	}
 }
