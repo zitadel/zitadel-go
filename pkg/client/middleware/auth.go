@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"os"
 
 	"github.com/zitadel/oidc/v3/pkg/client/profile"
@@ -41,6 +42,18 @@ func JWTProfileFromKeyAndUserID(ctx context.Context, key []byte, keyID, userID s
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		return profile.NewJWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)
 	}
+}
+
+// NewGenericAuthenticator creates an interceptor from any provided oauth2.TokenSource.
+// This is the most flexible constructor, allowing for use cases like Client
+// Credentials, Personal Access Tokens, or other custom token sources.
+func NewGenericAuthenticator(ts oauth2.TokenSource) (*AuthInterceptor, error) {
+	if ts == nil {
+		return nil, errors.New("token source cannot be nil")
+	}
+	return &AuthInterceptor{
+		TokenSource: oauth2.ReuseTokenSource(nil, ts),
+	}, nil
 }
 
 // NewAuthenticator creates an interceptor which authenticates a service account with a provided JWT Profile (using a key.json either as file or data).

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 	"log"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
@@ -33,7 +34,7 @@ func main() {
 		*issuer,
 		*api,
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
+		zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath("key.json")),
 	)
 	if err != nil {
 		log.Fatalln("could not create client", err)
