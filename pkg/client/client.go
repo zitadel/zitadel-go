@@ -311,3 +311,7 @@ func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
 		return webkeyV2Beta.NewWebKeyServiceClient(c.connection)
 	})
 }
+
+func (c *Client) Close() error {
+	return c.connection.Close()
+}
