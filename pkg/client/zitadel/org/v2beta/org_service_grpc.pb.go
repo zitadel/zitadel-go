@@ -45,6 +45,8 @@ type OrganizationServiceClient interface {
 	//
 	// Required permission:
 	//   - `org.create`
+	//
+	// Deprecated: Use [AddOrganization](/apis/resources/org_service_v2/organization-service-add-organization.api.mdx) instead to create an organization.
 	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
@@ -59,6 +61,8 @@ type OrganizationServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.read`
+	//
+	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
@@ -283,6 +287,8 @@ type OrganizationServiceServer interface {
 	//
 	// Required permission:
 	//   - `org.create`
+	//
+	// Deprecated: Use [AddOrganization](/apis/resources/org_service_v2/organization-service-add-organization.api.mdx) instead to create an organization.
 	CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
@@ -297,6 +303,8 @@ type OrganizationServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.read`
+	//
+	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
