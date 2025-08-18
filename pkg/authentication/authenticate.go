@@ -22,13 +22,6 @@ var (
 // Authenticator provides the functionality to handle authentication including check for existing session,
 // starting a new authentication by redirecting the user to the Login UI and more.
 type Authenticator[T Ctx] struct {
-	authN             Handler[T]
-	logger            *slog.Logger
-	router            *http.ServeMux
-	sessions          Sessions[T]
-	encryptionKey     string
-	sessionCookieName string
-	externalSecure    bool
 	authN                 Handler[T]
 	logger                *slog.Logger
 	router                *http.ServeMux
@@ -36,7 +29,7 @@ type Authenticator[T Ctx] struct {
 	encryptionKey         string
 	sessionCookieName     string
 	externalSecure        bool
-	useCookieSession  bool
+	useCookieSession      bool
 	postLogoutRedirectURI string
 }
 
