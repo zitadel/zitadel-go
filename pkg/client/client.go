@@ -37,6 +37,18 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
+type Lazy[T any] struct {
+	once  sync.Once
+	value T
+}
+
+func (l *Lazy[T]) Get(init func() T) T {
+	l.once.Do(func() {
+		l.value = init()
+	})
+	return l.value
+}
+
 type clientOptions struct {
 	initTokenSource TokenSourceInitializer
 	grpcDialOptions []grpc.DialOption
@@ -60,29 +72,18 @@ func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 	}
 }
 
-type Lazy[T any] struct {
-	once  sync.Once
-	value T
-}
-
-func (l *Lazy[T]) Get(init func() T) T {
-	l.once.Do(func() {
-		l.value = init()
-	})
-	return l.value
-}
-
 type Client struct {
 	connection *grpc.ClientConn
 
-	systemService                   Lazy[system.SystemServiceClient]
+	actionServiceV2Beta             Lazy[actionV2Beta.ActionServiceClient]
+	authorizationServiceV2Beta      Lazy[authorizationV2Beta.AuthorizationServiceClient]
 	adminService                    Lazy[admin.AdminServiceClient]
+	systemService                   Lazy[system.SystemServiceClient]
 	managementService               Lazy[management.ManagementServiceClient]
-	userService                     Lazy[userV2Beta.UserServiceClient]
-	userServiceV2                   Lazy[userV2.UserServiceClient]
 	authService                     Lazy[auth.AuthServiceClient]
 	settingsService                 Lazy[settingsV2Beta.SettingsServiceClient]
 	settingsServiceV2               Lazy[settingsV2.SettingsServiceClient]
+	internalPermissionServiceV2Beta Lazy[internalPermissionV2Beta.InternalPermissionServiceClient]
 	sessionService                  Lazy[sessionV2Beta.SessionServiceClient]
 	sessionServiceV2                Lazy[sessionV2.SessionServiceClient]
 	organizationService             Lazy[orgV2Beta.OrganizationServiceClient]
@@ -90,13 +91,13 @@ type Client struct {
 	oidcService                     Lazy[oidcV2Beta.OIDCServiceClient]
 	oidcServiceV2                   Lazy[oidcV2.OIDCServiceClient]
 	featureV2                       Lazy[featureV2.FeatureServiceClient]
-	webkeyV2Beta                    Lazy[webkeyV2Beta.WebKeyServiceClient]
-	actionServiceV2Beta             Lazy[actionV2Beta.ActionServiceClient]
-	authorizationServiceV2Beta      Lazy[authorizationV2Beta.AuthorizationServiceClient]
-	internalPermissionServiceV2Beta Lazy[internalPermissionV2Beta.InternalPermissionServiceClient]
+	userService                     Lazy[userV2Beta.UserServiceClient]
+	userServiceV2                   Lazy[userV2.UserServiceClient]
 	webkeyServiceV2                 Lazy[webkeyV2.WebKeyServiceClient]
+	webkeyServiceV2Beta             Lazy[webkeyV2Beta.WebKeyServiceClient]
 	appServiceV2Beta                Lazy[appV2Beta.AppServiceClient]
 	telemetryServiceV2Beta          Lazy[analyticsV2Beta.TelemetryServiceClient]
+	featureServiceV2                Lazy[featureV2.FeatureServiceClient]
 	featureServiceV2Beta            Lazy[featureV2Beta.FeatureServiceClient]
 	idpServiceV2                    Lazy[idpV2.IdentityProviderServiceClient]
 	instanceServiceV2Beta           Lazy[instanceV2Beta.InstanceServiceClient]
@@ -149,9 +150,9 @@ func newConnection(
 	return grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
 }
 
-func (c *Client) SystemService() system.SystemServiceClient {
-	return c.systemService.Get(func() system.SystemServiceClient {
-		return system.NewSystemServiceClient(c.connection)
+func (c *Client) ActionServiceV2Beta() actionV2Beta.ActionServiceClient {
+	return c.actionServiceV2Beta.Get(func() actionV2Beta.ActionServiceClient {
+		return actionV2Beta.NewActionServiceClient(c.connection)
 	})
 }
 
@@ -161,9 +162,15 @@ func (c *Client) AdminService() admin.AdminServiceClient {
 	})
 }
 
-func (c *Client) ManagementService() management.ManagementServiceClient {
-	return c.managementService.Get(func() management.ManagementServiceClient {
-		return management.NewManagementServiceClient(c.connection)
+func (c *Client) TelemetryServiceV2Beta() analyticsV2Beta.TelemetryServiceClient {
+	return c.telemetryServiceV2Beta.Get(func() analyticsV2Beta.TelemetryServiceClient {
+		return analyticsV2Beta.NewTelemetryServiceClient(c.connection)
+	})
+}
+
+func (c *Client) AppServiceV2Beta() appV2Beta.AppServiceClient {
+	return c.appServiceV2Beta.Get(func() appV2Beta.AppServiceClient {
+		return appV2Beta.NewAppServiceClient(c.connection)
 	})
 }
 
@@ -173,39 +180,45 @@ func (c *Client) AuthService() auth.AuthServiceClient {
 	})
 }
 
-func (c *Client) UserService() userV2Beta.UserServiceClient {
-	return c.userService.Get(func() userV2Beta.UserServiceClient {
-		return userV2Beta.NewUserServiceClient(c.connection)
+func (c *Client) AuthorizationServiceV2Beta() authorizationV2Beta.AuthorizationServiceClient {
+	return c.authorizationServiceV2Beta.Get(func() authorizationV2Beta.AuthorizationServiceClient {
+		return authorizationV2Beta.NewAuthorizationServiceClient(c.connection)
 	})
 }
 
-func (c *Client) UserServiceV2() userV2.UserServiceClient {
-	return c.userServiceV2.Get(func() userV2.UserServiceClient {
-		return userV2.NewUserServiceClient(c.connection)
+func (c *Client) FeatureServiceV2() featureV2.FeatureServiceClient {
+	return c.featureServiceV2.Get(func() featureV2.FeatureServiceClient {
+		return featureV2.NewFeatureServiceClient(c.connection)
 	})
 }
 
-func (c *Client) SettingsService() settingsV2Beta.SettingsServiceClient {
-	return c.settingsService.Get(func() settingsV2Beta.SettingsServiceClient {
-		return settingsV2Beta.NewSettingsServiceClient(c.connection)
+func (c *Client) FeatureServiceV2Beta() featureV2Beta.FeatureServiceClient {
+	return c.featureServiceV2Beta.Get(func() featureV2Beta.FeatureServiceClient {
+		return featureV2Beta.NewFeatureServiceClient(c.connection)
 	})
 }
 
-func (c *Client) SettingsServiceV2() settingsV2.SettingsServiceClient {
-	return c.settingsServiceV2.Get(func() settingsV2.SettingsServiceClient {
-		return settingsV2.NewSettingsServiceClient(c.connection)
+func (c *Client) InstanceServiceV2Beta() instanceV2Beta.InstanceServiceClient {
+	return c.instanceServiceV2Beta.Get(func() instanceV2Beta.InstanceServiceClient {
+		return instanceV2Beta.NewInstanceServiceClient(c.connection)
 	})
 }
 
-func (c *Client) SessionService() sessionV2Beta.SessionServiceClient {
-	return c.sessionService.Get(func() sessionV2Beta.SessionServiceClient {
-		return sessionV2Beta.NewSessionServiceClient(c.connection)
+func (c *Client) InternalPermissionServiceV2Beta() internalPermissionV2Beta.InternalPermissionServiceClient {
+	return c.internalPermissionServiceV2Beta.Get(func() internalPermissionV2Beta.InternalPermissionServiceClient {
+		return internalPermissionV2Beta.NewInternalPermissionServiceClient(c.connection)
 	})
 }
 
-func (c *Client) SessionServiceV2() sessionV2.SessionServiceClient {
-	return c.sessionServiceV2.Get(func() sessionV2.SessionServiceClient {
-		return sessionV2.NewSessionServiceClient(c.connection)
+func (c *Client) ManagementService() management.ManagementServiceClient {
+	return c.managementService.Get(func() management.ManagementServiceClient {
+		return management.NewManagementServiceClient(c.connection)
+	})
+}
+
+func (c *Client) IdpServiceV2() idpV2.IdentityProviderServiceClient {
+	return c.idpServiceV2.Get(func() idpV2.IdentityProviderServiceClient {
+		return idpV2.NewIdentityProviderServiceClient(c.connection)
 	})
 }
 
@@ -233,66 +246,6 @@ func (c *Client) OrganizationServiceV2() orgV2.OrganizationServiceClient {
 	})
 }
 
-func (c *Client) FeatureServiceV2() featureV2.FeatureServiceClient {
-	return c.featureV2.Get(func() featureV2.FeatureServiceClient {
-		return featureV2.NewFeatureServiceClient(c.connection)
-	})
-}
-
-func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
-	return c.webkeyV2Beta.Get(func() webkeyV2Beta.WebKeyServiceClient {
-		return webkeyV2Beta.NewWebKeyServiceClient(c.connection)
-	})
-}
-
-func (c *Client) ActionServiceV2Beta() actionV2Beta.ActionServiceClient {
-	return c.actionServiceV2Beta.Get(func() actionV2Beta.ActionServiceClient {
-		return actionV2Beta.NewActionServiceClient(c.connection)
-	})
-}
-
-func (c *Client) TelemetryServiceV2Beta() analyticsV2Beta.TelemetryServiceClient {
-	return c.telemetryServiceV2Beta.Get(func() analyticsV2Beta.TelemetryServiceClient {
-		return analyticsV2Beta.NewTelemetryServiceClient(c.connection)
-	})
-}
-
-func (c *Client) AppServiceV2Beta() appV2Beta.AppServiceClient {
-	return c.appServiceV2Beta.Get(func() appV2Beta.AppServiceClient {
-		return appV2Beta.NewAppServiceClient(c.connection)
-	})
-}
-
-func (c *Client) AuthorizationServiceV2Beta() authorizationV2Beta.AuthorizationServiceClient {
-	return c.authorizationServiceV2Beta.Get(func() authorizationV2Beta.AuthorizationServiceClient {
-		return authorizationV2Beta.NewAuthorizationServiceClient(c.connection)
-	})
-}
-
-func (c *Client) FeatureServiceV2Beta() featureV2Beta.FeatureServiceClient {
-	return c.featureServiceV2Beta.Get(func() featureV2Beta.FeatureServiceClient {
-		return featureV2Beta.NewFeatureServiceClient(c.connection)
-	})
-}
-
-func (c *Client) IdpServiceV2() idpV2.IdentityProviderServiceClient {
-	return c.idpServiceV2.Get(func() idpV2.IdentityProviderServiceClient {
-		return idpV2.NewIdentityProviderServiceClient(c.connection)
-	})
-}
-
-func (c *Client) InstanceServiceV2Beta() instanceV2Beta.InstanceServiceClient {
-	return c.instanceServiceV2Beta.Get(func() instanceV2Beta.InstanceServiceClient {
-		return instanceV2Beta.NewInstanceServiceClient(c.connection)
-	})
-}
-
-func (c *Client) InternalPermissionServiceV2Beta() internalPermissionV2Beta.InternalPermissionServiceClient {
-	return c.internalPermissionServiceV2Beta.Get(func() internalPermissionV2Beta.InternalPermissionServiceClient {
-		return internalPermissionV2Beta.NewInternalPermissionServiceClient(c.connection)
-	})
-}
-
 func (c *Client) ProjectServiceV2Beta() projectV2Beta.ProjectServiceClient {
 	return c.projectServiceV2Beta.Get(func() projectV2Beta.ProjectServiceClient {
 		return projectV2Beta.NewProjectServiceClient(c.connection)
@@ -305,8 +258,60 @@ func (c *Client) SAMLServiceV2() samlV2.SAMLServiceClient {
 	})
 }
 
+func (c *Client) SessionService() sessionV2Beta.SessionServiceClient {
+	return c.sessionService.Get(func() sessionV2Beta.SessionServiceClient {
+		return sessionV2Beta.NewSessionServiceClient(c.connection)
+	})
+}
+
+func (c *Client) SessionServiceV2() sessionV2.SessionServiceClient {
+	return c.sessionServiceV2.Get(func() sessionV2.SessionServiceClient {
+		return sessionV2.NewSessionServiceClient(c.connection)
+	})
+}
+
+func (c *Client) SettingsService() settingsV2Beta.SettingsServiceClient {
+	return c.settingsService.Get(func() settingsV2Beta.SettingsServiceClient {
+		return settingsV2Beta.NewSettingsServiceClient(c.connection)
+	})
+}
+
+func (c *Client) SettingsServiceV2() settingsV2.SettingsServiceClient {
+	return c.settingsServiceV2.Get(func() settingsV2.SettingsServiceClient {
+		return settingsV2.NewSettingsServiceClient(c.connection)
+	})
+}
+
+func (c *Client) SystemService() system.SystemServiceClient {
+	return c.systemService.Get(func() system.SystemServiceClient {
+		return system.NewSystemServiceClient(c.connection)
+	})
+}
+
+func (c *Client) UserService() userV2Beta.UserServiceClient {
+	return c.userService.Get(func() userV2Beta.UserServiceClient {
+		return userV2Beta.NewUserServiceClient(c.connection)
+	})
+}
+
+func (c *Client) UserServiceV2() userV2.UserServiceClient {
+	return c.userServiceV2.Get(func() userV2.UserServiceClient {
+		return userV2.NewUserServiceClient(c.connection)
+	})
+}
+
 func (c *Client) WebkeyServiceV2() webkeyV2.WebKeyServiceClient {
 	return c.webkeyServiceV2.Get(func() webkeyV2.WebKeyServiceClient {
 		return webkeyV2.NewWebKeyServiceClient(c.connection)
 	})
+}
+
+func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
+	return c.webkeyServiceV2Beta.Get(func() webkeyV2Beta.WebKeyServiceClient {
+		return webkeyV2Beta.NewWebKeyServiceClient(c.connection)
+	})
+}
+
+func (c *Client) Close() error {
+	return c.connection.Close()
 }
