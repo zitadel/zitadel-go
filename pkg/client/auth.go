@@ -17,7 +17,15 @@ import (
 
 type TokenSourceInitializer func(ctx context.Context, issuer string) (oauth2.TokenSource, error)
 
+// AuthenticationJWTProfile allows using the OAuth2 JWT Profile Grant to get a token using a key.json of a service user provided by ZITADEL.
+func AuthenticationJWTProfile(file *KeyFile, scopes ...string) TokenSourceInitializer {
+	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
+		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, file.Key, scopes)
+	}
+}
+
 // JWTAuthentication allows using the OAuth2 JWT Profile Grant to get a token using a key.json of a service user provided by ZITADEL.
+// Deprecated: Use [AuthenticationJWTProfile] instead, which uses the correct KeyFile type.
 func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, []byte(file.Key), scopes)
@@ -55,13 +63,13 @@ func PAT(pat string) TokenSourceInitializer {
 // DefaultServiceUserAuthentication is a short version of [JWTAuthentication]
 // with a key.json read from a provided path.
 func DefaultServiceUserAuthentication(path string, scopes ...string) TokenSourceInitializer {
-	c, err := client.ConfigFromKeyFile(path)
+	c, err := ConfigFromKeyFile(path)
 	if err != nil {
 		return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 			return nil, err
 		}
 	}
-	return JWTAuthentication(c, scopes...)
+	return AuthenticationJWTProfile(c, scopes...)
 }
 
 // AuthorizedUserCtx will set the authorization token of the authorized context (user) to be used
