@@ -84,9 +84,11 @@ type SystemServiceClient interface {
 	//
 	// Deprecated: Use [ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead to check existence of an instance
 	ExistsDomain(ctx context.Context, in *ExistsDomainRequest, opts ...grpc.CallOption) (*ExistsDomainResponse, error)
-	// Returns the custom domains of an instance
-	// Checks if a domain exists
-	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
+	// List Domains
+	//
+	// Deprecated: use [instance service v2 ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead.
+	//
+	// Returns the custom domains of an instance.
 	ListDomains(ctx context.Context, in *ListDomainsRequest, opts ...grpc.CallOption) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
 	//
@@ -399,9 +401,11 @@ type SystemServiceServer interface {
 	//
 	// Deprecated: Use [ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead to check existence of an instance
 	ExistsDomain(context.Context, *ExistsDomainRequest) (*ExistsDomainResponse, error)
-	// Returns the custom domains of an instance
-	// Checks if a domain exists
-	// Deprecated: Use the Admin APIs ListInstanceDomains on the admin API instead
+	// List Domains
+	//
+	// Deprecated: use [instance service v2 ListCustomDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-custom-domains.api.mdx) instead.
+	//
+	// Returns the custom domains of an instance.
 	ListDomains(context.Context, *ListDomainsRequest) (*ListDomainsResponse, error)
 	// Adds a domain to an instance
 	//

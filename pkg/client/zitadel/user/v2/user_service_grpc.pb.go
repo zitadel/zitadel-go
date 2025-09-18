@@ -92,6 +92,8 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// Create a new human user
 	//
+	// Deprecated: Use [CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) to create a new user of type human instead.
+	//
 	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
 	// User by ID
@@ -103,6 +105,8 @@ type UserServiceClient interface {
 	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Change the user email
+	//
+	// Deprecated: [Update the users email field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
 	//
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error)
@@ -116,17 +120,23 @@ type UserServiceClient interface {
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
+	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
 	// Delete the user phone
 	//
+	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx) to remove the phone number.
+	//
 	// Delete the phone number of a user.
 	RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error)
-	// Resend code to verify user phone
-	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
-	// Verify the phone
+	// Resend code to verify user phone number
 	//
-	// Verify the phone with the generated code..
+	// Resend code to verify user phone number.
+	ResendPhoneCode(ctx context.Context, in *ResendPhoneCodeRequest, opts ...grpc.CallOption) (*ResendPhoneCodeResponse, error)
+	// Verify the phone number
+	//
+	// Verify the phone number with the generated code.
 	VerifyPhone(ctx context.Context, in *VerifyPhoneRequest, opts ...grpc.CallOption) (*VerifyPhoneResponse, error)
 	// Update a User
 	//
@@ -139,7 +149,9 @@ type UserServiceClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	// Update Human User
 	//
-	// Update all information from a user..
+	// Deprecated: Use [UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) to update a user of type human instead.
+	//
+	// Update all information from a user.
 	UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error)
 	// Deactivate user
 	//
@@ -247,6 +259,8 @@ type UserServiceClient interface {
 	PasswordReset(ctx context.Context, in *PasswordResetRequest, opts ...grpc.CallOption) (*PasswordResetResponse, error)
 	// Change password
 	//
+	// Deprecated: [Update the users password](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
+	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*SetPasswordResponse, error)
 	// Add a Users Secret
@@ -324,6 +338,7 @@ type UserServiceClient interface {
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
 	// The new code will overwrite the previous one and make it invalid.
+	// Note: It is possible to reissue a new code only when the previous code has expired, or when the user provides a wrong code three or more times during verification.
 	CreateInviteCode(ctx context.Context, in *CreateInviteCodeRequest, opts ...grpc.CallOption) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
@@ -907,6 +922,8 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// Create a new human user
 	//
+	// Deprecated: Use [CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) to create a new user of type human instead.
+	//
 	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
 	// User by ID
@@ -918,6 +935,8 @@ type UserServiceServer interface {
 	// Search for users. By default, we will return all users of your instance that you have permission to read. Make sure to include a limit and sorting for pagination.
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Change the user email
+	//
+	// Deprecated: [Update the users email field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
 	//
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error)
@@ -931,17 +950,23 @@ type UserServiceServer interface {
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
+	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
 	// Delete the user phone
 	//
+	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx) to remove the phone number.
+	//
 	// Delete the phone number of a user.
 	RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error)
-	// Resend code to verify user phone
-	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
-	// Verify the phone
+	// Resend code to verify user phone number
 	//
-	// Verify the phone with the generated code..
+	// Resend code to verify user phone number.
+	ResendPhoneCode(context.Context, *ResendPhoneCodeRequest) (*ResendPhoneCodeResponse, error)
+	// Verify the phone number
+	//
+	// Verify the phone number with the generated code.
 	VerifyPhone(context.Context, *VerifyPhoneRequest) (*VerifyPhoneResponse, error)
 	// Update a User
 	//
@@ -954,7 +979,9 @@ type UserServiceServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	// Update Human User
 	//
-	// Update all information from a user..
+	// Deprecated: Use [UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) to update a user of type human instead.
+	//
+	// Update all information from a user.
 	UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error)
 	// Deactivate user
 	//
@@ -1062,6 +1089,8 @@ type UserServiceServer interface {
 	PasswordReset(context.Context, *PasswordResetRequest) (*PasswordResetResponse, error)
 	// Change password
 	//
+	// Deprecated: [Update the users password](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
+	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error)
 	// Add a Users Secret
@@ -1139,6 +1168,7 @@ type UserServiceServer interface {
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
 	// The new code will overwrite the previous one and make it invalid.
+	// Note: It is possible to reissue a new code only when the previous code has expired, or when the user provides a wrong code three or more times during verification.
 	CreateInviteCode(context.Context, *CreateInviteCodeRequest) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
