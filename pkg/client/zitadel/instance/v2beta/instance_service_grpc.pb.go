@@ -46,7 +46,7 @@ type InstanceServiceClient interface {
 	//
 	// Returns the instance in the current context.
 	//
-	// The instace_id in the input message will be used in the future.
+	// The instance_id in the input message will be used in the future.
 	//
 	// Required permissions:
 	//   - `iam.read`
@@ -238,7 +238,7 @@ type InstanceServiceServer interface {
 	//
 	// Returns the instance in the current context.
 	//
-	// The instace_id in the input message will be used in the future.
+	// The instance_id in the input message will be used in the future.
 	//
 	// Required permissions:
 	//   - `iam.read`
