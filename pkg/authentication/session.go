@@ -47,7 +47,7 @@ type InMemorySessions[T Ctx] struct {
 // ⚠️  Warning: Do not use in production - this will break your application!
 // See InMemorySessions documentation for why this is dangerous.
 //
-// For production use, consider WithCookieSession(true) for stateless sessions
+// For production use, consider [WithCookieSession](true) for stateless sessions
 // or implement a proper session store.
 //
 // Only use for local development, testing, or learning purposes.
