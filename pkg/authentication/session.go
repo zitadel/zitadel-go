@@ -45,7 +45,7 @@ type InMemorySessions[T Ctx] struct {
 // NewInMemorySessions creates a new in-memory session store.
 //
 // ⚠️  Warning: Do not use in production - this will break your application!
-// See InMemorySessions documentation for why this is dangerous.
+// See [InMemorySessions] documentation for why this is dangerous.
 //
 // For production use, consider [WithCookieSession](true) for stateless sessions
 // or implement a proper session store.
