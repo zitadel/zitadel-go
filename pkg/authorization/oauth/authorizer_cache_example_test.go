@@ -7,80 +7,122 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/patrickmn/go-cache"
 )
 
-// exCache is a minimal TTL cache used in the example.
-type exCache[T any] struct {
-	data map[string]struct {
-		v   T
-		exp time.Time
+// GoCacheAdapter provides a concrete, thread-safe implementation of the
+// TokenCache interface by wrapping the popular patrickmn/go-cache library.
+// It acts as a bridge, allowing the external library to be used as a
+// pluggable component in the verification process.
+type GoCacheAdapter[T any] struct {
+	client *cache.Cache
+}
+
+// NewGoCacheAdapter creates a new adapter that uses patrickmn/go-cache as its
+// underlying storage. The parameters control the cache's eviction policy.
+func NewGoCacheAdapter[T any](defaultExpiration, cleanupInterval time.Duration) *GoCacheAdapter[T] {
+	return &GoCacheAdapter[T]{
+		client: cache.New(defaultExpiration, cleanupInterval),
 	}
-	ttl time.Duration
 }
 
-func newExCache[T any](ttl time.Duration) *exCache[T] {
-	return &exCache[T]{data: make(map[string]struct {
-		v   T
-		exp time.Time
-	}), ttl: ttl}
-}
-
-func (c *exCache[T]) Get(key string) (T, bool) {
-	e, ok := c.data[key]
-	if !ok || time.Now().After(e.exp) {
-		var zero T
+// Get retrieves a value from the cache. It satisfies the TokenCache interface
+// by fetching the item from the underlying cache and performing a safe type
+// assertion to the expected generic type.
+func (a *GoCacheAdapter[T]) Get(token string) (T, bool) {
+	var zero T
+	value, found := a.client.Get(token)
+	if !found {
 		return zero, false
 	}
-	return e.v, true
-}
 
-func (c *exCache[T]) Set(key string, val T, ttl time.Duration) {
-	if ttl <= 0 {
-		ttl = c.ttl
+	typedValue, ok := value.(T)
+	if !ok {
+		return zero, false
 	}
-	c.data[key] = struct {
-		v   T
-		exp time.Time
-	}{v: val, exp: time.Now().Add(ttl)}
+	return typedValue, true
 }
 
-// exRS is a minimal ResourceServer stand-in for the example.
+// Set stores a value in the cache. It satisfies the TokenCache interface by
+// passing the token, value, and TTL directly to the underlying cache instance.
+func (a *GoCacheAdapter[T]) Set(token string, value T, ttl time.Duration) {
+	a.client.Set(token, value, ttl)
+}
+
+// exRS is a minimal ResourceServer stand-in used for this example. It provides
+// the necessary methods to satisfy the rs.ResourceServer interface.
 type exRS struct {
 	client *http.Client
 	url    string
 }
 
-func (e *exRS) IntrospectionURL() string { return e.url }
-func (e *exRS) TokenEndpoint() string    { return "" }
-func (e *exRS) HttpClient() *http.Client { return e.client }
-func (e *exRS) AuthFn() (any, error)     { return nil, nil }
+// IntrospectionURL returns the mock introspection endpoint URL.
+func (e *exRS) IntrospectionURL() string {
+	return e.url
+}
 
-// exTransport returns a canned introspection response.
+// TokenEndpoint returns an empty string as it's not needed for this example.
+func (e *exRS) TokenEndpoint() string {
+	return ""
+}
+
+// HttpClient returns the mock HTTP client.
+func (e *exRS) HttpClient() *http.Client {
+	return e.client
+}
+
+// AuthFn returns nil as it's not needed for this example.
+func (e *exRS) AuthFn() (any, error) {
+	return nil, nil
+}
+
+// exTransport is a mock http.RoundTripper that returns a canned introspection
+// response without making a real network call.
 type exTransport struct{}
 
+// RoundTrip returns a fixed, successful introspection response.
 func (t *exTransport) RoundTrip(_ *http.Request) (*http.Response, error) {
 	body := []byte(`{"active": true, "sub": "alice"}`)
 	return &http.Response{StatusCode: 200, Body: io.NopCloser(bytes.NewReader(body))}, nil
 }
 
-// ExampleIntrospectionVerificationWithCache shows a cached introspection flow.
+// ExampleIntrospectionVerificationWithCache demonstrates a complete verification
+// flow using a production-ready cache. It constructs a mock resource server and
+// a GoCacheAdapter, injects them into a new verifier instance, and then
+// executes an authorization check to show the components working together.
 func ExampleIntrospectionVerificationWithCache() {
-	rsrv := &exRS{
-		client: &http.Client{Transport: &exTransport{}},
+	mockTransport := &exTransport{}
+	httpClient := &http.Client{
+		Transport: mockTransport,
+	}
+
+	resourceServer := &exRS{
+		client: httpClient,
 		url:    "https://example.test/introspect",
 	}
 
-	cache := newExCache[struct {
+	type introspectionResp struct {
 		Active  bool   `json:"active"`
 		Subject string `json:"sub"`
-	}](30 * time.Second)
+	}
 
-	v := NewIntrospectionVerificationWithCache(rsrv, cache, 30*time.Second)
+	cacheAdapter := NewGoCacheAdapter[introspectionResp](
+		5*time.Minute,
+		10*time.Minute,
+	)
 
-	resp, err := v.CheckAuthorization(context.Background(), "Bearer token123")
+	verifier := NewIntrospectionVerificationWithCache(
+		resourceServer,
+		cacheAdapter,
+		30*time.Second,
+	)
+
+	resp, err := verifier.CheckAuthorization(context.Background(), "Bearer token123")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(resp.Subject)
 	// Output: alice
 }
