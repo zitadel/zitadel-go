@@ -9,6 +9,8 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
 )
 
 const (
@@ -28,13 +30,21 @@ type JWTDirectTokenSource func() (oauth2.TokenSource, error)
 
 func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSourceFromKeyFile(ctx, issuer, keyPath, scopes)
+		keyData, err := client.ConfigFromKeyFile(keyPath)
+		if err != nil {
+			return nil, err
+		}
+		return JWTProfileFromKeyAndUserID(ctx, keyData.Key, keyData.KeyID, keyData.UserID)(issuer, scopes)
 	}
 }
 
 func JWTProfileFromFileData(ctx context.Context, fileData []byte) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSourceFromKeyFileData(ctx, issuer, fileData, scopes)
+		keyData, err := client.ConfigFromKeyFileData(fileData)
+		if err != nil {
+			return nil, err
+		}
+		return JWTProfileFromKeyAndUserID(ctx, keyData.Key, keyData.KeyID, keyData.UserID)(issuer, scopes)
 	}
 }
 
