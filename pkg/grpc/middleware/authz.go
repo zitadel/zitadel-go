@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -60,7 +60,7 @@ func (i *Interceptor[T]) intercept(ctx context.Context, method string) (context.
 		if endpoint != method {
 			continue
 		}
-		authCtx, err := i.authorizer.CheckAuthorization(ctx, metautils.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
+		authCtx, err := i.authorizer.CheckAuthorization(ctx, metadata.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
 		if err != nil {
 			if errors.Is(err, &authorization.UnauthorizedErr{}) {
 				return nil, status.Error(codes.Unauthenticated, err.Error())

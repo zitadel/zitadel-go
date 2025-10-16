@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/zitadel/oidc/v3/pkg/client"
+	oidc_client "github.com/zitadel/oidc/v3/pkg/client"
 	"github.com/zitadel/oidc/v3/pkg/client/rs"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
@@ -43,9 +44,18 @@ func WithIntrospection[T authorization.Ctx](auth IntrospectionAuthentication) au
 
 type IntrospectionAuthentication func(ctx context.Context, issuer string) (rs.ResourceServer, error)
 
+// IntrospectionAuthenticationJWTProfile allows you to authenticate the introspection
+// request with JWT Profile using a key.json provided by ZITADEL.
+func IntrospectionAuthenticationJWTProfile(file *client.KeyFile) IntrospectionAuthentication {
+	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
+		return rs.NewResourceServerJWTProfile(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key))
+	}
+}
+
 // JWTProfileIntrospectionAuthentication allows you to authenticate the introspection
 // request with JWT Profile using a key.json provided by ZITADEL.
-func JWTProfileIntrospectionAuthentication(file *client.KeyFile) IntrospectionAuthentication {
+// Deprecated: Use [IntrospectionAuthenticationJWTProfile] instead, which uses the correct [client.KeyFile] type.
+func JWTProfileIntrospectionAuthentication(file *oidc_client.KeyFile) IntrospectionAuthentication {
 	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
 		return rs.NewResourceServerJWTProfile(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key))
 	}
@@ -70,7 +80,7 @@ func DefaultAuthorization(path string) authorization.VerifierInitializer[*Intros
 			return nil, err
 		}
 	}
-	return WithIntrospection[*IntrospectionContext](JWTProfileIntrospectionAuthentication(c))
+	return WithIntrospection[*IntrospectionContext](IntrospectionAuthenticationJWTProfile(c))
 }
 
 // CheckAuthorization implements the [authorization.Verifier] interface by
