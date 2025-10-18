@@ -23,7 +23,7 @@ var (
 
 // checkForEmptyorMalformedToken validates the following scenarios:
 // 1. Token header is empty
-// 2. Token header does not start with "Bearer "
+// 2. Token header does not equal "Bearer "
 // 3. Token is empty after "Bearer " prefix
 func checkForEmptyorMalformedToken(tokenHeader string) error {
 	t := strings.TrimSpace(tokenHeader)
