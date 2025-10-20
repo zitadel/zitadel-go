@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
@@ -15,8 +17,22 @@ const (
 
 var (
 	ErrEmptyAuthorizationHeader = errors.New("authorization header is empty")
+	ErrMissingToken             = errors.New("missing or malformed token")
 	ErrMissingRole              = errors.New("missing required role")
 )
+
+// checkForEmptyorMalformedToken validates the following scenarios:
+// 1. Token header is empty
+// 2. Token header does not equal "Bearer "
+// 3. Token is empty after "Bearer " prefix
+func checkForEmptyorMalformedToken(tokenHeader string) error {
+	t := strings.TrimSpace(tokenHeader)
+	token, ok := strings.CutPrefix(t, oidc.BearerToken+" ")
+	if !ok || token == "" || tokenHeader == "" {
+		return ErrMissingToken
+	}
+	return nil
+}
 
 // Authorizer provides the functionality to check for authorization such as token verification including role checks.
 type Authorizer[T Ctx] struct {
@@ -55,9 +71,9 @@ func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, initVerifier Veri
 func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error) {
 	a.logger.Log(ctx, slog.LevelDebug, "checking authorization")
 	var t T
-	if token == "" {
+	if err := checkForEmptyorMalformedToken(token); err != nil {
 		a.logger.Log(ctx, slog.LevelWarn, "no authorization header")
-		return t, NewErrorUnauthorized(ErrEmptyAuthorizationHeader)
+		return t, NewErrorUnauthorized(err)
 	}
 	checks := new(Check[Ctx])
 	for _, option := range options {
