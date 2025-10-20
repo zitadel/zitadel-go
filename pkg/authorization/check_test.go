@@ -34,10 +34,10 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 				options: nil,
 			},
 			wantAuthCtx: nil,
-			wantErr:     NewErrorUnauthorized(ErrEmptyAuthorizationHeader),
+			wantErr:     NewErrorUnauthorized(ErrMissingToken),
 		},
 		{
-			name: "unauthorized, unauthorized error",
+			name: "malformed token, unauthorized error",
 			a: Authorizer[*testCtx]{
 				verifier: &testVerifier[*testCtx]{},
 				logger:   slog.Default(),
@@ -48,7 +48,7 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 				options: nil,
 			},
 			wantAuthCtx: nil,
-			wantErr:     NewErrorUnauthorized(nil),
+			wantErr:     NewErrorUnauthorized(ErrMissingToken),
 		},
 		{
 			name: "missing role, permissiondenied error",
@@ -62,7 +62,7 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 			},
 			args: args{
 				ctx:     context.Background(),
-				token:   "token",
+				token:   "Bearer token",
 				options: []CheckOption{WithRole("test")},
 			},
 			wantAuthCtx: nil,
@@ -80,10 +80,10 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 			},
 			args: args{
 				ctx:     context.Background(),
-				token:   "token",
+				token:   "Bearer token",
 				options: nil,
 			},
-			wantAuthCtx: &testCtx{isAuthorized: true, token: "token"},
+			wantAuthCtx: &testCtx{isAuthorized: true, token: "Bearer token"},
 			wantErr:     nil,
 		},
 		{
@@ -99,10 +99,10 @@ func TestAuthorizer_CheckAuthorization(t *testing.T) {
 			},
 			args: args{
 				ctx:     context.Background(),
-				token:   "token",
+				token:   "Bearer token",
 				options: []CheckOption{WithRole("test")},
 			},
-			wantAuthCtx: &testCtx{isAuthorized: true, isGrantedRole: true, token: "token"},
+			wantAuthCtx: &testCtx{isAuthorized: true, isGrantedRole: true, token: "Bearer token"},
 			wantErr:     nil,
 		},
 	}
@@ -174,4 +174,104 @@ func (t *testCtx) IsGrantedRoleInOrganization(_, _ string) bool {
 		return false
 	}
 	return t.isGrantedRoleInOrganization
+}
+
+func TestCheckForEmptyorMalformedToken(t *testing.T) {
+	tests := []struct {
+		name        string
+		tokenHeader string
+		wantErr     error
+	}{
+		{
+			name:        "empty token header",
+			tokenHeader: "",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "whitespace only token header",
+			tokenHeader: "   ",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header without Bearer prefix",
+			tokenHeader: "invalid-token",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with Bearer but no space",
+			tokenHeader: "Bearertoken",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with Bearer prefix but empty token",
+			tokenHeader: "Bearer ",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with Bearer prefix but only whitespace token",
+			tokenHeader: "Bearer   ",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with Bearer prefix but tab and newline token",
+			tokenHeader: "Bearer \t\n",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "valid token with Bearer prefix",
+			tokenHeader: "Bearer valid-token",
+			wantErr:     nil,
+		},
+		{
+			name:        "valid token with Bearer prefix and extra whitespace",
+			tokenHeader: "  Bearer valid-token  ",
+			wantErr:     nil,
+		},
+		{
+			name:        "valid token with Bearer prefix and leading whitespace",
+			tokenHeader: " Bearer valid-token",
+			wantErr:     nil,
+		},
+		{
+			name:        "valid token with Bearer prefix and trailing whitespace",
+			tokenHeader: "Bearer valid-token ",
+			wantErr:     nil,
+		},
+		{
+			name:        "valid token with Bearer prefix and multiple spaces",
+			tokenHeader: "Bearer  valid-token",
+			wantErr:     nil,
+		},
+		{
+			name:        "token header with lowercase bearer prefix",
+			tokenHeader: "bearer valid-token",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with mixed case bearer prefix",
+			tokenHeader: "BeArEr valid-token",
+			wantErr:     ErrMissingToken,
+		},
+		{
+			name:        "token header with Bearer prefix and special characters",
+			tokenHeader: "Bearer token-with-special-chars!@#$%",
+			wantErr:     nil,
+		},
+		{
+			name:        "token header with Bearer prefix and JWT token",
+			tokenHeader: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+			wantErr:     nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := checkForEmptyorMalformedToken(tt.tokenHeader)
+			if tt.wantErr != nil {
+				assert.ErrorIs(t, err, tt.wantErr)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
 }
