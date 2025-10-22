@@ -26,7 +26,7 @@ jobs:
       - run: go test -race -v -coverprofile=profile.cov ./pkg/...
       - uses: codecov/codecov-action@v5
         with:
-          file: ./profile.cov
+          files: ./profile.cov
           name: codecov-go
           token: ${{ secrets.CODECOV_TOKEN }}
   release:
