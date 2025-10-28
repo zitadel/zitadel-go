@@ -1,12 +1,31 @@
 package client
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestConfigFromKeyFileData(t *testing.T) {
+	// generate a sample RSA private key for testing
+	rsaKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err, "failed to generate rsa key")
+	// and encode it to PEM format
+	privateKey := pem.EncodeToMemory(
+		&pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(rsaKey),
+		},
+	)
+	// replace newlines with \n for JSON embedding
+	privateKeySingleLine := strings.ReplaceAll(string(privateKey), "\n", "\\n")
+
 	type args struct {
 		data []byte
 	}
@@ -19,35 +38,35 @@ func TestConfigFromKeyFileData(t *testing.T) {
 		{
 			name: "valid service account key",
 			args: args{
-				data: []byte(`{
+				data: []byte(fmt.Sprintf(`{
 					"type": "serviceaccount",
 					"keyId": "key1",
-					"key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY",
+					"key": "%s",
 					"userId": "user1"
-				}`),
+				}`, privateKeySingleLine)),
 			},
 			want: &KeyFile{
 				Type:   ServiceAccountKey,
 				KeyID:  "key1",
-				Key:    []byte("-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY"),
+				Key:    privateKey,
 				UserID: "user1",
 			},
 		},
 		{
 			name: "valid application key",
 			args: args{
-				data: []byte(`{
+				data: []byte(fmt.Sprintf(`{
 					"type": "application",
 					"keyId": "key2",
-					"key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY",
+					"key": "%s",
 					"clientId": "client1",
 					"appId": "app1"
-				}`),
+				}`, privateKeySingleLine)),
 			},
 			want: &KeyFile{
 				Type:     ApplicationKey,
 				KeyID:    "key2",
-				Key:      []byte("-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY"),
+				Key:      privateKey,
 				ClientID: "client1",
 				AppID:    "app1",
 			},
@@ -59,7 +78,7 @@ func TestConfigFromKeyFileData(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, tt.want, got)
 
-			// Test JSON marshalling as well
+			// Test JSON marshaling as well
 			data, err := got.MarshalJSON()
 			require.NoError(t, err)
 			require.JSONEq(t, string(tt.args.data), string(data))
