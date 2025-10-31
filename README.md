@@ -274,7 +274,7 @@ Versions that also build are marked with :warning:.
 | Version | Supported          |
 |---------|--------------------|
 | <1.23   | :x:                |
-| 1.23    | :white_check_mark: |
+| 1.23    | :warning:          |
 | 1.24    | :white_check_mark: |
 | 1.25    | :white_check_mark: |
 
