@@ -45,6 +45,10 @@ protoc \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
     --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
     --go_opt=Mzitadel/protoc_gen_zitadel/v2/options.proto=${ZITADEL_IMPORT}/protoc/v2 \
+    --go_opt=Mzitadel/action/v2/action_service.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/execution.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/query.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/target.proto=${ZITADEL_IMPORT}/action/v2 \
     --go_opt=Mzitadel/action/v2beta/action_service.proto=${ZITADEL_IMPORT}/action/v2beta \
     --go_opt=Mzitadel/action/v2beta/execution.proto=${ZITADEL_IMPORT}/action/v2beta \
     --go_opt=Mzitadel/action/v2beta/query.proto=${ZITADEL_IMPORT}/action/v2beta \

@@ -101,7 +101,8 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/user/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/user/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/idp/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/idp/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2/ \
-    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2/
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/action/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/action/v2/
 
 #######################
 ## prepare generated files for output
