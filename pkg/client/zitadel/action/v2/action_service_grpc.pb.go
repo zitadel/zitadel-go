@@ -41,9 +41,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	CreateTarget(ctx context.Context, in *CreateTargetRequest, opts ...grpc.CallOption) (*CreateTargetResponse, error)
 	// Update Target
 	//
@@ -52,9 +49,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	UpdateTarget(ctx context.Context, in *UpdateTargetRequest, opts ...grpc.CallOption) (*UpdateTargetResponse, error)
 	// Delete Target
 	//
@@ -64,9 +58,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.delete`
-	//
-	// Required feature flag:
-	//   - `actions`
 	DeleteTarget(ctx context.Context, in *DeleteTargetRequest, opts ...grpc.CallOption) (*DeleteTargetResponse, error)
 	// Get Target
 	//
@@ -74,9 +65,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	GetTarget(ctx context.Context, in *GetTargetRequest, opts ...grpc.CallOption) (*GetTargetResponse, error)
 	// List targets
 	//
@@ -85,9 +73,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListTargets(ctx context.Context, in *ListTargetsRequest, opts ...grpc.CallOption) (*ListTargetsResponse, error)
 	// Set Execution
 	//
@@ -96,9 +81,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.execution.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	SetExecution(ctx context.Context, in *SetExecutionRequest, opts ...grpc.CallOption) (*SetExecutionResponse, error)
 	// List Executions
 	//
@@ -107,9 +89,6 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.execution.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListExecutions(ctx context.Context, in *ListExecutionsRequest, opts ...grpc.CallOption) (*ListExecutionsResponse, error)
 	// List Execution Functions
 	//
@@ -233,9 +212,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	CreateTarget(context.Context, *CreateTargetRequest) (*CreateTargetResponse, error)
 	// Update Target
 	//
@@ -244,9 +220,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	UpdateTarget(context.Context, *UpdateTargetRequest) (*UpdateTargetResponse, error)
 	// Delete Target
 	//
@@ -256,9 +229,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.delete`
-	//
-	// Required feature flag:
-	//   - `actions`
 	DeleteTarget(context.Context, *DeleteTargetRequest) (*DeleteTargetResponse, error)
 	// Get Target
 	//
@@ -266,9 +236,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	GetTarget(context.Context, *GetTargetRequest) (*GetTargetResponse, error)
 	// List targets
 	//
@@ -277,9 +244,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListTargets(context.Context, *ListTargetsRequest) (*ListTargetsResponse, error)
 	// Set Execution
 	//
@@ -288,9 +252,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.execution.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	SetExecution(context.Context, *SetExecutionRequest) (*SetExecutionResponse, error)
 	// List Executions
 	//
@@ -299,9 +260,6 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.execution.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListExecutions(context.Context, *ListExecutionsRequest) (*ListExecutionsResponse, error)
 	// List Execution Functions
 	//
