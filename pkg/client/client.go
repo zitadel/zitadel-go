@@ -7,6 +7,7 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 
+	actionV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
 	actionV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2beta"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/admin"
 	analyticsV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/analytics/v2beta"
@@ -76,6 +77,7 @@ type Client struct {
 	connection *grpc.ClientConn
 
 	actionServiceV2Beta             Lazy[actionV2Beta.ActionServiceClient]
+	actionServiceV2                 Lazy[actionV2.ActionServiceClient]
 	authorizationServiceV2Beta      Lazy[authorizationV2Beta.AuthorizationServiceClient]
 	adminService                    Lazy[admin.AdminServiceClient]
 	systemService                   Lazy[system.SystemServiceClient]
@@ -153,6 +155,12 @@ func newConnection(
 func (c *Client) ActionServiceV2Beta() actionV2Beta.ActionServiceClient {
 	return c.actionServiceV2Beta.Get(func() actionV2Beta.ActionServiceClient {
 		return actionV2Beta.NewActionServiceClient(c.connection)
+	})
+}
+
+func (c *Client) ActionServiceV2() actionV2.ActionServiceClient {
+	return c.actionServiceV2.Get(func() actionV2.ActionServiceClient {
+		return actionV2.NewActionServiceClient(c.connection)
 	})
 }
 
