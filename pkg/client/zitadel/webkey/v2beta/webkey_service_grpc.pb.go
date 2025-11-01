@@ -31,6 +31,8 @@ const (
 type WebKeyServiceClient interface {
 	// Create Web Key
 	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Generate a private and public key pair. The private key can be used to sign OIDC tokens after activation.
 	// The public key can be used to validate OIDC tokens.
 	// The newly created key will have the state `STATE_INITIAL` and is published to the public key endpoint.
@@ -40,11 +42,10 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	CreateWebKey(ctx context.Context, in *CreateWebKeyRequest, opts ...grpc.CallOption) (*CreateWebKeyResponse, error)
 	// Activate Web Key
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Switch the active signing web key. The previously active key will be deactivated.
 	// Note that the JWKs OIDC endpoint returns a cacheable response.
@@ -53,11 +54,10 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ActivateWebKey(ctx context.Context, in *ActivateWebKeyRequest, opts ...grpc.CallOption) (*ActivateWebKeyResponse, error)
 	// Delete Web Key
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete a web key pair. Only inactive keys can be deleted. Once a key is deleted,
 	// any tokens signed by this key will be invalid.
@@ -68,19 +68,15 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.delete`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	DeleteWebKey(ctx context.Context, in *DeleteWebKeyRequest, opts ...grpc.CallOption) (*DeleteWebKeyResponse, error)
 	// List Web Keys
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all web keys and their states.
 	//
 	// Required permission:
 	//   - `iam.web_key.read`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ListWebKeys(ctx context.Context, in *ListWebKeysRequest, opts ...grpc.CallOption) (*ListWebKeysResponse, error)
 }
 
@@ -134,6 +130,8 @@ func (c *webKeyServiceClient) ListWebKeys(ctx context.Context, in *ListWebKeysRe
 type WebKeyServiceServer interface {
 	// Create Web Key
 	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Generate a private and public key pair. The private key can be used to sign OIDC tokens after activation.
 	// The public key can be used to validate OIDC tokens.
 	// The newly created key will have the state `STATE_INITIAL` and is published to the public key endpoint.
@@ -143,11 +141,10 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	CreateWebKey(context.Context, *CreateWebKeyRequest) (*CreateWebKeyResponse, error)
 	// Activate Web Key
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Switch the active signing web key. The previously active key will be deactivated.
 	// Note that the JWKs OIDC endpoint returns a cacheable response.
@@ -156,11 +153,10 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ActivateWebKey(context.Context, *ActivateWebKeyRequest) (*ActivateWebKeyResponse, error)
 	// Delete Web Key
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete a web key pair. Only inactive keys can be deleted. Once a key is deleted,
 	// any tokens signed by this key will be invalid.
@@ -171,19 +167,15 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.delete`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	DeleteWebKey(context.Context, *DeleteWebKeyRequest) (*DeleteWebKeyResponse, error)
 	// List Web Keys
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all web keys and their states.
 	//
 	// Required permission:
 	//   - `iam.web_key.read`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ListWebKeys(context.Context, *ListWebKeysRequest) (*ListWebKeysResponse, error)
 	mustEmbedUnimplementedWebKeyServiceServer()
 }

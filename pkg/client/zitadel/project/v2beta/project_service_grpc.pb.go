@@ -44,6 +44,8 @@ const (
 type ProjectServiceClient interface {
 	// Create Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Create a new Project.
 	//
 	// Required permission:
@@ -51,12 +53,16 @@ type ProjectServiceClient interface {
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error)
 	// Update Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Update an existing project.
 	//
 	// Required permission:
 	//   - `project.write`
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
 	// Delete Project
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete an existing project.
 	// In case the project is not found, the request will return a successful response as
@@ -67,12 +73,16 @@ type ProjectServiceClient interface {
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
 	// Get Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Returns the project identified by the requested ID.
 	//
 	// Required permission:
 	//   - `project.read`
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*GetProjectResponse, error)
 	// List Projects
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching projects. By default all projects of the instance that the caller has permission to read are returned.
 	// Make sure to include a limit and sorting for pagination.
@@ -82,6 +92,8 @@ type ProjectServiceClient interface {
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	// Deactivate Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of a project to deactivated. Request returns no error if the project is already deactivated.
 	// Applications under deactivated projects are not able to login anymore.
 	//
@@ -90,12 +102,16 @@ type ProjectServiceClient interface {
 	DeactivateProject(ctx context.Context, in *DeactivateProjectRequest, opts ...grpc.CallOption) (*DeactivateProjectResponse, error)
 	// Activate Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of a project to active. Request returns no error if the project is already activated.
 	//
 	// Required permission:
 	//   - `project.write`
 	ActivateProject(ctx context.Context, in *ActivateProjectRequest, opts ...grpc.CallOption) (*ActivateProjectResponse, error)
 	// Add Project Role
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Add a new project role to a project. The key must be unique within the project.
 	//
@@ -104,12 +120,16 @@ type ProjectServiceClient interface {
 	AddProjectRole(ctx context.Context, in *AddProjectRoleRequest, opts ...grpc.CallOption) (*AddProjectRoleResponse, error)
 	// Update Project Role
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change a project role. The key is not editable. If a key should change, remove the role and create a new one.
 	//
 	// Required permission:
 	//   - `project.role.write`
 	UpdateProjectRole(ctx context.Context, in *UpdateProjectRoleRequest, opts ...grpc.CallOption) (*UpdateProjectRoleResponse, error)
 	// Remove Project Role
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
 	//
@@ -118,12 +138,16 @@ type ProjectServiceClient interface {
 	RemoveProjectRole(ctx context.Context, in *RemoveProjectRoleRequest, opts ...grpc.CallOption) (*RemoveProjectRoleResponse, error)
 	// List Project Roles
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Returns all roles of a project matching the search query.
 	//
 	// Required permission:
 	//   - `project.role.read`
 	ListProjectRoles(ctx context.Context, in *ListProjectRolesRequest, opts ...grpc.CallOption) (*ListProjectRolesResponse, error)
 	// Create Project Grant
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Grant a project to another organization.
 	// The project grant will allow the granted organization to access the project and manage the authorizations for its users.
@@ -133,6 +157,8 @@ type ProjectServiceClient interface {
 	CreateProjectGrant(ctx context.Context, in *CreateProjectGrantRequest, opts ...grpc.CallOption) (*CreateProjectGrantResponse, error)
 	// Update Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change the roles of the project that is granted to another organization.
 	// The project grant will allow the granted organization to access the project and manage the authorizations for its users.
 	//
@@ -140,6 +166,8 @@ type ProjectServiceClient interface {
 	//   - `project.grant.write`
 	UpdateProjectGrant(ctx context.Context, in *UpdateProjectGrantRequest, opts ...grpc.CallOption) (*UpdateProjectGrantResponse, error)
 	// Delete Project Grant
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete a project grant. All user grants for this project grant will also be removed.
 	// A user will not have access to the project afterward (if permissions are checked).
@@ -151,6 +179,8 @@ type ProjectServiceClient interface {
 	DeleteProjectGrant(ctx context.Context, in *DeleteProjectGrantRequest, opts ...grpc.CallOption) (*DeleteProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of the project grant to deactivated.
 	// Applications under deactivated projects grants are not able to login anymore.
 	//
@@ -159,12 +189,16 @@ type ProjectServiceClient interface {
 	DeactivateProjectGrant(ctx context.Context, in *DeactivateProjectGrantRequest, opts ...grpc.CallOption) (*DeactivateProjectGrantResponse, error)
 	// Activate Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of the project grant to activated.
 	//
 	// Required permission:
 	//   - `project.grant.write`
 	ActivateProjectGrant(ctx context.Context, in *ActivateProjectGrantRequest, opts ...grpc.CallOption) (*ActivateProjectGrantResponse, error)
 	// List Project Grants
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	//
@@ -340,6 +374,8 @@ func (c *projectServiceClient) ListProjectGrants(ctx context.Context, in *ListPr
 type ProjectServiceServer interface {
 	// Create Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Create a new Project.
 	//
 	// Required permission:
@@ -347,12 +383,16 @@ type ProjectServiceServer interface {
 	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
 	// Update Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Update an existing project.
 	//
 	// Required permission:
 	//   - `project.write`
 	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
 	// Delete Project
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete an existing project.
 	// In case the project is not found, the request will return a successful response as
@@ -363,12 +403,16 @@ type ProjectServiceServer interface {
 	DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error)
 	// Get Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Returns the project identified by the requested ID.
 	//
 	// Required permission:
 	//   - `project.read`
 	GetProject(context.Context, *GetProjectRequest) (*GetProjectResponse, error)
 	// List Projects
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching projects. By default all projects of the instance that the caller has permission to read are returned.
 	// Make sure to include a limit and sorting for pagination.
@@ -378,6 +422,8 @@ type ProjectServiceServer interface {
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	// Deactivate Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of a project to deactivated. Request returns no error if the project is already deactivated.
 	// Applications under deactivated projects are not able to login anymore.
 	//
@@ -386,12 +432,16 @@ type ProjectServiceServer interface {
 	DeactivateProject(context.Context, *DeactivateProjectRequest) (*DeactivateProjectResponse, error)
 	// Activate Project
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of a project to active. Request returns no error if the project is already activated.
 	//
 	// Required permission:
 	//   - `project.write`
 	ActivateProject(context.Context, *ActivateProjectRequest) (*ActivateProjectResponse, error)
 	// Add Project Role
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Add a new project role to a project. The key must be unique within the project.
 	//
@@ -400,12 +450,16 @@ type ProjectServiceServer interface {
 	AddProjectRole(context.Context, *AddProjectRoleRequest) (*AddProjectRoleResponse, error)
 	// Update Project Role
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change a project role. The key is not editable. If a key should change, remove the role and create a new one.
 	//
 	// Required permission:
 	//   - `project.role.write`
 	UpdateProjectRole(context.Context, *UpdateProjectRoleRequest) (*UpdateProjectRoleResponse, error)
 	// Remove Project Role
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
 	//
@@ -414,12 +468,16 @@ type ProjectServiceServer interface {
 	RemoveProjectRole(context.Context, *RemoveProjectRoleRequest) (*RemoveProjectRoleResponse, error)
 	// List Project Roles
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Returns all roles of a project matching the search query.
 	//
 	// Required permission:
 	//   - `project.role.read`
 	ListProjectRoles(context.Context, *ListProjectRolesRequest) (*ListProjectRolesResponse, error)
 	// Create Project Grant
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Grant a project to another organization.
 	// The project grant will allow the granted organization to access the project and manage the authorizations for its users.
@@ -429,6 +487,8 @@ type ProjectServiceServer interface {
 	CreateProjectGrant(context.Context, *CreateProjectGrantRequest) (*CreateProjectGrantResponse, error)
 	// Update Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change the roles of the project that is granted to another organization.
 	// The project grant will allow the granted organization to access the project and manage the authorizations for its users.
 	//
@@ -436,6 +496,8 @@ type ProjectServiceServer interface {
 	//   - `project.grant.write`
 	UpdateProjectGrant(context.Context, *UpdateProjectGrantRequest) (*UpdateProjectGrantResponse, error)
 	// Delete Project Grant
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete a project grant. All user grants for this project grant will also be removed.
 	// A user will not have access to the project afterward (if permissions are checked).
@@ -447,6 +509,8 @@ type ProjectServiceServer interface {
 	DeleteProjectGrant(context.Context, *DeleteProjectGrantRequest) (*DeleteProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of the project grant to deactivated.
 	// Applications under deactivated projects grants are not able to login anymore.
 	//
@@ -455,12 +519,16 @@ type ProjectServiceServer interface {
 	DeactivateProjectGrant(context.Context, *DeactivateProjectGrantRequest) (*DeactivateProjectGrantResponse, error)
 	// Activate Project Grant
 	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Set the state of the project grant to activated.
 	//
 	// Required permission:
 	//   - `project.grant.write`
 	ActivateProjectGrant(context.Context, *ActivateProjectGrantRequest) (*ActivateProjectGrantResponse, error)
 	// List Project Grants
+	//
+	// Deprecated: please move to the corresponding endpoint under project service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	//

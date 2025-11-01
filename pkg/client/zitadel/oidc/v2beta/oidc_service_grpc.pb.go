@@ -27,7 +27,20 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OIDCServiceClient interface {
+	// Get AuthRequest
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
+	// Get OIDC Auth Request details by ID, obtained from the redirect URL. Returns details that are parsed from the application's Auth Request.
 	GetAuthRequest(ctx context.Context, in *GetAuthRequestRequest, opts ...grpc.CallOption) (*GetAuthRequestResponse, error)
+	// Create Callback
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
+	// Finalize an Auth Request and get the callback URL for success or failure.
+	// The user must be redirected to the URL in order to inform the application about the success or failure.
+	// On success, the URL contains details for the application to obtain the tokens.
+	// This method can only be called once for an Auth request.
 	CreateCallback(ctx context.Context, in *CreateCallbackRequest, opts ...grpc.CallOption) (*CreateCallbackResponse, error)
 }
 
@@ -61,7 +74,20 @@ func (c *oIDCServiceClient) CreateCallback(ctx context.Context, in *CreateCallba
 // All implementations must embed UnimplementedOIDCServiceServer
 // for forward compatibility
 type OIDCServiceServer interface {
+	// Get AuthRequest
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
+	// Get OIDC Auth Request details by ID, obtained from the redirect URL. Returns details that are parsed from the application's Auth Request.
 	GetAuthRequest(context.Context, *GetAuthRequestRequest) (*GetAuthRequestResponse, error)
+	// Create Callback
+	//
+	// Deprecated: please move to the corresponding endpoint under oidc service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
+	// Finalize an Auth Request and get the callback URL for success or failure.
+	// The user must be redirected to the URL in order to inform the application about the success or failure.
+	// On success, the URL contains details for the application to obtain the tokens.
+	// This method can only be called once for an Auth request.
 	CreateCallback(context.Context, *CreateCallbackRequest) (*CreateCallbackResponse, error)
 	mustEmbedUnimplementedOIDCServiceServer()
 }
