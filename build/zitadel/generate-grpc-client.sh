@@ -45,10 +45,6 @@ protoc \
     --go_opt=Mzitadel/user.proto=${ZITADEL_IMPORT}/user \
     --go_opt=Mzitadel/v1.proto=${ZITADEL_IMPORT}/v1 \
     --go_opt=Mzitadel/protoc_gen_zitadel/v2/options.proto=${ZITADEL_IMPORT}/protoc/v2 \
-    --go_opt=Mzitadel/action/v2/action_service.proto=${ZITADEL_IMPORT}/action/v2 \
-    --go_opt=Mzitadel/action/v2/execution.proto=${ZITADEL_IMPORT}/action/v2 \
-    --go_opt=Mzitadel/action/v2/query.proto=${ZITADEL_IMPORT}/action/v2 \
-    --go_opt=Mzitadel/action/v2/target.proto=${ZITADEL_IMPORT}/action/v2 \
     --go_opt=Mzitadel/action/v2beta/action_service.proto=${ZITADEL_IMPORT}/action/v2beta \
     --go_opt=Mzitadel/action/v2beta/execution.proto=${ZITADEL_IMPORT}/action/v2beta \
     --go_opt=Mzitadel/action/v2beta/query.proto=${ZITADEL_IMPORT}/action/v2beta \
@@ -153,6 +149,10 @@ protoc \
     --go_opt=Mzitadel/webkey/v2/key.proto=${ZITADEL_IMPORT}/webkey/v2 \
     --go_opt=Mzitadel/webkey/v2/webkey_service.proto=${ZITADEL_IMPORT}/webkey/v2 \
     --go_opt=Mzitadel/object/v3alpha/object.proto=${ZITADEL_IMPORT}/object/v3lapha \
+    --go_opt=Mzitadel/action/v2/execution.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/query.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/target.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/action/v2/action_service.proto=${ZITADEL_IMPORT}/action/v2 \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)

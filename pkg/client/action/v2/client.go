@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
-	action "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
 )
 
 type Client struct {
@@ -17,7 +17,7 @@ func NewClient(ctx context.Context, issuer, api string, scopes []string, options
 	if err != nil {
 		return nil, err
 	}
-
+  
 	return &Client{
 		Connection:          conn,
 		ActionServiceClient: action.NewActionServiceClient(conn.ClientConn),

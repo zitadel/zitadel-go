@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        go: ['1.23', '1.24']
+        go: ['1.23', '1.24', '1.25']
     name: Go ${{ matrix.go }} test
     steps:
       - uses: actions/checkout@v5
@@ -26,7 +26,7 @@ jobs:
       - run: go test -race -v -coverprofile=profile.cov ./pkg/...
       - uses: codecov/codecov-action@v5
         with:
-          file: ./profile.cov
+          files: ./profile.cov
           name: codecov-go
           token: ${{ secrets.CODECOV_TOKEN }}
   release:
