@@ -31,6 +31,8 @@ const (
 type InternalPermissionServiceClient interface {
 	// ListAdministrators returns all administrators and its roles matching the request and necessary permissions.
 	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Required permissions depend on the resource type:
 	//   - "iam.member.read" for instance administrators
 	//   - "org.member.read" for organization administrators
@@ -39,6 +41,8 @@ type InternalPermissionServiceClient interface {
 	//   - no permissions required for listing own administrator roles
 	ListAdministrators(ctx context.Context, in *ListAdministratorsRequest, opts ...grpc.CallOption) (*ListAdministratorsResponse, error)
 	// CreateAdministrator grants a administrator role to a user for a specific resource.
+	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Note that the roles are specific to the resource type.
 	// This means that if you want to grant a user the administrator role for an organization and a project,
@@ -52,6 +56,8 @@ type InternalPermissionServiceClient interface {
 	CreateAdministrator(ctx context.Context, in *CreateAdministratorRequest, opts ...grpc.CallOption) (*CreateAdministratorResponse, error)
 	// UpdateAdministrator updates the specific administrator role.
 	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Note that any role previously granted to the user and not present in the request will be revoked.
 	//
 	// Required permissions depend on the resource type:
@@ -61,6 +67,8 @@ type InternalPermissionServiceClient interface {
 	//   - "project.grant.member.write" for project grant administrators
 	UpdateAdministrator(ctx context.Context, in *UpdateAdministratorRequest, opts ...grpc.CallOption) (*UpdateAdministratorResponse, error)
 	// DeleteAdministrator revokes a administrator role from a user.
+	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// In case the administrator role is not found, the request will return a successful response as
 	// the desired state is already achieved.
@@ -124,6 +132,8 @@ func (c *internalPermissionServiceClient) DeleteAdministrator(ctx context.Contex
 type InternalPermissionServiceServer interface {
 	// ListAdministrators returns all administrators and its roles matching the request and necessary permissions.
 	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Required permissions depend on the resource type:
 	//   - "iam.member.read" for instance administrators
 	//   - "org.member.read" for organization administrators
@@ -132,6 +142,8 @@ type InternalPermissionServiceServer interface {
 	//   - no permissions required for listing own administrator roles
 	ListAdministrators(context.Context, *ListAdministratorsRequest) (*ListAdministratorsResponse, error)
 	// CreateAdministrator grants a administrator role to a user for a specific resource.
+	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Note that the roles are specific to the resource type.
 	// This means that if you want to grant a user the administrator role for an organization and a project,
@@ -145,6 +157,8 @@ type InternalPermissionServiceServer interface {
 	CreateAdministrator(context.Context, *CreateAdministratorRequest) (*CreateAdministratorResponse, error)
 	// UpdateAdministrator updates the specific administrator role.
 	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Note that any role previously granted to the user and not present in the request will be revoked.
 	//
 	// Required permissions depend on the resource type:
@@ -154,6 +168,8 @@ type InternalPermissionServiceServer interface {
 	//   - "project.grant.member.write" for project grant administrators
 	UpdateAdministrator(context.Context, *UpdateAdministratorRequest) (*UpdateAdministratorResponse, error)
 	// DeleteAdministrator revokes a administrator role from a user.
+	//
+	// Deprecated: please move to the corresponding endpoint under internal permission service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// In case the administrator role is not found, the request will return a successful response as
 	// the desired state is already achieved.
