@@ -39,12 +39,16 @@ const (
 type AppServiceClient interface {
 	// Create Application
 	//
+	// Deprecated: use [application service v2 CreateApplication](apis/resources/application_service_v2/application-service-create-application.api.mdx) instead.
+	//
 	// Create an application. The application can be OIDC, API or SAML type, based on the input.
 	//
 	// Required permissions:
 	//   - project.app.write
 	CreateApplication(ctx context.Context, in *CreateApplicationRequest, opts ...grpc.CallOption) (*CreateApplicationResponse, error)
 	// Update Application
+	//
+	// Deprecated: use [application service v2 UpdateApplication](apis/resources/application_service_v2/zitadel-app-v-2-application-service-update-application.api.mdx) instead.
 	//
 	// Changes the configuration of an OIDC, API or SAML type application, as well as
 	// the application name, based on the input provided.
@@ -54,12 +58,16 @@ type AppServiceClient interface {
 	UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*UpdateApplicationResponse, error)
 	// Get Application
 	//
+	// Deprecated: use [application service v2 GetApplication](apis/resources/application_service_v2/application-service-get-application.api.mdx) instead.
+	//
 	// Retrieves the application matching the provided ID.
 	//
 	// Required permissions:
 	//   - project.app.read
 	GetApplication(ctx context.Context, in *GetApplicationRequest, opts ...grpc.CallOption) (*GetApplicationResponse, error)
 	// Delete Application
+	//
+	// Deprecated: use [application service v2 DeleteApplication](apis/resources/application_service_v2/application-service-delete-application.api.mdx) instead.
 	//
 	// Deletes the application belonging to the input project and matching the provided
 	// application ID.
@@ -69,6 +77,8 @@ type AppServiceClient interface {
 	DeleteApplication(ctx context.Context, in *DeleteApplicationRequest, opts ...grpc.CallOption) (*DeleteApplicationResponse, error)
 	// Deactivate Application
 	//
+	// Deprecated: use [application service v2 DeactivateApplication](apis/resources/application_service_v2/application-service-deactivate-application.api.mdx) instead.
+	//
 	// Deactivates the application belonging to the input project and matching the provided
 	// application ID.
 	//
@@ -76,6 +86,8 @@ type AppServiceClient interface {
 	//   - project.app.write
 	DeactivateApplication(ctx context.Context, in *DeactivateApplicationRequest, opts ...grpc.CallOption) (*DeactivateApplicationResponse, error)
 	// Reactivate Application
+	//
+	// Deprecated: use [application service v2 ReactivateApplication](apis/resources/application_service_v2/application-service-reactivate-application.api.mdx) instead.
 	//
 	// Reactivates the application belonging to the input project and matching the provided
 	// application ID.
@@ -85,12 +97,16 @@ type AppServiceClient interface {
 	ReactivateApplication(ctx context.Context, in *ReactivateApplicationRequest, opts ...grpc.CallOption) (*ReactivateApplicationResponse, error)
 	// Regenerate Client Secret
 	//
+	// Deprecated: use [application service v2 GenerateClientSecret](apis/resources/application_service_v2/application-service-generate-client-secret.api.mdx) instead.
+	//
 	// Regenerates the client secret of an API or OIDC application that belongs to the input project.
 	//
 	// Required permissions:
 	//   - project.app.write
 	RegenerateClientSecret(ctx context.Context, in *RegenerateClientSecretRequest, opts ...grpc.CallOption) (*RegenerateClientSecretResponse, error)
 	// List Applications
+	//
+	// Deprecated: use [application service v2 ListApplications](apis/resources/application_service_v2/application-service-list-applications.api.mdx) instead.
 	//
 	// Returns a list of applications matching the input parameters that belong to the provided
 	// project.
@@ -103,6 +119,8 @@ type AppServiceClient interface {
 	ListApplications(ctx context.Context, in *ListApplicationsRequest, opts ...grpc.CallOption) (*ListApplicationsResponse, error)
 	// Create Application Key
 	//
+	// Deprecated: use [application service v2 CreateApplicationKey](apis/resources/application_service_v2/application-service-create-application-key.api.mdx) instead.
+	//
 	// Create a new application key, which is used to authorize an API application.
 	//
 	// Key details are returned in the response. They must be stored safely, as it will not
@@ -112,6 +130,8 @@ type AppServiceClient interface {
 	//   - `project.app.write`
 	CreateApplicationKey(ctx context.Context, in *CreateApplicationKeyRequest, opts ...grpc.CallOption) (*CreateApplicationKeyResponse, error)
 	// Delete Application Key
+	//
+	// Deprecated: use [application service v2 DeleteApplicationKey](apis/resources/application_service_v2/application-service-delete-application-key.api.mdx) instead.
 	//
 	// Deletes an application key matching the provided ID.
 	//
@@ -124,6 +144,8 @@ type AppServiceClient interface {
 	DeleteApplicationKey(ctx context.Context, in *DeleteApplicationKeyRequest, opts ...grpc.CallOption) (*DeleteApplicationKeyResponse, error)
 	// Get Application Key
 	//
+	// Deprecated: use [application service v2 GetApplicationKey](apis/resources/application_service_v2/application-service-get-application-key.api.mdx) instead.
+	//
 	// Retrieves the application key matching the provided ID.
 	//
 	// Specifying a project, organization and app ID is optional but help with filtering/performance.
@@ -132,6 +154,8 @@ type AppServiceClient interface {
 	//   - project.app.read
 	GetApplicationKey(ctx context.Context, in *GetApplicationKeyRequest, opts ...grpc.CallOption) (*GetApplicationKeyResponse, error)
 	// List Application Keys
+	//
+	// Deprecated: use [application service v2 ListApplicationKeys](apis/resources/application_service_v2/application-service-list-application-keys.api.mdx) instead.
 	//
 	// Returns a list of application keys matching the input parameters.
 	//
@@ -265,12 +289,16 @@ func (c *appServiceClient) ListApplicationKeys(ctx context.Context, in *ListAppl
 type AppServiceServer interface {
 	// Create Application
 	//
+	// Deprecated: use [application service v2 CreateApplication](apis/resources/application_service_v2/application-service-create-application.api.mdx) instead.
+	//
 	// Create an application. The application can be OIDC, API or SAML type, based on the input.
 	//
 	// Required permissions:
 	//   - project.app.write
 	CreateApplication(context.Context, *CreateApplicationRequest) (*CreateApplicationResponse, error)
 	// Update Application
+	//
+	// Deprecated: use [application service v2 UpdateApplication](apis/resources/application_service_v2/zitadel-app-v-2-application-service-update-application.api.mdx) instead.
 	//
 	// Changes the configuration of an OIDC, API or SAML type application, as well as
 	// the application name, based on the input provided.
@@ -280,12 +308,16 @@ type AppServiceServer interface {
 	UpdateApplication(context.Context, *UpdateApplicationRequest) (*UpdateApplicationResponse, error)
 	// Get Application
 	//
+	// Deprecated: use [application service v2 GetApplication](apis/resources/application_service_v2/application-service-get-application.api.mdx) instead.
+	//
 	// Retrieves the application matching the provided ID.
 	//
 	// Required permissions:
 	//   - project.app.read
 	GetApplication(context.Context, *GetApplicationRequest) (*GetApplicationResponse, error)
 	// Delete Application
+	//
+	// Deprecated: use [application service v2 DeleteApplication](apis/resources/application_service_v2/application-service-delete-application.api.mdx) instead.
 	//
 	// Deletes the application belonging to the input project and matching the provided
 	// application ID.
@@ -295,6 +327,8 @@ type AppServiceServer interface {
 	DeleteApplication(context.Context, *DeleteApplicationRequest) (*DeleteApplicationResponse, error)
 	// Deactivate Application
 	//
+	// Deprecated: use [application service v2 DeactivateApplication](apis/resources/application_service_v2/application-service-deactivate-application.api.mdx) instead.
+	//
 	// Deactivates the application belonging to the input project and matching the provided
 	// application ID.
 	//
@@ -302,6 +336,8 @@ type AppServiceServer interface {
 	//   - project.app.write
 	DeactivateApplication(context.Context, *DeactivateApplicationRequest) (*DeactivateApplicationResponse, error)
 	// Reactivate Application
+	//
+	// Deprecated: use [application service v2 ReactivateApplication](apis/resources/application_service_v2/application-service-reactivate-application.api.mdx) instead.
 	//
 	// Reactivates the application belonging to the input project and matching the provided
 	// application ID.
@@ -311,12 +347,16 @@ type AppServiceServer interface {
 	ReactivateApplication(context.Context, *ReactivateApplicationRequest) (*ReactivateApplicationResponse, error)
 	// Regenerate Client Secret
 	//
+	// Deprecated: use [application service v2 GenerateClientSecret](apis/resources/application_service_v2/application-service-generate-client-secret.api.mdx) instead.
+	//
 	// Regenerates the client secret of an API or OIDC application that belongs to the input project.
 	//
 	// Required permissions:
 	//   - project.app.write
 	RegenerateClientSecret(context.Context, *RegenerateClientSecretRequest) (*RegenerateClientSecretResponse, error)
 	// List Applications
+	//
+	// Deprecated: use [application service v2 ListApplications](apis/resources/application_service_v2/application-service-list-applications.api.mdx) instead.
 	//
 	// Returns a list of applications matching the input parameters that belong to the provided
 	// project.
@@ -329,6 +369,8 @@ type AppServiceServer interface {
 	ListApplications(context.Context, *ListApplicationsRequest) (*ListApplicationsResponse, error)
 	// Create Application Key
 	//
+	// Deprecated: use [application service v2 CreateApplicationKey](apis/resources/application_service_v2/application-service-create-application-key.api.mdx) instead.
+	//
 	// Create a new application key, which is used to authorize an API application.
 	//
 	// Key details are returned in the response. They must be stored safely, as it will not
@@ -338,6 +380,8 @@ type AppServiceServer interface {
 	//   - `project.app.write`
 	CreateApplicationKey(context.Context, *CreateApplicationKeyRequest) (*CreateApplicationKeyResponse, error)
 	// Delete Application Key
+	//
+	// Deprecated: use [application service v2 DeleteApplicationKey](apis/resources/application_service_v2/application-service-delete-application-key.api.mdx) instead.
 	//
 	// Deletes an application key matching the provided ID.
 	//
@@ -350,6 +394,8 @@ type AppServiceServer interface {
 	DeleteApplicationKey(context.Context, *DeleteApplicationKeyRequest) (*DeleteApplicationKeyResponse, error)
 	// Get Application Key
 	//
+	// Deprecated: use [application service v2 GetApplicationKey](apis/resources/application_service_v2/application-service-get-application-key.api.mdx) instead.
+	//
 	// Retrieves the application key matching the provided ID.
 	//
 	// Specifying a project, organization and app ID is optional but help with filtering/performance.
@@ -358,6 +404,8 @@ type AppServiceServer interface {
 	//   - project.app.read
 	GetApplicationKey(context.Context, *GetApplicationKeyRequest) (*GetApplicationKeyResponse, error)
 	// List Application Keys
+	//
+	// Deprecated: use [application service v2 ListApplicationKeys](apis/resources/application_service_v2/application-service-list-application-keys.api.mdx) instead.
 	//
 	// Returns a list of application keys matching the input parameters.
 	//

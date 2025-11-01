@@ -33,6 +33,8 @@ const (
 type AuthorizationServiceClient interface {
 	// List Authorizations
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// ListAuthorizations returns all authorizations matching the request and necessary permissions.
 	//
 	// Required permissions:
@@ -41,12 +43,16 @@ type AuthorizationServiceClient interface {
 	ListAuthorizations(ctx context.Context, in *ListAuthorizationsRequest, opts ...grpc.CallOption) (*ListAuthorizationsResponse, error)
 	// Create Authorization
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// CreateAuthorization creates a new authorization for a user in an owned or granted project.
 	//
 	// Required permissions:
 	//   - "user.grant.write"
 	CreateAuthorization(ctx context.Context, in *CreateAuthorizationRequest, opts ...grpc.CallOption) (*CreateAuthorizationResponse, error)
 	// Update Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// UpdateAuthorization updates the authorization.
 	//
@@ -56,6 +62,8 @@ type AuthorizationServiceClient interface {
 	//   - "user.grant.write"
 	UpdateAuthorization(ctx context.Context, in *UpdateAuthorizationRequest, opts ...grpc.CallOption) (*UpdateAuthorizationResponse, error)
 	// Delete Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// DeleteAuthorization deletes the authorization.
 	//
@@ -68,6 +76,8 @@ type AuthorizationServiceClient interface {
 	DeleteAuthorization(ctx context.Context, in *DeleteAuthorizationRequest, opts ...grpc.CallOption) (*DeleteAuthorizationResponse, error)
 	// Activate Authorization
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// ActivateAuthorization activates an existing but inactive authorization.
 	//
 	// In case the authorization is already active, the request will return a successful response as
@@ -78,6 +88,8 @@ type AuthorizationServiceClient interface {
 	//   - "user.grant.write"
 	ActivateAuthorization(ctx context.Context, in *ActivateAuthorizationRequest, opts ...grpc.CallOption) (*ActivateAuthorizationResponse, error)
 	// Deactivate Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// DeactivateAuthorization deactivates an existing and active authorization.
 	//
@@ -158,6 +170,8 @@ func (c *authorizationServiceClient) DeactivateAuthorization(ctx context.Context
 type AuthorizationServiceServer interface {
 	// List Authorizations
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// ListAuthorizations returns all authorizations matching the request and necessary permissions.
 	//
 	// Required permissions:
@@ -166,12 +180,16 @@ type AuthorizationServiceServer interface {
 	ListAuthorizations(context.Context, *ListAuthorizationsRequest) (*ListAuthorizationsResponse, error)
 	// Create Authorization
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// CreateAuthorization creates a new authorization for a user in an owned or granted project.
 	//
 	// Required permissions:
 	//   - "user.grant.write"
 	CreateAuthorization(context.Context, *CreateAuthorizationRequest) (*CreateAuthorizationResponse, error)
 	// Update Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// UpdateAuthorization updates the authorization.
 	//
@@ -181,6 +199,8 @@ type AuthorizationServiceServer interface {
 	//   - "user.grant.write"
 	UpdateAuthorization(context.Context, *UpdateAuthorizationRequest) (*UpdateAuthorizationResponse, error)
 	// Delete Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// DeleteAuthorization deletes the authorization.
 	//
@@ -193,6 +213,8 @@ type AuthorizationServiceServer interface {
 	DeleteAuthorization(context.Context, *DeleteAuthorizationRequest) (*DeleteAuthorizationResponse, error)
 	// Activate Authorization
 	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// ActivateAuthorization activates an existing but inactive authorization.
 	//
 	// In case the authorization is already active, the request will return a successful response as
@@ -203,6 +225,8 @@ type AuthorizationServiceServer interface {
 	//   - "user.grant.write"
 	ActivateAuthorization(context.Context, *ActivateAuthorizationRequest) (*ActivateAuthorizationResponse, error)
 	// Deactivate Authorization
+	//
+	// Deprecated: please move to the corresponding endpoint under authorization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// DeactivateAuthorization deactivates an existing and active authorization.
 	//
