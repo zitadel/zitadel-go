@@ -36,9 +36,10 @@ type Target struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The timestamp of the target creation.
 	CreationDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
-	// The timestamp of the last change to the target (e.g. creation, activation, deactivation).
+	// The timestamp of the last change to the target.
 	ChangeDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=change_date,json=changeDate,proto3" json:"change_date,omitempty"`
-	Name       string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	// Display name of the target.
+	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// Defines the target type and how the response of the target is treated.
 	//
 	// Types that are assignable to TargetType:
@@ -49,9 +50,15 @@ type Target struct {
 	TargetType isTarget_TargetType `protobuf_oneof:"target_type"`
 	// Timeout defines the duration until ZITADEL cancels the execution.
 	// If the target doesn't respond before this timeout expires, the the connection is closed and the action fails. Depending on the target type and possible setting on `interrupt_on_error` following targets will not be called. In case of a `rest_async` target only this specific target will fail, without any influence on other targets of the same execution.
-	Timeout    *durationpb.Duration `protobuf:"bytes,8,opt,name=timeout,proto3" json:"timeout,omitempty"`
-	Endpoint   string               `protobuf:"bytes,9,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	SigningKey string               `protobuf:"bytes,10,opt,name=signing_key,json=signingKey,proto3" json:"signing_key,omitempty"`
+	Timeout *durationpb.Duration `protobuf:"bytes,8,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	// The URL that will be called in case of an execution.
+	Endpoint string `protobuf:"bytes,9,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
+	// The current signing key used to sign the request sent to the target.
+	// The key can be used to verify the integrity and authenticity of the request
+	// on the receiver side. The key should be treated as a secret and only known to ZITADEL and the receiver.
+	// The signature is included in the request header `X-ZITADEL-Signature`
+	// and calculated over the raw body of the request using HMAC with SHA256.
+	SigningKey string `protobuf:"bytes,10,opt,name=signing_key,json=signingKey,proto3" json:"signing_key,omitempty"`
 }
 
 func (x *Target) Reset() {

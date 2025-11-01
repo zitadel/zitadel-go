@@ -32,12 +32,16 @@ type Execution struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The condition under which the execution is triggered.
 	Condition *Condition `protobuf:"bytes,1,opt,name=condition,proto3" json:"condition,omitempty"`
 	// The timestamp of the execution creation.
 	CreationDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
 	// The timestamp of the last change to the execution.
 	ChangeDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=change_date,json=changeDate,proto3" json:"change_date,omitempty"`
 	// Ordered list of targets called during the execution.
+	// The order of the targets in this list defines the order of execution.
+	// If one of the targets fails, depending on the target's type and settings,
+	// the execution might be interrupted and the following targets will not be called.
 	Targets []string `protobuf:"bytes,4,rep,name=targets,proto3" json:"targets,omitempty"`
 }
 
@@ -296,17 +300,20 @@ type isRequestExecution_Condition interface {
 }
 
 type RequestExecution_Method struct {
-	// GRPC-method as condition.
+	// Define a GRPC-method as condition.
+	// When a request to this method happens, the execution is triggered.
 	Method string `protobuf:"bytes,1,opt,name=method,proto3,oneof"`
 }
 
 type RequestExecution_Service struct {
-	// GRPC-service as condition.
+	// Define a GRPC-service as condition.
+	// When a request to any method of this service happens, the execution is triggered.
 	Service string `protobuf:"bytes,2,opt,name=service,proto3,oneof"`
 }
 
 type RequestExecution_All struct {
-	// All calls to any available services and methods as condition.
+	// Define all calls as condition.
+	// When a call to any available service happens, the execution is triggered.
 	All bool `protobuf:"varint,3,opt,name=all,proto3,oneof"`
 }
 
@@ -396,17 +403,21 @@ type isResponseExecution_Condition interface {
 }
 
 type ResponseExecution_Method struct {
-	// GRPC-method as condition.
+	// Define a GRPC-method as condition.
+	// Before a response is returned to the client from this method, the execution is triggered.
 	Method string `protobuf:"bytes,1,opt,name=method,proto3,oneof"`
 }
 
 type ResponseExecution_Service struct {
-	// GRPC-service as condition.
+	// Define a GRPC-service as condition.
+	// Before a response is returned to the client from any method of this service, the execution is triggered.
 	Service string `protobuf:"bytes,2,opt,name=service,proto3,oneof"`
 }
 
 type ResponseExecution_All struct {
-	// All calls to any available services and methods as condition.
+	// Define all calls as condition.
+	// Before a response is returned to the client from any available service,
+	// the execution is triggered.
 	All bool `protobuf:"varint,3,opt,name=all,proto3,oneof"`
 }
 
@@ -544,17 +555,20 @@ type isEventExecution_Condition interface {
 }
 
 type EventExecution_Event struct {
-	// Event name as condition.
+	// Define a specific event as condition.
+	// After this event is created, the execution is triggered.
 	Event string `protobuf:"bytes,1,opt,name=event,proto3,oneof"`
 }
 
 type EventExecution_Group struct {
-	// Event group as condition, all events under this group.
+	// Define an event group as condition.
+	// After any event under this group is created, the execution is triggered.
 	Group string `protobuf:"bytes,2,opt,name=group,proto3,oneof"`
 }
 
 type EventExecution_All struct {
-	// all events as condition.
+	// Define all events as condition.
+	// After any event is created, the execution is triggered.
 	All bool `protobuf:"varint,3,opt,name=all,proto3,oneof"`
 }
 
