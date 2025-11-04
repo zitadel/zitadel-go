@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -13,12 +14,14 @@ import (
 
 var (
 	ErrNoValidSignature = errors.New("no valid signature")
+	ErrMissingHeader    = errors.New("no request headers set")
 	ErrInvalidHeader    = errors.New("webhook has invalid Zitadel-Signature header")
 	ErrNotSigned        = errors.New("webhook has no Zitadel-Signature header")
 	ErrTooOld           = errors.New("timestamp wasn't within tolerance")
 )
 
 const (
+	SigningHeader           = "ZITADEL-Signature"
 	signingTimestamp        = "t"
 	signingVersion   string = "v1"
 	DefaultTolerance        = 300 * time.Second
@@ -43,10 +46,22 @@ func computeSignature(t time.Time, payload []byte, signingKey string) []byte {
 	return mac.Sum(nil)
 }
 
+// ValidateRequestPayload validates the request payload against the Zitadel-Signature header.
+// This function extracts the Zitadel-Signature header from the request headers.
+func ValidateRequestPayload(payload []byte, reqHeader *http.Header, signingKey string) error {
+	if reqHeader == nil {
+		return ErrMissingHeader
+	}
+	header := reqHeader.Get(SigningHeader)
+	return ValidatePayloadWithTolerance(payload, header, signingKey, DefaultTolerance)
+}
+
+// ValidatePayload validates the payload against the Zitadel-Signature header.
 func ValidatePayload(payload []byte, header string, signingKey string) error {
 	return ValidatePayloadWithTolerance(payload, header, signingKey, DefaultTolerance)
 }
 
+// ValidatePayloadWithTolerance validates the payload against the Zitadel-Signature header with a given tolerance.
 func ValidatePayloadWithTolerance(payload []byte, header string, signingKey string, tolerance time.Duration) error {
 	return validatePayload(payload, header, signingKey, tolerance, true)
 }
