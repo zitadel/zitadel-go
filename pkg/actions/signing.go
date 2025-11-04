@@ -21,7 +21,7 @@ var (
 )
 
 const (
-	signingHeader           = "ZITADEL-Signature"
+	SigningHeader           = "ZITADEL-Signature"
 	signingTimestamp        = "t"
 	signingVersion   string = "v1"
 	DefaultTolerance        = 300 * time.Second
@@ -46,11 +46,11 @@ func computeSignature(t time.Time, payload []byte, signingKey string) []byte {
 	return mac.Sum(nil)
 }
 
-func ValidatePayload(payload []byte, reqHeader *http.Header, signingKey string) error {
+func ValidateRequestPayload(payload []byte, reqHeader *http.Header, signingKey string) error {
 	if reqHeader == nil {
 		return ErrMissingHeader
 	}
-	header := reqHeader.Get(signingHeader)
+	header := reqHeader.Get(SigningHeader)
 	return ValidatePayloadWithTolerance(payload, header, signingKey, DefaultTolerance)
 }
 

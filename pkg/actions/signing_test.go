@@ -94,7 +94,7 @@ func Test_validatePayload(t *testing.T) {
 	}
 }
 
-func Test_ValidatePayload(t *testing.T) {
+func Test_ValidatePayloadFromRequest(t *testing.T) {
 	tnow := time.Now()
 	payload := []byte("test")
 	signingKey := "testSigningKey"
@@ -112,7 +112,7 @@ func Test_ValidatePayload(t *testing.T) {
 			payload: payload,
 			reqHeader: func() *http.Header {
 				h := http.Header{}
-				h.Add(signingHeader, header)
+				h.Add(SigningHeader, header)
 				h.Add("X-Forwarded-For", "0.0.0.0")
 				return &h
 			}(),
@@ -135,7 +135,7 @@ func Test_ValidatePayload(t *testing.T) {
 			payload: payload,
 			reqHeader: func() *http.Header {
 				h := http.Header{}
-				h.Add(signingHeader, "invalidHeader")
+				h.Add(SigningHeader, "invalidHeader")
 				h.Add("X-Forwarded-For", "0.0.0.0")
 				return &h
 			}(),
@@ -154,7 +154,7 @@ func Test_ValidatePayload(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidatePayload(tt.payload, tt.reqHeader, tt.signingKey)
+			err := ValidateRequestPayload(tt.payload, tt.reqHeader, tt.signingKey)
 			require.Equal(t, tt.wantErr, err)
 		})
 	}
