@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -88,6 +89,72 @@ func Test_validatePayload(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validatePayload(tt.payload, tt.sigHeader, tt.signingKey, tt.tolerance, tt.enforceTolerance)
+			require.Equal(t, tt.wantErr, err)
+		})
+	}
+}
+
+func Test_ValidatePayload(t *testing.T) {
+	tnow := time.Now()
+	payload := []byte("test")
+	signingKey := "testSigningKey"
+	header := ComputeSignatureHeader(tnow, payload, signingKey)
+
+	tests := []struct {
+		name       string
+		payload    []byte
+		reqHeader  *http.Header
+		signingKey string
+		wantErr    error
+	}{
+		{
+			name:    "valid header",
+			payload: payload,
+			reqHeader: func() *http.Header {
+				h := http.Header{}
+				h.Add(signingHeader, header)
+				h.Add("X-Forwarded-For", "0.0.0.0")
+				return &h
+			}(),
+			signingKey: signingKey,
+			wantErr:    nil,
+		},
+		{
+			name:    "missing signing header",
+			payload: payload,
+			reqHeader: func() *http.Header {
+				h := http.Header{}
+				h.Add("X-Forwarded-For", "0.0.0.0")
+				return &h
+			}(),
+			signingKey: signingKey,
+			wantErr:    ErrNotSigned,
+		},
+		{
+			name:    "invalid signing header",
+			payload: payload,
+			reqHeader: func() *http.Header {
+				h := http.Header{}
+				h.Add(signingHeader, "invalidHeader")
+				h.Add("X-Forwarded-For", "0.0.0.0")
+				return &h
+			}(),
+			signingKey: signingKey,
+			wantErr:    ErrInvalidHeader,
+		},
+		{
+			name: "missing request header",
+			payload: func() []byte {
+				return []byte("test")
+			}(),
+			reqHeader:  nil,
+			signingKey: signingKey,
+			wantErr:    ErrMissingHeader,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidatePayload(tt.payload, tt.reqHeader, tt.signingKey)
 			require.Equal(t, tt.wantErr, err)
 		})
 	}
