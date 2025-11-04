@@ -19,6 +19,7 @@ var (
 )
 
 const (
+	SigningHeader           = "ZITADEL-Signature"
 	signingTimestamp        = "t"
 	signingVersion   string = "v1"
 	DefaultTolerance        = 300 * time.Second
