@@ -92,7 +92,8 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/instance/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/instance/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/internal_permission/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/internal_permission/v2beta/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/project/v2beta/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/project/v2beta/ \
-    # v2 packages
+    # v2 packages \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/authorization/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/authorization/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/session/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/session/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/oidc/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/oidc/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/org/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/org/v2/ \

@@ -127,6 +127,8 @@ protoc \
     --go_opt=Mzitadel/org/v2/org_service.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/saml/v2/authorization.proto=${ZITADEL_IMPORT}/saml/v2 \
     --go_opt=Mzitadel/saml/v2/saml_service.proto=${ZITADEL_IMPORT}/saml/v2 \
+    --go_opt=Mzitadel/authorization/v2/authorization.proto=${ZITADEL_IMPORT}/authorization/v2 \
+    --go_opt=Mzitadel/authorization/v2/authorization_service.proto=${ZITADEL_IMPORT}/authorization/v2 \
     --go_opt=Mzitadel/settings/v2/branding_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/domain_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/legal_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
