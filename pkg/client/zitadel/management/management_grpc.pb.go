@@ -664,7 +664,7 @@ type ManagementServiceClient interface {
 	RemoveHumanLinkedIDP(ctx context.Context, in *RemoveHumanLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveHumanLinkedIDPResponse, error)
 	// List ZITADEL Permissions
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Show all the permissions the user has in ZITADEL (ZITADEL Manager).
 	ListUserMemberships(ctx context.Context, in *ListUserMembershipsRequest, opts ...grpc.CallOption) (*ListUserMembershipsResponse, error)
@@ -776,373 +776,373 @@ type ManagementServiceClient interface {
 	ListOrgMemberRoles(ctx context.Context, in *ListOrgMemberRolesRequest, opts ...grpc.CallOption) (*ListOrgMemberRolesResponse, error)
 	// List Organization Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
 	ListOrgMembers(ctx context.Context, in *ListOrgMembersRequest, opts ...grpc.CallOption) (*ListOrgMembersResponse, error)
 	// Add Organization Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
 	AddOrgMember(ctx context.Context, in *AddOrgMemberRequest, opts ...grpc.CallOption) (*AddOrgMemberResponse, error)
 	// Update Organization Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateOrgMember(ctx context.Context, in *UpdateOrgMemberRequest, opts ...grpc.CallOption) (*UpdateOrgMemberResponse, error)
 	// Remove Organization Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
 	RemoveOrgMember(ctx context.Context, in *RemoveOrgMemberRequest, opts ...grpc.CallOption) (*RemoveOrgMemberResponse, error)
 	// Get Project By ID
 	//
-	// Deprecated: use [project v2 service GetProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-get-project.api.mdx) instead.
+	// Deprecated: use [project v2 service GetProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-get-project.api.mdx) instead.
 	//
 	// Returns a project owned by the organization (no granted projects). A Project is a vessel for different applications sharing the same role context.
 	GetProjectByID(ctx context.Context, in *GetProjectByIDRequest, opts ...grpc.CallOption) (*GetProjectByIDResponse, error)
 	// Get Granted Project By ID
 	//
-	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a project owned by another organization and granted to my organization. A Project is a vessel for different applications sharing the same role context.
 	GetGrantedProjectByID(ctx context.Context, in *GetGrantedProjectByIDRequest, opts ...grpc.CallOption) (*GetGrantedProjectByIDResponse, error)
 	// Search Project
 	//
-	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-projects.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-projects.api.mdx) instead.
 	//
 	// Lists projects my organization is the owner of (no granted projects). A Project is a vessel for different applications sharing the same role context.
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	// Search Granted Project
 	//
-	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-projects.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-projects.api.mdx) instead.
 	//
 	// Lists projects my organization got granted from another organization. A Project is a vessel for different applications sharing the same role context.
 	ListGrantedProjects(ctx context.Context, in *ListGrantedProjectsRequest, opts ...grpc.CallOption) (*ListGrantedProjectsResponse, error)
 	// Search Granted Project Roles
 	//
-	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Lists the roles a granted projects has. These are the roles, that have been granted by the owner organization to my organization.
 	ListGrantedProjectRoles(ctx context.Context, in *ListGrantedProjectRolesRequest, opts ...grpc.CallOption) (*ListGrantedProjectRolesResponse, error)
 	ListProjectChanges(ctx context.Context, in *ListProjectChangesRequest, opts ...grpc.CallOption) (*ListProjectChangesResponse, error)
 	// Create Project
 	//
-	// Deprecated: use [project v2 service CreateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-create-project.api.mdx) instead.
+	// Deprecated: use [project v2 service CreateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project.api.mdx) instead.
 	//
 	// Create a new project. A Project is a vessel for different applications sharing the same role context.
 	AddProject(ctx context.Context, in *AddProjectRequest, opts ...grpc.CallOption) (*AddProjectResponse, error)
 	// Update Project
 	//
-	// Deprecated: use [project v2 service UpdateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project.api.mdx) instead.
+	// Deprecated: use [project v2 service UpdateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project.api.mdx) instead.
 	//
 	// Update a project and its settings. A Project is a vessel for different applications sharing the same role context.
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
 	// Deactivate Project
 	//
-	// Deprecated: use [project v2 service DeactivateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-deactivate-project.api.mdx) instead.
+	// Deprecated: use [project v2 service DeactivateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-deactivate-project.api.mdx) instead.
 	//
 	// Set the state of a project to deactivated. Request returns an error if the project is already deactivated.
 	DeactivateProject(ctx context.Context, in *DeactivateProjectRequest, opts ...grpc.CallOption) (*DeactivateProjectResponse, error)
 	// Reactivate Project
 	//
-	// Deprecated: use [project v2 service ActivateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-activate-project.api.mdx) instead.
+	// Deprecated: use [project v2 service ActivateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-activate-project.api.mdx) instead.
 	//
 	// Set the state of a project to active. Request returns an error if the project is not deactivated.
 	ReactivateProject(ctx context.Context, in *ReactivateProjectRequest, opts ...grpc.CallOption) (*ReactivateProjectResponse, error)
 	// Remove Project
 	//
-	// Deprecated: use [project v2 service DeleteProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-delete-project.api.mdx) instead.
+	// Deprecated: use [project v2 service DeleteProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project.api.mdx) instead.
 	//
 	// Set the state of a project to active. Request returns an error if the project is not deactivated.
 	RemoveProject(ctx context.Context, in *RemoveProjectRequest, opts ...grpc.CallOption) (*RemoveProjectResponse, error)
 	// Search Project Roles
 	//
-	// Deprecated: use [project v2 service ListProjectRoles](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-roles.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectRoles](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-roles.api.mdx) instead.
 	//
 	// Returns all roles of a project matching the search query.
 	ListProjectRoles(ctx context.Context, in *ListProjectRolesRequest, opts ...grpc.CallOption) (*ListProjectRolesResponse, error)
 	// Add Project Role
 	//
-	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-add-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-add-project-role.api.mdx) instead.
 	//
 	// Add a new project role to a project. The key must be unique within the project.
 	AddProjectRole(ctx context.Context, in *AddProjectRoleRequest, opts ...grpc.CallOption) (*AddProjectRoleResponse, error)
 	// Bulk Add Project Role
 	//
-	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-add-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-add-project-role.api.mdx) instead.
 	//
 	// Add a list of roles to a project. The keys must be unique within the project.
 	BulkAddProjectRoles(ctx context.Context, in *BulkAddProjectRolesRequest, opts ...grpc.CallOption) (*BulkAddProjectRolesResponse, error)
 	// Change Project Role
 	//
-	// Deprecated: use [project v2 service UpdateProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service UpdateProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-role.api.mdx) instead.
 	//
 	// Change a project role. The key is not editable. If a key should change, remove the role and create a new one.
 	UpdateProjectRole(ctx context.Context, in *UpdateProjectRoleRequest, opts ...grpc.CallOption) (*UpdateProjectRoleResponse, error)
 	// Remove Project Role
 	//
-	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-remove-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-remove-project-role.api.mdx) instead.
 	//
 	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
 	RemoveProjectRole(ctx context.Context, in *RemoveProjectRoleRequest, opts ...grpc.CallOption) (*RemoveProjectRoleResponse, error)
 	ListProjectMemberRoles(ctx context.Context, in *ListProjectMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectMemberRolesResponse, error)
 	// List Project Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
 	ListProjectMembers(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ListProjectMembersResponse, error)
 	// Add Project Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
 	AddProjectMember(ctx context.Context, in *AddProjectMemberRequest, opts ...grpc.CallOption) (*AddProjectMemberResponse, error)
 	// Update Project Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectMember(ctx context.Context, in *UpdateProjectMemberRequest, opts ...grpc.CallOption) (*UpdateProjectMemberResponse, error)
 	// Remove Project Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
 	RemoveProjectMember(ctx context.Context, in *RemoveProjectMemberRequest, opts ...grpc.CallOption) (*RemoveProjectMemberResponse, error)
 	// Get Application By ID
 	//
-	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-get-application.api.mdx) instead to fetch an app
+	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-get-application.api.mdx) instead to fetch an app
 	//
 	// Get an application of any type (OIDC, API, SAML).
 	GetAppByID(ctx context.Context, in *GetAppByIDRequest, opts ...grpc.CallOption) (*GetAppByIDResponse, error)
 	// Search Applications
 	//
-	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-list-applications.api.mdx) instead to list applications
+	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-list-applications.api.mdx) instead to list applications
 	//
 	// Returns all applications within a project, that match the query.
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	ListAppChanges(ctx context.Context, in *ListAppChangesRequest, opts ...grpc.CallOption) (*ListAppChangesResponse, error)
 	// Create Application (OIDC)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create an OIDC application.
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create an OIDC application.
 	//
 	// Create a new OIDC client. The client id will be generated and returned in the response. Depending on the chosen configuration also a secret will be returned.
 	AddOIDCApp(ctx context.Context, in *AddOIDCAppRequest, opts ...grpc.CallOption) (*AddOIDCAppResponse, error)
 	// Create Application (SAML)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create a SAML application.
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create a SAML application.
 	//
 	// Create a new SAML client. Returns an entity ID.
 	AddSAMLApp(ctx context.Context, in *AddSAMLAppRequest, opts ...grpc.CallOption) (*AddSAMLAppResponse, error)
 	// Create Application (API)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create an API application
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create an API application
 	//
 	// Create a new API client. The client id will be generated and returned in the response.
 	// Depending on the chosen configuration also a secret will be generated and returned.
 	AddAPIApp(ctx context.Context, in *AddAPIAppRequest, opts ...grpc.CallOption) (*AddAPIAppResponse, error)
 	// Update Application
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the generic params of an app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the generic params of an app.
 	//
 	// Update the basic information of an application. This doesn't include information that are dependent on the application type (OIDC, API, SAML)
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
 	// Update OIDC Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of an OIDC app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of an OIDC app.
 	//
 	// Update the OIDC specific configuration of an application.
 	UpdateOIDCAppConfig(ctx context.Context, in *UpdateOIDCAppConfigRequest, opts ...grpc.CallOption) (*UpdateOIDCAppConfigResponse, error)
 	// Update SAML Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of a SAML app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of a SAML app.
 	//
 	// Update the SAML specific configuration of an application.
 	UpdateSAMLAppConfig(ctx context.Context, in *UpdateSAMLAppConfigRequest, opts ...grpc.CallOption) (*UpdateSAMLAppConfigResponse, error)
 	// Update API Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of an API app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of an API app.
 	//
 	// Update the OIDC-specific configuration of an application.
 	UpdateAPIAppConfig(ctx context.Context, in *UpdateAPIAppConfigRequest, opts ...grpc.CallOption) (*UpdateAPIAppConfigResponse, error)
 	// Deactivate Application
 	//
-	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-deactivate-application.api.mdx) instead to deactivate an app.
+	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-deactivate-application.api.mdx) instead to deactivate an app.
 	//
 	// Set the state of an application to deactivated. It is not possible to request tokens for deactivated apps. Request returns an error if the application is already deactivated.
 	DeactivateApp(ctx context.Context, in *DeactivateAppRequest, opts ...grpc.CallOption) (*DeactivateAppResponse, error)
 	// Reactivate Application
 	//
-	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-reactivate-application.api.mdx) instead to reactivate an app.
+	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-reactivate-application.api.mdx) instead to reactivate an app.
 	//
 	// Set the state of an application to active. Request returns an error if the application is not deactivated.
 	ReactivateApp(ctx context.Context, in *ReactivateAppRequest, opts ...grpc.CallOption) (*ReactivateAppResponse, error)
 	// Remove Application
 	//
-	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-delete-application.api.mdx) instead to delete an app.
+	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-delete-application.api.mdx) instead to delete an app.
 	//
 	// Remove an application. It is not possible to request tokens for removed apps. Request returns an error if the application is already deactivated.
 	RemoveApp(ctx context.Context, in *RemoveAppRequest, opts ...grpc.CallOption) (*RemoveAppResponse, error)
 	// Generate New OIDC Client Secret
 	//
-	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-regenerate-client-secret.api.mdx) instead to regenerate an OIDC app client secret.
+	// Deprecated: Use [GenerateClientSecret](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-generate-client-secret.api.mdx) instead to (re-)generate an OIDC app client secret.
 	//
 	// Generates a new client secret for the OIDC application, make sure to save the response.
 	RegenerateOIDCClientSecret(ctx context.Context, in *RegenerateOIDCClientSecretRequest, opts ...grpc.CallOption) (*RegenerateOIDCClientSecretResponse, error)
 	// Generate New API Client Secret
 	//
-	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-regenerate-client-secret.api.mdx) instead to regenerate an API app client secret
+	// Deprecated: Use [GenerateClientSecret](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-generate-client-secret.api.mdx) instead to (re-)generate an API app client secret
 	//
 	// Generates a new client secret for the API application, make sure to save the response.
 	RegenerateAPIClientSecret(ctx context.Context, in *RegenerateAPIClientSecretRequest, opts ...grpc.CallOption) (*RegenerateAPIClientSecretResponse, error)
 	// Get Application Key By ID
 	//
-	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-get-application-key.api.mdx) instead to get an application key.
+	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-get-application-key.api.mdx) instead to get an application key.
 	//
 	// Returns an application key. Keys are used for authorizing API Applications.
 	GetAppKey(ctx context.Context, in *GetAppKeyRequest, opts ...grpc.CallOption) (*GetAppKeyResponse, error)
 	// List Application Keys
 	//
-	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-list-application-keys.api.mdx) instead to list application keys.
+	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-list-application-keys.api.mdx) instead to list application keys.
 	//
 	// Search application keys. Keys are used for authorizing API Applications.
 	ListAppKeys(ctx context.Context, in *ListAppKeysRequest, opts ...grpc.CallOption) (*ListAppKeysResponse, error)
 	// Create Application Key
 	//
-	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application-key.api.mdx) instead to create an application key.
+	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application-key.api.mdx) instead to create an application key.
 	//
 	// Create a new application key, they are used for authorizing API Applications. Key details will be returned in the response, make sure to save it.
 	AddAppKey(ctx context.Context, in *AddAppKeyRequest, opts ...grpc.CallOption) (*AddAppKeyResponse, error)
 	// Delete Application Key
 	//
-	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-delete-application-key.api.mdx) instead to delete an application key.
+	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-delete-application-key.api.mdx) instead to delete an application key.
 	//
 	// Remove an application key. The API application will not be able to authorize with the key anymore.
 	RemoveAppKey(ctx context.Context, in *RemoveAppKeyRequest, opts ...grpc.CallOption) (*RemoveAppKeyResponse, error)
 	ListProjectGrantChanges(ctx context.Context, in *ListProjectGrantChangesRequest, opts ...grpc.CallOption) (*ListProjectGrantChangesResponse, error)
 	// Project Grant By ID
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a project grant. A project grant is when the organization grants its project to another organization.
 	GetProjectGrantByID(ctx context.Context, in *GetProjectGrantByIDRequest, opts ...grpc.CallOption) (*GetProjectGrantByIDResponse, error)
 	// Search Project Grants from Project
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a list of project grants for a specific project. A project grant is when the organization grants its project to another organization.
 	ListProjectGrants(ctx context.Context, in *ListProjectGrantsRequest, opts ...grpc.CallOption) (*ListProjectGrantsResponse, error)
 	// Search Project Grants
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	ListAllProjectGrants(ctx context.Context, in *ListAllProjectGrantsRequest, opts ...grpc.CallOption) (*ListAllProjectGrantsResponse, error)
 	// Add Project Grant
 	//
-	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-create-project-grant.api.mdx) instead.
+	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project-grant.api.mdx) instead.
 	//
 	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
 	AddProjectGrant(ctx context.Context, in *AddProjectGrantRequest, opts ...grpc.CallOption) (*AddProjectGrantResponse, error)
 	// Change Project Grant
 	//
-	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project-grant.api.mdx) instead.
+	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-grant.api.mdx) instead.
 	//
 	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
 	UpdateProjectGrant(ctx context.Context, in *UpdateProjectGrantRequest, opts ...grpc.CallOption) (*UpdateProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
-	// Deprecated: use [DeactivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-deactivate-project-grant.api.mdx) instead.
+	// Deprecated: use [DeactivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-deactivate-project-grant.api.mdx) instead.
 	//
 	// Set the state of the project grant to deactivated. The grant has to be active to be able to deactivate.
 	DeactivateProjectGrant(ctx context.Context, in *DeactivateProjectGrantRequest, opts ...grpc.CallOption) (*DeactivateProjectGrantResponse, error)
 	// Reactivate Project Grant
 	//
-	// Deprecated: use [ActivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-activate-project-grant.api.mdx) instead.
+	// Deprecated: use [ActivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-activate-project-grant.api.mdx) instead.
 	//
 	// Set the state of the project grant to active. The grant has to be deactivated to be able to reactivate.
 	ReactivateProjectGrant(ctx context.Context, in *ReactivateProjectGrantRequest, opts ...grpc.CallOption) (*ReactivateProjectGrantResponse, error)
 	// Remove Project Grant
 	//
-	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-delete-project-grant.api.mdx) instead.
+	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project-grant.api.mdx) instead.
 	//
 	// Remove a project grant. All user grants for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
 	RemoveProjectGrant(ctx context.Context, in *RemoveProjectGrantRequest, opts ...grpc.CallOption) (*RemoveProjectGrantResponse, error)
 	ListProjectGrantMemberRoles(ctx context.Context, in *ListProjectGrantMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectGrantMemberRolesResponse, error)
 	// List Project Grant Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	ListProjectGrantMembers(ctx context.Context, in *ListProjectGrantMembersRequest, opts ...grpc.CallOption) (*ListProjectGrantMembersResponse, error)
 	// Add Project Grant Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	AddProjectGrantMember(ctx context.Context, in *AddProjectGrantMemberRequest, opts ...grpc.CallOption) (*AddProjectGrantMemberResponse, error)
 	// Update Project Grant Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectGrantMember(ctx context.Context, in *UpdateProjectGrantMemberRequest, opts ...grpc.CallOption) (*UpdateProjectGrantMemberResponse, error)
 	// Remove Project Grant Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
 	RemoveProjectGrantMember(ctx context.Context, in *RemoveProjectGrantMemberRequest, opts ...grpc.CallOption) (*RemoveProjectGrantMemberResponse, error)
 	// Get User Grant By ID
 	//
-	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and filter by its ID.
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and filter by its ID.
 	//
 	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
 	GetUserGrantByID(ctx context.Context, in *GetUserGrantByIDRequest, opts ...grpc.CallOption) (*GetUserGrantByIDResponse, error)
 	// Search User Grants
 	//
-	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
 	//
 	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
 	ListUserGrants(ctx context.Context, in *ListUserGrantRequest, opts ...grpc.CallOption) (*ListUserGrantResponse, error)
 	// Add User Grant
 	//
-	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
+	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
 	//
 	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
 	AddUserGrant(ctx context.Context, in *AddUserGrantRequest, opts ...grpc.CallOption) (*AddUserGrantResponse, error)
 	// Update User Grant
 	//
-	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
+	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
 	//
 	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
 	UpdateUserGrant(ctx context.Context, in *UpdateUserGrantRequest, opts ...grpc.CallOption) (*UpdateUserGrantResponse, error)
 	// Deactivate User Grant
 	//
-	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
+	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
 	//
 	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
 	DeactivateUserGrant(ctx context.Context, in *DeactivateUserGrantRequest, opts ...grpc.CallOption) (*DeactivateUserGrantResponse, error)
 	// Reactivate User Grant
 	//
-	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
+	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
 	//
 	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
 	ReactivateUserGrant(ctx context.Context, in *ReactivateUserGrantRequest, opts ...grpc.CallOption) (*ReactivateUserGrantResponse, error)
 	// Remove User Grant
 	//
-	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
+	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
 	//
 	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
 	// Bulk Remove User Grants
 	//
-	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
+	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
 	//
 	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
@@ -4347,7 +4347,7 @@ type ManagementServiceServer interface {
 	RemoveHumanLinkedIDP(context.Context, *RemoveHumanLinkedIDPRequest) (*RemoveHumanLinkedIDPResponse, error)
 	// List ZITADEL Permissions
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Show all the permissions the user has in ZITADEL (ZITADEL Manager).
 	ListUserMemberships(context.Context, *ListUserMembershipsRequest) (*ListUserMembershipsResponse, error)
@@ -4459,373 +4459,373 @@ type ManagementServiceServer interface {
 	ListOrgMemberRoles(context.Context, *ListOrgMemberRolesRequest) (*ListOrgMemberRolesResponse, error)
 	// List Organization Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
 	ListOrgMembers(context.Context, *ListOrgMembersRequest) (*ListOrgMembersResponse, error)
 	// Add Organization Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
 	AddOrgMember(context.Context, *AddOrgMemberRequest) (*AddOrgMemberResponse, error)
 	// Update Organization Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateOrgMember(context.Context, *UpdateOrgMemberRequest) (*UpdateOrgMemberResponse, error)
 	// Remove Organization Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
 	RemoveOrgMember(context.Context, *RemoveOrgMemberRequest) (*RemoveOrgMemberResponse, error)
 	// Get Project By ID
 	//
-	// Deprecated: use [project v2 service GetProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-get-project.api.mdx) instead.
+	// Deprecated: use [project v2 service GetProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-get-project.api.mdx) instead.
 	//
 	// Returns a project owned by the organization (no granted projects). A Project is a vessel for different applications sharing the same role context.
 	GetProjectByID(context.Context, *GetProjectByIDRequest) (*GetProjectByIDResponse, error)
 	// Get Granted Project By ID
 	//
-	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a project owned by another organization and granted to my organization. A Project is a vessel for different applications sharing the same role context.
 	GetGrantedProjectByID(context.Context, *GetGrantedProjectByIDRequest) (*GetGrantedProjectByIDResponse, error)
 	// Search Project
 	//
-	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-projects.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-projects.api.mdx) instead.
 	//
 	// Lists projects my organization is the owner of (no granted projects). A Project is a vessel for different applications sharing the same role context.
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	// Search Granted Project
 	//
-	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-projects.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjects](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-projects.api.mdx) instead.
 	//
 	// Lists projects my organization got granted from another organization. A Project is a vessel for different applications sharing the same role context.
 	ListGrantedProjects(context.Context, *ListGrantedProjectsRequest) (*ListGrantedProjectsResponse, error)
 	// Search Granted Project Roles
 	//
-	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Lists the roles a granted projects has. These are the roles, that have been granted by the owner organization to my organization.
 	ListGrantedProjectRoles(context.Context, *ListGrantedProjectRolesRequest) (*ListGrantedProjectRolesResponse, error)
 	ListProjectChanges(context.Context, *ListProjectChangesRequest) (*ListProjectChangesResponse, error)
 	// Create Project
 	//
-	// Deprecated: use [project v2 service CreateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-create-project.api.mdx) instead.
+	// Deprecated: use [project v2 service CreateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project.api.mdx) instead.
 	//
 	// Create a new project. A Project is a vessel for different applications sharing the same role context.
 	AddProject(context.Context, *AddProjectRequest) (*AddProjectResponse, error)
 	// Update Project
 	//
-	// Deprecated: use [project v2 service UpdateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project.api.mdx) instead.
+	// Deprecated: use [project v2 service UpdateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project.api.mdx) instead.
 	//
 	// Update a project and its settings. A Project is a vessel for different applications sharing the same role context.
 	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
 	// Deactivate Project
 	//
-	// Deprecated: use [project v2 service DeactivateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-deactivate-project.api.mdx) instead.
+	// Deprecated: use [project v2 service DeactivateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-deactivate-project.api.mdx) instead.
 	//
 	// Set the state of a project to deactivated. Request returns an error if the project is already deactivated.
 	DeactivateProject(context.Context, *DeactivateProjectRequest) (*DeactivateProjectResponse, error)
 	// Reactivate Project
 	//
-	// Deprecated: use [project v2 service ActivateProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-activate-project.api.mdx) instead.
+	// Deprecated: use [project v2 service ActivateProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-activate-project.api.mdx) instead.
 	//
 	// Set the state of a project to active. Request returns an error if the project is not deactivated.
 	ReactivateProject(context.Context, *ReactivateProjectRequest) (*ReactivateProjectResponse, error)
 	// Remove Project
 	//
-	// Deprecated: use [project v2 service DeleteProject](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-delete-project.api.mdx) instead.
+	// Deprecated: use [project v2 service DeleteProject](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project.api.mdx) instead.
 	//
 	// Set the state of a project to active. Request returns an error if the project is not deactivated.
 	RemoveProject(context.Context, *RemoveProjectRequest) (*RemoveProjectResponse, error)
 	// Search Project Roles
 	//
-	// Deprecated: use [project v2 service ListProjectRoles](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-roles.api.mdx) instead.
+	// Deprecated: use [project v2 service ListProjectRoles](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-roles.api.mdx) instead.
 	//
 	// Returns all roles of a project matching the search query.
 	ListProjectRoles(context.Context, *ListProjectRolesRequest) (*ListProjectRolesResponse, error)
 	// Add Project Role
 	//
-	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-add-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-add-project-role.api.mdx) instead.
 	//
 	// Add a new project role to a project. The key must be unique within the project.
 	AddProjectRole(context.Context, *AddProjectRoleRequest) (*AddProjectRoleResponse, error)
 	// Bulk Add Project Role
 	//
-	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-add-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service AddProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-add-project-role.api.mdx) instead.
 	//
 	// Add a list of roles to a project. The keys must be unique within the project.
 	BulkAddProjectRoles(context.Context, *BulkAddProjectRolesRequest) (*BulkAddProjectRolesResponse, error)
 	// Change Project Role
 	//
-	// Deprecated: use [project v2 service UpdateProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service UpdateProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-role.api.mdx) instead.
 	//
 	// Change a project role. The key is not editable. If a key should change, remove the role and create a new one.
 	UpdateProjectRole(context.Context, *UpdateProjectRoleRequest) (*UpdateProjectRoleResponse, error)
 	// Remove Project Role
 	//
-	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-remove-project-role.api.mdx) instead.
+	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-remove-project-role.api.mdx) instead.
 	//
 	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
 	RemoveProjectRole(context.Context, *RemoveProjectRoleRequest) (*RemoveProjectRoleResponse, error)
 	ListProjectMemberRoles(context.Context, *ListProjectMemberRolesRequest) (*ListProjectMemberRolesResponse, error)
 	// List Project Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
 	ListProjectMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error)
 	// Add Project Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
 	AddProjectMember(context.Context, *AddProjectMemberRequest) (*AddProjectMemberResponse, error)
 	// Update Project Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectMember(context.Context, *UpdateProjectMemberRequest) (*UpdateProjectMemberResponse, error)
 	// Remove Project Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
 	RemoveProjectMember(context.Context, *RemoveProjectMemberRequest) (*RemoveProjectMemberResponse, error)
 	// Get Application By ID
 	//
-	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-get-application.api.mdx) instead to fetch an app
+	// Deprecated: Use [GetApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-get-application.api.mdx) instead to fetch an app
 	//
 	// Get an application of any type (OIDC, API, SAML).
 	GetAppByID(context.Context, *GetAppByIDRequest) (*GetAppByIDResponse, error)
 	// Search Applications
 	//
-	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-list-applications.api.mdx) instead to list applications
+	// Deprecated: Use [ListApplications](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-list-applications.api.mdx) instead to list applications
 	//
 	// Returns all applications within a project, that match the query.
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	ListAppChanges(context.Context, *ListAppChangesRequest) (*ListAppChangesResponse, error)
 	// Create Application (OIDC)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create an OIDC application.
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create an OIDC application.
 	//
 	// Create a new OIDC client. The client id will be generated and returned in the response. Depending on the chosen configuration also a secret will be returned.
 	AddOIDCApp(context.Context, *AddOIDCAppRequest) (*AddOIDCAppResponse, error)
 	// Create Application (SAML)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create a SAML application.
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create a SAML application.
 	//
 	// Create a new SAML client. Returns an entity ID.
 	AddSAMLApp(context.Context, *AddSAMLAppRequest) (*AddSAMLAppResponse, error)
 	// Create Application (API)
 	//
-	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application.api.mdx) instead to create an API application
+	// Deprecated: Use [CreateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application.api.mdx) instead to create an API application
 	//
 	// Create a new API client. The client id will be generated and returned in the response.
 	// Depending on the chosen configuration also a secret will be generated and returned.
 	AddAPIApp(context.Context, *AddAPIAppRequest) (*AddAPIAppResponse, error)
 	// Update Application
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the generic params of an app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the generic params of an app.
 	//
 	// Update the basic information of an application. This doesn't include information that are dependent on the application type (OIDC, API, SAML)
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
 	// Update OIDC Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of an OIDC app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of an OIDC app.
 	//
 	// Update the OIDC specific configuration of an application.
 	UpdateOIDCAppConfig(context.Context, *UpdateOIDCAppConfigRequest) (*UpdateOIDCAppConfigResponse, error)
 	// Update SAML Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of a SAML app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of a SAML app.
 	//
 	// Update the SAML specific configuration of an application.
 	UpdateSAMLAppConfig(context.Context, *UpdateSAMLAppConfigRequest) (*UpdateSAMLAppConfigResponse, error)
 	// Update API Application Config
 	//
-	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-update-application.api.mdx) instead to update the config of an API app.
+	// Deprecated: Use [PatchApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-update-application.api.mdx) instead to update the config of an API app.
 	//
 	// Update the OIDC-specific configuration of an application.
 	UpdateAPIAppConfig(context.Context, *UpdateAPIAppConfigRequest) (*UpdateAPIAppConfigResponse, error)
 	// Deactivate Application
 	//
-	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-deactivate-application.api.mdx) instead to deactivate an app.
+	// Deprecated: Use [DeactivateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-deactivate-application.api.mdx) instead to deactivate an app.
 	//
 	// Set the state of an application to deactivated. It is not possible to request tokens for deactivated apps. Request returns an error if the application is already deactivated.
 	DeactivateApp(context.Context, *DeactivateAppRequest) (*DeactivateAppResponse, error)
 	// Reactivate Application
 	//
-	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-reactivate-application.api.mdx) instead to reactivate an app.
+	// Deprecated: Use [ReactivateApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-reactivate-application.api.mdx) instead to reactivate an app.
 	//
 	// Set the state of an application to active. Request returns an error if the application is not deactivated.
 	ReactivateApp(context.Context, *ReactivateAppRequest) (*ReactivateAppResponse, error)
 	// Remove Application
 	//
-	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-delete-application.api.mdx) instead to delete an app.
+	// Deprecated: Use [DeleteApplication](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-delete-application.api.mdx) instead to delete an app.
 	//
 	// Remove an application. It is not possible to request tokens for removed apps. Request returns an error if the application is already deactivated.
 	RemoveApp(context.Context, *RemoveAppRequest) (*RemoveAppResponse, error)
 	// Generate New OIDC Client Secret
 	//
-	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-regenerate-client-secret.api.mdx) instead to regenerate an OIDC app client secret.
+	// Deprecated: Use [GenerateClientSecret](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-generate-client-secret.api.mdx) instead to (re-)generate an OIDC app client secret.
 	//
 	// Generates a new client secret for the OIDC application, make sure to save the response.
 	RegenerateOIDCClientSecret(context.Context, *RegenerateOIDCClientSecretRequest) (*RegenerateOIDCClientSecretResponse, error)
 	// Generate New API Client Secret
 	//
-	// Deprecated: Use [RegenerateClientSecret](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-regenerate-client-secret.api.mdx) instead to regenerate an API app client secret
+	// Deprecated: Use [GenerateClientSecret](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-generate-client-secret.api.mdx) instead to (re-)generate an API app client secret
 	//
 	// Generates a new client secret for the API application, make sure to save the response.
 	RegenerateAPIClientSecret(context.Context, *RegenerateAPIClientSecretRequest) (*RegenerateAPIClientSecretResponse, error)
 	// Get Application Key By ID
 	//
-	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-get-application-key.api.mdx) instead to get an application key.
+	// Deprecated: Use [GetApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-get-application-key.api.mdx) instead to get an application key.
 	//
 	// Returns an application key. Keys are used for authorizing API Applications.
 	GetAppKey(context.Context, *GetAppKeyRequest) (*GetAppKeyResponse, error)
 	// List Application Keys
 	//
-	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-list-application-keys.api.mdx) instead to list application keys.
+	// Deprecated: Use [ListApplicationKeys](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-list-application-keys.api.mdx) instead to list application keys.
 	//
 	// Search application keys. Keys are used for authorizing API Applications.
 	ListAppKeys(context.Context, *ListAppKeysRequest) (*ListAppKeysResponse, error)
 	// Create Application Key
 	//
-	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-create-application-key.api.mdx) instead to create an application key.
+	// Deprecated: Use [CreateApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-create-application-key.api.mdx) instead to create an application key.
 	//
 	// Create a new application key, they are used for authorizing API Applications. Key details will be returned in the response, make sure to save it.
 	AddAppKey(context.Context, *AddAppKeyRequest) (*AddAppKeyResponse, error)
 	// Delete Application Key
 	//
-	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/zitadel-app-v-2-beta-app-service-delete-application-key.api.mdx) instead to delete an application key.
+	// Deprecated: Use [DeleteApplicationKey](/apis/resources/application_service_v2/zitadel-application-v-2-application-service-delete-application-key.api.mdx) instead to delete an application key.
 	//
 	// Remove an application key. The API application will not be able to authorize with the key anymore.
 	RemoveAppKey(context.Context, *RemoveAppKeyRequest) (*RemoveAppKeyResponse, error)
 	ListProjectGrantChanges(context.Context, *ListProjectGrantChangesRequest) (*ListProjectGrantChangesResponse, error)
 	// Project Grant By ID
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a project grant. A project grant is when the organization grants its project to another organization.
 	GetProjectGrantByID(context.Context, *GetProjectGrantByIDRequest) (*GetProjectGrantByIDResponse, error)
 	// Search Project Grants from Project
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a list of project grants for a specific project. A project grant is when the organization grants its project to another organization.
 	ListProjectGrants(context.Context, *ListProjectGrantsRequest) (*ListProjectGrantsResponse, error)
 	// Search Project Grants
 	//
-	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-list-project-grants.api.mdx) instead.
+	// Deprecated: use [ListProjectGrants](apis/resources/project_service_v2/zitadel-project-v-2-project-service-list-project-grants.api.mdx) instead.
 	//
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	ListAllProjectGrants(context.Context, *ListAllProjectGrantsRequest) (*ListAllProjectGrantsResponse, error)
 	// Add Project Grant
 	//
-	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-create-project-grant.api.mdx) instead.
+	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project-grant.api.mdx) instead.
 	//
 	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
 	AddProjectGrant(context.Context, *AddProjectGrantRequest) (*AddProjectGrantResponse, error)
 	// Change Project Grant
 	//
-	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-update-project-grant.api.mdx) instead.
+	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-grant.api.mdx) instead.
 	//
 	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
 	UpdateProjectGrant(context.Context, *UpdateProjectGrantRequest) (*UpdateProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
-	// Deprecated: use [DeactivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-deactivate-project-grant.api.mdx) instead.
+	// Deprecated: use [DeactivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-deactivate-project-grant.api.mdx) instead.
 	//
 	// Set the state of the project grant to deactivated. The grant has to be active to be able to deactivate.
 	DeactivateProjectGrant(context.Context, *DeactivateProjectGrantRequest) (*DeactivateProjectGrantResponse, error)
 	// Reactivate Project Grant
 	//
-	// Deprecated: use [ActivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-activate-project-grant.api.mdx) instead.
+	// Deprecated: use [ActivateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-activate-project-grant.api.mdx) instead.
 	//
 	// Set the state of the project grant to active. The grant has to be deactivated to be able to reactivate.
 	ReactivateProjectGrant(context.Context, *ReactivateProjectGrantRequest) (*ReactivateProjectGrantResponse, error)
 	// Remove Project Grant
 	//
-	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-beta-project-service-delete-project-grant.api.mdx) instead.
+	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project-grant.api.mdx) instead.
 	//
 	// Remove a project grant. All user grants for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
 	RemoveProjectGrant(context.Context, *RemoveProjectGrantRequest) (*RemoveProjectGrantResponse, error)
 	ListProjectGrantMemberRoles(context.Context, *ListProjectGrantMemberRolesRequest) (*ListProjectGrantMemberRolesResponse, error)
 	// List Project Grant Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	ListProjectGrantMembers(context.Context, *ListProjectGrantMembersRequest) (*ListProjectGrantMembersResponse, error)
 	// Add Project Grant Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	AddProjectGrantMember(context.Context, *AddProjectGrantMemberRequest) (*AddProjectGrantMemberResponse, error)
 	// Update Project Grant Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectGrantMember(context.Context, *UpdateProjectGrantMemberRequest) (*UpdateProjectGrantMemberResponse, error)
 	// Remove Project Grant Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
 	RemoveProjectGrantMember(context.Context, *RemoveProjectGrantMemberRequest) (*RemoveProjectGrantMemberResponse, error)
 	// Get User Grant By ID
 	//
-	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and filter by its ID.
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and filter by its ID.
 	//
 	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
 	GetUserGrantByID(context.Context, *GetUserGrantByIDRequest) (*GetUserGrantByIDResponse, error)
 	// Search User Grants
 	//
-	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
+	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
 	//
 	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
 	ListUserGrants(context.Context, *ListUserGrantRequest) (*ListUserGrantResponse, error)
 	// Add User Grant
 	//
-	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
+	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
 	//
 	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
 	AddUserGrant(context.Context, *AddUserGrantRequest) (*AddUserGrantResponse, error)
 	// Update User Grant
 	//
-	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
+	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
 	//
 	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
 	UpdateUserGrant(context.Context, *UpdateUserGrantRequest) (*UpdateUserGrantResponse, error)
 	// Deactivate User Grant
 	//
-	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
+	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
 	//
 	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
 	DeactivateUserGrant(context.Context, *DeactivateUserGrantRequest) (*DeactivateUserGrantResponse, error)
 	// Reactivate User Grant
 	//
-	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
+	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
 	//
 	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
 	ReactivateUserGrant(context.Context, *ReactivateUserGrantRequest) (*ReactivateUserGrantResponse, error)
 	// Remove User Grant
 	//
-	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
+	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
 	//
 	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
 	// Bulk Remove User Grants
 	//
-	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-beta-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
+	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
 	//
 	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)

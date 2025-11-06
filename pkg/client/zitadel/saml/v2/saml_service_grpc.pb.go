@@ -27,7 +27,22 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SAMLServiceClient interface {
+	// Get SAML Request
+	//
+	// Get SAML Request details by ID. Returns details that are parsed from the application's SAML Request.
+	//
+	// Required permissions:
+	//   - `session.read`
 	GetSAMLRequest(ctx context.Context, in *GetSAMLRequestRequest, opts ...grpc.CallOption) (*GetSAMLRequestResponse, error)
+	// Create Response
+	//
+	// Finalize a SAML Request and get the response definition for success or failure.
+	// The response must be handled as per the SAML definition to inform the application about the success or failure.
+	// On success, the response contains details for the application to obtain the SAMLResponse.
+	// This method can only be called once for an SAML request.
+	//
+	// Required permissions:
+	//   - `session.link`
 	CreateResponse(ctx context.Context, in *CreateResponseRequest, opts ...grpc.CallOption) (*CreateResponseResponse, error)
 }
 
@@ -61,7 +76,22 @@ func (c *sAMLServiceClient) CreateResponse(ctx context.Context, in *CreateRespon
 // All implementations must embed UnimplementedSAMLServiceServer
 // for forward compatibility
 type SAMLServiceServer interface {
+	// Get SAML Request
+	//
+	// Get SAML Request details by ID. Returns details that are parsed from the application's SAML Request.
+	//
+	// Required permissions:
+	//   - `session.read`
 	GetSAMLRequest(context.Context, *GetSAMLRequestRequest) (*GetSAMLRequestResponse, error)
+	// Create Response
+	//
+	// Finalize a SAML Request and get the response definition for success or failure.
+	// The response must be handled as per the SAML definition to inform the application about the success or failure.
+	// On success, the response contains details for the application to obtain the SAMLResponse.
+	// This method can only be called once for an SAML request.
+	//
+	// Required permissions:
+	//   - `session.link`
 	CreateResponse(context.Context, *CreateResponseRequest) (*CreateResponseResponse, error)
 	mustEmbedUnimplementedSAMLServiceServer()
 }

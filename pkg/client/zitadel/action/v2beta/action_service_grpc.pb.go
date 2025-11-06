@@ -37,26 +37,26 @@ const (
 type ActionServiceClient interface {
 	// Create Target
 	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Create a new target to your endpoint, which can be used in executions.
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	CreateTarget(ctx context.Context, in *CreateTargetRequest, opts ...grpc.CallOption) (*CreateTargetResponse, error)
 	// Update Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Update an existing target.
 	// To generate a new signing key set the optional expirationSigningKey.
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	UpdateTarget(ctx context.Context, in *UpdateTargetRequest, opts ...grpc.CallOption) (*UpdateTargetResponse, error)
 	// Delete Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete an existing target. This will remove it from any configured execution as well.
 	// In case the target is not found, the request will return a successful response as
@@ -64,62 +64,61 @@ type ActionServiceClient interface {
 	//
 	// Required permission:
 	//   - `action.target.delete`
-	//
-	// Required feature flag:
-	//   - `actions`
 	DeleteTarget(ctx context.Context, in *DeleteTargetRequest, opts ...grpc.CallOption) (*DeleteTargetResponse, error)
 	// Get Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the target identified by the requested ID.
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	GetTarget(ctx context.Context, in *GetTargetRequest, opts ...grpc.CallOption) (*GetTargetResponse, error)
 	// List targets
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching targets. By default all targets of the instance are returned.
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListTargets(ctx context.Context, in *ListTargetsRequest, opts ...grpc.CallOption) (*ListTargetsResponse, error)
 	// Set Execution
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Sets an execution to call a target or include the targets of another execution.
 	// Setting an empty list of targets will remove all targets from the execution, making it a noop.
 	//
 	// Required permission:
 	//   - `action.execution.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	SetExecution(ctx context.Context, in *SetExecutionRequest, opts ...grpc.CallOption) (*SetExecutionResponse, error)
 	// List Executions
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching executions. By default all executions of the instance are returned that have at least one execution target.
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
 	//   - `action.execution.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListExecutions(ctx context.Context, in *ListExecutionsRequest, opts ...grpc.CallOption) (*ListExecutionsResponse, error)
 	// List Execution Functions
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all available functions which can be used as condition for executions.
 	ListExecutionFunctions(ctx context.Context, in *ListExecutionFunctionsRequest, opts ...grpc.CallOption) (*ListExecutionFunctionsResponse, error)
 	// List Execution Methods
 	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// List all available methods which can be used as condition for executions.
 	ListExecutionMethods(ctx context.Context, in *ListExecutionMethodsRequest, opts ...grpc.CallOption) (*ListExecutionMethodsResponse, error)
 	// List Execution Services
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all available services which can be used as condition for executions.
 	ListExecutionServices(ctx context.Context, in *ListExecutionServicesRequest, opts ...grpc.CallOption) (*ListExecutionServicesResponse, error)
@@ -229,26 +228,26 @@ func (c *actionServiceClient) ListExecutionServices(ctx context.Context, in *Lis
 type ActionServiceServer interface {
 	// Create Target
 	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Create a new target to your endpoint, which can be used in executions.
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	CreateTarget(context.Context, *CreateTargetRequest) (*CreateTargetResponse, error)
 	// Update Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Update an existing target.
 	// To generate a new signing key set the optional expirationSigningKey.
 	//
 	// Required permission:
 	//   - `action.target.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	UpdateTarget(context.Context, *UpdateTargetRequest) (*UpdateTargetResponse, error)
 	// Delete Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete an existing target. This will remove it from any configured execution as well.
 	// In case the target is not found, the request will return a successful response as
@@ -256,62 +255,61 @@ type ActionServiceServer interface {
 	//
 	// Required permission:
 	//   - `action.target.delete`
-	//
-	// Required feature flag:
-	//   - `actions`
 	DeleteTarget(context.Context, *DeleteTargetRequest) (*DeleteTargetResponse, error)
 	// Get Target
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the target identified by the requested ID.
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	GetTarget(context.Context, *GetTargetRequest) (*GetTargetResponse, error)
 	// List targets
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching targets. By default all targets of the instance are returned.
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
 	//   - `action.target.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListTargets(context.Context, *ListTargetsRequest) (*ListTargetsResponse, error)
 	// Set Execution
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Sets an execution to call a target or include the targets of another execution.
 	// Setting an empty list of targets will remove all targets from the execution, making it a noop.
 	//
 	// Required permission:
 	//   - `action.execution.write`
-	//
-	// Required feature flag:
-	//   - `actions`
 	SetExecution(context.Context, *SetExecutionRequest) (*SetExecutionResponse, error)
 	// List Executions
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all matching executions. By default all executions of the instance are returned that have at least one execution target.
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
 	//   - `action.execution.read`
-	//
-	// Required feature flag:
-	//   - `actions`
 	ListExecutions(context.Context, *ListExecutionsRequest) (*ListExecutionsResponse, error)
 	// List Execution Functions
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all available functions which can be used as condition for executions.
 	ListExecutionFunctions(context.Context, *ListExecutionFunctionsRequest) (*ListExecutionFunctionsResponse, error)
 	// List Execution Methods
 	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// List all available methods which can be used as condition for executions.
 	ListExecutionMethods(context.Context, *ListExecutionMethodsRequest) (*ListExecutionMethodsResponse, error)
 	// List Execution Services
+	//
+	// Deprecated: please move to the corresponding endpoint under action service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// List all available services which can be used as condition for executions.
 	ListExecutionServices(context.Context, *ListExecutionServicesRequest) (*ListExecutionServicesResponse, error)

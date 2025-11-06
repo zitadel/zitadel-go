@@ -236,31 +236,31 @@ type AdminServiceClient interface {
 	GetDefaultLanguage(ctx context.Context, in *GetDefaultLanguageRequest, opts ...grpc.CallOption) (*GetDefaultLanguageResponse, error)
 	// Get My Instance
 	//
-	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead.
+	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-get-instance.api.mdx) instead.
 	//
 	// Returns the details about the current instance such as the name, version, domains, etc.
 	GetMyInstance(ctx context.Context, in *GetMyInstanceRequest, opts ...grpc.CallOption) (*GetMyInstanceResponse, error)
 	// List Instance Domains
 	//
-	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead.
+	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-get-instance.api.mdx) instead.
 	//
 	// Returns a list of domains that are configured for this ZITADEL instance. These domains are the URLs where ZITADEL is running.
 	ListInstanceDomains(ctx context.Context, in *ListInstanceDomainsRequest, opts ...grpc.CallOption) (*ListInstanceDomainsResponse, error)
 	// List Instance Trusted Domains
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-trusted-domains.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-list-trusted-domains.api.mdx) instead.
 	//
 	// Returns a list of domains that are configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	ListInstanceTrustedDomains(ctx context.Context, in *ListInstanceTrustedDomainsRequest, opts ...grpc.CallOption) (*ListInstanceTrustedDomainsResponse, error)
 	// Add an Instance Trusted Domain
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-add-trusted-domain.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-add-trusted-domain.api.mdx) instead.
 	//
 	// Add a domain to the list configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	AddInstanceTrustedDomain(ctx context.Context, in *AddInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*AddInstanceTrustedDomainResponse, error)
 	// Remove an Instance Trusted Domain
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-remove-trusted-domain.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-remove-trusted-domain.api.mdx) instead.
 	//
 	// Removes a domain from the list configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	RemoveInstanceTrustedDomain(ctx context.Context, in *RemoveInstanceTrustedDomainRequest, opts ...grpc.CallOption) (*RemoveInstanceTrustedDomainResponse, error)
@@ -560,25 +560,25 @@ type AdminServiceClient interface {
 	ListIAMMemberRoles(ctx context.Context, in *ListIAMMemberRolesRequest, opts ...grpc.CallOption) (*ListIAMMemberRolesResponse, error)
 	// List IAM Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the instance level, matching the search queries. The search queries will be AND linked.
 	ListIAMMembers(ctx context.Context, in *ListIAMMembersRequest, opts ...grpc.CallOption) (*ListIAMMembersResponse, error)
 	// Add IAM Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list with one or multiple roles.
 	AddIAMMember(ctx context.Context, in *AddIAMMemberRequest, opts ...grpc.CallOption) (*AddIAMMemberResponse, error)
 	// Update IAM Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateIAMMember(ctx context.Context, in *UpdateIAMMemberRequest, opts ...grpc.CallOption) (*UpdateIAMMemberResponse, error)
 	// Remove IAM Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (organization, project).
 	RemoveIAMMember(ctx context.Context, in *RemoveIAMMemberRequest, opts ...grpc.CallOption) (*RemoveIAMMemberResponse, error)
@@ -2457,31 +2457,31 @@ type AdminServiceServer interface {
 	GetDefaultLanguage(context.Context, *GetDefaultLanguageRequest) (*GetDefaultLanguageResponse, error)
 	// Get My Instance
 	//
-	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead.
+	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-get-instance.api.mdx) instead.
 	//
 	// Returns the details about the current instance such as the name, version, domains, etc.
 	GetMyInstance(context.Context, *GetMyInstanceRequest) (*GetMyInstanceResponse, error)
 	// List Instance Domains
 	//
-	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-get-instance.api.mdx) instead.
+	// Deprecated: use [instance service v2 GetInstance](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-get-instance.api.mdx) instead.
 	//
 	// Returns a list of domains that are configured for this ZITADEL instance. These domains are the URLs where ZITADEL is running.
 	ListInstanceDomains(context.Context, *ListInstanceDomainsRequest) (*ListInstanceDomainsResponse, error)
 	// List Instance Trusted Domains
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-list-trusted-domains.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-list-trusted-domains.api.mdx) instead.
 	//
 	// Returns a list of domains that are configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	ListInstanceTrustedDomains(context.Context, *ListInstanceTrustedDomainsRequest) (*ListInstanceTrustedDomainsResponse, error)
 	// Add an Instance Trusted Domain
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-add-trusted-domain.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-add-trusted-domain.api.mdx) instead.
 	//
 	// Add a domain to the list configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	AddInstanceTrustedDomain(context.Context, *AddInstanceTrustedDomainRequest) (*AddInstanceTrustedDomainResponse, error)
 	// Remove an Instance Trusted Domain
 	//
-	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-beta-instance-service-remove-trusted-domain.api.mdx) instead.
+	// Deprecated: use [instance service v2 ListTrustedDomains](apis/resources/instance_service_v2/zitadel-instance-v-2-instance-service-remove-trusted-domain.api.mdx) instead.
 	//
 	// Removes a domain from the list configured for this ZITADEL instance. These domains are trusted to be used as public hosts.
 	RemoveInstanceTrustedDomain(context.Context, *RemoveInstanceTrustedDomainRequest) (*RemoveInstanceTrustedDomainResponse, error)
@@ -2781,25 +2781,25 @@ type AdminServiceServer interface {
 	ListIAMMemberRoles(context.Context, *ListIAMMemberRolesRequest) (*ListIAMMemberRolesResponse, error)
 	// List IAM Members
 	//
-	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-list-administrators.api.mdx) instead.
+	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the instance level, matching the search queries. The search queries will be AND linked.
 	ListIAMMembers(context.Context, *ListIAMMembersRequest) (*ListIAMMembersResponse, error)
 	// Add IAM Member
 	//
-	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-create-administrator.api.mdx) instead.
+	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list with one or multiple roles.
 	AddIAMMember(context.Context, *AddIAMMemberRequest) (*AddIAMMemberResponse, error)
 	// Update IAM Member
 	//
-	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-update-administrator.api.mdx) instead.
+	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateIAMMember(context.Context, *UpdateIAMMemberRequest) (*UpdateIAMMemberResponse, error)
 	// Remove IAM Member
 	//
-	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-beta-internal-permission-service-delete-administrator.api.mdx) instead.
+	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
 	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (organization, project).
 	RemoveIAMMember(context.Context, *RemoveIAMMemberRequest) (*RemoveIAMMemberResponse, error)

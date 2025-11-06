@@ -37,12 +37,16 @@ const (
 type InstanceServiceClient interface {
 	// Delete Instance
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Deletes an instance with the given ID.
 	//
 	// Required permissions:
 	//   - `system.instance.delete`
 	DeleteInstance(ctx context.Context, in *DeleteInstanceRequest, opts ...grpc.CallOption) (*DeleteInstanceResponse, error)
 	// Get Instance
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the instance in the current context.
 	//
@@ -53,6 +57,8 @@ type InstanceServiceClient interface {
 	GetInstance(ctx context.Context, in *GetInstanceRequest, opts ...grpc.CallOption) (*GetInstanceResponse, error)
 	// Update Instance
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Updates instance in context with the given name.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -61,6 +67,8 @@ type InstanceServiceClient interface {
 	//   - `iam.write`
 	UpdateInstance(ctx context.Context, in *UpdateInstanceRequest, opts ...grpc.CallOption) (*UpdateInstanceResponse, error)
 	// List Instances
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Lists instances matching the given query.
 	// The query can be used to filter either by instance ID or domain.
@@ -71,6 +79,8 @@ type InstanceServiceClient interface {
 	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesResponse, error)
 	// Add Custom Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Adds a custom domain to the instance in context.
 	//
 	// The instance_id in the input message will be used in the future
@@ -79,6 +89,8 @@ type InstanceServiceClient interface {
 	//   - `system.domain.write`
 	AddCustomDomain(ctx context.Context, in *AddCustomDomainRequest, opts ...grpc.CallOption) (*AddCustomDomainResponse, error)
 	// Remove Custom Domain
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Removes a custom domain from the instance.
 	//
@@ -89,6 +101,8 @@ type InstanceServiceClient interface {
 	RemoveCustomDomain(ctx context.Context, in *RemoveCustomDomainRequest, opts ...grpc.CallOption) (*RemoveCustomDomainResponse, error)
 	// List Custom Domains
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Lists custom domains of the instance.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -97,6 +111,8 @@ type InstanceServiceClient interface {
 	//   - `iam.read`
 	ListCustomDomains(ctx context.Context, in *ListCustomDomainsRequest, opts ...grpc.CallOption) (*ListCustomDomainsResponse, error)
 	// Add Trusted Domain
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Adds a trusted domain to the instance.
 	//
@@ -107,6 +123,8 @@ type InstanceServiceClient interface {
 	AddTrustedDomain(ctx context.Context, in *AddTrustedDomainRequest, opts ...grpc.CallOption) (*AddTrustedDomainResponse, error)
 	// Remove Trusted Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Removes a trusted domain from the instance.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -115,6 +133,8 @@ type InstanceServiceClient interface {
 	//   - `iam.write`
 	RemoveTrustedDomain(ctx context.Context, in *RemoveTrustedDomainRequest, opts ...grpc.CallOption) (*RemoveTrustedDomainResponse, error)
 	// List Trusted Domains
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Lists trusted domains of the instance.
 	//
@@ -229,12 +249,16 @@ func (c *instanceServiceClient) ListTrustedDomains(ctx context.Context, in *List
 type InstanceServiceServer interface {
 	// Delete Instance
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Deletes an instance with the given ID.
 	//
 	// Required permissions:
 	//   - `system.instance.delete`
 	DeleteInstance(context.Context, *DeleteInstanceRequest) (*DeleteInstanceResponse, error)
 	// Get Instance
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the instance in the current context.
 	//
@@ -245,6 +269,8 @@ type InstanceServiceServer interface {
 	GetInstance(context.Context, *GetInstanceRequest) (*GetInstanceResponse, error)
 	// Update Instance
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Updates instance in context with the given name.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -253,6 +279,8 @@ type InstanceServiceServer interface {
 	//   - `iam.write`
 	UpdateInstance(context.Context, *UpdateInstanceRequest) (*UpdateInstanceResponse, error)
 	// List Instances
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Lists instances matching the given query.
 	// The query can be used to filter either by instance ID or domain.
@@ -263,6 +291,8 @@ type InstanceServiceServer interface {
 	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesResponse, error)
 	// Add Custom Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Adds a custom domain to the instance in context.
 	//
 	// The instance_id in the input message will be used in the future
@@ -271,6 +301,8 @@ type InstanceServiceServer interface {
 	//   - `system.domain.write`
 	AddCustomDomain(context.Context, *AddCustomDomainRequest) (*AddCustomDomainResponse, error)
 	// Remove Custom Domain
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Removes a custom domain from the instance.
 	//
@@ -281,6 +313,8 @@ type InstanceServiceServer interface {
 	RemoveCustomDomain(context.Context, *RemoveCustomDomainRequest) (*RemoveCustomDomainResponse, error)
 	// List Custom Domains
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Lists custom domains of the instance.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -289,6 +323,8 @@ type InstanceServiceServer interface {
 	//   - `iam.read`
 	ListCustomDomains(context.Context, *ListCustomDomainsRequest) (*ListCustomDomainsResponse, error)
 	// Add Trusted Domain
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Adds a trusted domain to the instance.
 	//
@@ -299,6 +335,8 @@ type InstanceServiceServer interface {
 	AddTrustedDomain(context.Context, *AddTrustedDomainRequest) (*AddTrustedDomainResponse, error)
 	// Remove Trusted Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Removes a trusted domain from the instance.
 	//
 	// The instance_id in the input message will be used in the future.
@@ -307,6 +345,8 @@ type InstanceServiceServer interface {
 	//   - `iam.write`
 	RemoveTrustedDomain(context.Context, *RemoveTrustedDomainRequest) (*RemoveTrustedDomainResponse, error)
 	// List Trusted Domains
+	//
+	// Deprecated: please move to the corresponding endpoint under instance service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Lists trusted domains of the instance.
 	//

@@ -40,9 +40,6 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	CreateWebKey(ctx context.Context, in *CreateWebKeyRequest, opts ...grpc.CallOption) (*CreateWebKeyResponse, error)
 	// Activate Web Key
 	//
@@ -53,9 +50,6 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ActivateWebKey(ctx context.Context, in *ActivateWebKeyRequest, opts ...grpc.CallOption) (*ActivateWebKeyResponse, error)
 	// Delete Web Key
 	//
@@ -68,9 +62,6 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.delete`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	DeleteWebKey(ctx context.Context, in *DeleteWebKeyRequest, opts ...grpc.CallOption) (*DeleteWebKeyResponse, error)
 	// List Web Keys
 	//
@@ -78,9 +69,6 @@ type WebKeyServiceClient interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.read`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ListWebKeys(ctx context.Context, in *ListWebKeysRequest, opts ...grpc.CallOption) (*ListWebKeysResponse, error)
 }
 
@@ -143,9 +131,6 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	CreateWebKey(context.Context, *CreateWebKeyRequest) (*CreateWebKeyResponse, error)
 	// Activate Web Key
 	//
@@ -156,9 +141,6 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.write`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ActivateWebKey(context.Context, *ActivateWebKeyRequest) (*ActivateWebKeyResponse, error)
 	// Delete Web Key
 	//
@@ -171,9 +153,6 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.delete`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	DeleteWebKey(context.Context, *DeleteWebKeyRequest) (*DeleteWebKeyResponse, error)
 	// List Web Keys
 	//
@@ -181,9 +160,6 @@ type WebKeyServiceServer interface {
 	//
 	// Required permission:
 	//   - `iam.web_key.read`
-	//
-	// Required feature flag:
-	//   - `web_key`
 	ListWebKeys(context.Context, *ListWebKeysRequest) (*ListWebKeysResponse, error)
 	mustEmbedUnimplementedWebKeyServiceServer()
 }

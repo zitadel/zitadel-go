@@ -387,7 +387,7 @@ type RSA struct {
 
 	// Bit size of the RSA key. Default is 2048 bits.
 	Bits RSABits `protobuf:"varint,1,opt,name=bits,proto3,enum=zitadel.webkey.v2.RSABits" json:"bits,omitempty"`
-	// Signing algrithm used. Default is SHA256.
+	// Signing algorithm used. Default is SHA256.
 	Hasher RSAHasher `protobuf:"varint,2,opt,name=hasher,proto3,enum=zitadel.webkey.v2.RSAHasher" json:"hasher,omitempty"`
 }
 
