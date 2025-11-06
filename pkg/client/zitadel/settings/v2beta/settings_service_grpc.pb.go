@@ -37,26 +37,48 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SettingsServiceClient interface {
 	// Get basic information over the instance
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetGeneralSettings(ctx context.Context, in *GetGeneralSettingsRequest, opts ...grpc.CallOption) (*GetGeneralSettingsResponse, error)
 	// Get the login settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLoginSettings(ctx context.Context, in *GetLoginSettingsRequest, opts ...grpc.CallOption) (*GetLoginSettingsResponse, error)
 	// Get the current active identity providers
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetActiveIdentityProviders(ctx context.Context, in *GetActiveIdentityProvidersRequest, opts ...grpc.CallOption) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetPasswordComplexitySettings(ctx context.Context, in *GetPasswordComplexitySettingsRequest, opts ...grpc.CallOption) (*GetPasswordComplexitySettingsResponse, error)
 	// Get the password expiry settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetBrandingSettings(ctx context.Context, in *GetBrandingSettingsRequest, opts ...grpc.CallOption) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetDomainSettings(ctx context.Context, in *GetDomainSettingsRequest, opts ...grpc.CallOption) (*GetDomainSettingsResponse, error)
 	// Get the legal and support settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLegalAndSupportSettings(ctx context.Context, in *GetLegalAndSupportSettingsRequest, opts ...grpc.CallOption) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLockoutSettings(ctx context.Context, in *GetLockoutSettingsRequest, opts ...grpc.CallOption) (*GetLockoutSettingsResponse, error)
 	// Get the security settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
 }
 
@@ -172,26 +194,48 @@ func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *Set
 // for forward compatibility
 type SettingsServiceServer interface {
 	// Get basic information over the instance
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetGeneralSettings(context.Context, *GetGeneralSettingsRequest) (*GetGeneralSettingsResponse, error)
 	// Get the login settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLoginSettings(context.Context, *GetLoginSettingsRequest) (*GetLoginSettingsResponse, error)
 	// Get the current active identity providers
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetActiveIdentityProviders(context.Context, *GetActiveIdentityProvidersRequest) (*GetActiveIdentityProvidersResponse, error)
 	// Get the password complexity settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error)
 	// Get the password expiry settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error)
 	// Get the current active branding settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error)
 	// Get the domain settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetDomainSettings(context.Context, *GetDomainSettingsRequest) (*GetDomainSettingsResponse, error)
 	// Get the legal and support settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLegalAndSupportSettings(context.Context, *GetLegalAndSupportSettingsRequest) (*GetLegalAndSupportSettingsResponse, error)
 	// Get the lockout settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error)
 	// Get the security settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
+	//
+	// Deprecated: please move to the corresponding endpoint under settings service v2. This endpoint will be removed with the next major version of ZITADEL.
 	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
 	mustEmbedUnimplementedSettingsServiceServer()
 }

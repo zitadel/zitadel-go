@@ -17,6 +17,7 @@ func NewClient(ctx context.Context, issuer, api string, scopes []string, options
 	if err != nil {
 		return nil, err
 	}
+
 	return &Client{
 		Connection:          conn,
 		ActionServiceClient: action.NewActionServiceClient(conn.ClientConn),
