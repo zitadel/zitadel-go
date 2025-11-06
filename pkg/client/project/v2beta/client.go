@@ -1,15 +1,15 @@
-package v2
+package v2beta
 
 import (
 	"context"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
+	project "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/project/v2beta"
 )
 
 type Client struct {
 	Connection *zitadel.Connection
-	action.ActionServiceClient
+	project.ProjectServiceClient
 }
 
 func NewClient(ctx context.Context, issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
@@ -19,7 +19,7 @@ func NewClient(ctx context.Context, issuer, api string, scopes []string, options
 	}
 
 	return &Client{
-		Connection:          conn,
-		ActionServiceClient: action.NewActionServiceClient(conn.ClientConn),
+		Connection:           conn,
+		ProjectServiceClient: project.NewProjectServiceClient(conn.ClientConn),
 	}, nil
 }

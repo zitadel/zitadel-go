@@ -1,15 +1,15 @@
-package v2
+package v2beta
 
 import (
 	"context"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
+	internal_permission "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/internal_permission/v2beta"
 )
 
 type Client struct {
 	Connection *zitadel.Connection
-	action.ActionServiceClient
+	internal_permission.InternalPermissionServiceClient
 }
 
 func NewClient(ctx context.Context, issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
@@ -19,7 +19,7 @@ func NewClient(ctx context.Context, issuer, api string, scopes []string, options
 	}
 
 	return &Client{
-		Connection:          conn,
-		ActionServiceClient: action.NewActionServiceClient(conn.ClientConn),
+		Connection:                      conn,
+		InternalPermissionServiceClient: internal_permission.NewInternalPermissionServiceClient(conn.ClientConn),
 	}, nil
 }

@@ -127,6 +127,8 @@ protoc \
     --go_opt=Mzitadel/org/v2/org_service.proto=${ZITADEL_IMPORT}/org/v2 \
     --go_opt=Mzitadel/saml/v2/authorization.proto=${ZITADEL_IMPORT}/saml/v2 \
     --go_opt=Mzitadel/saml/v2/saml_service.proto=${ZITADEL_IMPORT}/saml/v2 \
+    --go_opt=Mzitadel/authorization/v2/authorization.proto=${ZITADEL_IMPORT}/authorization/v2 \
+    --go_opt=Mzitadel/authorization/v2/authorization_service.proto=${ZITADEL_IMPORT}/authorization/v2 \
     --go_opt=Mzitadel/settings/v2/branding_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/domain_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
     --go_opt=Mzitadel/settings/v2/legal_settings.proto=${ZITADEL_IMPORT}/settings/v2 \
@@ -153,6 +155,18 @@ protoc \
     --go_opt=Mzitadel/action/v2/query.proto=${ZITADEL_IMPORT}/action/v2 \
     --go_opt=Mzitadel/action/v2/target.proto=${ZITADEL_IMPORT}/action/v2 \
     --go_opt=Mzitadel/action/v2/action_service.proto=${ZITADEL_IMPORT}/action/v2 \
+    --go_opt=Mzitadel/application/v2/api.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/application/v2/application.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/application/v2/application_service.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/application/v2/login.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/application/v2/oidc.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/application/v2/saml.proto=${ZITADEL_IMPORT}/application/v2 \
+		--go_opt=Mzitadel/instance/v2/instance.proto=${ZITADEL_IMPORT}/instance/v2 \
+		--go_opt=Mzitadel/instance/v2/instance_service.proto=${ZITADEL_IMPORT}/instance/v2 \
+		--go_opt=Mzitadel/internal_permission/v2/internal_permission_service.proto=${ZITADEL_IMPORT}/internal_permission/v2 \
+		--go_opt=Mzitadel/internal_permission/v2/query.proto=${ZITADEL_IMPORT}/internal_permission/v2 \
+		--go_opt=Mzitadel/project/v2/project_service.proto=${ZITADEL_IMPORT}/project/v2 \
+		--go_opt=Mzitadel/project/v2/query.proto=${ZITADEL_IMPORT}/project/v2 \
     --go_out /go/src \
     --go-grpc_out /go/src \
     $(find /proto/include/zitadel -iname *.proto)
