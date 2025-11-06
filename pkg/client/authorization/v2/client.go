@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel"
-	"github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
+	authz "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/authorization/v2"
 )
 
 type Client struct {
 	Connection *zitadel.Connection
-	action.ActionServiceClient
+	authz.AuthorizationServiceClient
 }
 
 func NewClient(ctx context.Context, issuer, api string, scopes []string, options ...zitadel.Option) (*Client, error) {
@@ -19,7 +19,7 @@ func NewClient(ctx context.Context, issuer, api string, scopes []string, options
 	}
 
 	return &Client{
-		Connection:          conn,
-		ActionServiceClient: action.NewActionServiceClient(conn.ClientConn),
+		Connection:                 conn,
+		AuthorizationServiceClient: authz.NewAuthorizationServiceClient(conn.ClientConn),
 	}, nil
 }

@@ -103,6 +103,10 @@ RUN ./build/zitadel/generate-grpc-client.sh ${PROJECT_PATH} \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/idp/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/idp/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/webkey/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/webkey/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/feature/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/feature/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/application/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/application/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/instance/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/instance/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/internal_permission/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/internal_permission/v2/ \
+    && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/project/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/project/v2/ \
     && mv /go/src/github.com/zitadel/zitadel/pkg/grpc/action/v2/*.pb.go /zitadel-api/go/src/${PROJECT_PATH}/zitadel/action/v2/
 
 #######################
