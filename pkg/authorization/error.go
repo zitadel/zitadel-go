@@ -71,3 +71,37 @@ func (e *PermissionDeniedErr) Is(target error) bool {
 func (e *PermissionDeniedErr) Unwrap() error {
 	return e.err
 }
+
+// ServiceUnavailableErr is used to indicate that the authorization service is temporarily unavailable (5xx errors).
+// This allows downstream code to distinguish between client errors (4xx) and server errors (5xx).
+type ServiceUnavailableErr struct {
+	err error
+}
+
+func NewErrorServiceUnavailable(err error) *ServiceUnavailableErr {
+	return &ServiceUnavailableErr{
+		err: err,
+	}
+}
+
+func (e *ServiceUnavailableErr) Error() string {
+	if e.err == nil {
+		return "service unavailable"
+	}
+	return e.err.Error()
+}
+
+func (e *ServiceUnavailableErr) Is(target error) bool {
+	t, ok := target.(*ServiceUnavailableErr)
+	if !ok {
+		return false
+	}
+	if t.err == nil {
+		return true
+	}
+	return errors.Is(e.err, t.err)
+}
+
+func (e *ServiceUnavailableErr) Unwrap() error {
+	return e.err
+}
