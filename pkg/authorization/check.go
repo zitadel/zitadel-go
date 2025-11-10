@@ -140,30 +140,15 @@ func isServerError(err error) bool {
 	errorMsg := err.Error()
 
 	// Check for explicit 5xx status codes in the error message
+	// Note: When errors are wrapped with fmt.Errorf("%w", ...), the outer error's
+	// Error() method includes the wrapped error's message, so checking the outer
+	// error message is sufficient.
 	statusCodeRegex := regexp.MustCompile(`\b(5\d{2})\b`)
 	matches := statusCodeRegex.FindStringSubmatch(errorMsg)
 	if len(matches) > 1 {
-		if code, parseErr := strconv.Atoi(matches[1]); parseErr == nil {
-			if code >= 500 && code < 600 {
-				return true
-			}
+		if _, parseErr := strconv.Atoi(matches[1]); parseErr == nil {
+			return true
 		}
-	}
-
-	// Check wrapped errors
-	var unwrappedErr error = err
-	for unwrappedErr != nil {
-		if unwrappedMsg := unwrappedErr.Error(); unwrappedMsg != errorMsg {
-			matches := statusCodeRegex.FindStringSubmatch(unwrappedMsg)
-			if len(matches) > 1 {
-				if code, parseErr := strconv.Atoi(matches[1]); parseErr == nil {
-					if code >= 500 && code < 600 {
-						return true
-					}
-				}
-			}
-		}
-		unwrappedErr = errors.Unwrap(unwrappedErr)
 	}
 
 	return false
