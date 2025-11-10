@@ -31,14 +31,24 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SessionServiceClient interface {
 	// Search sessions
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error)
 	// GetSession a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionResponse, error)
 	// Create a new session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionResponse, error)
 	// Update a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	SetSession(ctx context.Context, in *SetSessionRequest, opts ...grpc.CallOption) (*SetSessionResponse, error)
 	// Terminate a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	DeleteSession(ctx context.Context, in *DeleteSessionRequest, opts ...grpc.CallOption) (*DeleteSessionResponse, error)
 }
 
@@ -100,14 +110,24 @@ func (c *sessionServiceClient) DeleteSession(ctx context.Context, in *DeleteSess
 // for forward compatibility
 type SessionServiceServer interface {
 	// Search sessions
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error)
 	// GetSession a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	GetSession(context.Context, *GetSessionRequest) (*GetSessionResponse, error)
 	// Create a new session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error)
 	// Update a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	SetSession(context.Context, *SetSessionRequest) (*SetSessionResponse, error)
 	// Terminate a session
+	//
+	// Deprecated: please move to the corresponding endpoint under session service v2. This endpoint will be removed with the next major version of ZITADEL.
 	DeleteSession(context.Context, *DeleteSessionRequest) (*DeleteSessionResponse, error)
 	mustEmbedUnimplementedSessionServiceServer()
 }

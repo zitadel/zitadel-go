@@ -38,27 +38,108 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SettingsServiceClient interface {
-	// Get basic information over the instance
+	// Get General Settings
+	//
+	// Get basic information of the instance like the default organization, default language and supported languages.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetGeneralSettings(ctx context.Context, in *GetGeneralSettingsRequest, opts ...grpc.CallOption) (*GetGeneralSettingsResponse, error)
-	// Get the login settings
+	// Get Login Settings
+	//
+	// Get the login settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLoginSettings(ctx context.Context, in *GetLoginSettingsRequest, opts ...grpc.CallOption) (*GetLoginSettingsResponse, error)
-	// Get the current active identity providers
+	// Get Active Identity Providers
+	//
+	// Get the current active identity providers for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned identity providers will fall back to the active instance identity providers
+	// if not explicitly set on the organization.
+	//
+	// Optionally, filter the identity providers by their allowed actions:
+	//   - creation_allowed: only return identity providers that are allowed for user creation
+	//   - linking_allowed: only return identity providers that are allowed for linking to existing users
+	//   - auto_creation: only return identity providers that are allowed for automatic user creation
+	//   - auto_linking: only return identity providers that are allowed for automatic linking to existing users
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetActiveIdentityProviders(ctx context.Context, in *GetActiveIdentityProvidersRequest, opts ...grpc.CallOption) (*GetActiveIdentityProvidersResponse, error)
-	// Get the password complexity settings
+	// Get Password Complexity Settings
+	//
+	// Get the password complexity settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetPasswordComplexitySettings(ctx context.Context, in *GetPasswordComplexitySettingsRequest, opts ...grpc.CallOption) (*GetPasswordComplexitySettingsResponse, error)
-	// Get the password expiry settings
+	// Get Password Expiry Settings
+	//
+	// Get the password expiry settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetPasswordExpirySettings(ctx context.Context, in *GetPasswordExpirySettingsRequest, opts ...grpc.CallOption) (*GetPasswordExpirySettingsResponse, error)
-	// Get the current active branding settings
+	// Get Branding Settings
+	//
+	// Get the current active branding settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetBrandingSettings(ctx context.Context, in *GetBrandingSettingsRequest, opts ...grpc.CallOption) (*GetBrandingSettingsResponse, error)
-	// Get the domain settings
+	// Get Domain Settings
+	//
+	// Get the domain settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetDomainSettings(ctx context.Context, in *GetDomainSettingsRequest, opts ...grpc.CallOption) (*GetDomainSettingsResponse, error)
-	// Get the legal and support settings
+	// Get Legal and Support Settings
+	//
+	// Get the legal and support settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLegalAndSupportSettings(ctx context.Context, in *GetLegalAndSupportSettingsRequest, opts ...grpc.CallOption) (*GetLegalAndSupportSettingsResponse, error)
-	// Get the lockout settings
+	// Get Lockout Settings
+	//
+	// Get the lockout settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Lockout settings define how many failed attempts are allowed before a user is locked out.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLockoutSettings(ctx context.Context, in *GetLockoutSettingsRequest, opts ...grpc.CallOption) (*GetLockoutSettingsResponse, error)
-	// Get the security settings
+	// Get Security Settings
+	//
+	// Get the security settings of the ZITADEL instance.
+	// Security settings include settings like enabling impersonation and embedded iframe settings.
+	//
+	// Required permissions:
+	//   - `iam.policy.read`
 	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
-	// Set the security settings
+	// Set Security Settings
+	//
+	// Set the security settings of the instance.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
 	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
 	// Get Hosted Login Translation
 	//
@@ -213,27 +294,108 @@ func (c *settingsServiceClient) SetHostedLoginTranslation(ctx context.Context, i
 // All implementations must embed UnimplementedSettingsServiceServer
 // for forward compatibility
 type SettingsServiceServer interface {
-	// Get basic information over the instance
+	// Get General Settings
+	//
+	// Get basic information of the instance like the default organization, default language and supported languages.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetGeneralSettings(context.Context, *GetGeneralSettingsRequest) (*GetGeneralSettingsResponse, error)
-	// Get the login settings
+	// Get Login Settings
+	//
+	// Get the login settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLoginSettings(context.Context, *GetLoginSettingsRequest) (*GetLoginSettingsResponse, error)
-	// Get the current active identity providers
+	// Get Active Identity Providers
+	//
+	// Get the current active identity providers for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned identity providers will fall back to the active instance identity providers
+	// if not explicitly set on the organization.
+	//
+	// Optionally, filter the identity providers by their allowed actions:
+	//   - creation_allowed: only return identity providers that are allowed for user creation
+	//   - linking_allowed: only return identity providers that are allowed for linking to existing users
+	//   - auto_creation: only return identity providers that are allowed for automatic user creation
+	//   - auto_linking: only return identity providers that are allowed for automatic linking to existing users
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetActiveIdentityProviders(context.Context, *GetActiveIdentityProvidersRequest) (*GetActiveIdentityProvidersResponse, error)
-	// Get the password complexity settings
+	// Get Password Complexity Settings
+	//
+	// Get the password complexity settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetPasswordComplexitySettings(context.Context, *GetPasswordComplexitySettingsRequest) (*GetPasswordComplexitySettingsResponse, error)
-	// Get the password expiry settings
+	// Get Password Expiry Settings
+	//
+	// Get the password expiry settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetPasswordExpirySettings(context.Context, *GetPasswordExpirySettingsRequest) (*GetPasswordExpirySettingsResponse, error)
-	// Get the current active branding settings
+	// Get Branding Settings
+	//
+	// Get the current active branding settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetBrandingSettings(context.Context, *GetBrandingSettingsRequest) (*GetBrandingSettingsResponse, error)
-	// Get the domain settings
+	// Get Domain Settings
+	//
+	// Get the domain settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetDomainSettings(context.Context, *GetDomainSettingsRequest) (*GetDomainSettingsResponse, error)
-	// Get the legal and support settings
+	// Get Legal and Support Settings
+	//
+	// Get the legal and support settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLegalAndSupportSettings(context.Context, *GetLegalAndSupportSettingsRequest) (*GetLegalAndSupportSettingsResponse, error)
-	// Get the lockout settings
+	// Get Lockout Settings
+	//
+	// Get the lockout settings for the requested context.
+	// This can be the instance or an organization. In case of an organization,
+	// the returned settings will fall back to the instance settings if not explicitly set on the organization.
+	//
+	// Lockout settings define how many failed attempts are allowed before a user is locked out.
+	//
+	// Required permissions:
+	//   - `policy.read`
 	GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error)
-	// Get the security settings
+	// Get Security Settings
+	//
+	// Get the security settings of the ZITADEL instance.
+	// Security settings include settings like enabling impersonation and embedded iframe settings.
+	//
+	// Required permissions:
+	//   - `iam.policy.read`
 	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
-	// Set the security settings
+	// Set Security Settings
+	//
+	// Set the security settings of the instance.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
 	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
 	// Get Hosted Login Translation
 	//

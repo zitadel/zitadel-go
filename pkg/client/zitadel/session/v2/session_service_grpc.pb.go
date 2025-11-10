@@ -30,15 +30,60 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SessionServiceClient interface {
-	// Search sessions
+	// List sessions
+	//
+	// Searches for sessions matching the given query. You can search by session ID, user ID,
+	// creation date, creator, user agent or expiration date.
+	//
+	// Required permissions:
+	//   - `session.read`
+	//   - no permission required to search for own sessions
 	ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error)
-	// GetSession a session
+	// Get Session
+	//
+	// Retrieve a session by its ID. Returns all information about the session, including
+	// the factors that were verified, the metadata, user agent information and possible expiration date.
+	// The session token is required unless either of the following conditions is met:
+	//   - the caller created the session
+	//   - the authenticated user requests their own session (checked user)
+	//   - the security token provided in the authorization header has the same user agent as the session
+	//   - the caller is granted the permission session.read permission on either the instance or on the checked user's organization
+	//
+	// Required permissions:
+	//   - `session.read`
+	//   - no permission required to get own sessions (see above) or when providing the current session token
 	GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionResponse, error)
-	// Create a new session
+	// Create Session
+	//
+	// Create a new session with initial checks, metadata and challenges for further verification.
+	// A token will be returned, which is required for using the session as authentication, e.g.
+	// when authenticating an OIDC auth request or SAML request.
+	// Additionally, the session token can be used as OAuth2 access token to authenticate against
+	// the ZITADEL APIs.
+	//
+	// Required permissions:
+	//   - `session.write`
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionResponse, error)
-	// Update a session
+	// Set Session
+	//
+	// Update an existing session with new information like additional checks or metadata
+	// or request additional challenges.
+	// A new session token will be returned. Note that the previous token will be invalidated.
+	//
+	// Required permissions:
+	//   - `session.write`
 	SetSession(ctx context.Context, in *SetSessionRequest, opts ...grpc.CallOption) (*SetSessionResponse, error)
-	// Terminate a session
+	// DeleteSession
+	//
+	// Terminate an existing session. This invalidates the session and its token.
+	// The session can no longer be used for the authentication of other resources
+	// or to authenticate against the ZITADEL APIs.
+	//
+	// You can only terminate your own session, unless you are granted the `session.delete` permission.
+	//
+	// Required permissions:
+	//   - `session.delete`
+	//   - no permission required for own sessions or when providing the current session token
 	DeleteSession(ctx context.Context, in *DeleteSessionRequest, opts ...grpc.CallOption) (*DeleteSessionResponse, error)
 }
 
@@ -99,15 +144,60 @@ func (c *sessionServiceClient) DeleteSession(ctx context.Context, in *DeleteSess
 // All implementations must embed UnimplementedSessionServiceServer
 // for forward compatibility
 type SessionServiceServer interface {
-	// Search sessions
+	// List sessions
+	//
+	// Searches for sessions matching the given query. You can search by session ID, user ID,
+	// creation date, creator, user agent or expiration date.
+	//
+	// Required permissions:
+	//   - `session.read`
+	//   - no permission required to search for own sessions
 	ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error)
-	// GetSession a session
+	// Get Session
+	//
+	// Retrieve a session by its ID. Returns all information about the session, including
+	// the factors that were verified, the metadata, user agent information and possible expiration date.
+	// The session token is required unless either of the following conditions is met:
+	//   - the caller created the session
+	//   - the authenticated user requests their own session (checked user)
+	//   - the security token provided in the authorization header has the same user agent as the session
+	//   - the caller is granted the permission session.read permission on either the instance or on the checked user's organization
+	//
+	// Required permissions:
+	//   - `session.read`
+	//   - no permission required to get own sessions (see above) or when providing the current session token
 	GetSession(context.Context, *GetSessionRequest) (*GetSessionResponse, error)
-	// Create a new session
+	// Create Session
+	//
+	// Create a new session with initial checks, metadata and challenges for further verification.
+	// A token will be returned, which is required for using the session as authentication, e.g.
+	// when authenticating an OIDC auth request or SAML request.
+	// Additionally, the session token can be used as OAuth2 access token to authenticate against
+	// the ZITADEL APIs.
+	//
+	// Required permissions:
+	//   - `session.write`
 	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error)
-	// Update a session
+	// Set Session
+	//
+	// Update an existing session with new information like additional checks or metadata
+	// or request additional challenges.
+	// A new session token will be returned. Note that the previous token will be invalidated.
+	//
+	// Required permissions:
+	//   - `session.write`
 	SetSession(context.Context, *SetSessionRequest) (*SetSessionResponse, error)
-	// Terminate a session
+	// DeleteSession
+	//
+	// Terminate an existing session. This invalidates the session and its token.
+	// The session can no longer be used for the authentication of other resources
+	// or to authenticate against the ZITADEL APIs.
+	//
+	// You can only terminate your own session, unless you are granted the `session.delete` permission.
+	//
+	// Required permissions:
+	//   - `session.delete`
+	//   - no permission required for own sessions or when providing the current session token
 	DeleteSession(context.Context, *DeleteSessionRequest) (*DeleteSessionResponse, error)
 	mustEmbedUnimplementedSessionServiceServer()
 }

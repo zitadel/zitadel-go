@@ -60,7 +60,7 @@ type OrganizationServiceClient interface {
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	//
 	// Required permission:
-	//   - `iam.read`
+	//   - `org.read`
 	//
 	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
@@ -302,7 +302,7 @@ type OrganizationServiceServer interface {
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	//
 	// Required permission:
-	//   - `iam.read`
+	//   - `org.read`
 	//
 	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
