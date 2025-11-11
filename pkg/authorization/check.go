@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
@@ -81,6 +83,10 @@ func (a *Authorizer[T]) CheckAuthorization(ctx context.Context, token string, op
 	}
 	authCtx, err = a.verifier.CheckAuthorization(ctx, token)
 	if err != nil || !authCtx.IsAuthorized() {
+		if err != nil && isServerError(err) {
+			a.logger.With("error", err).Log(ctx, slog.LevelWarn, "service unavailable")
+			return t, NewErrorServiceUnavailable(err)
+		}
 		a.logger.With("error", err).Log(ctx, slog.LevelWarn, "unauthorized")
 		return t, NewErrorUnauthorized(err)
 	}
@@ -122,4 +128,28 @@ func WithRole(role string) CheckOption {
 			return fmt.Errorf("%w: `%s`", ErrMissingRole, role)
 		})
 	}
+}
+
+// isServerError checks if an error indicates a 5xx server error from the introspection endpoint.
+// It looks for 5xx status codes in the error message or common server error indicators.
+func isServerError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errorMsg := err.Error()
+
+	// Check for explicit 5xx status codes in the error message
+	// Note: When errors are wrapped with fmt.Errorf("%w", ...), the outer error's
+	// Error() method includes the wrapped error's message, so checking the outer
+	// error message is sufficient.
+	statusCodeRegex := regexp.MustCompile(`\b(5\d{2})\b`)
+	matches := statusCodeRegex.FindStringSubmatch(errorMsg)
+	if len(matches) > 1 {
+		if _, parseErr := strconv.Atoi(matches[1]); parseErr == nil {
+			return true
+		}
+	}
+
+	return false
 }
