@@ -132,6 +132,7 @@ type testCtx struct {
 	userID                      string
 	isGrantedRole               bool
 	isGrantedRoleInOrganization bool
+	isGrantedRoleInProject      bool
 	token                       string
 }
 
@@ -176,6 +177,13 @@ func (t *testCtx) IsGrantedRoleInOrganization(_, _ string) bool {
 		return false
 	}
 	return t.isGrantedRoleInOrganization
+}
+
+func (t *testCtx) IsGrantedRoleInProject(_, _, _ string) bool {
+	if t == nil {
+		return false
+	}
+	return t.isGrantedRoleInProject
 }
 
 func TestCheckForEmptyorMalformedToken(t *testing.T) {
