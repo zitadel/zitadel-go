@@ -2,6 +2,8 @@ package authorization
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log/slog"
 	"testing"
 
@@ -282,4 +284,107 @@ func TestCheckForEmptyorMalformedToken(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAuthorizer_CheckAuthorization_ServerError(t *testing.T) {
+	tests := []struct {
+		name           string
+		verifierErr    error
+		wantServiceErr bool
+		wantUnauthErr  bool
+		description    string
+	}{
+		{
+			name:           "503 Service Unavailable error returns ServiceUnavailableErr",
+			verifierErr:    fmt.Errorf("token introspection failed: http status not ok: 503 Service Unavailable"),
+			wantServiceErr: true,
+			wantUnauthErr:  false,
+			description:    "503 errors should be returned as ServiceUnavailableErr, not UnauthorizedErr",
+		},
+		{
+			name:           "500 Internal Server Error returns ServiceUnavailableErr",
+			verifierErr:    fmt.Errorf("token introspection failed: http status not ok: 500 Internal Server Error"),
+			wantServiceErr: true,
+			wantUnauthErr:  false,
+			description:    "500 errors should be returned as ServiceUnavailableErr",
+		},
+		{
+			name:           "502 Bad Gateway returns ServiceUnavailableErr",
+			verifierErr:    fmt.Errorf("token introspection failed: http status not ok: 502 Bad Gateway"),
+			wantServiceErr: true,
+			wantUnauthErr:  false,
+			description:    "502 errors should be returned as ServiceUnavailableErr",
+		},
+		{
+			name:           "401 Unauthorized error returns UnauthorizedErr",
+			verifierErr:    fmt.Errorf("token introspection failed: http status not ok: 401 Unauthorized"),
+			wantServiceErr: false,
+			wantUnauthErr:  true,
+			description:    "401 errors should be returned as UnauthorizedErr",
+		},
+		{
+			name:           "403 Forbidden error returns UnauthorizedErr",
+			verifierErr:    fmt.Errorf("token introspection failed: http status not ok: 403 Forbidden"),
+			wantServiceErr: false,
+			wantUnauthErr:  true,
+			description:    "403 errors should be returned as UnauthorizedErr",
+		},
+		{
+			name:           "generic error without status code returns UnauthorizedErr",
+			verifierErr:    fmt.Errorf("token introspection failed: some other error"),
+			wantServiceErr: false,
+			wantUnauthErr:  true,
+			description:    "Errors without 5xx status codes should default to UnauthorizedErr",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			authorizer := Authorizer[*testCtx]{
+				verifier: &testVerifier[*testCtx]{
+					err: tt.verifierErr,
+				},
+				logger: slog.Default(),
+			}
+
+			_, err := authorizer.CheckAuthorization(context.Background(), "Bearer test-token")
+
+			assert.Error(t, err, "expected an error")
+
+			// Check for ServiceUnavailableErr
+			var serviceUnavailableErr *ServiceUnavailableErr
+			if tt.wantServiceErr {
+				assert.ErrorAs(t, err, &serviceUnavailableErr, tt.description)
+			} else {
+				assert.False(t, errors.As(err, &serviceUnavailableErr), "should NOT be ServiceUnavailableErr: "+tt.description)
+			}
+
+			// Check for UnauthorizedErr
+			var unauthorizedErr *UnauthorizedErr
+			if tt.wantUnauthErr {
+				assert.ErrorAs(t, err, &unauthorizedErr, tt.description)
+			} else {
+				assert.False(t, errors.As(err, &unauthorizedErr), "should NOT be UnauthorizedErr: "+tt.description)
+			}
+		})
+	}
+}
+
+func TestAuthorizer_CheckAuthorization_ServerErrorWithWrappedError(t *testing.T) {
+	// Test that wrapped errors with 5xx status codes are detected
+	baseErr := fmt.Errorf("http status not ok: 503 Service Unavailable")
+	wrappedErr := fmt.Errorf("token introspection failed: %w", baseErr)
+
+	authorizer := Authorizer[*testCtx]{
+		verifier: &testVerifier[*testCtx]{
+			err: wrappedErr,
+		},
+		logger: slog.Default(),
+	}
+
+	_, err := authorizer.CheckAuthorization(context.Background(), "Bearer test-token")
+
+	assert.Error(t, err)
+	var serviceUnavailableErr *ServiceUnavailableErr
+	assert.ErrorAs(t, err, &serviceUnavailableErr, "wrapped 503 error should be detected as ServiceUnavailableErr")
 }
