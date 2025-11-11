@@ -14,6 +14,7 @@ type Ctx interface {
 	OrganizationID() string
 	UserID() string
 	IsGrantedRole(role string) bool
+	IsGrantedRoleInProject(projectID, role, organizationID string) bool
 	IsGrantedRoleInOrganization(role, organizationID string) bool
 	SetToken(token string)
 	GetToken() string

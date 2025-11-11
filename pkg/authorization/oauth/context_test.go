@@ -9,18 +9,20 @@ import (
 
 func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 	tests := []struct {
-		name      string
-		ctx       *IntrospectionContext
-		projectID string
-		role      string
-		want      bool
+		name           string
+		ctx            *IntrospectionContext
+		projectID      string
+		role           string
+		organizationID string
+		want           bool
 	}{
 		{
-			name:      "nil context",
-			ctx:       nil,
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			name:           "nil context",
+			ctx:            nil,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "project claim does not exist",
@@ -30,9 +32,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					Claims: map[string]interface{}{},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "project claim exists but role does not exist",
@@ -48,9 +51,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "role exists in project with organizations",
@@ -69,9 +73,54 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      true,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           true,
+		},
+		{
+			name: "role exists in project within given organization",
+			ctx: &IntrospectionContext{
+				IntrospectionResponse: oidc.IntrospectionResponse{
+					Active: true,
+					Claims: map[string]interface{}{
+						"urn:zitadel:iam:org:project:my_project:roles": map[string]interface{}{
+							"create": map[string]interface{}{
+								"302802686149969770": "zitadel_domain.com",
+							},
+							"read": map[string]interface{}{
+								"302802686149969770": "zitadel_domain.com",
+							},
+						},
+					},
+				},
+			},
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "302802686149969770",
+			want:           true,
+		},
+		{
+			name: "role exists in project within unknown organization",
+			ctx: &IntrospectionContext{
+				IntrospectionResponse: oidc.IntrospectionResponse{
+					Active: true,
+					Claims: map[string]interface{}{
+						"urn:zitadel:iam:org:project:my_project:roles": map[string]interface{}{
+							"create": map[string]interface{}{
+								"302802686149969770": "zitadel_domain.com",
+							},
+							"read": map[string]interface{}{
+								"302802686149969770": "zitadel_domain.com",
+							},
+						},
+					},
+				},
+			},
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "totallyrealorganizationid",
+			want:           false,
 		},
 		{
 			name: "role exists in project with multiple organizations",
@@ -88,9 +137,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      true,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           true,
 		},
 		{
 			name: "role exists but with empty organizations map",
@@ -104,9 +154,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "different project, same role name",
@@ -127,9 +178,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "another-project",
-			role:      "create",
-			want:      true,
+			projectID:      "another-project",
+			role:           "create",
+			organizationID: "",
+			want:           true,
 		},
 		{
 			name: "wrong project ID",
@@ -145,9 +197,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "wrong-project",
-			role:      "create",
-			want:      false,
+			projectID:      "wrong-project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "project claim is not a map",
@@ -159,9 +212,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "role value is not a map",
@@ -175,9 +229,10 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "create",
-			want:      false,
+			projectID:      "my_project",
+			role:           "create",
+			organizationID: "",
+			want:           false,
 		},
 		{
 			name: "read role from example JWT payload",
@@ -196,15 +251,16 @@ func TestIntrospectionContext_IsGrantedRoleInProject(t *testing.T) {
 					},
 				},
 			},
-			projectID: "my_project",
-			role:      "read",
-			want:      true,
+			projectID:      "my_project",
+			role:           "read",
+			organizationID: "",
+			want:           true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.ctx.IsGrantedRoleInProject(tt.projectID, tt.role)
+			got := tt.ctx.IsGrantedRoleInProject(tt.projectID, tt.role, tt.organizationID)
 			assert.Equal(t, tt.want, got)
 		})
 	}

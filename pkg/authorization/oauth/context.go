@@ -56,11 +56,11 @@ func (c *IntrospectionContext) IsGrantedRoleInOrganization(role, organizationID 
 // IsGrantedRoleInProject checks if the role is granted in the specified project using the
 // `urn:zitadel:iam:org:project:{projectId}:roles` claim format. This is the recommended format
 // per Zitadel's latest standards.
-func (c *IntrospectionContext) IsGrantedRoleInProject(projectID, role string) bool {
+func (c *IntrospectionContext) IsGrantedRoleInProject(projectID, role, organisationID string) bool {
 	if c == nil {
 		return false
 	}
-	organisations := c.checkProjectRoleClaim(projectID, role)
+	organisations := c.checkProjectRoleClaim(projectID, role, organisationID)
 	return len(organisations) > 0
 }
 
@@ -84,7 +84,7 @@ func (c *IntrospectionContext) checkRoleClaim(role string) map[string]interface{
 	return organisations
 }
 
-func (c *IntrospectionContext) checkProjectRoleClaim(projectID, role string) map[string]interface{} {
+func (c *IntrospectionContext) checkProjectRoleClaim(projectID, role, organisationID string) map[string]interface{} {
 	claimKey := "urn:zitadel:iam:org:project:" + projectID + ":roles"
 	roles, ok := c.IntrospectionResponse.Claims[claimKey].(map[string]interface{})
 	if !ok || len(roles) == 0 {
@@ -93,6 +93,12 @@ func (c *IntrospectionContext) checkProjectRoleClaim(projectID, role string) map
 	organisations, ok := roles[role].(map[string]interface{})
 	if !ok {
 		return nil
+	}
+	if organisationID != "" {
+		_, ok := organisations[organisationID]
+		if !ok {
+			return nil
+		}
 	}
 	return organisations
 }
