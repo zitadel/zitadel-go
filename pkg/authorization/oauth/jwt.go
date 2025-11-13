@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/zitadel/oidc/v3/pkg/client"
 	gohttp "net/http"
 	"strings"
+
+	"github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/oidc/v3/pkg/op"
 
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
@@ -22,7 +24,7 @@ var (
 // JWTVerification provides an [authorization.Verifier] implementation
 // by validating an Authorization header bearing a JWT locally.
 type JWTVerification struct {
-	verifier *rp.IDTokenVerifier
+	verifier *op.AccessTokenVerifier
 }
 
 // WithJWT creates the local JWT validation implementation of the
@@ -48,7 +50,8 @@ func WithJWT(clientID string, httpClient *gohttp.Client, options ...rp.VerifierO
 		keySet := rp.NewRemoteKeySet(httpClient, discoveryConfig.JwksURI)
 
 		// Pass the optional VerifierOptions to the underlying constructor.
-		verifier := rp.NewIDTokenVerifier(discoveryConfig.Issuer, clientID, keySet, options...)
+		// verifier := rp.NewIDTokenVerifier(discoveryConfig.Issuer, clientID, keySet, options...)
+		verifier := op.NewAccessTokenVerifier(discoveryConfig.Issuer, keySet)
 
 		return &JWTVerification{
 			verifier: verifier,
@@ -70,7 +73,8 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 	}
 	accessToken = strings.TrimSpace(accessToken)
 
-	claims, err := rp.VerifyIDToken[*oidc.IDTokenClaims](ctx, accessToken, j.verifier)
+	// claims, err := rp.VerifyIDToken[*oidc.IDTokenClaims](ctx, accessToken, j.verifier)
+	claims, err := op.VerifyAccessToken[*oidc.AccessTokenClaims](ctx, accessToken, j.verifier)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrInvalidToken, err)
 	}
@@ -81,10 +85,16 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 
 	resp := &IntrospectionContext{
 		IntrospectionResponse: oidc.IntrospectionResponse{
-			Active:   true,
-			Subject:  claims.Subject,
-			ClientID: claims.Audience[0],
-			Claims:   claims.Claims,
+			Active:     true,
+			Issuer:     claims.Issuer,
+			Subject:    claims.Subject,
+			Audience:   claims.Audience,
+			Expiration: claims.Expiration,
+			IssuedAt:   claims.IssuedAt,
+			NotBefore:  claims.NotBefore,
+			ClientID:   claims.ClientID,
+			JWTID:      claims.JWTID,
+			Claims:     claims.Claims,
 		},
 	}
 	resp.SetToken(accessToken)

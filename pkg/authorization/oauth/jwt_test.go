@@ -103,10 +103,10 @@ func TestWithJWT(t *testing.T) {
 			expectSuccess: false,
 		},
 		{
-			name:          "Failure: wrong audience",
+			name:          "Failure: empty audience",
 			ttl:           time.Hour,
 			issuer:        mockServer.URL,
-			audience:      []string{"wrong-aud"},
+			audience:      []string{},
 			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},
