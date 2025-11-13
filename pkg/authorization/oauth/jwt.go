@@ -49,8 +49,6 @@ func WithJWT(clientID string, httpClient *gohttp.Client, options ...rp.VerifierO
 
 		keySet := rp.NewRemoteKeySet(httpClient, discoveryConfig.JwksURI)
 
-		// Pass the optional VerifierOptions to the underlying constructor.
-		// verifier := rp.NewIDTokenVerifier(discoveryConfig.Issuer, clientID, keySet, options...)
 		verifier := op.NewAccessTokenVerifier(discoveryConfig.Issuer, keySet)
 
 		return &JWTVerification{
@@ -73,7 +71,6 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 	}
 	accessToken = strings.TrimSpace(accessToken)
 
-	// claims, err := rp.VerifyIDToken[*oidc.IDTokenClaims](ctx, accessToken, j.verifier)
 	claims, err := op.VerifyAccessToken[*oidc.AccessTokenClaims](ctx, accessToken, j.verifier)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrInvalidToken, err)
