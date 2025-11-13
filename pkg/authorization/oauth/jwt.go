@@ -104,6 +104,6 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 //
 // It takes the clientID of the protected resource server and optional
 // [rp.VerifierOption] to customize the validation behavior.
-func DefaultJWTAuthorization(clientID string, options ...rp.VerifierOption) authorization.VerifierInitializer[*IntrospectionContext] {
+func DefaultJWTAuthorization(clientID string, options ...op.AccessTokenVerifierOpt) authorization.VerifierInitializer[*IntrospectionContext] {
 	return WithJWT(clientID, nil, options...)
 }
