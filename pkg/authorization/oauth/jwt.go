@@ -34,8 +34,7 @@ type JWTVerification struct {
 // This initializer uses OIDC Discovery to dynamically find the JWKS URI and
 // creates an [rp.RemoteKeySet] which fetches and caches the keys in memory.
 // It accepts the clientID for audience validation and optional
-// [op.AccessTokenVerifierOpt] to allow for supported a different signing algorithm.
-// validation, such as setting a clock skew tolerance.
+// [op.AccessTokenVerifierOpt] to allow for support of different signing algorithms.
 func WithJWT(clientID string, httpClient *gohttp.Client, options ...op.AccessTokenVerifierOpt) authorization.VerifierInitializer[*IntrospectionContext] {
 	if httpClient == nil {
 		httpClient = gohttp.DefaultClient
@@ -103,7 +102,7 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 // WithJWT.
 //
 // It takes the clientID of the protected resource server and optional
-// [rp.VerifierOption] to customize the validation behavior.
+// [op.AccessTokenVerifierOpt] to customize the validation behavior.
 func DefaultJWTAuthorization(clientID string, options ...op.AccessTokenVerifierOpt) authorization.VerifierInitializer[*IntrospectionContext] {
 	return WithJWT(clientID, nil, options...)
 }
