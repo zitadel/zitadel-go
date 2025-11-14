@@ -19,7 +19,8 @@ import (
 )
 
 var (
-	ErrInvalidToken = errors.New("invalid token")
+	ErrInvalidToken    = errors.New("invalid token")
+	ErrInvalidAudience = errors.New("invalid audience")
 )
 
 // JWTVerification provides an [authorization.Verifier] implementation
@@ -82,7 +83,7 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 		return nil, fmt.Errorf("%w: empty aud", ErrInvalidToken)
 	}
 	if !slices.Contains(claims.Audience, j.clientID) {
-		return nil, fmt.Errorf("%w: invalid aud", ErrInvalidToken)
+		return nil, fmt.Errorf("%w: %s", ErrInvalidAudience, j.clientID)
 	}
 
 	resp := &IntrospectionContext{
