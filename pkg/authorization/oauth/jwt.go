@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/zitadel/oidc/v3/pkg/client"
 	gohttp "net/http"
+	"slices"
 	"strings"
+
+	"github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/oidc/v3/pkg/op"
 
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
@@ -16,13 +19,15 @@ import (
 )
 
 var (
-	ErrInvalidToken = errors.New("invalid token")
+	ErrInvalidToken    = errors.New("invalid token")
+	ErrInvalidAudience = errors.New("invalid audience")
 )
 
 // JWTVerification provides an [authorization.Verifier] implementation
 // by validating an Authorization header bearing a JWT locally.
 type JWTVerification struct {
-	verifier *rp.IDTokenVerifier
+	verifier *op.AccessTokenVerifier
+	clientID string
 }
 
 // WithJWT creates the local JWT validation implementation of the
@@ -32,9 +37,8 @@ type JWTVerification struct {
 // This initializer uses OIDC Discovery to dynamically find the JWKS URI and
 // creates an [rp.RemoteKeySet] which fetches and caches the keys in memory.
 // It accepts the clientID for audience validation and optional
-// [rp.VerifierOption] to allow for fine-grained control over the token
-// validation, such as setting a clock skew tolerance.
-func WithJWT(clientID string, httpClient *gohttp.Client, options ...rp.VerifierOption) authorization.VerifierInitializer[*IntrospectionContext] {
+// [op.AccessTokenVerifierOpt] to allow for support of different signing algorithms.
+func WithJWT(clientID string, httpClient *gohttp.Client, options ...op.AccessTokenVerifierOpt) authorization.VerifierInitializer[*IntrospectionContext] {
 	if httpClient == nil {
 		httpClient = gohttp.DefaultClient
 	}
@@ -47,11 +51,11 @@ func WithJWT(clientID string, httpClient *gohttp.Client, options ...rp.VerifierO
 
 		keySet := rp.NewRemoteKeySet(httpClient, discoveryConfig.JwksURI)
 
-		// Pass the optional VerifierOptions to the underlying constructor.
-		verifier := rp.NewIDTokenVerifier(discoveryConfig.Issuer, clientID, keySet, options...)
+		verifier := op.NewAccessTokenVerifier(discoveryConfig.Issuer, keySet, options...)
 
 		return &JWTVerification{
 			verifier: verifier,
+			clientID: clientID,
 		}, nil
 	}
 }
@@ -70,7 +74,7 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 	}
 	accessToken = strings.TrimSpace(accessToken)
 
-	claims, err := rp.VerifyIDToken[*oidc.IDTokenClaims](ctx, accessToken, j.verifier)
+	claims, err := op.VerifyAccessToken[*oidc.AccessTokenClaims](ctx, accessToken, j.verifier)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrInvalidToken, err)
 	}
@@ -78,13 +82,22 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 	if len(claims.Audience) == 0 {
 		return nil, fmt.Errorf("%w: empty aud", ErrInvalidToken)
 	}
+	if !slices.Contains(claims.Audience, j.clientID) {
+		return nil, fmt.Errorf("%w: %s", ErrInvalidAudience, j.clientID)
+	}
 
 	resp := &IntrospectionContext{
 		IntrospectionResponse: oidc.IntrospectionResponse{
-			Active:   true,
-			Subject:  claims.Subject,
-			ClientID: claims.Audience[0],
-			Claims:   claims.Claims,
+			Active:     true,
+			Issuer:     claims.Issuer,
+			Subject:    claims.Subject,
+			Audience:   claims.Audience,
+			Expiration: claims.Expiration,
+			IssuedAt:   claims.IssuedAt,
+			NotBefore:  claims.NotBefore,
+			ClientID:   claims.ClientID,
+			JWTID:      claims.JWTID,
+			Claims:     claims.Claims,
 		},
 	}
 	resp.SetToken(accessToken)
@@ -96,7 +109,7 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 // WithJWT.
 //
 // It takes the clientID of the protected resource server and optional
-// [rp.VerifierOption] to customize the validation behavior.
-func DefaultJWTAuthorization(clientID string, options ...rp.VerifierOption) authorization.VerifierInitializer[*IntrospectionContext] {
+// [op.AccessTokenVerifierOpt] to customize the validation behavior.
+func DefaultJWTAuthorization(clientID string, options ...op.AccessTokenVerifierOpt) authorization.VerifierInitializer[*IntrospectionContext] {
 	return WithJWT(clientID, nil, options...)
 }
