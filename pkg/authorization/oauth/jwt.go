@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	gohttp "net/http"
+	"slices"
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/client"
@@ -25,6 +26,7 @@ var (
 // by validating an Authorization header bearing a JWT locally.
 type JWTVerification struct {
 	verifier *op.AccessTokenVerifier
+	clientID string
 }
 
 // WithJWT creates the local JWT validation implementation of the
@@ -52,6 +54,7 @@ func WithJWT(clientID string, httpClient *gohttp.Client, options ...op.AccessTok
 
 		return &JWTVerification{
 			verifier: verifier,
+			clientID: clientID,
 		}, nil
 	}
 }
@@ -77,6 +80,9 @@ func (j *JWTVerification) CheckAuthorization(ctx context.Context, authorizationT
 
 	if len(claims.Audience) == 0 {
 		return nil, fmt.Errorf("%w: empty aud", ErrInvalidToken)
+	}
+	if !slices.Contains(claims.Audience, j.clientID) {
+		return nil, fmt.Errorf("%w: invalid aud", ErrInvalidToken)
 	}
 
 	resp := &IntrospectionContext{
