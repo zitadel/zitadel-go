@@ -671,104 +671,104 @@ type ManagementServiceClient interface {
 	GetMyOrg(ctx context.Context, in *GetMyOrgRequest, opts ...grpc.CallOption) (*GetMyOrgResponse, error)
 	// Get Organization By Domain
 	//
-	// Deprecated: use [organization v2 service ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization v2 service ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Search an organization by the domain, overall organizations. The domain must match exactly.
 	GetOrgByDomainGlobal(ctx context.Context, in *GetOrgByDomainGlobalRequest, opts ...grpc.CallOption) (*GetOrgByDomainGlobalResponse, error)
 	ListOrgChanges(ctx context.Context, in *ListOrgChangesRequest, opts ...grpc.CallOption) (*ListOrgChangesResponse, error)
 	// Create Organization
 	//
-	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-create-organization.api.mdx) instead
+	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead
 	//
 	// Create a new organization. Based on the given name a domain will be generated to be able to identify users within an organization.
 	AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error)
 	// Update Organization
 	//
-	// Deprecated: use [organization service v2 UpdateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-update-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 UpdateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-update-organization.api.mdx) instead.
 	//
 	// Change the name of the organization.
 	UpdateOrg(ctx context.Context, in *UpdateOrgRequest, opts ...grpc.CallOption) (*UpdateOrgResponse, error)
 	// Deactivate Organization
 	//
-	// Deprecated: use [organization service v2 DeactivateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-deactivate-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeactivateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-deactivate-organization.api.mdx) instead.
 	//
 	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
 	DeactivateOrg(ctx context.Context, in *DeactivateOrgRequest, opts ...grpc.CallOption) (*DeactivateOrgResponse, error)
 	// Reactivate Organization
 	//
-	// Deprecated: use [organization service v2 ActivateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-activate-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 ActivateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-activate-organization.api.mdx) instead.
 	//
 	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
 	ReactivateOrg(ctx context.Context, in *ReactivateOrgRequest, opts ...grpc.CallOption) (*ReactivateOrgResponse, error)
 	// Delete Organization
 	//
-	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization.api.mdx) instead.
 	//
 	// Deletes my organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
 	// Set Organization Metadata
 	//
-	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-set-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-set-organization-metadata.api.mdx) instead.
 	//
 	// This endpoint either adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
 	SetOrgMetadata(ctx context.Context, in *SetOrgMetadataRequest, opts ...grpc.CallOption) (*SetOrgMetadataResponse, error)
 	// Bulk Set Organization Metadata
 	//
-	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-set-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-set-organization-metadata.api.mdx) instead.
 	//
 	// This endpoint sets a list of metadata to the organization. Make sure the values are base64 encoded.
 	BulkSetOrgMetadata(ctx context.Context, in *BulkSetOrgMetadataRequest, opts ...grpc.CallOption) (*BulkSetOrgMetadataResponse, error)
 	// Search Organization Metadata
 	//
-	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-metadata.api.mdx) instead.
 	//
 	// Get the metadata of an organization filtered by your query.
 	ListOrgMetadata(ctx context.Context, in *ListOrgMetadataRequest, opts ...grpc.CallOption) (*ListOrgMetadataResponse, error)
 	// Get Organization Metadata By Key
 	//
-	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-metadata.api.mdx) instead.
 	//
 	// Get a metadata object from an organization by a specific key.
 	GetOrgMetadata(ctx context.Context, in *GetOrgMetadataRequest, opts ...grpc.CallOption) (*GetOrgMetadataResponse, error)
 	// Delete Organization Metadata By Key
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-metadata.api.mdx) instead.
 	//
 	// Remove a metadata object from an organization with a specific key.
 	RemoveOrgMetadata(ctx context.Context, in *RemoveOrgMetadataRequest, opts ...grpc.CallOption) (*RemoveOrgMetadataResponse, error)
 	// Bulk Delete Metadata
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-metadata.api.mdx) instead.
 	//
 	// Remove a list of metadata objects from an organization with a list of keys.
 	BulkRemoveOrgMetadata(ctx context.Context, in *BulkRemoveOrgMetadataRequest, opts ...grpc.CallOption) (*BulkRemoveOrgMetadataResponse, error)
 	// Add Domain
 	//
-	// Deprecated: use [organization service v2 AddOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-add-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 AddOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization-domain.api.mdx) instead.
 	//
 	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
 	AddOrgDomain(ctx context.Context, in *AddOrgDomainRequest, opts ...grpc.CallOption) (*AddOrgDomainResponse, error)
 	// Search Domains
 	//
-	// Deprecated: use [organization service v2 ListOrganizationDomains](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-domains.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationDomains](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-domains.api.mdx) instead.
 	//
 	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
 	ListOrgDomains(ctx context.Context, in *ListOrgDomainsRequest, opts ...grpc.CallOption) (*ListOrgDomainsResponse, error)
 	// Remove Domain
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-domain.api.mdx) instead.
 	//
 	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
 	RemoveOrgDomain(ctx context.Context, in *RemoveOrgDomainRequest, opts ...grpc.CallOption) (*RemoveOrgDomainResponse, error)
 	// Generate Domain Verification
 	//
-	// Deprecated: use [organization service v2 GenerateOrganizationDomainValidation](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-generate-organization-domain-validation.api.mdx) instead.
+	// Deprecated: use [organization service v2 GenerateOrganizationDomainValidation](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-generate-organization-domain-validation.api.mdx) instead.
 	//
 	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
 	GenerateOrgDomainValidation(ctx context.Context, in *GenerateOrgDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrgDomainValidationResponse, error)
 	// Verify Domain
 	//
-	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-verify-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-verify-organization-domain.api.mdx) instead.
 	//
 	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	ValidateOrgDomain(ctx context.Context, in *ValidateOrgDomainRequest, opts ...grpc.CallOption) (*ValidateOrgDomainResponse, error)
@@ -4354,104 +4354,104 @@ type ManagementServiceServer interface {
 	GetMyOrg(context.Context, *GetMyOrgRequest) (*GetMyOrgResponse, error)
 	// Get Organization By Domain
 	//
-	// Deprecated: use [organization v2 service ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization v2 service ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Search an organization by the domain, overall organizations. The domain must match exactly.
 	GetOrgByDomainGlobal(context.Context, *GetOrgByDomainGlobalRequest) (*GetOrgByDomainGlobalResponse, error)
 	ListOrgChanges(context.Context, *ListOrgChangesRequest) (*ListOrgChangesResponse, error)
 	// Create Organization
 	//
-	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-create-organization.api.mdx) instead
+	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead
 	//
 	// Create a new organization. Based on the given name a domain will be generated to be able to identify users within an organization.
 	AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error)
 	// Update Organization
 	//
-	// Deprecated: use [organization service v2 UpdateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-update-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 UpdateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-update-organization.api.mdx) instead.
 	//
 	// Change the name of the organization.
 	UpdateOrg(context.Context, *UpdateOrgRequest) (*UpdateOrgResponse, error)
 	// Deactivate Organization
 	//
-	// Deprecated: use [organization service v2 DeactivateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-deactivate-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeactivateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-deactivate-organization.api.mdx) instead.
 	//
 	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
 	DeactivateOrg(context.Context, *DeactivateOrgRequest) (*DeactivateOrgResponse, error)
 	// Reactivate Organization
 	//
-	// Deprecated: use [organization service v2 ActivateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-activate-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 ActivateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-activate-organization.api.mdx) instead.
 	//
 	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
 	ReactivateOrg(context.Context, *ReactivateOrgRequest) (*ReactivateOrgResponse, error)
 	// Delete Organization
 	//
-	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization.api.mdx) instead.
 	//
 	// Deletes my organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
 	// Set Organization Metadata
 	//
-	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-set-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-set-organization-metadata.api.mdx) instead.
 	//
 	// This endpoint either adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
 	SetOrgMetadata(context.Context, *SetOrgMetadataRequest) (*SetOrgMetadataResponse, error)
 	// Bulk Set Organization Metadata
 	//
-	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-set-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 SetOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-set-organization-metadata.api.mdx) instead.
 	//
 	// This endpoint sets a list of metadata to the organization. Make sure the values are base64 encoded.
 	BulkSetOrgMetadata(context.Context, *BulkSetOrgMetadataRequest) (*BulkSetOrgMetadataResponse, error)
 	// Search Organization Metadata
 	//
-	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-metadata.api.mdx) instead.
 	//
 	// Get the metadata of an organization filtered by your query.
 	ListOrgMetadata(context.Context, *ListOrgMetadataRequest) (*ListOrgMetadataResponse, error)
 	// Get Organization Metadata By Key
 	//
-	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-metadata.api.mdx) instead.
 	//
 	// Get a metadata object from an organization by a specific key.
 	GetOrgMetadata(context.Context, *GetOrgMetadataRequest) (*GetOrgMetadataResponse, error)
 	// Delete Organization Metadata By Key
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-metadata.api.mdx) instead.
 	//
 	// Remove a metadata object from an organization with a specific key.
 	RemoveOrgMetadata(context.Context, *RemoveOrgMetadataRequest) (*RemoveOrgMetadataResponse, error)
 	// Bulk Delete Metadata
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-metadata.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationMetadata](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-metadata.api.mdx) instead.
 	//
 	// Remove a list of metadata objects from an organization with a list of keys.
 	BulkRemoveOrgMetadata(context.Context, *BulkRemoveOrgMetadataRequest) (*BulkRemoveOrgMetadataResponse, error)
 	// Add Domain
 	//
-	// Deprecated: use [organization service v2 AddOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-add-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 AddOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization-domain.api.mdx) instead.
 	//
 	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
 	AddOrgDomain(context.Context, *AddOrgDomainRequest) (*AddOrgDomainResponse, error)
 	// Search Domains
 	//
-	// Deprecated: use [organization service v2 ListOrganizationDomains](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-list-organization-domains.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizationDomains](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organization-domains.api.mdx) instead.
 	//
 	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
 	ListOrgDomains(context.Context, *ListOrgDomainsRequest) (*ListOrgDomainsResponse, error)
 	// Remove Domain
 	//
-	// Deprecated: use [organization service v2 DeleteOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization-domain.api.mdx) instead.
 	//
 	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
 	RemoveOrgDomain(context.Context, *RemoveOrgDomainRequest) (*RemoveOrgDomainResponse, error)
 	// Generate Domain Verification
 	//
-	// Deprecated: use [organization service v2 GenerateOrganizationDomainValidation](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-generate-organization-domain-validation.api.mdx) instead.
+	// Deprecated: use [organization service v2 GenerateOrganizationDomainValidation](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-generate-organization-domain-validation.api.mdx) instead.
 	//
 	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
 	GenerateOrgDomainValidation(context.Context, *GenerateOrgDomainValidationRequest) (*GenerateOrgDomainValidationResponse, error)
 	// Verify Domain
 	//
-	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-verify-organization-domain.api.mdx) instead.
+	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-verify-organization-domain.api.mdx) instead.
 	//
 	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	ValidateOrgDomain(context.Context, *ValidateOrgDomainRequest) (*ValidateOrgDomainResponse, error)

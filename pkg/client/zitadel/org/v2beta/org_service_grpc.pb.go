@@ -50,12 +50,16 @@ type OrganizationServiceClient interface {
 	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change the name of the organization.
 	//
 	// Required permission:
 	//   - `org.write`
 	UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*UpdateOrganizationResponse, error)
 	// List Organizations
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	//
@@ -66,12 +70,16 @@ type OrganizationServiceClient interface {
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	//
 	// Required permission:
 	//   - `org.delete`
 	DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*DeleteOrganizationResponse, error)
 	// Set Organization Metadata
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
 	//
@@ -80,12 +88,16 @@ type OrganizationServiceClient interface {
 	SetOrganizationMetadata(ctx context.Context, in *SetOrganizationMetadataRequest, opts ...grpc.CallOption) (*SetOrganizationMetadataResponse, error)
 	// List Organization Metadata
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// List metadata of an organization filtered by query.
 	//
 	// Required permission:
 	//   - `org.read`
 	ListOrganizationMetadata(ctx context.Context, in *ListOrganizationMetadataRequest, opts ...grpc.CallOption) (*ListOrganizationMetadataResponse, error)
 	// Delete Organization Metadata
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete metadata objects from an organization with a specific key.
 	//
@@ -94,12 +106,16 @@ type OrganizationServiceClient interface {
 	DeleteOrganizationMetadata(ctx context.Context, in *DeleteOrganizationMetadataRequest, opts ...grpc.CallOption) (*DeleteOrganizationMetadataResponse, error)
 	// Add Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
 	//
 	// Required permission:
 	//   - `org.write`
 	AddOrganizationDomain(ctx context.Context, in *AddOrganizationDomainRequest, opts ...grpc.CallOption) (*AddOrganizationDomainResponse, error)
 	// List Organization Domains
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
 	//
@@ -108,12 +124,16 @@ type OrganizationServiceClient interface {
 	ListOrganizationDomains(ctx context.Context, in *ListOrganizationDomainsRequest, opts ...grpc.CallOption) (*ListOrganizationDomainsResponse, error)
 	// Delete Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
 	//
 	// Required permission:
 	//   - `org.write`
 	DeleteOrganizationDomain(ctx context.Context, in *DeleteOrganizationDomainRequest, opts ...grpc.CallOption) (*DeleteOrganizationDomainResponse, error)
 	// Generate Organization Domain Validation
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
 	//
@@ -122,6 +142,8 @@ type OrganizationServiceClient interface {
 	GenerateOrganizationDomainValidation(ctx context.Context, in *GenerateOrganizationDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
@@ -129,12 +151,16 @@ type OrganizationServiceClient interface {
 	VerifyOrganizationDomain(ctx context.Context, in *VerifyOrganizationDomainRequest, opts ...grpc.CallOption) (*VerifyOrganizationDomainResponse, error)
 	// Deactivate Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
 	//
 	// Required permission:
 	//   - `org.write`
 	DeactivateOrganization(ctx context.Context, in *DeactivateOrganizationRequest, opts ...grpc.CallOption) (*DeactivateOrganizationResponse, error)
 	// Activate Organization
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
 	//
@@ -292,12 +318,16 @@ type OrganizationServiceServer interface {
 	CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Change the name of the organization.
 	//
 	// Required permission:
 	//   - `org.write`
 	UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*UpdateOrganizationResponse, error)
 	// List Organizations
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	//
@@ -308,12 +338,16 @@ type OrganizationServiceServer interface {
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	//
 	// Required permission:
 	//   - `org.delete`
 	DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*DeleteOrganizationResponse, error)
 	// Set Organization Metadata
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
 	//
@@ -322,12 +356,16 @@ type OrganizationServiceServer interface {
 	SetOrganizationMetadata(context.Context, *SetOrganizationMetadataRequest) (*SetOrganizationMetadataResponse, error)
 	// List Organization Metadata
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// List metadata of an organization filtered by query.
 	//
 	// Required permission:
 	//   - `org.read`
 	ListOrganizationMetadata(context.Context, *ListOrganizationMetadataRequest) (*ListOrganizationMetadataResponse, error)
 	// Delete Organization Metadata
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Delete metadata objects from an organization with a specific key.
 	//
@@ -336,12 +374,16 @@ type OrganizationServiceServer interface {
 	DeleteOrganizationMetadata(context.Context, *DeleteOrganizationMetadataRequest) (*DeleteOrganizationMetadataResponse, error)
 	// Add Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Add a new domain to an organization. The domains are used to identify to which organization a user belongs.
 	//
 	// Required permission:
 	//   - `org.write`
 	AddOrganizationDomain(context.Context, *AddOrganizationDomainRequest) (*AddOrganizationDomainResponse, error)
 	// List Organization Domains
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Returns the list of registered domains of an organization. The domains are used to identify to which organization a user belongs.
 	//
@@ -350,12 +392,16 @@ type OrganizationServiceServer interface {
 	ListOrganizationDomains(context.Context, *ListOrganizationDomainsRequest) (*ListOrganizationDomainsResponse, error)
 	// Delete Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Delete a new domain from an organization. The domains are used to identify to which organization a user belongs. If the uses use the domain for login, this will not be possible afterwards. They have to use another domain instead.
 	//
 	// Required permission:
 	//   - `org.write`
 	DeleteOrganizationDomain(context.Context, *DeleteOrganizationDomainRequest) (*DeleteOrganizationDomainResponse, error)
 	// Generate Organization Domain Validation
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Generate a new file to be able to verify your domain with DNS or HTTP challenge.
 	//
@@ -364,6 +410,8 @@ type OrganizationServiceServer interface {
 	GenerateOrganizationDomainValidation(context.Context, *GenerateOrganizationDomainValidationRequest) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
@@ -371,12 +419,16 @@ type OrganizationServiceServer interface {
 	VerifyOrganizationDomain(context.Context, *VerifyOrganizationDomainRequest) (*VerifyOrganizationDomainResponse, error)
 	// Deactivate Organization
 	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
+	//
 	// Sets the state of my organization to deactivated. Users of this organization will not be able to log in.
 	//
 	// Required permission:
 	//   - `org.write`
 	DeactivateOrganization(context.Context, *DeactivateOrganizationRequest) (*DeactivateOrganizationResponse, error)
 	// Activate Organization
+	//
+	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
 	// Set the state of my organization to active. The state of the organization has to be deactivated to perform the request. Users of this organization will be able to log in again.
 	//
