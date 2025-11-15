@@ -27,8 +27,9 @@ const (
 type OrganizationFieldName int32
 
 const (
-	OrganizationFieldName_ORGANIZATION_FIELD_NAME_UNSPECIFIED OrganizationFieldName = 0
-	OrganizationFieldName_ORGANIZATION_FIELD_NAME_NAME        OrganizationFieldName = 1
+	OrganizationFieldName_ORGANIZATION_FIELD_NAME_UNSPECIFIED   OrganizationFieldName = 0
+	OrganizationFieldName_ORGANIZATION_FIELD_NAME_NAME          OrganizationFieldName = 1
+	OrganizationFieldName_ORGANIZATION_FIELD_NAME_CREATION_DATE OrganizationFieldName = 2
 )
 
 // Enum value maps for OrganizationFieldName.
@@ -36,10 +37,12 @@ var (
 	OrganizationFieldName_name = map[int32]string{
 		0: "ORGANIZATION_FIELD_NAME_UNSPECIFIED",
 		1: "ORGANIZATION_FIELD_NAME_NAME",
+		2: "ORGANIZATION_FIELD_NAME_CREATION_DATE",
 	}
 	OrganizationFieldName_value = map[string]int32{
-		"ORGANIZATION_FIELD_NAME_UNSPECIFIED": 0,
-		"ORGANIZATION_FIELD_NAME_NAME":        1,
+		"ORGANIZATION_FIELD_NAME_UNSPECIFIED":   0,
+		"ORGANIZATION_FIELD_NAME_NAME":          1,
+		"ORGANIZATION_FIELD_NAME_CREATION_DATE": 2,
 	}
 )
 
@@ -68,6 +71,55 @@ func (x OrganizationFieldName) Number() protoreflect.EnumNumber {
 // Deprecated: Use OrganizationFieldName.Descriptor instead.
 func (OrganizationFieldName) EnumDescriptor() ([]byte, []int) {
 	return file_zitadel_org_v2_query_proto_rawDescGZIP(), []int{0}
+}
+
+type DomainFieldName int32
+
+const (
+	DomainFieldName_DOMAIN_FIELD_NAME_UNSPECIFIED   DomainFieldName = 0
+	DomainFieldName_DOMAIN_FIELD_NAME_NAME          DomainFieldName = 1
+	DomainFieldName_DOMAIN_FIELD_NAME_CREATION_DATE DomainFieldName = 2
+)
+
+// Enum value maps for DomainFieldName.
+var (
+	DomainFieldName_name = map[int32]string{
+		0: "DOMAIN_FIELD_NAME_UNSPECIFIED",
+		1: "DOMAIN_FIELD_NAME_NAME",
+		2: "DOMAIN_FIELD_NAME_CREATION_DATE",
+	}
+	DomainFieldName_value = map[string]int32{
+		"DOMAIN_FIELD_NAME_UNSPECIFIED":   0,
+		"DOMAIN_FIELD_NAME_NAME":          1,
+		"DOMAIN_FIELD_NAME_CREATION_DATE": 2,
+	}
+)
+
+func (x DomainFieldName) Enum() *DomainFieldName {
+	p := new(DomainFieldName)
+	*p = x
+	return p
+}
+
+func (x DomainFieldName) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DomainFieldName) Descriptor() protoreflect.EnumDescriptor {
+	return file_zitadel_org_v2_query_proto_enumTypes[1].Descriptor()
+}
+
+func (DomainFieldName) Type() protoreflect.EnumType {
+	return &file_zitadel_org_v2_query_proto_enumTypes[1]
+}
+
+func (x DomainFieldName) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DomainFieldName.Descriptor instead.
+func (DomainFieldName) EnumDescriptor() ([]byte, []int) {
+	return file_zitadel_org_v2_query_proto_rawDescGZIP(), []int{1}
 }
 
 type SearchQuery struct {
@@ -164,22 +216,27 @@ type isSearchQuery_Query interface {
 }
 
 type SearchQuery_NameQuery struct {
+	// Filter organizations by their name.
 	NameQuery *OrganizationNameQuery `protobuf:"bytes,1,opt,name=name_query,json=nameQuery,proto3,oneof"`
 }
 
 type SearchQuery_DomainQuery struct {
+	// Filter organizations by their domain.
 	DomainQuery *OrganizationDomainQuery `protobuf:"bytes,2,opt,name=domain_query,json=domainQuery,proto3,oneof"`
 }
 
 type SearchQuery_StateQuery struct {
+	// Filter organizations by their state.
 	StateQuery *OrganizationStateQuery `protobuf:"bytes,3,opt,name=state_query,json=stateQuery,proto3,oneof"`
 }
 
 type SearchQuery_IdQuery struct {
+	// Filter organizations by their id.
 	IdQuery *OrganizationIDQuery `protobuf:"bytes,4,opt,name=id_query,json=idQuery,proto3,oneof"`
 }
 
 type SearchQuery_DefaultQuery struct {
+	// Filter for the default organization.
 	DefaultQuery *DefaultOrganizationQuery `protobuf:"bytes,5,opt,name=default_query,json=defaultQuery,proto3,oneof"`
 }
 
@@ -441,6 +498,74 @@ func (*DefaultOrganizationQuery) Descriptor() ([]byte, []int) {
 	return file_zitadel_org_v2_query_proto_rawDescGZIP(), []int{5}
 }
 
+type DomainSearchFilter struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to Filter:
+	//
+	//	*DomainSearchFilter_DomainFilter
+	Filter isDomainSearchFilter_Filter `protobuf_oneof:"filter"`
+}
+
+func (x *DomainSearchFilter) Reset() {
+	*x = DomainSearchFilter{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_org_v2_query_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DomainSearchFilter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DomainSearchFilter) ProtoMessage() {}
+
+func (x *DomainSearchFilter) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_org_v2_query_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DomainSearchFilter.ProtoReflect.Descriptor instead.
+func (*DomainSearchFilter) Descriptor() ([]byte, []int) {
+	return file_zitadel_org_v2_query_proto_rawDescGZIP(), []int{6}
+}
+
+func (m *DomainSearchFilter) GetFilter() isDomainSearchFilter_Filter {
+	if m != nil {
+		return m.Filter
+	}
+	return nil
+}
+
+func (x *DomainSearchFilter) GetDomainFilter() *OrganizationDomainQuery {
+	if x, ok := x.GetFilter().(*DomainSearchFilter_DomainFilter); ok {
+		return x.DomainFilter
+	}
+	return nil
+}
+
+type isDomainSearchFilter_Filter interface {
+	isDomainSearchFilter_Filter()
+}
+
+type DomainSearchFilter_DomainFilter struct {
+	// Filter organization domains by their domain name.
+	DomainFilter *OrganizationDomainQuery `protobuf:"bytes,1,opt,name=domain_filter,json=domainFilter,proto3,oneof"`
+}
+
+func (*DomainSearchFilter_DomainFilter) isDomainSearchFilter_Filter() {}
+
 var File_zitadel_org_v2_query_proto protoreflect.FileDescriptor
 
 var file_zitadel_org_v2_query_proto_rawDesc = []byte{
@@ -516,17 +641,35 @@ var file_zitadel_org_v2_query_proto_rawDesc = []byte{
 	0x30, 0x36, 0x34, 0x38, 0x38, 0x33, 0x33, 0x34, 0x22, 0x78, 0xc8, 0x01, 0x80, 0x01, 0x01, 0xe0,
 	0x41, 0x02, 0xfa, 0x42, 0x07, 0x72, 0x05, 0x10, 0x01, 0x18, 0xc8, 0x01, 0x52, 0x02, 0x69, 0x64,
 	0x22, 0x1a, 0x0a, 0x18, 0x44, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x4f, 0x72, 0x67, 0x61, 0x6e,
-	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x2a, 0x62, 0x0a, 0x15,
-	0x4f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x46, 0x69, 0x65, 0x6c,
-	0x64, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x23, 0x4f, 0x52, 0x47, 0x41, 0x4e, 0x49, 0x5a,
-	0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45,
-	0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x20,
-	0x0a, 0x1c, 0x4f, 0x52, 0x47, 0x41, 0x4e, 0x49, 0x5a, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x46,
-	0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x10, 0x01,
-	0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a,
-	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70,
-	0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x6f, 0x72, 0x67, 0x2f, 0x76, 0x32, 0x3b, 0x6f,
-	0x72, 0x67, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x22, 0x73, 0x0a, 0x12,
+	0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x46, 0x69, 0x6c, 0x74,
+	0x65, 0x72, 0x12, 0x4e, 0x0a, 0x0d, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x5f, 0x66, 0x69, 0x6c,
+	0x74, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x7a, 0x69, 0x74, 0x61,
+	0x64, 0x65, 0x6c, 0x2e, 0x6f, 0x72, 0x67, 0x2e, 0x76, 0x32, 0x2e, 0x4f, 0x72, 0x67, 0x61, 0x6e,
+	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x51, 0x75, 0x65,
+	0x72, 0x79, 0x48, 0x00, 0x52, 0x0c, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x46, 0x69, 0x6c, 0x74,
+	0x65, 0x72, 0x42, 0x0d, 0x0a, 0x06, 0x66, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x12, 0x03, 0xf8, 0x42,
+	0x01, 0x2a, 0x8d, 0x01, 0x0a, 0x15, 0x4f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x23, 0x4f,
+	0x52, 0x47, 0x41, 0x4e, 0x49, 0x5a, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x46, 0x49, 0x45, 0x4c,
+	0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49,
+	0x45, 0x44, 0x10, 0x00, 0x12, 0x20, 0x0a, 0x1c, 0x4f, 0x52, 0x47, 0x41, 0x4e, 0x49, 0x5a, 0x41,
+	0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f,
+	0x4e, 0x41, 0x4d, 0x45, 0x10, 0x01, 0x12, 0x29, 0x0a, 0x25, 0x4f, 0x52, 0x47, 0x41, 0x4e, 0x49,
+	0x5a, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d,
+	0x45, 0x5f, 0x43, 0x52, 0x45, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x44, 0x41, 0x54, 0x45, 0x10,
+	0x02, 0x2a, 0x75, 0x0a, 0x0f, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x46, 0x69, 0x65, 0x6c, 0x64,
+	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x21, 0x0a, 0x1d, 0x44, 0x4f, 0x4d, 0x41, 0x49, 0x4e, 0x5f, 0x46,
+	0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43,
+	0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x1a, 0x0a, 0x16, 0x44, 0x4f, 0x4d, 0x41, 0x49,
+	0x4e, 0x5f, 0x46, 0x49, 0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x4e, 0x41, 0x4d,
+	0x45, 0x10, 0x01, 0x12, 0x23, 0x0a, 0x1f, 0x44, 0x4f, 0x4d, 0x41, 0x49, 0x4e, 0x5f, 0x46, 0x49,
+	0x45, 0x4c, 0x44, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x43, 0x52, 0x45, 0x41, 0x54, 0x49, 0x4f,
+	0x4e, 0x5f, 0x44, 0x41, 0x54, 0x45, 0x10, 0x02, 0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x7a,
+	0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f,
+	0x6f, 0x72, 0x67, 0x2f, 0x76, 0x32, 0x3b, 0x6f, 0x72, 0x67, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -541,33 +684,36 @@ func file_zitadel_org_v2_query_proto_rawDescGZIP() []byte {
 	return file_zitadel_org_v2_query_proto_rawDescData
 }
 
-var file_zitadel_org_v2_query_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_zitadel_org_v2_query_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_zitadel_org_v2_query_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_zitadel_org_v2_query_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_zitadel_org_v2_query_proto_goTypes = []interface{}{
 	(OrganizationFieldName)(0),       // 0: zitadel.org.v2.OrganizationFieldName
-	(*SearchQuery)(nil),              // 1: zitadel.org.v2.SearchQuery
-	(*OrganizationNameQuery)(nil),    // 2: zitadel.org.v2.OrganizationNameQuery
-	(*OrganizationDomainQuery)(nil),  // 3: zitadel.org.v2.OrganizationDomainQuery
-	(*OrganizationStateQuery)(nil),   // 4: zitadel.org.v2.OrganizationStateQuery
-	(*OrganizationIDQuery)(nil),      // 5: zitadel.org.v2.OrganizationIDQuery
-	(*DefaultOrganizationQuery)(nil), // 6: zitadel.org.v2.DefaultOrganizationQuery
-	(v2.TextQueryMethod)(0),          // 7: zitadel.object.v2.TextQueryMethod
-	(OrganizationState)(0),           // 8: zitadel.org.v2.OrganizationState
+	(DomainFieldName)(0),             // 1: zitadel.org.v2.DomainFieldName
+	(*SearchQuery)(nil),              // 2: zitadel.org.v2.SearchQuery
+	(*OrganizationNameQuery)(nil),    // 3: zitadel.org.v2.OrganizationNameQuery
+	(*OrganizationDomainQuery)(nil),  // 4: zitadel.org.v2.OrganizationDomainQuery
+	(*OrganizationStateQuery)(nil),   // 5: zitadel.org.v2.OrganizationStateQuery
+	(*OrganizationIDQuery)(nil),      // 6: zitadel.org.v2.OrganizationIDQuery
+	(*DefaultOrganizationQuery)(nil), // 7: zitadel.org.v2.DefaultOrganizationQuery
+	(*DomainSearchFilter)(nil),       // 8: zitadel.org.v2.DomainSearchFilter
+	(v2.TextQueryMethod)(0),          // 9: zitadel.object.v2.TextQueryMethod
+	(OrganizationState)(0),           // 10: zitadel.org.v2.OrganizationState
 }
 var file_zitadel_org_v2_query_proto_depIdxs = []int32{
-	2, // 0: zitadel.org.v2.SearchQuery.name_query:type_name -> zitadel.org.v2.OrganizationNameQuery
-	3, // 1: zitadel.org.v2.SearchQuery.domain_query:type_name -> zitadel.org.v2.OrganizationDomainQuery
-	4, // 2: zitadel.org.v2.SearchQuery.state_query:type_name -> zitadel.org.v2.OrganizationStateQuery
-	5, // 3: zitadel.org.v2.SearchQuery.id_query:type_name -> zitadel.org.v2.OrganizationIDQuery
-	6, // 4: zitadel.org.v2.SearchQuery.default_query:type_name -> zitadel.org.v2.DefaultOrganizationQuery
-	7, // 5: zitadel.org.v2.OrganizationNameQuery.method:type_name -> zitadel.object.v2.TextQueryMethod
-	7, // 6: zitadel.org.v2.OrganizationDomainQuery.method:type_name -> zitadel.object.v2.TextQueryMethod
-	8, // 7: zitadel.org.v2.OrganizationStateQuery.state:type_name -> zitadel.org.v2.OrganizationState
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	3,  // 0: zitadel.org.v2.SearchQuery.name_query:type_name -> zitadel.org.v2.OrganizationNameQuery
+	4,  // 1: zitadel.org.v2.SearchQuery.domain_query:type_name -> zitadel.org.v2.OrganizationDomainQuery
+	5,  // 2: zitadel.org.v2.SearchQuery.state_query:type_name -> zitadel.org.v2.OrganizationStateQuery
+	6,  // 3: zitadel.org.v2.SearchQuery.id_query:type_name -> zitadel.org.v2.OrganizationIDQuery
+	7,  // 4: zitadel.org.v2.SearchQuery.default_query:type_name -> zitadel.org.v2.DefaultOrganizationQuery
+	9,  // 5: zitadel.org.v2.OrganizationNameQuery.method:type_name -> zitadel.object.v2.TextQueryMethod
+	9,  // 6: zitadel.org.v2.OrganizationDomainQuery.method:type_name -> zitadel.object.v2.TextQueryMethod
+	10, // 7: zitadel.org.v2.OrganizationStateQuery.state:type_name -> zitadel.org.v2.OrganizationState
+	4,  // 8: zitadel.org.v2.DomainSearchFilter.domain_filter:type_name -> zitadel.org.v2.OrganizationDomainQuery
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_zitadel_org_v2_query_proto_init() }
@@ -649,6 +795,18 @@ func file_zitadel_org_v2_query_proto_init() {
 				return nil
 			}
 		}
+		file_zitadel_org_v2_query_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DomainSearchFilter); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_zitadel_org_v2_query_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*SearchQuery_NameQuery)(nil),
@@ -657,13 +815,16 @@ func file_zitadel_org_v2_query_proto_init() {
 		(*SearchQuery_IdQuery)(nil),
 		(*SearchQuery_DefaultQuery)(nil),
 	}
+	file_zitadel_org_v2_query_proto_msgTypes[6].OneofWrappers = []interface{}{
+		(*DomainSearchFilter_DomainFilter)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_org_v2_query_proto_rawDesc,
-			NumEnums:      1,
-			NumMessages:   6,
+			NumEnums:      2,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
