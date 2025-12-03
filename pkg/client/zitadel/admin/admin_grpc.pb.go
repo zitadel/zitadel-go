@@ -365,38 +365,38 @@ type AdminServiceClient interface {
 	SetSecurityPolicy(ctx context.Context, in *SetSecurityPolicyRequest, opts ...grpc.CallOption) (*SetSecurityPolicyResponse, error)
 	// Get Organization By ID
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Returns an organization by its ID. Make sure the user has the permissions to access the organization.
 	GetOrgByID(ctx context.Context, in *GetOrgByIDRequest, opts ...grpc.CallOption) (*GetOrgByIDResponse, error)
 	// Is Organization Unique
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Checks if an organization with the searched parameters already exists or not.
 	IsOrgUnique(ctx context.Context, in *IsOrgUniqueRequest, opts ...grpc.CallOption) (*IsOrgUniqueResponse, error)
 	SetDefaultOrg(ctx context.Context, in *SetDefaultOrgRequest, opts ...grpc.CallOption) (*SetDefaultOrgResponse, error)
 	// Get Default Organization
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Get the default organization of the ZITADEL instance. If no specific organization is given on the register form, a user will be registered to the default organization.
 	GetDefaultOrg(ctx context.Context, in *GetDefaultOrgRequest, opts ...grpc.CallOption) (*GetDefaultOrgResponse, error)
 	// Search Organizations
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	ListOrgs(ctx context.Context, in *ListOrgsRequest, opts ...grpc.CallOption) (*ListOrgsResponse, error)
 	// Setup Organization
 	//
-	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-create-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 AddOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead.
 	//
 	// Create a new organization with an administrative user. If no specific roles are sent for the first user, the user will get the role ORG_OWNER.
 	SetUpOrg(ctx context.Context, in *SetUpOrgRequest, opts ...grpc.CallOption) (*SetUpOrgResponse, error)
 	// Remove Organization
 	//
-	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization.api.mdx) instead.
 	//
 	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	RemoveOrg(ctx context.Context, in *RemoveOrgRequest, opts ...grpc.CallOption) (*RemoveOrgResponse, error)
@@ -2586,38 +2586,38 @@ type AdminServiceServer interface {
 	SetSecurityPolicy(context.Context, *SetSecurityPolicyRequest) (*SetSecurityPolicyResponse, error)
 	// Get Organization By ID
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Returns an organization by its ID. Make sure the user has the permissions to access the organization.
 	GetOrgByID(context.Context, *GetOrgByIDRequest) (*GetOrgByIDResponse, error)
 	// Is Organization Unique
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Checks if an organization with the searched parameters already exists or not.
 	IsOrgUnique(context.Context, *IsOrgUniqueRequest) (*IsOrgUniqueResponse, error)
 	SetDefaultOrg(context.Context, *SetDefaultOrgRequest) (*SetDefaultOrgResponse, error)
 	// Get Default Organization
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Get the default organization of the ZITADEL instance. If no specific organization is given on the register form, a user will be registered to the default organization.
 	GetDefaultOrg(context.Context, *GetDefaultOrgRequest) (*GetDefaultOrgResponse, error)
 	// Search Organizations
 	//
-	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead.
+	// Deprecated: use [organization service v2 ListOrganizations](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-list-organizations.api.mdx) instead.
 	//
 	// Returns a list of organizations that match the requesting filters. All filters are applied with an AND condition.
 	ListOrgs(context.Context, *ListOrgsRequest) (*ListOrgsResponse, error)
 	// Setup Organization
 	//
-	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-create-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 AddOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead.
 	//
 	// Create a new organization with an administrative user. If no specific roles are sent for the first user, the user will get the role ORG_OWNER.
 	SetUpOrg(context.Context, *SetUpOrgRequest) (*SetUpOrgResponse, error)
 	// Remove Organization
 	//
-	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2beta/zitadel-org-v-2-beta-organization-service-delete-organization.api.mdx) instead.
+	// Deprecated: use [organization service v2 DeleteOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-delete-organization.api.mdx) instead.
 	//
 	// Deletes the organization and all its resources (Users, Projects, Grants to and from the org). Users of this organization will not be able to log in.
 	RemoveOrg(context.Context, *RemoveOrgRequest) (*RemoveOrgResponse, error)
