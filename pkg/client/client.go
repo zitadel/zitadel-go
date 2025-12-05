@@ -6,6 +6,7 @@ import (
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	actionV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
 	actionV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2beta"
@@ -152,9 +153,38 @@ func newConnection(
 		return nil, err
 	}
 
+	// Interceptor to inject custom headers (e.g. Proxy-Auth) into metadata
+	headerUnaryInterceptor := func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		if h := zitadel.Headers(); len(h) > 0 {
+			kv := make([]string, 0, len(h)*2)
+			for k, vv := range h {
+				for _, v := range vv {
+					kv = append(kv, k, v)
+				}
+			}
+			ctx = metadata.AppendToOutgoingContext(ctx, kv...)
+		}
+		return invoker(ctx, method, req, reply, cc, opts...)
+	}
+
+	headerStreamInterceptor := func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+		if h := zitadel.Headers(); len(h) > 0 {
+			kv := make([]string, 0, len(h)*2)
+			for k, vv := range h {
+				for _, v := range vv {
+					kv = append(kv, k, v)
+				}
+			}
+			ctx = metadata.AppendToOutgoingContext(ctx, kv...)
+		}
+		return streamer(ctx, desc, cc, method, opts...)
+	}
+
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(transportCreds),
 		grpc.WithPerRPCCredentials(&cred{tls: zitadel.IsTLS(), tokenSource: tokenSource}),
+		grpc.WithChainUnaryInterceptor(headerUnaryInterceptor),
+		grpc.WithChainStreamInterceptor(headerStreamInterceptor),
 	}
 	dialOptions = append(dialOptions, opts...)
 

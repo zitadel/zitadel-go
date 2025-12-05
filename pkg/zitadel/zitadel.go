@@ -2,6 +2,7 @@ package zitadel
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 )
 
@@ -13,6 +14,7 @@ type Zitadel struct {
 	port                  string
 	tls                   bool
 	insecureSkipVerifyTLS bool
+	headers               http.Header
 }
 
 func New(domain string, options ...Option) *Zitadel {
@@ -21,6 +23,7 @@ func New(domain string, options ...Option) *Zitadel {
 		port:                  "443",
 		tls:                   true,
 		insecureSkipVerifyTLS: false,
+		headers:               make(http.Header),
 	}
 	for _, option := range options {
 		option(zitadel)
@@ -55,6 +58,14 @@ func WithPort(port uint16) Option {
 	}
 }
 
+// WithCustomHeader allows to set a custom header (e.g. Host, Proxy-Authorization, etc.)
+// which will be sent with every request (gRPC and HTTP).
+func WithCustomHeader(key, value string) Option {
+	return func(z *Zitadel) {
+		z.headers.Add(key, value)
+	}
+}
+
 // Origin returns the HTTP Origin (schema://hostname[:port]), e.g.
 // https://your-instance.zitadel.cloud
 // https://your-domain.com
@@ -78,6 +89,10 @@ func (z *Zitadel) IsInsecureSkipVerifyTLS() bool {
 
 func (z *Zitadel) Domain() string {
 	return z.domain
+}
+
+func (z *Zitadel) Headers() http.Header {
+	return z.headers
 }
 
 func buildOrigin(hostname string, externalPort string, tls bool) string {
