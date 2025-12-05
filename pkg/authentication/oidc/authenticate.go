@@ -14,6 +14,8 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
+type DefaultContext = UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]
+
 type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 	authentication.Ctx
 	New() Ctx[C, S]
@@ -30,11 +32,16 @@ type codeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] st
 	relyingParty rp.RelyingParty
 }
 
+type headersKey struct{}
+
 // WithCodeFlow creates the OIDC/OAuth2 Authorization Code Flow implementation of the [authentication.Handler] interface.
 // The token endpoint itself requires some [ClientAuthentication] of the client.
 // Possible implementation are [PKCEAuthentication] and [ClientIDSecretAuthentication].
 func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientAuthentication) authentication.HandlerInitializer[T] {
 	return func(ctx context.Context, zitadel *zitadel.Zitadel) (authentication.Handler[T], error) {
+		if len(zitadel.Headers()) > 0 {
+			ctx = context.WithValue(ctx, headersKey{}, zitadel.Headers())
+		}
 		relyingParty, err := auth(ctx, zitadel.Origin())
 		if err != nil {
 			return nil, err
@@ -64,11 +71,11 @@ func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, sc
 // DefaultAuthentication is a short version of [WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo]]
 // with the client_id, redirectURI and encryptionKey and optional scopes.
 // If no scopes are provided, `"openid", "profile", "email"` will be used.
-func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...string) authentication.HandlerInitializer[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]] {
+func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...string) authentication.HandlerInitializer[*DefaultContext] {
 	if len(scopes) == 0 {
 		scopes = []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}
 	}
-	return WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
+	return WithCodeFlow[*DefaultContext, *oidc.IDTokenClaims, *oidc.UserInfo](
 		PKCEAuthentication(clientID, redirectURI, scopes, httphelper.NewCookieHandler([]byte(key), []byte(key))),
 	)
 }
@@ -77,7 +84,34 @@ func newRP(ctx context.Context, domain, clientID, clientSecret, redirectURI stri
 	if len(scopes) == 0 {
 		scopes = []string{oidc.ScopeOpenID}
 	}
+	if h, ok := ctx.Value(headersKey{}).(http.Header); ok && len(h) > 0 {
+		hc := &http.Client{
+			Transport: &headerRoundTripper{
+				next:    http.DefaultTransport,
+				headers: h,
+			},
+		}
+		options = append(options, rp.WithHTTPClient(hc))
+	}
 	return rp.NewRelyingPartyOIDC(ctx, domain, clientID, clientSecret, redirectURI, scopes, options...)
+}
+
+type headerRoundTripper struct {
+	next    http.RoundTripper
+	headers http.Header
+}
+
+func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	for k, vv := range h.headers {
+		// If Host header is set, we must set it on the struct field for it to be effective
+		if k == "Host" && len(vv) > 0 {
+			req.Host = vv[0]
+		}
+		for _, v := range vv {
+			req.Header.Add(k, v)
+		}
+	}
+	return h.next.RoundTrip(req)
 }
 
 // Authenticate starts the OIDC/OAuth2 Authorization Code Flow and redirects the user to the Login UI.
