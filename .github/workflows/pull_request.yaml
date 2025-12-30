@@ -1,0 +1,64 @@
+name: Test Package
+
+on: pull_request
+
+jobs:
+
+  lint:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+          cache: false
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.6.2
+          github-token: ${{ github.token }}
+          only-new-issues: true
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Download Go Modules
+      run: go mod download
+
+    - name: Run Acceptance Tests
+      run: go test -coverprofile=profile.cov ./...
+
+    - name: Publish Coverage
+      uses: codecov/codecov-action@v3.1.4
+      with:
+        file: profile.cov
+        name: acceptance-tests
+        flags: acceptance-tests
