@@ -13,6 +13,7 @@ type Zitadel struct {
 	port                  string
 	tls                   bool
 	insecureSkipVerifyTLS bool
+	transportHeaders      map[string]string
 }
 
 func New(domain string, options ...Option) *Zitadel {
@@ -21,6 +22,7 @@ func New(domain string, options ...Option) *Zitadel {
 		port:                  "443",
 		tls:                   true,
 		insecureSkipVerifyTLS: false,
+		transportHeaders:      make(map[string]string),
 	}
 	for _, option := range options {
 		option(zitadel)
@@ -55,6 +57,14 @@ func WithPort(port uint16) Option {
 	}
 }
 
+// WithTransportHeader allows to set custom headers (e.g. Proxy-Authorization) that will be sent
+// with both HTTP (authentication) and gRPC (API) requests.
+func WithTransportHeader(key, value string) Option {
+	return func(z *Zitadel) {
+		z.transportHeaders[key] = value
+	}
+}
+
 // Origin returns the HTTP Origin (schema://hostname[:port]), e.g.
 // https://your-instance.zitadel.cloud
 // https://your-domain.com
@@ -78,6 +88,10 @@ func (z *Zitadel) IsInsecureSkipVerifyTLS() bool {
 
 func (z *Zitadel) Domain() string {
 	return z.domain
+}
+
+func (z *Zitadel) TransportHeaders() map[string]string {
+	return z.transportHeaders
 }
 
 func buildOrigin(hostname string, externalPort string, tls bool) string {

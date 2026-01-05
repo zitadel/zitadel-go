@@ -24,6 +24,11 @@ const (
 	ActionService_DeleteTarget_FullMethodName           = "/zitadel.action.v2.ActionService/DeleteTarget"
 	ActionService_GetTarget_FullMethodName              = "/zitadel.action.v2.ActionService/GetTarget"
 	ActionService_ListTargets_FullMethodName            = "/zitadel.action.v2.ActionService/ListTargets"
+	ActionService_AddPublicKey_FullMethodName           = "/zitadel.action.v2.ActionService/AddPublicKey"
+	ActionService_ActivatePublicKey_FullMethodName      = "/zitadel.action.v2.ActionService/ActivatePublicKey"
+	ActionService_DeactivatePublicKey_FullMethodName    = "/zitadel.action.v2.ActionService/DeactivatePublicKey"
+	ActionService_RemovePublicKey_FullMethodName        = "/zitadel.action.v2.ActionService/RemovePublicKey"
+	ActionService_ListPublicKeys_FullMethodName         = "/zitadel.action.v2.ActionService/ListPublicKeys"
 	ActionService_SetExecution_FullMethodName           = "/zitadel.action.v2.ActionService/SetExecution"
 	ActionService_ListExecutions_FullMethodName         = "/zitadel.action.v2.ActionService/ListExecutions"
 	ActionService_ListExecutionFunctions_FullMethodName = "/zitadel.action.v2.ActionService/ListExecutionFunctions"
@@ -74,6 +79,64 @@ type ActionServiceClient interface {
 	// Required permission:
 	//   - `action.target.read`
 	ListTargets(ctx context.Context, in *ListTargetsRequest, opts ...grpc.CallOption) (*ListTargetsResponse, error)
+	// Add Public Key
+	//
+	// Adds a public key to the target for payload encryption.
+	// The public key is used to encrypt the payload sent to the target when the payload type is set to `PAYLOAD_TYPE_JWE`.
+	// The public key must be in PEM format and be either an RSA or an EC key.
+	// On a successful addition, a key ID is returned which can not only be used to manage the key (activate, remove),
+	// but also will be used as the `kid` header in the JWE token sent to the target to indicate which key was used for encryption.
+	// Note that newly added keys are inactive by default. You must activate the key to use it for payload encryption.
+	// Providing an optional expiration date allows you to set a validity period for the key.
+	// After the expiration date, the key will be automatically deactivated and no longer used for payload encryption.
+	// Be sure to activate a new key before the current active key expires to avoid interruptions in your target executions.
+	// You can have multiple inactive keys for rotation purposes, but only one active key at a time.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	AddPublicKey(ctx context.Context, in *AddPublicKeyRequest, opts ...grpc.CallOption) (*AddPublicKeyResponse, error)
+	// Activate Public Key
+	//
+	// Activates the public key for payload encryption.
+	// The public key is used to encrypt the payload sent to the target when the payload type is set to `PAYLOAD_TYPE_JWE`.
+	// Activating a new key will deactivate the current active key. Only one key can be active at a time.
+	// The active key is indicated in the `kid` header in the JWE token sent to the target.
+	// Activating a key that is already active is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	ActivatePublicKey(ctx context.Context, in *ActivatePublicKeyRequest, opts ...grpc.CallOption) (*ActivatePublicKeyResponse, error)
+	// Deactivate Public Key
+	//
+	// Deactivates the public key for payload encryption.
+	// The public key will no longer be used to encrypt payloads sent to the target.
+	// Be aware that deactivating the active key will leave the target without an active key.
+	// Subsequent calls to the target with payload type `PAYLOAD_TYPE_JWE` will fail until a new key is activated.
+	// This endpoint can be used in break glass scenarios to quickly disable a compromised key.
+	// Deactivating a key that is already inactive is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	DeactivatePublicKey(ctx context.Context, in *DeactivatePublicKeyRequest, opts ...grpc.CallOption) (*DeactivatePublicKeyResponse, error)
+	// Remove Public Key
+	//
+	// Removes the public key from the target. This is a permanent action and can not be undone.
+	// Note that you can only remove inactive keys. Attempting to remove an active key will result in an error.
+	// For break glass scenarios, deactivate the key first and then remove it.
+	// Removing a non-existing key is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	RemovePublicKey(ctx context.Context, in *RemovePublicKeyRequest, opts ...grpc.CallOption) (*RemovePublicKeyResponse, error)
+	// List Public Keys
+	//
+	// Lists all public keys of a target.
+	// The response includes which key is active and the key's expiration dates.
+	// This allows you to manage key rotations and ensure that your target always has an active key for payload encryption.
+	//
+	// Required permission:
+	//   - `action.target.read`
+	ListPublicKeys(ctx context.Context, in *ListPublicKeysRequest, opts ...grpc.CallOption) (*ListPublicKeysResponse, error)
 	// Set Execution
 	//
 	// Sets an execution to call a target or include the targets of another execution.
@@ -151,6 +214,51 @@ func (c *actionServiceClient) GetTarget(ctx context.Context, in *GetTargetReques
 func (c *actionServiceClient) ListTargets(ctx context.Context, in *ListTargetsRequest, opts ...grpc.CallOption) (*ListTargetsResponse, error) {
 	out := new(ListTargetsResponse)
 	err := c.cc.Invoke(ctx, ActionService_ListTargets_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *actionServiceClient) AddPublicKey(ctx context.Context, in *AddPublicKeyRequest, opts ...grpc.CallOption) (*AddPublicKeyResponse, error) {
+	out := new(AddPublicKeyResponse)
+	err := c.cc.Invoke(ctx, ActionService_AddPublicKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *actionServiceClient) ActivatePublicKey(ctx context.Context, in *ActivatePublicKeyRequest, opts ...grpc.CallOption) (*ActivatePublicKeyResponse, error) {
+	out := new(ActivatePublicKeyResponse)
+	err := c.cc.Invoke(ctx, ActionService_ActivatePublicKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *actionServiceClient) DeactivatePublicKey(ctx context.Context, in *DeactivatePublicKeyRequest, opts ...grpc.CallOption) (*DeactivatePublicKeyResponse, error) {
+	out := new(DeactivatePublicKeyResponse)
+	err := c.cc.Invoke(ctx, ActionService_DeactivatePublicKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *actionServiceClient) RemovePublicKey(ctx context.Context, in *RemovePublicKeyRequest, opts ...grpc.CallOption) (*RemovePublicKeyResponse, error) {
+	out := new(RemovePublicKeyResponse)
+	err := c.cc.Invoke(ctx, ActionService_RemovePublicKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *actionServiceClient) ListPublicKeys(ctx context.Context, in *ListPublicKeysRequest, opts ...grpc.CallOption) (*ListPublicKeysResponse, error) {
+	out := new(ListPublicKeysResponse)
+	err := c.cc.Invoke(ctx, ActionService_ListPublicKeys_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -245,6 +353,64 @@ type ActionServiceServer interface {
 	// Required permission:
 	//   - `action.target.read`
 	ListTargets(context.Context, *ListTargetsRequest) (*ListTargetsResponse, error)
+	// Add Public Key
+	//
+	// Adds a public key to the target for payload encryption.
+	// The public key is used to encrypt the payload sent to the target when the payload type is set to `PAYLOAD_TYPE_JWE`.
+	// The public key must be in PEM format and be either an RSA or an EC key.
+	// On a successful addition, a key ID is returned which can not only be used to manage the key (activate, remove),
+	// but also will be used as the `kid` header in the JWE token sent to the target to indicate which key was used for encryption.
+	// Note that newly added keys are inactive by default. You must activate the key to use it for payload encryption.
+	// Providing an optional expiration date allows you to set a validity period for the key.
+	// After the expiration date, the key will be automatically deactivated and no longer used for payload encryption.
+	// Be sure to activate a new key before the current active key expires to avoid interruptions in your target executions.
+	// You can have multiple inactive keys for rotation purposes, but only one active key at a time.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	AddPublicKey(context.Context, *AddPublicKeyRequest) (*AddPublicKeyResponse, error)
+	// Activate Public Key
+	//
+	// Activates the public key for payload encryption.
+	// The public key is used to encrypt the payload sent to the target when the payload type is set to `PAYLOAD_TYPE_JWE`.
+	// Activating a new key will deactivate the current active key. Only one key can be active at a time.
+	// The active key is indicated in the `kid` header in the JWE token sent to the target.
+	// Activating a key that is already active is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	ActivatePublicKey(context.Context, *ActivatePublicKeyRequest) (*ActivatePublicKeyResponse, error)
+	// Deactivate Public Key
+	//
+	// Deactivates the public key for payload encryption.
+	// The public key will no longer be used to encrypt payloads sent to the target.
+	// Be aware that deactivating the active key will leave the target without an active key.
+	// Subsequent calls to the target with payload type `PAYLOAD_TYPE_JWE` will fail until a new key is activated.
+	// This endpoint can be used in break glass scenarios to quickly disable a compromised key.
+	// Deactivating a key that is already inactive is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	DeactivatePublicKey(context.Context, *DeactivatePublicKeyRequest) (*DeactivatePublicKeyResponse, error)
+	// Remove Public Key
+	//
+	// Removes the public key from the target. This is a permanent action and can not be undone.
+	// Note that you can only remove inactive keys. Attempting to remove an active key will result in an error.
+	// For break glass scenarios, deactivate the key first and then remove it.
+	// Removing a non-existing key is a no-op.
+	//
+	// Required permission:
+	//   - `action.target.write`
+	RemovePublicKey(context.Context, *RemovePublicKeyRequest) (*RemovePublicKeyResponse, error)
+	// List Public Keys
+	//
+	// Lists all public keys of a target.
+	// The response includes which key is active and the key's expiration dates.
+	// This allows you to manage key rotations and ensure that your target always has an active key for payload encryption.
+	//
+	// Required permission:
+	//   - `action.target.read`
+	ListPublicKeys(context.Context, *ListPublicKeysRequest) (*ListPublicKeysResponse, error)
 	// Set Execution
 	//
 	// Sets an execution to call a target or include the targets of another execution.
@@ -294,6 +460,21 @@ func (UnimplementedActionServiceServer) GetTarget(context.Context, *GetTargetReq
 }
 func (UnimplementedActionServiceServer) ListTargets(context.Context, *ListTargetsRequest) (*ListTargetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTargets not implemented")
+}
+func (UnimplementedActionServiceServer) AddPublicKey(context.Context, *AddPublicKeyRequest) (*AddPublicKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddPublicKey not implemented")
+}
+func (UnimplementedActionServiceServer) ActivatePublicKey(context.Context, *ActivatePublicKeyRequest) (*ActivatePublicKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivatePublicKey not implemented")
+}
+func (UnimplementedActionServiceServer) DeactivatePublicKey(context.Context, *DeactivatePublicKeyRequest) (*DeactivatePublicKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeactivatePublicKey not implemented")
+}
+func (UnimplementedActionServiceServer) RemovePublicKey(context.Context, *RemovePublicKeyRequest) (*RemovePublicKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePublicKey not implemented")
+}
+func (UnimplementedActionServiceServer) ListPublicKeys(context.Context, *ListPublicKeysRequest) (*ListPublicKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPublicKeys not implemented")
 }
 func (UnimplementedActionServiceServer) SetExecution(context.Context, *SetExecutionRequest) (*SetExecutionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetExecution not implemented")
@@ -409,6 +590,96 @@ func _ActionService_ListTargets_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ActionServiceServer).ListTargets(ctx, req.(*ListTargetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ActionService_AddPublicKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddPublicKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActionServiceServer).AddPublicKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ActionService_AddPublicKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActionServiceServer).AddPublicKey(ctx, req.(*AddPublicKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ActionService_ActivatePublicKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivatePublicKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActionServiceServer).ActivatePublicKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ActionService_ActivatePublicKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActionServiceServer).ActivatePublicKey(ctx, req.(*ActivatePublicKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ActionService_DeactivatePublicKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeactivatePublicKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActionServiceServer).DeactivatePublicKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ActionService_DeactivatePublicKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActionServiceServer).DeactivatePublicKey(ctx, req.(*DeactivatePublicKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ActionService_RemovePublicKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePublicKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActionServiceServer).RemovePublicKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ActionService_RemovePublicKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActionServiceServer).RemovePublicKey(ctx, req.(*RemovePublicKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ActionService_ListPublicKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPublicKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActionServiceServer).ListPublicKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ActionService_ListPublicKeys_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActionServiceServer).ListPublicKeys(ctx, req.(*ListPublicKeysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -529,6 +800,26 @@ var ActionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTargets",
 			Handler:    _ActionService_ListTargets_Handler,
+		},
+		{
+			MethodName: "AddPublicKey",
+			Handler:    _ActionService_AddPublicKey_Handler,
+		},
+		{
+			MethodName: "ActivatePublicKey",
+			Handler:    _ActionService_ActivatePublicKey_Handler,
+		},
+		{
+			MethodName: "DeactivatePublicKey",
+			Handler:    _ActionService_DeactivatePublicKey_Handler,
+		},
+		{
+			MethodName: "RemovePublicKey",
+			Handler:    _ActionService_RemovePublicKey_Handler,
+		},
+		{
+			MethodName: "ListPublicKeys",
+			Handler:    _ActionService_ListPublicKeys_Handler,
 		},
 		{
 			MethodName: "SetExecution",
