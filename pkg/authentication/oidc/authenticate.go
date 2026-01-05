@@ -14,6 +14,8 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
+type DefaultContext = UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]
+
 type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 	authentication.Ctx
 	New() Ctx[C, S]
@@ -64,11 +66,11 @@ func ClientIDSecretAuthentication(clientID, clientSecret, redirectURI string, sc
 // DefaultAuthentication is a short version of [WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo]]
 // with the client_id, redirectURI and encryptionKey and optional scopes.
 // If no scopes are provided, `"openid", "profile", "email"` will be used.
-func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...string) authentication.HandlerInitializer[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]] {
+func DefaultAuthentication(clientID, redirectURI string, key string, scopes ...string) authentication.HandlerInitializer[*DefaultContext] {
 	if len(scopes) == 0 {
 		scopes = []string{oidc.ScopeOpenID, oidc.ScopeProfile, oidc.ScopeEmail}
 	}
-	return WithCodeFlow[*UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo], *oidc.IDTokenClaims, *oidc.UserInfo](
+	return WithCodeFlow[*DefaultContext, *oidc.IDTokenClaims, *oidc.UserInfo](
 		PKCEAuthentication(clientID, redirectURI, scopes, httphelper.NewCookieHandler([]byte(key), []byte(key))),
 	)
 }
