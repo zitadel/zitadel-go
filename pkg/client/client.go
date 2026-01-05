@@ -2,10 +2,13 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
+	"net/http"
 	"sync"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	actionV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
 	actionV2Beta "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2beta"
@@ -122,6 +125,36 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 		o(&options)
 	}
 
+	if zitadel.IsInsecureSkipVerifyTLS() || len(zitadel.TransportHeaders()) > 0 {
+		var baseTransport *http.Transport
+		if t, ok := http.DefaultTransport.(*http.Transport); ok {
+			baseTransport = t.Clone()
+		} else {
+			baseTransport = &http.Transport{
+				Proxy: http.ProxyFromEnvironment,
+			}
+		}
+
+		if zitadel.IsInsecureSkipVerifyTLS() {
+			if baseTransport.TLSClientConfig == nil {
+				baseTransport.TLSClientConfig = &tls.Config{}
+			}
+			baseTransport.TLSClientConfig.InsecureSkipVerify = true
+		}
+
+		var rt http.RoundTripper = baseTransport
+		if len(zitadel.TransportHeaders()) > 0 {
+			rt = &headerRoundTripper{
+				rt:      baseTransport,
+				headers: zitadel.TransportHeaders(),
+			}
+		}
+
+		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+			Transport: rt,
+		})
+	}
+
 	var source oauth2.TokenSource
 	if options.initTokenSource != nil {
 		var err error
@@ -156,6 +189,16 @@ func newConnection(
 		grpc.WithTransportCredentials(transportCreds),
 		grpc.WithPerRPCCredentials(&cred{tls: zitadel.IsTLS(), tokenSource: tokenSource}),
 	}
+
+	if len(zitadel.TransportHeaders()) > 0 {
+		dialOptions = append(dialOptions, grpc.WithUnaryInterceptor(func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+			for k, v := range zitadel.TransportHeaders() {
+				ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+			}
+			return invoker(ctx, method, req, reply, cc, opts...)
+		}))
+	}
+
 	dialOptions = append(dialOptions, opts...)
 
 	return grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
@@ -374,4 +417,21 @@ func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
 
 func (c *Client) Close() error {
 	return c.connection.Close()
+}
+
+type headerRoundTripper struct {
+	rt      http.RoundTripper
+	headers map[string]string
+}
+
+func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	newReq := *req
+	newReq.Header = make(http.Header, len(req.Header))
+	for k, s := range req.Header {
+		newReq.Header[k] = s
+	}
+	for k, v := range h.headers {
+		newReq.Header.Set(k, v)
+	}
+	return h.rt.RoundTrip(&newReq)
 }
