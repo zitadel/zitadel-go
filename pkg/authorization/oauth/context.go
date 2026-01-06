@@ -13,7 +13,7 @@ func (c *IntrospectionContext) IsAuthorized() bool {
 	if c == nil {
 		return false
 	}
-	return c.IntrospectionResponse.Active
+	return c.Active
 }
 
 // OrganizationID implements [authorization.Ctx] by returning the `urn:zitadel:iam:user:resourceowner:id` claim
@@ -23,7 +23,7 @@ func (c *IntrospectionContext) OrganizationID() string {
 		return ""
 	}
 	// check for organization ID when using scope "urn:zitadel:iam:user:resourceowner"
-	orgID, _ := c.IntrospectionResponse.Claims["urn:zitadel:iam:user:resourceowner:id"].(string)
+	orgID, _ := c.Claims["urn:zitadel:iam:user:resourceowner:id"].(string)
 	return orgID
 }
 
@@ -32,7 +32,7 @@ func (c *IntrospectionContext) UserID() string {
 	if c == nil {
 		return ""
 	}
-	return c.IntrospectionResponse.Subject
+	return c.Subject
 }
 
 // IsGrantedRole implements [authorization.Ctx] by checking if the `urn:zitadel:iam:org:project:roles` claim contains the requested role.
@@ -73,7 +73,7 @@ func (c *IntrospectionContext) GetToken() string {
 }
 
 func (c *IntrospectionContext) checkRoleClaim(role string) map[string]interface{} {
-	roles, ok := c.IntrospectionResponse.Claims["urn:zitadel:iam:org:project:roles"].(map[string]interface{})
+	roles, ok := c.Claims["urn:zitadel:iam:org:project:roles"].(map[string]interface{})
 	if !ok || len(roles) == 0 {
 		return nil
 	}
@@ -86,7 +86,7 @@ func (c *IntrospectionContext) checkRoleClaim(role string) map[string]interface{
 
 func (c *IntrospectionContext) checkProjectRoleClaim(projectID, role, organisationID string) map[string]interface{} {
 	claimKey := "urn:zitadel:iam:org:project:" + projectID + ":roles"
-	roles, ok := c.IntrospectionResponse.Claims[claimKey].(map[string]interface{})
+	roles, ok := c.Claims[claimKey].(map[string]interface{})
 	if !ok || len(roles) == 0 {
 		return nil
 	}

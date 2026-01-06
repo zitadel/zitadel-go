@@ -41,6 +41,7 @@ func main() {
 
 	//call ZITADEL and print the name and creation date of all instances
 	//the call was successful if no error occurred
+	//nolint:staticcheck // Example uses deprecated call for simplicity.
 	resp, err := client.ListInstances(ctx, &pb.ListInstancesRequest{})
 	if err != nil {
 		log.Fatalln("call failed: ", err)

@@ -26,6 +26,8 @@ func AuthenticationJWTProfile(file *KeyFile, scopes ...string) TokenSourceInitia
 
 // JWTAuthentication allows using the OAuth2 JWT Profile Grant to get a token using a key.json of a service user provided by ZITADEL.
 // Deprecated: Use [AuthenticationJWTProfile] instead, which uses the correct KeyFile type.
+//
+//nolint:staticcheck // Keep deprecated signature for backward compatibility.
 func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, []byte(file.Key), scopes)
