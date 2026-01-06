@@ -143,6 +143,7 @@ func TestClient_TransportConfiguration_Table(t *testing.T) {
 
 			c, err := New(ctx, zitadel.New(host, opts...),
 				WithAuth(mockSource),
+				//nolint:staticcheck // WithBlock is used in tests to ensure connection attempts block as expected.
 				WithGRPCDialOptions(grpc.WithBlock()),
 			)
 
