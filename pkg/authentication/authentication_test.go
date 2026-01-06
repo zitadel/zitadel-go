@@ -1,4 +1,3 @@
-// file: pkg/authentication/authentication_test.go
 package authentication_test
 
 import (

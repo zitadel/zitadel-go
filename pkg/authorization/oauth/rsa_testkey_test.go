@@ -38,7 +38,7 @@ func NewTestKey(bits int) (*TestKey, error) {
 	eBytes := big.NewInt(int64(priv.PublicKey.E)).Bytes()
 	jwk := fmt.Sprintf(`{"e":"%s","kty":"RSA","n":"%s"}`,
 		b64.EncodeToString(eBytes),
-		b64.EncodeToString(priv.PublicKey.N.Bytes()))
+		b64.EncodeToString(priv.N.Bytes()))
 	sum := sha256.Sum256([]byte(jwk))
 
 	return &TestKey{

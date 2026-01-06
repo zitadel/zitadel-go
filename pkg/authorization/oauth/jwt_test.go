@@ -13,6 +13,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization/oauth"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
@@ -107,6 +108,14 @@ func TestWithJWT(t *testing.T) {
 			ttl:           time.Hour,
 			issuer:        mockServer.URL,
 			audience:      []string{"wrong-aud"},
+			signingKey:    keyPair.Private(),
+			expectSuccess: false,
+		},
+		{
+			name:          "Failure: empty audience",
+			ttl:           time.Hour,
+			issuer:        mockServer.URL,
+			audience:      []string{},
 			signingKey:    keyPair.Private(),
 			expectSuccess: false,
 		},

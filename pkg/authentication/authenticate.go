@@ -144,29 +144,27 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "unable to serialize auth context", http.StatusInternalServerError)
 			return
 		}
-		err = a.setSessionCookie(w, string(data))
-		if err != nil {
+		if err = a.setSessionCookie(w, string(data)); err != nil {
 			a.logger.Error("unable to save session cookie", "error", err)
 			http.Error(w, "session could not be stored", http.StatusInternalServerError)
 			return
 		}
-	} else {
-		// Original stateful mode: Store session in memory.
-		id := uuid.NewString()
-		err = a.sessions.Set(id, authCtx)
-		if err != nil {
-			a.logger.Error("unable to save session", "error", err, "id", id)
-			http.Error(w, "session could not be stored", http.StatusInternalServerError)
-			return
-		}
-		err = a.setSessionCookie(w, id)
-		if err != nil {
-			a.logger.Error("unable to save session cookie", "error", err, "id", id)
-			http.Error(w, "session could not be stored", http.StatusInternalServerError)
-			return
-		}
+		http.Redirect(w, req, state.RequestedURI, http.StatusFound)
+		return
 	}
 
+	// Original stateful mode: Store session in memory.
+	id := uuid.NewString()
+	if err = a.sessions.Set(id, authCtx); err != nil {
+		a.logger.Error("unable to save session", "error", err, "id", id)
+		http.Error(w, "session could not be stored", http.StatusInternalServerError)
+		return
+	}
+	if err = a.setSessionCookie(w, id); err != nil {
+		a.logger.Error("unable to save session cookie", "error", err, "id", id)
+		http.Error(w, "session could not be stored", http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, req, state.RequestedURI, http.StatusFound)
 }
 
@@ -207,16 +205,15 @@ func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 	if err != nil {
 		return t, ErrNoCookie
 	}
-	decrypted, err := crypto.DecryptAES(cookie.Value, a.encryptionKey)
+	sessionValue, err := crypto.DecryptAES(cookie.Value, a.encryptionKey)
 	if err != nil {
 		a.logger.Log(req.Context(), slog.LevelWarn, "unable to decrypt session cookie")
 		return t, err
 	}
 
-	// This is the crucial logic that was missing.
 	if a.useCookieSession {
 		// Stateless mode: Deserialize the context directly from the cookie.
-		if err = json.Unmarshal([]byte(decrypted), &t); err != nil {
+		if err = json.Unmarshal([]byte(sessionValue), &t); err != nil {
 			a.logger.Log(req.Context(), slog.LevelWarn, "unable to deserialize auth context from cookie")
 			return t, err
 		}
@@ -224,10 +221,9 @@ func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 	}
 
 	// Original stateful mode: Use decrypted value as session ID to look up in the store.
-	sessionID := decrypted
-	session, err := a.sessions.Get(sessionID)
+	session, err := a.sessions.Get(sessionValue)
 	if err != nil {
-		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", sessionID)
+		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", sessionValue)
 		return t, ErrNoSession
 	}
 	return session, nil

@@ -1,0 +1,167 @@
+package client
+
+import (
+	"context"
+	"crypto/tls"
+	"net"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
+	"golang.org/x/oauth2"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+)
+
+func TestClient_TransportConfiguration_Table(t *testing.T) {
+	tests := []struct {
+		name             string
+		useTLS           bool
+		clientOptsFunc   func(host string, port uint16) []zitadel.Option
+		expectError      bool
+		expectHTTPHeader bool
+		expectGRPCHeader bool
+	}{
+		{
+			name:   "1_InsecureSkipVerify_Success",
+			useTLS: true,
+			clientOptsFunc: func(host string, port uint16) []zitadel.Option {
+				return []zitadel.Option{
+					zitadel.WithPort(port),
+					zitadel.WithInsecureSkipVerifyTLS(),
+				}
+			},
+			expectError: false,
+		},
+		{
+			name:   "2_Plaintext_HTTP_Success",
+			useTLS: false,
+			clientOptsFunc: func(host string, port uint16) []zitadel.Option {
+				return []zitadel.Option{
+					zitadel.WithInsecure(strconv.Itoa(int(port))),
+				}
+			},
+			expectError: false,
+		},
+		{
+			name:   "3_CustomHeaders_Propagate",
+			useTLS: true,
+			clientOptsFunc: func(host string, port uint16) []zitadel.Option {
+				return []zitadel.Option{
+					zitadel.WithPort(port),
+					zitadel.WithInsecureSkipVerifyTLS(),
+					zitadel.WithTransportHeader("x-foo", "bar"),
+				}
+			},
+			expectError:      false,
+			expectHTTPHeader: true,
+			expectGRPCHeader: true,
+		},
+		{
+			name:   "4_DefaultSecure_FailsOnSelfSigned",
+			useTLS: true,
+			clientOptsFunc: func(host string, port uint16) []zitadel.Option {
+				return []zitadel.Option{
+					zitadel.WithPort(port),
+				}
+			},
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var server *httptest.Server
+			handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if tt.expectHTTPHeader {
+					assert.Equal(t, "bar", r.Header.Get("x-foo"))
+				}
+				w.WriteHeader(http.StatusOK)
+			})
+
+			if tt.useTLS {
+				server = httptest.NewTLSServer(handler)
+			} else {
+				server = httptest.NewServer(handler)
+			}
+			defer server.Close()
+
+			listener, err := net.Listen("tcp", "localhost:0")
+			require.NoError(t, err)
+
+			var srvOpts []grpc.ServerOption
+			if tt.useTLS {
+				cert := server.TLS.Certificates[0]
+				srvOpts = append(srvOpts, grpc.Creds(credentials.NewTLS(&tls.Config{Certificates: []tls.Certificate{cert}})))
+			}
+
+			srvOpts = append(srvOpts, grpc.UnaryInterceptor(func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+				if tt.expectGRPCHeader {
+					md, _ := metadata.FromIncomingContext(ctx)
+					vals := md.Get("x-foo")
+					if assert.NotEmpty(t, vals) {
+						assert.Equal(t, "bar", vals[0])
+					}
+				}
+				return handler(ctx, req)
+			}))
+
+			grpcServer := grpc.NewServer(srvOpts...)
+			go func() { _ = grpcServer.Serve(listener) }()
+			defer grpcServer.Stop()
+
+			host, portStr, _ := net.SplitHostPort(listener.Addr().String())
+			port, _ := strconv.Atoi(portStr)
+
+			opts := tt.clientOptsFunc(host, uint16(port))
+
+			mockSource := func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
+				httpClient, ok := ctx.Value(oauth2.HTTPClient).(*http.Client)
+				if !ok {
+					httpClient = http.DefaultClient
+				}
+
+				req, _ := http.NewRequest("GET", server.URL, nil)
+				resp, err := httpClient.Do(req)
+				if err != nil {
+					return nil, err
+				}
+				assert.NoError(t, resp.Body.Close())
+				return nil, nil
+			}
+
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+
+			c, err := New(ctx, zitadel.New(host, opts...),
+				WithAuth(mockSource),
+				WithGRPCDialOptions(grpc.WithBlock()),
+			)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				require.NoError(t, err)
+
+				err = c.connection.Invoke(ctx, "/test.Service/TestMethod", nil, nil)
+				if err != nil {
+					st, ok := status.FromError(err)
+					require.True(t, ok)
+					assert.Equal(t, codes.Unimplemented, st.Code())
+				} else {
+					assert.NoError(t, err)
+				}
+
+				require.NoError(t, c.Close())
+			}
+		})
+	}
+}

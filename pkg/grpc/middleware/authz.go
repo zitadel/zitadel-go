@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,10 +28,10 @@ func New[T authorization.Ctx](authorizer *authorization.Authorizer[T], checks ma
 // Ensure to configure the [Interceptor] with the required checks.
 // If no checks are provided the interceptor will allow public access to the API.
 func (i *Interceptor[T]) Unary() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 		ctx, err = i.intercept(ctx, info.FullMethod)
 		if err != nil {
-			return nil, status.Error(codes.PermissionDenied, err.Error())
+			return nil, err
 		}
 		return handler(ctx, req)
 	}
@@ -41,7 +41,7 @@ func (i *Interceptor[T]) Unary() grpc.UnaryServerInterceptor {
 // Ensure to configure the [Interceptor] with the required checks.
 // If no checks are provided the interceptor will allow public access to the API.
 func (i *Interceptor[T]) Stream() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx, err := i.intercept(stream.Context(), info.FullMethod)
 		if err != nil {
 			return err
@@ -60,7 +60,7 @@ func (i *Interceptor[T]) intercept(ctx context.Context, method string) (context.
 		if endpoint != method {
 			continue
 		}
-		authCtx, err := i.authorizer.CheckAuthorization(ctx, metautils.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
+		authCtx, err := i.authorizer.CheckAuthorization(ctx, metadata.ExtractIncoming(ctx).Get(authorization.HeaderName), checks...)
 		if err != nil {
 			if errors.Is(err, &authorization.UnauthorizedErr{}) {
 				return nil, status.Error(codes.Unauthenticated, err.Error())
