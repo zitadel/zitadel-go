@@ -10,11 +10,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type key int
+type ctxKey string
 
-const (
-	ctxOverwrite = 1
-)
+const ctxOverwrite ctxKey = "zitadel-ctx-overwrite"
 
 type cred struct {
 	tokenSource oauth2.TokenSource

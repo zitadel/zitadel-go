@@ -61,6 +61,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		return nil, err
 	}
 	dialOptions = append(dialOptions, opt)
+	//nolint:staticcheck // grpc.Dial is retained for compatibility with existing usage.
 	conn, err := grpc.Dial(c.api, dialOptions...)
 	if err != nil {
 		return nil, err
@@ -96,6 +97,7 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 
 func transportOption(api string, insecure bool) (grpc.DialOption, error) {
 	if insecure {
+		//nolint:staticcheck // WithInsecure is used for compatibility; callers control security.
 		return grpc.WithInsecure(), nil
 	}
 	certs, err := transportCredentials(api)

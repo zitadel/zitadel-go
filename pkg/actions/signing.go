@@ -40,7 +40,7 @@ func ComputeSignatureHeader(t time.Time, payload []byte, signingKey ...string) s
 
 func computeSignature(t time.Time, payload []byte, signingKey string) []byte {
 	mac := hmac.New(sha256.New, []byte(signingKey))
-	fmt.Fprintf(mac, "%d", t.Unix())
+	_, _ = fmt.Fprintf(mac, "%d", t.Unix())
 	mac.Write([]byte("."))
 	mac.Write(payload)
 	return mac.Sum(nil)
