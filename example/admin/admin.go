@@ -48,6 +48,7 @@ func main() {
 
 	//call ZITADEL and print the name and creation date of the requested organisation
 	//the call was successful if no error occurred
+	//nolint:staticcheck // Example uses deprecated call for simplicity.
 	resp, err := client.GetOrgByID(ctx, &pb.GetOrgByIDRequest{
 		Id: *orgID,
 	})

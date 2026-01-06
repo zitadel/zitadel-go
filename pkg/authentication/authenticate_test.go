@@ -24,8 +24,8 @@ func (m *mockHandler[T]) Authenticate(_ http.ResponseWriter, _ *http.Request, _ 
 
 func (m *mockHandler[T]) Callback(_ http.ResponseWriter, _ *http.Request) (T, string) {
 	var t T
-	if newCtx, ok := any(t).(*zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]); ok {
-		newCtx = &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+	if _, ok := any(t).(*zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]); ok {
+		newCtx := &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
 			Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{IDToken: "dummy-id-token"},
 		}
 		return any(newCtx).(T), "dummy-state"

@@ -201,6 +201,7 @@ func newConnection(
 
 	dialOptions = append(dialOptions, opts...)
 
+	//nolint:staticcheck // grpc.DialContext is kept for backward compatibility across supported gRPC versions.
 	return grpc.DialContext(ctx, zitadel.Host(), dialOptions...)
 }
 

@@ -30,6 +30,10 @@ func main() {
 	api, err := client.New(ctx, zitadel.New(*domain),
 		client.WithAuth(client.DefaultServiceUserAuthentication(*keyPath, oidc.ScopeOpenID, client.ScopeZitadelAPI())),
 	)
+	if err != nil {
+		slog.Error("cannot create api client", "error", err)
+		os.Exit(1)
+	}
 
 	// In this example we will just use the ManagementService to retrieve the users organisation,
 	// but you can use the API for all the other services (Admin, Auth, User, Session, ...) too.

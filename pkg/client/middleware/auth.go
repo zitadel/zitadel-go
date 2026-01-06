@@ -110,7 +110,7 @@ func (interceptor *AuthInterceptor) Stream() grpc.StreamClientInterceptor {
 }
 
 func (interceptor *AuthInterceptor) setToken(ctx context.Context) (context.Context, error) {
-	token, err := interceptor.TokenSource.Token()
+	token, err := interceptor.Token()
 	if err != nil {
 		return ctx, err
 	}

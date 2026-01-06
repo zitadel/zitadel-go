@@ -55,6 +55,8 @@ func IntrospectionAuthenticationJWTProfile(file *client.KeyFile) IntrospectionAu
 // JWTProfileIntrospectionAuthentication allows you to authenticate the introspection
 // request with JWT Profile using a key.json provided by ZITADEL.
 // Deprecated: Use [IntrospectionAuthenticationJWTProfile] instead, which uses the correct [client.KeyFile] type.
+//
+//nolint:staticcheck // Keep deprecated signature for backward compatibility.
 func JWTProfileIntrospectionAuthentication(file *oidc_client.KeyFile) IntrospectionAuthentication {
 	return func(ctx context.Context, issuer string) (rs.ResourceServer, error) {
 		return rs.NewResourceServerJWTProfile(ctx, issuer, file.ClientID, file.KeyID, []byte(file.Key))
