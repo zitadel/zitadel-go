@@ -51,6 +51,8 @@ const (
 	UserService_RemoveTOTP_FullMethodName                     = "/zitadel.user.v2.UserService/RemoveTOTP"
 	UserService_AddOTPSMS_FullMethodName                      = "/zitadel.user.v2.UserService/AddOTPSMS"
 	UserService_RemoveOTPSMS_FullMethodName                   = "/zitadel.user.v2.UserService/RemoveOTPSMS"
+	UserService_GenerateRecoveryCodes_FullMethodName          = "/zitadel.user.v2.UserService/GenerateRecoveryCodes"
+	UserService_RemoveRecoveryCodes_FullMethodName            = "/zitadel.user.v2.UserService/RemoveRecoveryCodes"
 	UserService_AddOTPEmail_FullMethodName                    = "/zitadel.user.v2.UserService/AddOTPEmail"
 	UserService_RemoveOTPEmail_FullMethodName                 = "/zitadel.user.v2.UserService/RemoveOTPEmail"
 	UserService_StartIdentityProviderIntent_FullMethodName    = "/zitadel.user.v2.UserService/StartIdentityProviderIntent"
@@ -225,6 +227,14 @@ type UserServiceClient interface {
 	//
 	// Remove the configured One-Time Password (OTP) SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveOTPSMS(ctx context.Context, in *RemoveOTPSMSRequest, opts ...grpc.CallOption) (*RemoveOTPSMSResponse, error)
+	// Generate single-use recovery codes for a user
+	//
+	// Generate new single-use recovery codes for the authenticated user. Recovery codes can be used to recover access to the account if other second factors are not available.
+	GenerateRecoveryCodes(ctx context.Context, in *GenerateRecoveryCodesRequest, opts ...grpc.CallOption) (*GenerateRecoveryCodesResponse, error)
+	// Remove recovery codes from a user
+	//
+	// Remove all recovery codes from the authenticated user. This will disable the recovery code second factor.
+	RemoveRecoveryCodes(ctx context.Context, in *RemoveRecoveryCodesRequest, opts ...grpc.CallOption) (*RemoveRecoveryCodesResponse, error)
 	// Add OTP Email for a user
 	//
 	// Add a new One-Time Password (OTP) Email factor to the authenticated user. OTP Email will enable the user to verify a OTP with the latest verified email. The email has to be verified to add the second factor..
@@ -675,6 +685,24 @@ func (c *userServiceClient) RemoveOTPSMS(ctx context.Context, in *RemoveOTPSMSRe
 	return out, nil
 }
 
+func (c *userServiceClient) GenerateRecoveryCodes(ctx context.Context, in *GenerateRecoveryCodesRequest, opts ...grpc.CallOption) (*GenerateRecoveryCodesResponse, error) {
+	out := new(GenerateRecoveryCodesResponse)
+	err := c.cc.Invoke(ctx, UserService_GenerateRecoveryCodes_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveRecoveryCodes(ctx context.Context, in *RemoveRecoveryCodesRequest, opts ...grpc.CallOption) (*RemoveRecoveryCodesResponse, error) {
+	out := new(RemoveRecoveryCodesResponse)
+	err := c.cc.Invoke(ctx, UserService_RemoveRecoveryCodes_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) AddOTPEmail(ctx context.Context, in *AddOTPEmailRequest, opts ...grpc.CallOption) (*AddOTPEmailResponse, error) {
 	out := new(AddOTPEmailResponse)
 	err := c.cc.Invoke(ctx, UserService_AddOTPEmail_FullMethodName, in, out, opts...)
@@ -1055,6 +1083,14 @@ type UserServiceServer interface {
 	//
 	// Remove the configured One-Time Password (OTP) SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveOTPSMS(context.Context, *RemoveOTPSMSRequest) (*RemoveOTPSMSResponse, error)
+	// Generate single-use recovery codes for a user
+	//
+	// Generate new single-use recovery codes for the authenticated user. Recovery codes can be used to recover access to the account if other second factors are not available.
+	GenerateRecoveryCodes(context.Context, *GenerateRecoveryCodesRequest) (*GenerateRecoveryCodesResponse, error)
+	// Remove recovery codes from a user
+	//
+	// Remove all recovery codes from the authenticated user. This will disable the recovery code second factor.
+	RemoveRecoveryCodes(context.Context, *RemoveRecoveryCodesRequest) (*RemoveRecoveryCodesResponse, error)
 	// Add OTP Email for a user
 	//
 	// Add a new One-Time Password (OTP) Email factor to the authenticated user. OTP Email will enable the user to verify a OTP with the latest verified email. The email has to be verified to add the second factor..
@@ -1309,6 +1345,12 @@ func (UnimplementedUserServiceServer) AddOTPSMS(context.Context, *AddOTPSMSReque
 }
 func (UnimplementedUserServiceServer) RemoveOTPSMS(context.Context, *RemoveOTPSMSRequest) (*RemoveOTPSMSResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveOTPSMS not implemented")
+}
+func (UnimplementedUserServiceServer) GenerateRecoveryCodes(context.Context, *GenerateRecoveryCodesRequest) (*GenerateRecoveryCodesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateRecoveryCodes not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveRecoveryCodes(context.Context, *RemoveRecoveryCodesRequest) (*RemoveRecoveryCodesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveRecoveryCodes not implemented")
 }
 func (UnimplementedUserServiceServer) AddOTPEmail(context.Context, *AddOTPEmailRequest) (*AddOTPEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOTPEmail not implemented")
@@ -1977,6 +2019,42 @@ func _UserService_RemoveOTPSMS_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GenerateRecoveryCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateRecoveryCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GenerateRecoveryCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GenerateRecoveryCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GenerateRecoveryCodes(ctx, req.(*GenerateRecoveryCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveRecoveryCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveRecoveryCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveRecoveryCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_RemoveRecoveryCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveRecoveryCodes(ctx, req.(*RemoveRecoveryCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_AddOTPEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddOTPEmailRequest)
 	if err := dec(in); err != nil {
@@ -2579,6 +2657,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveOTPSMS",
 			Handler:    _UserService_RemoveOTPSMS_Handler,
+		},
+		{
+			MethodName: "GenerateRecoveryCodes",
+			Handler:    _UserService_GenerateRecoveryCodes_Handler,
+		},
+		{
+			MethodName: "RemoveRecoveryCodes",
+			Handler:    _UserService_RemoveRecoveryCodes_Handler,
 		},
 		{
 			MethodName: "AddOTPEmail",
