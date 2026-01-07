@@ -195,13 +195,14 @@ type Factors struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User     *UserFactor     `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	Password *PasswordFactor `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	WebAuthN *WebAuthNFactor `protobuf:"bytes,3,opt,name=web_auth_n,json=webAuthN,proto3" json:"web_auth_n,omitempty"`
-	Intent   *IntentFactor   `protobuf:"bytes,4,opt,name=intent,proto3" json:"intent,omitempty"`
-	Totp     *TOTPFactor     `protobuf:"bytes,5,opt,name=totp,proto3" json:"totp,omitempty"`
-	OtpSms   *OTPFactor      `protobuf:"bytes,6,opt,name=otp_sms,json=otpSms,proto3" json:"otp_sms,omitempty"`
-	OtpEmail *OTPFactor      `protobuf:"bytes,7,opt,name=otp_email,json=otpEmail,proto3" json:"otp_email,omitempty"`
+	User         *UserFactor         `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Password     *PasswordFactor     `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	WebAuthN     *WebAuthNFactor     `protobuf:"bytes,3,opt,name=web_auth_n,json=webAuthN,proto3" json:"web_auth_n,omitempty"`
+	Intent       *IntentFactor       `protobuf:"bytes,4,opt,name=intent,proto3" json:"intent,omitempty"`
+	Totp         *TOTPFactor         `protobuf:"bytes,5,opt,name=totp,proto3" json:"totp,omitempty"`
+	OtpSms       *OTPFactor          `protobuf:"bytes,6,opt,name=otp_sms,json=otpSms,proto3" json:"otp_sms,omitempty"`
+	OtpEmail     *OTPFactor          `protobuf:"bytes,7,opt,name=otp_email,json=otpEmail,proto3" json:"otp_email,omitempty"`
+	RecoveryCode *RecoveryCodeFactor `protobuf:"bytes,8,opt,name=recovery_code,json=recoveryCode,proto3" json:"recovery_code,omitempty"`
 }
 
 func (x *Factors) Reset() {
@@ -281,6 +282,13 @@ func (x *Factors) GetOtpSms() *OTPFactor {
 func (x *Factors) GetOtpEmail() *OTPFactor {
 	if x != nil {
 		return x.OtpEmail
+	}
+	return nil
+}
+
+func (x *Factors) GetRecoveryCode() *RecoveryCodeFactor {
+	if x != nil {
+		return x.RecoveryCode
 	}
 	return nil
 }
@@ -619,6 +627,54 @@ func (x *OTPFactor) GetVerifiedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+type RecoveryCodeFactor struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The timestamp when the Recovery Code was last verified.
+	VerifiedAt *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=verified_at,json=verifiedAt,proto3" json:"verified_at,omitempty"`
+}
+
+func (x *RecoveryCodeFactor) Reset() {
+	*x = RecoveryCodeFactor{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RecoveryCodeFactor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecoveryCodeFactor) ProtoMessage() {}
+
+func (x *RecoveryCodeFactor) ProtoReflect() protoreflect.Message {
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecoveryCodeFactor.ProtoReflect.Descriptor instead.
+func (*RecoveryCodeFactor) Descriptor() ([]byte, []int) {
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *RecoveryCodeFactor) GetVerifiedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.VerifiedAt
+	}
+	return nil
+}
+
 type SearchQuery struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -638,7 +694,7 @@ type SearchQuery struct {
 func (x *SearchQuery) Reset() {
 	*x = SearchQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[8]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -651,7 +707,7 @@ func (x *SearchQuery) String() string {
 func (*SearchQuery) ProtoMessage() {}
 
 func (x *SearchQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[8]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -664,7 +720,7 @@ func (x *SearchQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchQuery.ProtoReflect.Descriptor instead.
 func (*SearchQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{8}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{9}
 }
 
 func (m *SearchQuery) GetQuery() isSearchQuery_Query {
@@ -780,7 +836,7 @@ type IDsQuery struct {
 func (x *IDsQuery) Reset() {
 	*x = IDsQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[9]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -793,7 +849,7 @@ func (x *IDsQuery) String() string {
 func (*IDsQuery) ProtoMessage() {}
 
 func (x *IDsQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[9]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -806,7 +862,7 @@ func (x *IDsQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IDsQuery.ProtoReflect.Descriptor instead.
 func (*IDsQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{9}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *IDsQuery) GetIds() []string {
@@ -828,7 +884,7 @@ type UserIDQuery struct {
 func (x *UserIDQuery) Reset() {
 	*x = UserIDQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[10]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -841,7 +897,7 @@ func (x *UserIDQuery) String() string {
 func (*UserIDQuery) ProtoMessage() {}
 
 func (x *UserIDQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[10]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -854,7 +910,7 @@ func (x *UserIDQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserIDQuery.ProtoReflect.Descriptor instead.
 func (*UserIDQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{10}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UserIDQuery) GetId() string {
@@ -879,7 +935,7 @@ type CreationDateQuery struct {
 func (x *CreationDateQuery) Reset() {
 	*x = CreationDateQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[11]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -892,7 +948,7 @@ func (x *CreationDateQuery) String() string {
 func (*CreationDateQuery) ProtoMessage() {}
 
 func (x *CreationDateQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[11]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -905,7 +961,7 @@ func (x *CreationDateQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreationDateQuery.ProtoReflect.Descriptor instead.
 func (*CreationDateQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{11}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CreationDateQuery) GetCreationDate() *timestamppb.Timestamp {
@@ -934,7 +990,7 @@ type CreatorQuery struct {
 func (x *CreatorQuery) Reset() {
 	*x = CreatorQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[12]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -947,7 +1003,7 @@ func (x *CreatorQuery) String() string {
 func (*CreatorQuery) ProtoMessage() {}
 
 func (x *CreatorQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[12]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -960,7 +1016,7 @@ func (x *CreatorQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatorQuery.ProtoReflect.Descriptor instead.
 func (*CreatorQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{12}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreatorQuery) GetId() string {
@@ -984,7 +1040,7 @@ type UserAgentQuery struct {
 func (x *UserAgentQuery) Reset() {
 	*x = UserAgentQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[13]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -997,7 +1053,7 @@ func (x *UserAgentQuery) String() string {
 func (*UserAgentQuery) ProtoMessage() {}
 
 func (x *UserAgentQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[13]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1010,7 +1066,7 @@ func (x *UserAgentQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserAgentQuery.ProtoReflect.Descriptor instead.
 func (*UserAgentQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{13}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UserAgentQuery) GetFingerprintId() string {
@@ -1035,7 +1091,7 @@ type ExpirationDateQuery struct {
 func (x *ExpirationDateQuery) Reset() {
 	*x = ExpirationDateQuery{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[14]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1048,7 +1104,7 @@ func (x *ExpirationDateQuery) String() string {
 func (*ExpirationDateQuery) ProtoMessage() {}
 
 func (x *ExpirationDateQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[14]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1061,7 +1117,7 @@ func (x *ExpirationDateQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExpirationDateQuery.ProtoReflect.Descriptor instead.
 func (*ExpirationDateQuery) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{14}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ExpirationDateQuery) GetExpirationDate() *timestamppb.Timestamp {
@@ -1096,7 +1152,7 @@ type UserAgent struct {
 func (x *UserAgent) Reset() {
 	*x = UserAgent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[15]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1109,7 +1165,7 @@ func (x *UserAgent) String() string {
 func (*UserAgent) ProtoMessage() {}
 
 func (x *UserAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[15]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1122,7 +1178,7 @@ func (x *UserAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserAgent.ProtoReflect.Descriptor instead.
 func (*UserAgent) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{15}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UserAgent) GetFingerprintId() string {
@@ -1168,7 +1224,7 @@ type UserAgent_HeaderValues struct {
 func (x *UserAgent_HeaderValues) Reset() {
 	*x = UserAgent_HeaderValues{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_zitadel_session_v2_session_proto_msgTypes[17]
+		mi := &file_zitadel_session_v2_session_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1181,7 +1237,7 @@ func (x *UserAgent_HeaderValues) String() string {
 func (*UserAgent_HeaderValues) ProtoMessage() {}
 
 func (x *UserAgent_HeaderValues) ProtoReflect() protoreflect.Message {
-	mi := &file_zitadel_session_v2_session_proto_msgTypes[17]
+	mi := &file_zitadel_session_v2_session_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1194,7 +1250,7 @@ func (x *UserAgent_HeaderValues) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserAgent_HeaderValues.ProtoReflect.Descriptor instead.
 func (*UserAgent_HeaderValues) Descriptor() ([]byte, []int) {
-	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{15, 0}
+	return file_zitadel_session_v2_session_proto_rawDescGZIP(), []int{16, 0}
 }
 
 func (x *UserAgent_HeaderValues) GetValues() []string {
@@ -1251,7 +1307,7 @@ var file_zitadel_session_v2_session_proto_rawDesc = []byte{
 	0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x42,
 	0x12, 0x0a, 0x10, 0x5f, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x64,
-	0x61, 0x74, 0x65, 0x22, 0xa1, 0x03, 0x0a, 0x07, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x73, 0x12,
+	0x61, 0x74, 0x65, 0x22, 0xee, 0x03, 0x0a, 0x07, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x73, 0x12,
 	0x32, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1e, 0x2e,
 	0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e,
 	0x76, 0x32, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x52, 0x04, 0x75,
@@ -1277,43 +1333,53 @@ var file_zitadel_session_v2_session_proto_rawDesc = []byte{
 	0x74, 0x70, 0x5f, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d,
 	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
 	0x2e, 0x76, 0x32, 0x2e, 0x4f, 0x54, 0x50, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x52, 0x08, 0x6f,
-	0x74, 0x70, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x22, 0xdb, 0x01, 0x0a, 0x0a, 0x55, 0x73, 0x65, 0x72,
-	0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69,
-	0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f,
-	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69,
-	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65,
-	0x64, 0x41, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x69, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x5f, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x4e, 0x61,
-	0x6d, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x5f, 0x6e, 0x61,
-	0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61,
-	0x79, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a,
-	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e,
-	0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x4a, 0x04,
-	0x08, 0x05, 0x10, 0x06, 0x52, 0x0f, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x73, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x22, 0x4d, 0x0a, 0x0e, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72,
-	0x64, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66,
-	0x69, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67,
-	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54,
-	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69,
-	0x65, 0x64, 0x41, 0x74, 0x22, 0x4b, 0x0a, 0x0c, 0x49, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x46, 0x61,
+	0x74, 0x70, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x4b, 0x0a, 0x0d, 0x72, 0x65, 0x63, 0x6f, 0x76,
+	0x65, 0x72, 0x79, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x26,
+	0x2e, 0x7a, 0x69, 0x74, 0x61, 0x64, 0x65, 0x6c, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+	0x2e, 0x76, 0x32, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x43, 0x6f, 0x64, 0x65,
+	0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x52, 0x0c, 0x72, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79,
+	0x43, 0x6f, 0x64, 0x65, 0x22, 0xdb, 0x01, 0x0a, 0x0a, 0x55, 0x73, 0x65, 0x72, 0x46, 0x61, 0x63,
+	0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f,
+	0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73,
+	0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64,
+	0x12, 0x1d, 0x0a, 0x0a, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x4e, 0x61, 0x6d, 0x65, 0x12,
+	0x21, 0x0a, 0x0c, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x4e, 0x61,
+	0x6d, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x6f, 0x72, 0x67,
+	0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x4a, 0x04, 0x08, 0x05, 0x10,
+	0x06, 0x52, 0x0f, 0x6f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f,
+	0x69, 0x64, 0x22, 0x4d, 0x0a, 0x0e, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x46, 0x61,
 	0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64,
 	0x5f, 0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65,
 	0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41,
-	0x74, 0x22, 0x72, 0x0a, 0x0e, 0x57, 0x65, 0x62, 0x41, 0x75, 0x74, 0x68, 0x4e, 0x46, 0x61, 0x63,
-	0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f,
-	0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
-	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73,
-	0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74,
-	0x12, 0x23, 0x0a, 0x0d, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65,
-	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0c, 0x75, 0x73, 0x65, 0x72, 0x56, 0x65, 0x72,
-	0x69, 0x66, 0x69, 0x65, 0x64, 0x22, 0x49, 0x0a, 0x0a, 0x54, 0x4f, 0x54, 0x50, 0x46, 0x61, 0x63,
-	0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f,
-	0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
-	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73,
-	0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74,
-	0x22, 0x48, 0x0a, 0x09, 0x4f, 0x54, 0x50, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a,
+	0x74, 0x22, 0x4b, 0x0a, 0x0c, 0x49, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x46, 0x61, 0x63, 0x74, 0x6f,
+	0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f, 0x61, 0x74,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74, 0x22, 0x72,
+	0x0a, 0x0e, 0x57, 0x65, 0x62, 0x41, 0x75, 0x74, 0x68, 0x4e, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72,
+	0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74, 0x12, 0x23, 0x0a,
+	0x0d, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x0c, 0x75, 0x73, 0x65, 0x72, 0x56, 0x65, 0x72, 0x69, 0x66, 0x69,
+	0x65, 0x64, 0x22, 0x49, 0x0a, 0x0a, 0x54, 0x4f, 0x54, 0x50, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72,
+	0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74, 0x22, 0x48, 0x0a,
+	0x09, 0x4f, 0x54, 0x50, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a, 0x0b, 0x76, 0x65,
+	0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a, 0x76, 0x65, 0x72,
+	0x69, 0x66, 0x69, 0x65, 0x64, 0x41, 0x74, 0x22, 0x51, 0x0a, 0x12, 0x52, 0x65, 0x63, 0x6f, 0x76,
+	0x65, 0x72, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x3b, 0x0a,
 	0x0b, 0x76, 0x65, 0x72, 0x69, 0x66, 0x69, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0a,
@@ -1433,7 +1499,7 @@ func file_zitadel_session_v2_session_proto_rawDescGZIP() []byte {
 }
 
 var file_zitadel_session_v2_session_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_zitadel_session_v2_session_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_zitadel_session_v2_session_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_zitadel_session_v2_session_proto_goTypes = []interface{}{
 	(SessionFieldName)(0),            // 0: zitadel.session.v2.SessionFieldName
 	(*Session)(nil),                  // 1: zitadel.session.v2.Session
@@ -1444,27 +1510,28 @@ var file_zitadel_session_v2_session_proto_goTypes = []interface{}{
 	(*WebAuthNFactor)(nil),           // 6: zitadel.session.v2.WebAuthNFactor
 	(*TOTPFactor)(nil),               // 7: zitadel.session.v2.TOTPFactor
 	(*OTPFactor)(nil),                // 8: zitadel.session.v2.OTPFactor
-	(*SearchQuery)(nil),              // 9: zitadel.session.v2.SearchQuery
-	(*IDsQuery)(nil),                 // 10: zitadel.session.v2.IDsQuery
-	(*UserIDQuery)(nil),              // 11: zitadel.session.v2.UserIDQuery
-	(*CreationDateQuery)(nil),        // 12: zitadel.session.v2.CreationDateQuery
-	(*CreatorQuery)(nil),             // 13: zitadel.session.v2.CreatorQuery
-	(*UserAgentQuery)(nil),           // 14: zitadel.session.v2.UserAgentQuery
-	(*ExpirationDateQuery)(nil),      // 15: zitadel.session.v2.ExpirationDateQuery
-	(*UserAgent)(nil),                // 16: zitadel.session.v2.UserAgent
-	nil,                              // 17: zitadel.session.v2.Session.MetadataEntry
-	(*UserAgent_HeaderValues)(nil),   // 18: zitadel.session.v2.UserAgent.HeaderValues
-	nil,                              // 19: zitadel.session.v2.UserAgent.HeaderEntry
-	(*timestamppb.Timestamp)(nil),    // 20: google.protobuf.Timestamp
-	(object.TimestampQueryMethod)(0), // 21: zitadel.v1.TimestampQueryMethod
+	(*RecoveryCodeFactor)(nil),       // 9: zitadel.session.v2.RecoveryCodeFactor
+	(*SearchQuery)(nil),              // 10: zitadel.session.v2.SearchQuery
+	(*IDsQuery)(nil),                 // 11: zitadel.session.v2.IDsQuery
+	(*UserIDQuery)(nil),              // 12: zitadel.session.v2.UserIDQuery
+	(*CreationDateQuery)(nil),        // 13: zitadel.session.v2.CreationDateQuery
+	(*CreatorQuery)(nil),             // 14: zitadel.session.v2.CreatorQuery
+	(*UserAgentQuery)(nil),           // 15: zitadel.session.v2.UserAgentQuery
+	(*ExpirationDateQuery)(nil),      // 16: zitadel.session.v2.ExpirationDateQuery
+	(*UserAgent)(nil),                // 17: zitadel.session.v2.UserAgent
+	nil,                              // 18: zitadel.session.v2.Session.MetadataEntry
+	(*UserAgent_HeaderValues)(nil),   // 19: zitadel.session.v2.UserAgent.HeaderValues
+	nil,                              // 20: zitadel.session.v2.UserAgent.HeaderEntry
+	(*timestamppb.Timestamp)(nil),    // 21: google.protobuf.Timestamp
+	(object.TimestampQueryMethod)(0), // 22: zitadel.v1.TimestampQueryMethod
 }
 var file_zitadel_session_v2_session_proto_depIdxs = []int32{
-	20, // 0: zitadel.session.v2.Session.creation_date:type_name -> google.protobuf.Timestamp
-	20, // 1: zitadel.session.v2.Session.change_date:type_name -> google.protobuf.Timestamp
+	21, // 0: zitadel.session.v2.Session.creation_date:type_name -> google.protobuf.Timestamp
+	21, // 1: zitadel.session.v2.Session.change_date:type_name -> google.protobuf.Timestamp
 	2,  // 2: zitadel.session.v2.Session.factors:type_name -> zitadel.session.v2.Factors
-	17, // 3: zitadel.session.v2.Session.metadata:type_name -> zitadel.session.v2.Session.MetadataEntry
-	16, // 4: zitadel.session.v2.Session.user_agent:type_name -> zitadel.session.v2.UserAgent
-	20, // 5: zitadel.session.v2.Session.expiration_date:type_name -> google.protobuf.Timestamp
+	18, // 3: zitadel.session.v2.Session.metadata:type_name -> zitadel.session.v2.Session.MetadataEntry
+	17, // 4: zitadel.session.v2.Session.user_agent:type_name -> zitadel.session.v2.UserAgent
+	21, // 5: zitadel.session.v2.Session.expiration_date:type_name -> google.protobuf.Timestamp
 	3,  // 6: zitadel.session.v2.Factors.user:type_name -> zitadel.session.v2.UserFactor
 	4,  // 7: zitadel.session.v2.Factors.password:type_name -> zitadel.session.v2.PasswordFactor
 	6,  // 8: zitadel.session.v2.Factors.web_auth_n:type_name -> zitadel.session.v2.WebAuthNFactor
@@ -1472,29 +1539,31 @@ var file_zitadel_session_v2_session_proto_depIdxs = []int32{
 	7,  // 10: zitadel.session.v2.Factors.totp:type_name -> zitadel.session.v2.TOTPFactor
 	8,  // 11: zitadel.session.v2.Factors.otp_sms:type_name -> zitadel.session.v2.OTPFactor
 	8,  // 12: zitadel.session.v2.Factors.otp_email:type_name -> zitadel.session.v2.OTPFactor
-	20, // 13: zitadel.session.v2.UserFactor.verified_at:type_name -> google.protobuf.Timestamp
-	20, // 14: zitadel.session.v2.PasswordFactor.verified_at:type_name -> google.protobuf.Timestamp
-	20, // 15: zitadel.session.v2.IntentFactor.verified_at:type_name -> google.protobuf.Timestamp
-	20, // 16: zitadel.session.v2.WebAuthNFactor.verified_at:type_name -> google.protobuf.Timestamp
-	20, // 17: zitadel.session.v2.TOTPFactor.verified_at:type_name -> google.protobuf.Timestamp
-	20, // 18: zitadel.session.v2.OTPFactor.verified_at:type_name -> google.protobuf.Timestamp
-	10, // 19: zitadel.session.v2.SearchQuery.ids_query:type_name -> zitadel.session.v2.IDsQuery
-	11, // 20: zitadel.session.v2.SearchQuery.user_id_query:type_name -> zitadel.session.v2.UserIDQuery
-	12, // 21: zitadel.session.v2.SearchQuery.creation_date_query:type_name -> zitadel.session.v2.CreationDateQuery
-	13, // 22: zitadel.session.v2.SearchQuery.creator_query:type_name -> zitadel.session.v2.CreatorQuery
-	14, // 23: zitadel.session.v2.SearchQuery.user_agent_query:type_name -> zitadel.session.v2.UserAgentQuery
-	15, // 24: zitadel.session.v2.SearchQuery.expiration_date_query:type_name -> zitadel.session.v2.ExpirationDateQuery
-	20, // 25: zitadel.session.v2.CreationDateQuery.creation_date:type_name -> google.protobuf.Timestamp
-	21, // 26: zitadel.session.v2.CreationDateQuery.method:type_name -> zitadel.v1.TimestampQueryMethod
-	20, // 27: zitadel.session.v2.ExpirationDateQuery.expiration_date:type_name -> google.protobuf.Timestamp
-	21, // 28: zitadel.session.v2.ExpirationDateQuery.method:type_name -> zitadel.v1.TimestampQueryMethod
-	19, // 29: zitadel.session.v2.UserAgent.header:type_name -> zitadel.session.v2.UserAgent.HeaderEntry
-	18, // 30: zitadel.session.v2.UserAgent.HeaderEntry.value:type_name -> zitadel.session.v2.UserAgent.HeaderValues
-	31, // [31:31] is the sub-list for method output_type
-	31, // [31:31] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	9,  // 13: zitadel.session.v2.Factors.recovery_code:type_name -> zitadel.session.v2.RecoveryCodeFactor
+	21, // 14: zitadel.session.v2.UserFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 15: zitadel.session.v2.PasswordFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 16: zitadel.session.v2.IntentFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 17: zitadel.session.v2.WebAuthNFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 18: zitadel.session.v2.TOTPFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 19: zitadel.session.v2.OTPFactor.verified_at:type_name -> google.protobuf.Timestamp
+	21, // 20: zitadel.session.v2.RecoveryCodeFactor.verified_at:type_name -> google.protobuf.Timestamp
+	11, // 21: zitadel.session.v2.SearchQuery.ids_query:type_name -> zitadel.session.v2.IDsQuery
+	12, // 22: zitadel.session.v2.SearchQuery.user_id_query:type_name -> zitadel.session.v2.UserIDQuery
+	13, // 23: zitadel.session.v2.SearchQuery.creation_date_query:type_name -> zitadel.session.v2.CreationDateQuery
+	14, // 24: zitadel.session.v2.SearchQuery.creator_query:type_name -> zitadel.session.v2.CreatorQuery
+	15, // 25: zitadel.session.v2.SearchQuery.user_agent_query:type_name -> zitadel.session.v2.UserAgentQuery
+	16, // 26: zitadel.session.v2.SearchQuery.expiration_date_query:type_name -> zitadel.session.v2.ExpirationDateQuery
+	21, // 27: zitadel.session.v2.CreationDateQuery.creation_date:type_name -> google.protobuf.Timestamp
+	22, // 28: zitadel.session.v2.CreationDateQuery.method:type_name -> zitadel.v1.TimestampQueryMethod
+	21, // 29: zitadel.session.v2.ExpirationDateQuery.expiration_date:type_name -> google.protobuf.Timestamp
+	22, // 30: zitadel.session.v2.ExpirationDateQuery.method:type_name -> zitadel.v1.TimestampQueryMethod
+	20, // 31: zitadel.session.v2.UserAgent.header:type_name -> zitadel.session.v2.UserAgent.HeaderEntry
+	19, // 32: zitadel.session.v2.UserAgent.HeaderEntry.value:type_name -> zitadel.session.v2.UserAgent.HeaderValues
+	33, // [33:33] is the sub-list for method output_type
+	33, // [33:33] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_zitadel_session_v2_session_proto_init() }
@@ -1600,7 +1669,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchQuery); i {
+			switch v := v.(*RecoveryCodeFactor); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1612,7 +1681,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*IDsQuery); i {
+			switch v := v.(*SearchQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1624,7 +1693,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserIDQuery); i {
+			switch v := v.(*IDsQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1636,7 +1705,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreationDateQuery); i {
+			switch v := v.(*UserIDQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1648,7 +1717,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreatorQuery); i {
+			switch v := v.(*CreationDateQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1660,7 +1729,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserAgentQuery); i {
+			switch v := v.(*CreatorQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1672,7 +1741,7 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ExpirationDateQuery); i {
+			switch v := v.(*UserAgentQuery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1684,6 +1753,18 @@ func file_zitadel_session_v2_session_proto_init() {
 			}
 		}
 		file_zitadel_session_v2_session_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExpirationDateQuery); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_zitadel_session_v2_session_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserAgent); i {
 			case 0:
 				return &v.state
@@ -1695,7 +1776,7 @@ func file_zitadel_session_v2_session_proto_init() {
 				return nil
 			}
 		}
-		file_zitadel_session_v2_session_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_zitadel_session_v2_session_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserAgent_HeaderValues); i {
 			case 0:
 				return &v.state
@@ -1709,7 +1790,7 @@ func file_zitadel_session_v2_session_proto_init() {
 		}
 	}
 	file_zitadel_session_v2_session_proto_msgTypes[0].OneofWrappers = []interface{}{}
-	file_zitadel_session_v2_session_proto_msgTypes[8].OneofWrappers = []interface{}{
+	file_zitadel_session_v2_session_proto_msgTypes[9].OneofWrappers = []interface{}{
 		(*SearchQuery_IdsQuery)(nil),
 		(*SearchQuery_UserIdQuery)(nil),
 		(*SearchQuery_CreationDateQuery)(nil),
@@ -1717,16 +1798,16 @@ func file_zitadel_session_v2_session_proto_init() {
 		(*SearchQuery_UserAgentQuery)(nil),
 		(*SearchQuery_ExpirationDateQuery)(nil),
 	}
-	file_zitadel_session_v2_session_proto_msgTypes[12].OneofWrappers = []interface{}{}
 	file_zitadel_session_v2_session_proto_msgTypes[13].OneofWrappers = []interface{}{}
-	file_zitadel_session_v2_session_proto_msgTypes[15].OneofWrappers = []interface{}{}
+	file_zitadel_session_v2_session_proto_msgTypes[14].OneofWrappers = []interface{}{}
+	file_zitadel_session_v2_session_proto_msgTypes[16].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_zitadel_session_v2_session_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   19,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
