@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -165,4 +166,73 @@ func TestClient_TransportConfiguration_Table(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestClient_GetValidToken(t *testing.T) {
+	tests := []struct {
+		name          string
+		tokenSource   oauth2.TokenSource
+		expectedToken string
+		expectedError bool
+	}{
+		{
+			name: "valid_token",
+			tokenSource: oauth2.StaticTokenSource(&oauth2.Token{
+				AccessToken: "test-token-123",
+				TokenType:   "Bearer",
+			}),
+			expectedToken: "test-token-123",
+			expectedError: false,
+		},
+		{
+			name:          "nil_token_source",
+			tokenSource:   nil,
+			expectedToken: "",
+			expectedError: false,
+		},
+		{
+			name: "token_source_error",
+			tokenSource: &mockTokenSource{
+				token: nil,
+				err:   errors.New("token generation failed"),
+			},
+			expectedToken: "",
+			expectedError: true,
+		},
+		{
+			name: "empty_token",
+			tokenSource: oauth2.StaticTokenSource(&oauth2.Token{
+				AccessToken: "",
+				TokenType:   "Bearer",
+			}),
+			expectedToken: "",
+			expectedError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client := &Client{
+				tokenSource: tt.tokenSource,
+			}
+
+			token, err := client.GetValidToken()
+
+			if tt.expectedError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expectedToken, token)
+			}
+		})
+	}
+}
+
+type mockTokenSource struct {
+	token *oauth2.Token
+	err   error
+}
+
+func (m *mockTokenSource) Token() (*oauth2.Token, error) {
+	return m.token, m.err
 }
