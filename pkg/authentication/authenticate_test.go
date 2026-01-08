@@ -2,18 +2,19 @@ package authentication_test
 
 import (
 	"context"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
-	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
 	zitadeloidc "github.com/zitadel/zitadel-go/v3/pkg/authentication/oidc"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 type mockHandler[T authentication.Ctx] struct {
