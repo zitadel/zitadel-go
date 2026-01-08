@@ -82,7 +82,8 @@ func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 }
 
 type Client struct {
-	connection *grpc.ClientConn
+	connection  *grpc.ClientConn
+	tokenSource oauth2.TokenSource
 
 	actionServiceV2                 Lazy[actionV2.ActionServiceClient]
 	actionServiceV2Beta             Lazy[actionV2Beta.ActionServiceClient]
@@ -170,7 +171,8 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 	}
 
 	return &Client{
-		connection: conn,
+		connection:  conn,
+		tokenSource: source,
 	}, nil
 }
 
@@ -414,6 +416,21 @@ func (c *Client) WebkeyServiceV2Beta() webkeyV2Beta.WebKeyServiceClient {
 	return c.webkeyServiceV2Beta.Get(func() webkeyV2Beta.WebKeyServiceClient {
 		return webkeyV2Beta.NewWebKeyServiceClient(c.connection)
 	})
+}
+
+// GetValidToken retrieves a valid access token from the client's token source.
+// This is useful when you need to make direct API calls to endpoints not covered by the SDK.
+// The token will be automatically refreshed if it has expired.
+// Returns an empty string if no token source was configured during client creation.
+func (c *Client) GetValidToken() (string, error) {
+	if c.tokenSource == nil {
+		return "", nil
+	}
+	token, err := c.tokenSource.Token()
+	if err != nil {
+		return "", err
+	}
+	return token.AccessToken, nil
 }
 
 func (c *Client) Close() error {
