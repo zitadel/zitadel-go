@@ -42,4 +42,13 @@ func main() {
 	}
 
 	log.Printf("Successfully called API: Your organization is %s", resp.GetOrg().GetName())
+
+	// Example: Get a valid token for custom API calls
+	token, err := api.GetValidToken()
+	if err != nil {
+		slog.Error("failed to get valid token", "error", err)
+		os.Exit(1)
+	}
+	log.Printf("Got valid access token (first 20 chars): %s...", token[:min(20, len(token))])
+	log.Println("You can now use this token for custom API calls to endpoints not covered by the SDK")
 }
