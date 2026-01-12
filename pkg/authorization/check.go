@@ -36,11 +36,20 @@ func checkForEmptyorMalformedToken(tokenHeader string) error {
 	return nil
 }
 
+// AuthorizationChecker defines the interface for checking authorization.
+// This interface allows for mocking in tests.
+type AuthorizationChecker[T Ctx] interface {
+	CheckAuthorization(ctx context.Context, token string, options ...CheckOption) (authCtx T, err error)
+}
+
 // Authorizer provides the functionality to check for authorization such as token verification including role checks.
 type Authorizer[T Ctx] struct {
 	verifier Verifier[T]
 	logger   *slog.Logger
 }
+
+// compile-time check that Authorizer implements AuthorizationChecker
+var _ AuthorizationChecker[Ctx] = (*Authorizer[Ctx])(nil)
 
 // Option allows customization of the [Authorizer] such as caching, logging and more.
 type Option[T Ctx] func(authorizer *Authorizer[T])

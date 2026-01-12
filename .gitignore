@@ -19,3 +19,6 @@
 devbox.lock
 devbox.json
 .devbox
+
+# Claude
+.claude
