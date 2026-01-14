@@ -9,10 +9,10 @@ import (
 )
 
 type Interceptor[T authorization.Ctx] struct {
-	authorizer *authorization.Authorizer[T]
+	authorizer authorization.AuthorizationChecker[T]
 }
 
-func New[T authorization.Ctx](authorizer *authorization.Authorizer[T]) *Interceptor[T] {
+func New[T authorization.Ctx](authorizer authorization.AuthorizationChecker[T]) *Interceptor[T] {
 	return &Interceptor[T]{
 		authorizer: authorizer,
 	}

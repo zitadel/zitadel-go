@@ -18,6 +18,13 @@ var (
 	ErrNoSession = errors.New("no session")
 )
 
+// AuthenticationChecker defines the interface for checking authentication.
+// This interface allows for mocking in tests.
+type AuthenticationChecker[T Ctx] interface {
+	IsAuthenticated(req *http.Request) (T, error)
+	Authenticate(w http.ResponseWriter, r *http.Request, requestedURI string)
+}
+
 // Authenticator provides the functionality to handle authentication including check for existing session,
 // starting a new authentication by redirecting the user to the Login UI and more.
 type Authenticator[T Ctx] struct {
@@ -30,6 +37,9 @@ type Authenticator[T Ctx] struct {
 	externalSecure        bool
 	postLogoutRedirectURI string
 }
+
+// compile-time check that Authenticator implements AuthenticationChecker
+var _ AuthenticationChecker[Ctx] = (*Authenticator[Ctx])(nil)
 
 // Option allows customization of the [Authenticator] such as logging and more.
 type Option[T Ctx] func(authorizer *Authenticator[T])
