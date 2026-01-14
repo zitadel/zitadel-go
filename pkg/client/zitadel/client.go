@@ -4,8 +4,10 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"net/http"
 	"strings"
 
+	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
 
@@ -13,6 +15,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
@@ -22,6 +25,7 @@ type Connection struct {
 	jwtProfileTokenSource middleware.JWTProfileTokenSource
 	jwtDirectTokenSource  middleware.JWTDirectTokenSource
 	tokenSource           oauth2.TokenSource
+	httpClient            *http.Client
 	scopes                []string
 	orgID                 string
 	insecure              bool
@@ -35,17 +39,52 @@ type Connection struct {
 
 func NewConnection(ctx context.Context, issuer, api string, scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
-		issuer:                issuer,
-		api:                   api,
-		jwtProfileTokenSource: middleware.JWTProfileFromPath(ctx, middleware.OSKeyPath()),
-		scopes:                scopes,
-		transportHeaders:      make(map[string]string),
+		issuer:           issuer,
+		api:              api,
+		scopes:           scopes,
+		transportHeaders: make(map[string]string),
 	}
 
 	for _, option := range options {
 		if err := option(c); err != nil {
 			return nil, err
 		}
+	}
+
+	var customHTTPClient *http.Client
+	if c.insecureSkipVerify || len(c.transportHeaders) > 0 {
+		var baseTransport *http.Transport
+		if t, ok := http.DefaultTransport.(*http.Transport); ok {
+			baseTransport = t.Clone()
+		} else {
+			baseTransport = &http.Transport{
+				Proxy: http.ProxyFromEnvironment,
+			}
+		}
+
+		if c.insecureSkipVerify {
+			if baseTransport.TLSClientConfig == nil {
+				baseTransport.TLSClientConfig = &tls.Config{}
+			}
+			baseTransport.TLSClientConfig.InsecureSkipVerify = true
+		}
+
+		var rt http.RoundTripper = baseTransport
+		if len(c.transportHeaders) > 0 {
+			rt = &headerRoundTripper{
+				rt:      baseTransport,
+				headers: c.transportHeaders,
+			}
+		}
+
+		customHTTPClient = &http.Client{
+			Transport: rt,
+		}
+	}
+	c.httpClient = customHTTPClient
+
+	if c.jwtProfileTokenSource == nil && c.jwtDirectTokenSource == nil && c.tokenSource == nil {
+		c.jwtProfileTokenSource = createDefaultJWTProfileTokenSource(ctx, c.httpClient)
 	}
 
 	err := c.setInterceptors(c.issuer, c.orgID, c.scopes, c.jwtProfileTokenSource)
@@ -96,25 +135,58 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
 	var auth *middleware.AuthInterceptor
 	var err error
+
 	if c.tokenSource != nil {
 		auth, err = middleware.NewGenericAuthenticator(c.tokenSource)
 	} else if c.jwtDirectTokenSource != nil {
 		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
 	} else {
-		auth, err = middleware.NewAuthenticator(c.issuer, c.jwtProfileTokenSource, c.scopes...)
+		// 1. We manually call the TokenSource generator.
+		// Because you set this up in NewConnection, it ALREADY uses
+		// the customHTTPClient that skips certificate checks.
+		ts, err := c.jwtProfileTokenSourceWithHTTPClient(jwtProfileTokenSource)
+		if err != nil {
+			return err
+		}
+
+		// 2. We use the Generic Authenticator.
+		// This DOES NOT perform its own failing discovery call.
+		auth, err = middleware.NewGenericAuthenticator(ts)
 	}
+
 	if err != nil {
 		return err
 	}
 
 	c.unaryInterceptors = append(c.unaryInterceptors, auth.Unary())
 	c.streamInterceptors = append(c.streamInterceptors, auth.Stream())
+
 	if orgID != "" {
 		org := middleware.NewOrgInterceptor(orgID)
 		c.unaryInterceptors = append(c.unaryInterceptors, org.Unary())
 		c.streamInterceptors = append(c.streamInterceptors, org.Stream())
 	}
 	return nil
+}
+
+func (c *Connection) jwtProfileTokenSourceWithHTTPClient(jwtProfileTokenSource middleware.JWTProfileTokenSource) (oauth2.TokenSource, error) {
+	if c.httpClient == nil {
+		return jwtProfileTokenSource(c.issuer, c.scopes)
+	}
+
+	originalDefaultClient := http.DefaultClient
+	originalDefaultTransport := http.DefaultTransport
+
+	http.DefaultClient = c.httpClient
+	if c.httpClient.Transport != nil {
+		http.DefaultTransport = c.httpClient.Transport
+	}
+	defer func() {
+		http.DefaultClient = originalDefaultClient
+		http.DefaultTransport = originalDefaultTransport
+	}()
+
+	return jwtProfileTokenSource(c.issuer, c.scopes)
 }
 
 func transportOption(api string, insecure bool, insecureSkipVerify bool) (grpc.DialOption, error) {
@@ -246,5 +318,41 @@ func WithDialOptions(opts ...grpc.DialOption) func(*Connection) error {
 	return func(client *Connection) error {
 		client.dialOptions = append(client.dialOptions, opts...)
 		return nil
+	}
+}
+
+// headerRoundTripper wraps an http.RoundTripper to add custom headers to each request
+type headerRoundTripper struct {
+	rt      http.RoundTripper
+	headers map[string]string
+}
+
+func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	newReq := *req
+	newReq.Header = make(http.Header, len(req.Header))
+	for k, s := range req.Header {
+		newReq.Header[k] = s
+	}
+	for k, v := range h.headers {
+		newReq.Header.Set(k, v)
+	}
+	return h.rt.RoundTrip(&newReq)
+}
+
+// createDefaultJWTProfileTokenSource creates a JWT profile token source that reads
+// the key file from the ZITADEL_KEY_PATH environment variable and optionally uses
+// a custom HTTP client for OIDC discovery and token fetching.
+func createDefaultJWTProfileTokenSource(ctx context.Context, httpClient *http.Client) middleware.JWTProfileTokenSource {
+	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+		keyPath := middleware.OSKeyPath()
+		keyData, err := client.ConfigFromKeyFile(keyPath)
+		if err != nil {
+			return nil, err
+		}
+
+		if httpClient != nil {
+			return profile.NewJWTProfileTokenSource(ctx, issuer, keyData.UserID, keyData.KeyID, keyData.Key, scopes, profile.WithHTTPClient(httpClient))
+		}
+		return profile.NewJWTProfileTokenSource(ctx, issuer, keyData.UserID, keyData.KeyID, keyData.Key, scopes)
 	}
 }
