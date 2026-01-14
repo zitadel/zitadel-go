@@ -21,10 +21,23 @@ type Options struct {
 	ExpectedHeaders map[string]string
 }
 
+// ServerInfo contains information about the mock server including the CA certificate
+type ServerInfo struct {
+	IssuerURL string
+	APIAddr   string
+	CACert    []byte // PEM-encoded CA certificate
+}
+
 func WithServer(t *testing.T, opts Options, fn func(issuerURL, apiAddr string)) {
+	WithServerInfo(t, opts, func(info ServerInfo) {
+		fn(info.IssuerURL, info.APIAddr)
+	})
+}
+
+func WithServerInfo(t *testing.T, opts Options, fn func(info ServerInfo)) {
 	t.Helper()
 
-	tlsConfig := newTLSConfig(t)
+	tlsConfig, caCert := newTLSConfigWithCA(t)
 	server := httptest.NewUnstartedServer(nil)
 	server.TLS = tlsConfig.Clone()
 	server.Config.Handler = newOIDCHandler(t, func() string { return server.URL }, opts.ExpectedHeaders)
@@ -33,7 +46,11 @@ func WithServer(t *testing.T, opts Options, fn func(issuerURL, apiAddr string)) 
 
 	apiAddr := startGRPCServer(t, tlsConfig, opts.ExpectedHeaders)
 
-	fn(server.URL, apiAddr)
+	fn(ServerInfo{
+		IssuerURL: server.URL,
+		APIAddr:   apiAddr,
+		CACert:    caCert,
+	})
 }
 
 func newOIDCHandler(t *testing.T, issuer func() string, expectedHeaders map[string]string) http.Handler {
@@ -66,7 +83,7 @@ func newOIDCHandler(t *testing.T, issuer func() string, expectedHeaders map[stri
 	})
 }
 
-func newTLSConfig(t *testing.T) *tls.Config {
+func newTLSConfigWithCA(t *testing.T) (*tls.Config, []byte) {
 	t.Helper()
 
 	ca := testcerts.NewCA()
@@ -82,7 +99,7 @@ func newTLSConfig(t *testing.T) *tls.Config {
 	})
 	require.NoError(t, err)
 
-	return serverTLS
+	return serverTLS, ca.PublicKey()
 }
 
 func startGRPCServer(t *testing.T, tlsConfig *tls.Config, expectedHeaders map[string]string) string {

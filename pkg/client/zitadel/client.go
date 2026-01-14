@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"net/http"
 	"strings"
 
@@ -30,6 +31,7 @@ type Connection struct {
 	orgID                 string
 	insecure              bool
 	insecureSkipVerify    bool
+	caCertPool            *x509.CertPool
 	transportHeaders      map[string]string
 	unaryInterceptors     []grpc.UnaryClientInterceptor
 	streamInterceptors    []grpc.StreamClientInterceptor
@@ -51,8 +53,8 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		}
 	}
 
-	var customHTTPClient *http.Client
-	if c.insecureSkipVerify || len(c.transportHeaders) > 0 {
+	// Only create a custom HTTP client if one wasn't already provided via WithHTTPClient
+	if c.httpClient == nil && (c.insecureSkipVerify || c.caCertPool != nil || len(c.transportHeaders) > 0) {
 		var baseTransport *http.Transport
 		if t, ok := http.DefaultTransport.(*http.Transport); ok {
 			baseTransport = t.Clone()
@@ -62,11 +64,17 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 			}
 		}
 
-		if c.insecureSkipVerify {
+		if c.insecureSkipVerify || c.caCertPool != nil {
 			if baseTransport.TLSClientConfig == nil {
 				baseTransport.TLSClientConfig = &tls.Config{}
 			}
-			baseTransport.TLSClientConfig.InsecureSkipVerify = true
+			if c.insecureSkipVerify {
+				//nolint:gosec // InsecureSkipVerify is intentionally configurable for local development with self-signed certs.
+				baseTransport.TLSClientConfig.InsecureSkipVerify = true
+			}
+			if c.caCertPool != nil {
+				baseTransport.TLSClientConfig.RootCAs = c.caCertPool
+			}
 		}
 
 		var rt http.RoundTripper = baseTransport
@@ -77,11 +85,10 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 			}
 		}
 
-		customHTTPClient = &http.Client{
+		c.httpClient = &http.Client{
 			Transport: rt,
 		}
 	}
-	c.httpClient = customHTTPClient
 
 	if c.jwtProfileTokenSource == nil && c.jwtDirectTokenSource == nil && c.tokenSource == nil {
 		c.jwtProfileTokenSource = createDefaultJWTProfileTokenSource(ctx, c.httpClient)
@@ -117,7 +124,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		),
 	}
 	dialOptions = append(dialOptions, c.dialOptions...)
-	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify)
+	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify, c.caCertPool)
 	if err != nil {
 		return nil, err
 	}
@@ -189,25 +196,31 @@ func (c *Connection) jwtProfileTokenSourceWithHTTPClient(jwtProfileTokenSource m
 	return jwtProfileTokenSource(c.issuer, c.scopes)
 }
 
-func transportOption(api string, insecure bool, insecureSkipVerify bool) (grpc.DialOption, error) {
+func transportOption(api string, insecure bool, insecureSkipVerify bool, caCertPool *x509.CertPool) (grpc.DialOption, error) {
 	if insecure {
 		//nolint:staticcheck // WithInsecure is used for compatibility; callers control security.
 		return grpc.WithInsecure(), nil
 	}
-	certs, err := transportCredentials(api, insecureSkipVerify)
+	certs, err := transportCredentials(api, insecureSkipVerify, caCertPool)
 	if err != nil {
 		return nil, err
 	}
 	return grpc.WithTransportCredentials(certs), nil
 }
 
-func transportCredentials(api string, insecureSkipVerify bool) (credentials.TransportCredentials, error) {
-	ca, err := x509.SystemCertPool()
-	if err != nil {
-		return nil, err
-	}
-	if ca == nil {
-		ca = x509.NewCertPool()
+func transportCredentials(api string, insecureSkipVerify bool, caCertPool *x509.CertPool) (credentials.TransportCredentials, error) {
+	var ca *x509.CertPool
+	if caCertPool != nil {
+		ca = caCertPool
+	} else {
+		var err error
+		ca, err = x509.SystemCertPool()
+		if err != nil {
+			return nil, err
+		}
+		if ca == nil {
+			ca = x509.NewCertPool()
+		}
 	}
 
 	servernameWithoutPort := strings.Split(api, ":")[0]
@@ -282,9 +295,42 @@ func WithInsecure() func(*Connection) error {
 
 // WithInsecureSkipVerifyTLS skips certificate verification when using TLS.
 // Use only for local development with self-signed certs.
+// For more advanced TLS configurations (e.g., custom CA), use WithHTTPClient instead.
 func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	return func(client *Connection) error {
 		client.insecureSkipVerify = true
+		return nil
+	}
+}
+
+// WithHTTPClient sets a custom HTTP client for OIDC discovery and token requests.
+// This allows full control over TLS configuration, including custom CAs, timeouts, and proxies.
+// When set, this takes precedence over WithInsecureSkipVerifyTLS and WithTrustStore for HTTP transport.
+// Note: This does not affect gRPC transport TLS settings.
+func WithHTTPClient(httpClient *http.Client) func(*Connection) error {
+	return func(client *Connection) error {
+		client.httpClient = httpClient
+		return nil
+	}
+}
+
+// WithTrustStore adds custom CA certificates to the trust store for both gRPC and HTTP transports.
+// The certificates should be PEM-encoded. This is useful when connecting to servers using
+// certificates signed by a private CA (e.g., in development or enterprise environments).
+// The provided certificates are appended to the system certificate pool.
+// For HTTP transport, this is ignored if WithHTTPClient is also set (user has full control).
+func WithTrustStore(caCerts ...[]byte) func(*Connection) error {
+	return func(client *Connection) error {
+		pool, err := x509.SystemCertPool()
+		if err != nil {
+			pool = x509.NewCertPool()
+		}
+		for _, cert := range caCerts {
+			if !pool.AppendCertsFromPEM(cert) {
+				return errors.New("failed to append CA certificate to trust store")
+			}
+		}
+		client.caCertPool = pool
 		return nil
 	}
 }
