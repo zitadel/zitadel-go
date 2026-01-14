@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
+
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
