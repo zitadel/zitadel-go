@@ -1,4 +1,4 @@
-module github.com/zitadel/zitadel-go/v3
+module github.com/TrappTechnology/zitadel-go/v3
 
 go 1.24.0
 
