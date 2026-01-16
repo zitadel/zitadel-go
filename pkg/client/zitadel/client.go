@@ -266,11 +266,3 @@ func WithTransportCredentials(creds credentials.TransportCredentials) func(*Conn
 		return nil
 	}
 }
-
-// WithScopes sets the OAuth2 scopes for the connection
-func WithScopes(scopes ...string) func(*Connection) error {
-	return func(client *Connection) error {
-		client.scopes = scopes
-		return nil
-	}
-}
