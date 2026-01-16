@@ -2,6 +2,7 @@ package zitadel
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"testing"
 
@@ -10,6 +11,7 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 )
 
@@ -150,4 +152,17 @@ func TestWithDialOptions(t *testing.T) {
 	require.NoError(t, err, "NewConnection should not fail")
 
 	assert.Len(t, conn.dialOptions, 1)
+}
+
+func TestWithTransportCredentials(t *testing.T) {
+	api := startMockGRPCServer(t)
+
+	conn, err := NewConnection(context.Background(), "issuer", api, nil,
+		WithTransportCredentials(credentials.NewTLS(&tls.Config{MinVersion: tls.VersionTLS12})),
+		WithTokenSource(oauth2.StaticTokenSource(&oauth2.Token{})),
+	)
+	require.NoError(t, err, "NewConnection should not fail")
+
+	assert.NotNil(t, conn.transportCredentials)
+
 }
