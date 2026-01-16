@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
 	actionV2 "github.com/zitadel/zitadel-go/v3/pkg/client/zitadel/action/v2"
@@ -59,8 +60,9 @@ func (l *Lazy[T]) Get(init func() T) T {
 }
 
 type clientOptions struct {
-	initTokenSource TokenSourceInitializer
-	grpcDialOptions []grpc.DialOption
+	initTokenSource      TokenSourceInitializer
+	grpcDialOptions      []grpc.DialOption
+	transportCredentials credentials.TransportCredentials
 }
 
 type Option func(*clientOptions)
@@ -78,6 +80,13 @@ func WithAuth(initTokenSource TokenSourceInitializer) Option {
 func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 	return func(c *clientOptions) {
 		c.grpcDialOptions = append(c.grpcDialOptions, opts...)
+	}
+}
+
+// WithTransportCredentials allows to set custom transport credentials for the gRPC connection.
+func WithTransportCredentials(creds credentials.TransportCredentials) Option {
+	return func(c *clientOptions) {
+		c.transportCredentials = creds
 	}
 }
 
@@ -165,7 +174,7 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 		}
 	}
 
-	conn, err := newConnection(ctx, zitadel, source, options.grpcDialOptions...)
+	conn, err := newConnection(ctx, zitadel, source, options.transportCredentials, options.grpcDialOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -180,13 +189,20 @@ func newConnection(
 	ctx context.Context,
 	zitadel *zitadel.Zitadel,
 	tokenSource oauth2.TokenSource,
+	creds credentials.TransportCredentials,
 	opts ...grpc.DialOption,
 ) (*grpc.ClientConn, error) {
-	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS())
-	if err != nil {
-		return nil, err
-	}
 
+	transportCreds := creds
+
+	if creds == nil {
+		// if creds are not provided, create default transport credentials
+		var err error
+		transportCreds, err = transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS())
+		if err != nil {
+			return nil, err
+		}
+	}
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(transportCreds),
 		grpc.WithPerRPCCredentials(&cred{tls: zitadel.IsTLS(), tokenSource: tokenSource}),
