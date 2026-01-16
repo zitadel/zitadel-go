@@ -52,7 +52,7 @@ func main() {
 		},
 	}
 	// create jwt profile middleware from key file and http client
-	mw := middleware.JWTProfileFromFile(ctx, *keyFile, hClient)
+	mw := middleware.JWTProfileFromFileWithHTTP(ctx, *keyFile, hClient)
 	authOption := client.WithAuth(func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
 
 		return mw(issuer, []string{oidc.ScopeOpenID, client.ScopeZitadelAPI()})

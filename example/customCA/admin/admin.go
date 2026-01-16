@@ -62,7 +62,7 @@ func main() {
 		*api,
 		[]string{oidc.ScopeOpenID, client2.ScopeZitadelAPI()},
 		//provide the jwt profile token source middleware with the key file and the custom http client
-		zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromFile(ctx, *keyFile, hClient)),
+		zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromFileWithHTTP(ctx, *keyFile, hClient)),
 		//provide the grpc transport credentials with the custom tls config
 		zitadel.WithTransportCredentials(credentials.NewTLS(tlsConfig)),
 	)
