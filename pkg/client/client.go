@@ -196,7 +196,7 @@ func newConnection(
 	transportCreds := creds
 
 	if creds == nil {
-		// if creds are not provided, create default transport credentials
+		// if no custom transport credentials are provided, create default transport credentials as a fallback
 		var err error
 		transportCreds, err = transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS())
 		if err != nil {
