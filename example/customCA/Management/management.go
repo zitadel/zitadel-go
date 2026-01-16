@@ -32,7 +32,9 @@ func main() {
 	ctx := context.Background()
 
 	// build tls config with custom CA
-	var tlsConfig = &tls.Config{}
+	var tlsConfig = &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
 	if *caFile != "" {
 		certPool := x509.NewCertPool()
 		bs, err := os.ReadFile(*caFile)
