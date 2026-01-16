@@ -236,3 +236,17 @@ type mockTokenSource struct {
 func (m *mockTokenSource) Token() (*oauth2.Token, error) {
 	return m.token, m.err
 }
+
+type mockTransportCredentials struct {
+	credentials.TransportCredentials
+}
+
+func TestWithTransportCredentials(t *testing.T) {
+	mockCreds := &mockTransportCredentials{}
+	opts := &clientOptions{}
+
+	optFunc := WithTransportCredentials(mockCreds)
+	optFunc(opts)
+
+	assert.Equal(t, mockCreds, opts.transportCredentials)
+}
