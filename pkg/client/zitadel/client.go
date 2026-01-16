@@ -259,7 +259,17 @@ func WithDialOptions(opts ...grpc.DialOption) func(*Connection) error {
 	}
 }
 
-// WithTransportCredentials sets custom transport credentials for the GRPC connection
+// WithTransportCredentials configures custom gRPC transport credentials for the connection.
+//
+// Use this option when you need full control over the TLS settings used by the client,
+// for example by providing credentials created with credentials.NewTLS and a custom
+// *tls.Config. A common use case is trusting server certificates that are issued by a
+// private or otherwise non-standard certificate authority by adding that CA to
+// tls.Config.RootCAs.
+//
+// When custom transport credentials are provided, they take precedence over any
+// security-related options configured via WithInsecure or WithInsecureSkipVerifyTLS;
+// the connection will use the supplied credentials as-is.
 func WithTransportCredentials(creds credentials.TransportCredentials) func(*Connection) error {
 	return func(client *Connection) error {
 		client.transportCredentials = creds
