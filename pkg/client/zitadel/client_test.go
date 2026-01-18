@@ -76,6 +76,33 @@ func TestWithInsecure(t *testing.T) {
 	assert.True(t, conn.insecure)
 }
 
+// TestWithInsecureSkipVerifyTLS verifies that the WithInsecureSkipVerifyTLS option
+// correctly sets the flag on the connection.
+func TestWithInsecureSkipVerifyTLS(t *testing.T) {
+	api := startMockGRPCServer(t)
+
+	conn, err := NewConnection(context.Background(), "issuer", api, nil,
+		WithInsecureSkipVerifyTLS(),
+		WithTokenSource(oauth2.StaticTokenSource(&oauth2.Token{})),
+	)
+	require.NoError(t, err, "NewConnection should not fail")
+
+	assert.True(t, conn.insecureSkipVerify)
+}
+
+// TestWithTransportHeader verifies that transport headers are stored on the connection.
+func TestWithTransportHeader(t *testing.T) {
+	api := startMockGRPCServer(t)
+
+	conn, err := NewConnection(context.Background(), "issuer", api, nil,
+		WithTransportHeader("x-test", "value"),
+		WithTokenSource(oauth2.StaticTokenSource(&oauth2.Token{})),
+	)
+	require.NoError(t, err, "NewConnection should not fail")
+
+	assert.Equal(t, "value", conn.transportHeaders["x-test"])
+}
+
 // TestWithUnaryInterceptors verifies that the WithUnaryInterceptors option
 // correctly appends custom gRPC interceptors to the connection's list.
 func TestWithUnaryInterceptors(t *testing.T) {

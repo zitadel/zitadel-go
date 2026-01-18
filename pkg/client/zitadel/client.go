@@ -2,6 +2,7 @@ package zitadel
 
 import (
 	"context"
+	"crypto/tls"
 	"crypto/x509"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
@@ -23,6 +25,8 @@ type Connection struct {
 	scopes                []string
 	orgID                 string
 	insecure              bool
+	insecureSkipVerify    bool
+	transportHeaders      map[string]string
 	unaryInterceptors     []grpc.UnaryClientInterceptor
 	streamInterceptors    []grpc.StreamClientInterceptor
 	dialOptions           []grpc.DialOption
@@ -35,6 +39,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		api:                   api,
 		jwtProfileTokenSource: middleware.JWTProfileFromPath(ctx, middleware.OSKeyPath()),
 		scopes:                scopes,
+		transportHeaders:      make(map[string]string),
 	}
 
 	for _, option := range options {
@@ -47,6 +52,23 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 	if err != nil {
 		return nil, err
 	}
+	if len(c.transportHeaders) > 0 {
+		headerUnary := func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+			for k, v := range c.transportHeaders {
+				ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+			}
+			return invoker(ctx, method, req, reply, cc, opts...)
+		}
+		headerStream := func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+			for k, v := range c.transportHeaders {
+				ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+			}
+			return streamer(ctx, desc, cc, method, opts...)
+		}
+		c.unaryInterceptors = append(c.unaryInterceptors, headerUnary)
+		c.streamInterceptors = append(c.streamInterceptors, headerStream)
+	}
+
 	dialOptions := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
 			c.unaryInterceptors...,
@@ -56,7 +78,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		),
 	}
 	dialOptions = append(dialOptions, c.dialOptions...)
-	opt, err := transportOption(c.api, c.insecure)
+	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify)
 	if err != nil {
 		return nil, err
 	}
@@ -95,19 +117,19 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 	return nil
 }
 
-func transportOption(api string, insecure bool) (grpc.DialOption, error) {
+func transportOption(api string, insecure bool, insecureSkipVerify bool) (grpc.DialOption, error) {
 	if insecure {
 		//nolint:staticcheck // WithInsecure is used for compatibility; callers control security.
 		return grpc.WithInsecure(), nil
 	}
-	certs, err := transportCredentials(api)
+	certs, err := transportCredentials(api, insecureSkipVerify)
 	if err != nil {
 		return nil, err
 	}
 	return grpc.WithTransportCredentials(certs), nil
 }
 
-func transportCredentials(api string) (credentials.TransportCredentials, error) {
+func transportCredentials(api string, insecureSkipVerify bool) (credentials.TransportCredentials, error) {
 	ca, err := x509.SystemCertPool()
 	if err != nil {
 		return nil, err
@@ -117,7 +139,12 @@ func transportCredentials(api string) (credentials.TransportCredentials, error) 
 	}
 
 	servernameWithoutPort := strings.Split(api, ":")[0]
-	return credentials.NewClientTLSFromCert(ca, servernameWithoutPort), nil
+	tlsConfig := &tls.Config{
+		RootCAs:            ca,
+		InsecureSkipVerify: insecureSkipVerify,
+		ServerName:         servernameWithoutPort,
+	}
+	return credentials.NewTLS(tlsConfig), nil
 }
 
 type Option func(*Connection) error
@@ -177,6 +204,23 @@ func WithOrgID(orgID string) func(*Connection) error {
 func WithInsecure() func(*Connection) error {
 	return func(client *Connection) error {
 		client.insecure = true
+		return nil
+	}
+}
+
+// WithInsecureSkipVerifyTLS skips certificate verification when using TLS.
+// Use only for local development with self-signed certs.
+func WithInsecureSkipVerifyTLS() func(*Connection) error {
+	return func(client *Connection) error {
+		client.insecureSkipVerify = true
+		return nil
+	}
+}
+
+// WithTransportHeader sets a custom header on outgoing gRPC requests.
+func WithTransportHeader(key, value string) func(*Connection) error {
+	return func(client *Connection) error {
+		client.transportHeaders[key] = value
 		return nil
 	}
 }

@@ -1,8 +1,11 @@
 package authentication
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
-// Sessions is an abstraction of the session storage
+// Sessions is an abstraction of the session storage.
 type Sessions[T Ctx] interface {
 	Set(id string, session T) error
 	Get(id string) (T, error)
@@ -32,13 +35,14 @@ type Sessions[T Ctx] interface {
 //   - No way to revoke sessions or handle security incidents
 //
 // Production alternatives:
-//   - Use WithCookieSession(true) for stateless encrypted cookie sessions
+//   - Use [WithCookieSession](true) for stateless encrypted cookie sessions
 //   - Use Redis/Memcached for fast server-side sessions
 //   - Use database storage for persistent sessions
-//   - Implement your own Sessions interface with custom storage
+//   - Implement your own [Sessions] interface with custom storage
 //
 // Intended use: Local development, unit tests, and proof-of-concept demos only.
 type InMemorySessions[T Ctx] struct {
+	mu       sync.RWMutex
 	sessions map[string]T
 }
 
@@ -58,6 +62,8 @@ func NewInMemorySessions[T Ctx]() Sessions[T] {
 }
 
 func (s *InMemorySessions[T]) Get(id string) (T, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	t, ok := s.sessions[id]
 	if !ok {
 		return t, errors.New("session not found")
@@ -66,6 +72,8 @@ func (s *InMemorySessions[T]) Get(id string) (T, error) {
 }
 
 func (s *InMemorySessions[T]) Set(id string, session T) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	s.sessions[id] = session
 	return nil
 }

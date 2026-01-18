@@ -13,11 +13,11 @@ import (
 )
 
 type Interceptor[T authorization.Ctx] struct {
-	authorizer *authorization.Authorizer[T]
+	authorizer authorization.AuthorizationChecker[T]
 	checks     map[string][]authorization.CheckOption
 }
 
-func New[T authorization.Ctx](authorizer *authorization.Authorizer[T], checks map[string][]authorization.CheckOption) *Interceptor[T] {
+func New[T authorization.Ctx](authorizer authorization.AuthorizationChecker[T], checks map[string][]authorization.CheckOption) *Interceptor[T] {
 	return &Interceptor[T]{
 		authorizer: authorizer,
 		checks:     checks,

@@ -2,8 +2,8 @@ package authentication_test
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	"crypto/rand"
+	"encoding/hex"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,206 +14,212 @@ import (
 	"github.com/zitadel/oidc/v3/pkg/crypto"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/authentication"
+	"github.com/zitadel/zitadel-go/v3/pkg/authentication/internal"
 	zitadeloidc "github.com/zitadel/zitadel-go/v3/pkg/authentication/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
-// CtxType is an alias for the specific context type used in these tests.
-type CtxType = *zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]
+type testContext = *zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]
 
-const testEncryptionKey = "01234567890123456789012345678901"
+func generateEncryptionKey() string {
+	key := make([]byte, 16)
+	_, _ = rand.Read(key)
+	return hex.EncodeToString(key)
+}
 
-// newTestAuthContext is a helper that creates a valid, non-nil auth context.
-func newTestAuthContext(subject string) CtxType {
+func newAuthContext(subject string) testContext {
 	return &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
-		UserInfo: &oidc.UserInfo{
-			Subject: subject,
-		},
-		Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{
-			IDToken: "test-id-token",
-		},
+		UserInfo: &oidc.UserInfo{Subject: subject},
+		Tokens:   &oidc.Tokens[*oidc.IDTokenClaims]{IDToken: "id-token"},
 	}
 }
 
-// mockHandler is a flexible test double for the Handler interface.
-type mockHandler struct {
-	CallbackResponse  CtxType
-	CapturedLogoutURI string
+type stubHandler struct {
+	callbackCtx testContext
+	logoutURI   string
+	encKey      string
 }
 
-func (m *mockHandler) Authenticate(_ http.ResponseWriter, _ *http.Request, _ string) {}
+func (h *stubHandler) Authenticate(_ http.ResponseWriter, _ *http.Request, _ string) {}
 
-func (m *mockHandler) Callback(_ http.ResponseWriter, _ *http.Request) (CtxType, string) {
-	state, _ := (&authentication.State{RequestedURI: "/profile"}).Encrypt(testEncryptionKey)
-	if m.CallbackResponse != nil {
-		return m.CallbackResponse, state
+func (h *stubHandler) Callback(_ http.ResponseWriter, _ *http.Request) (testContext, string) {
+	state, _ := (&authentication.State{RequestedURI: "/dashboard"}).Encrypt(h.encKey)
+	if h.callbackCtx != nil {
+		return h.callbackCtx, state
 	}
-	return newTestAuthContext("dummy-subject"), "dummy-state"
+	return newAuthContext("user-123"), state
 }
 
-func (m *mockHandler) Logout(_ http.ResponseWriter, _ *http.Request, _ CtxType, _, optionalRedirectURI string) {
-	m.CapturedLogoutURI = optionalRedirectURI
+func (h *stubHandler) Logout(_ http.ResponseWriter, _ *http.Request, _ testContext, _, redirectURI string) {
+	h.logoutURI = redirectURI
 }
 
-// mockSessionStore is a test double for the Sessions interface.
-type mockSessionStore struct {
-	SetWasCalled bool
-	GetWasCalled bool
-	store        map[string]CtxType
+type emptyStateHandler struct {
+	callbackCtx testContext
+	encKey      string
 }
 
-func (m *mockSessionStore) Set(id string, session CtxType) error {
-	m.SetWasCalled = true
-	if m.store == nil {
-		m.store = make(map[string]CtxType)
-	}
-	m.store[id] = session
-	return nil
+func (h *emptyStateHandler) Authenticate(_ http.ResponseWriter, _ *http.Request, _ string) {}
+
+func (h *emptyStateHandler) Callback(_ http.ResponseWriter, _ *http.Request) (testContext, string) {
+	state, _ := (&authentication.State{RequestedURI: ""}).Encrypt(h.encKey)
+	return h.callbackCtx, state
 }
 
-func (m *mockSessionStore) Get(id string) (CtxType, error) {
-	m.GetWasCalled = true
-	s, ok := m.store[id]
-	if !ok {
-		return nil, errors.New("no session")
-	}
-	return s, nil
-}
+func (h *emptyStateHandler) Logout(_ http.ResponseWriter, _ *http.Request, _ testContext, _, _ string) {}
 
-func TestAuthenticator_SessionHandling(t *testing.T) {
-	authCtxToStore := newTestAuthContext("test-subject")
-	mock := &mockHandler{CallbackResponse: authCtxToStore}
-	mockInitializer := func(ctx context.Context, z *zitadel.Zitadel) (authentication.Handler[CtxType], error) {
-		return mock, nil
+func TestSessionHandling(t *testing.T) {
+	encKey := generateEncryptionKey()
+	authCtx := newAuthContext("test-user")
+
+	handler := &stubHandler{callbackCtx: authCtx, encKey: encKey}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
 	}
 
+	t.Run("custom session store", func(t *testing.T) {
+		sessions := internal.NewMockSessionStore[testContext]()
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithSessionStore[testContext](sessions),
+		)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+
+		assert.True(t, sessions.SetCalled)
+	})
+
+	t.Run("stateful session lookup", func(t *testing.T) {
+		sessions := internal.NewMockSessionStore[testContext]()
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithSessionStore[testContext](sessions),
+		)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+		require.Equal(t, http.StatusFound, rec.Code)
+
+		cookie := rec.Result().Cookies()[0]
+		auth2, _ := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithSessionStore[testContext](sessions),
+		)
+		req2 := httptest.NewRequest(http.MethodGet, "/protected", nil)
+		req2.AddCookie(cookie)
+		_, err = auth2.IsAuthenticated(req2)
+
+		require.NoError(t, err)
+		assert.True(t, sessions.GetCalled)
+	})
+
+	t.Run("stateless cookie session", func(t *testing.T) {
+		sessions := internal.NewMockSessionStore[testContext]()
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithCookieSession[testContext](true),
+		)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+		require.Equal(t, http.StatusFound, rec.Code)
+
+		cookie := rec.Result().Cookies()[0]
+		auth2, _ := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithCookieSession[testContext](true),
+		)
+		req2 := httptest.NewRequest(http.MethodGet, "/protected", nil)
+		req2.AddCookie(cookie)
+		ctx, err := auth2.IsAuthenticated(req2)
+
+		require.NoError(t, err)
+		assert.Equal(t, authCtx.GetUserInfo().GetSubject(), ctx.GetUserInfo().GetSubject())
+		assert.False(t, sessions.GetCalled)
+	})
+}
+
+func TestLogout(t *testing.T) {
 	tests := []struct {
-		name    string
-		options func(sessions *mockSessionStore) []authentication.Option[CtxType]
-		assert  func(t *testing.T, cookie *http.Cookie, sessions *mockSessionStore)
+		name        string
+		customURI   string
+		requestURL  string
+		expectedURI string
 	}{
 		{
-			name: "uses a custom session store when provided",
-			options: func(sessions *mockSessionStore) []authentication.Option[CtxType] {
-				return []authentication.Option[CtxType]{authentication.WithSessionStore[CtxType](sessions)}
-			},
-			assert: func(t *testing.T, cookie *http.Cookie, sessions *mockSessionStore) {
-				assert.True(t, sessions.SetWasCalled, "The custom session store's Set method should have been called")
-			},
+			name:        "custom redirect URI",
+			customURI:   "https://app.example.com/signed-out",
+			requestURL:  "/auth/logout",
+			expectedURI: "https://app.example.com/signed-out",
 		},
 		{
-			name: "uses stateful session by default",
-			options: func(sessions *mockSessionStore) []authentication.Option[CtxType] {
-				return []authentication.Option[CtxType]{authentication.WithSessionStore[CtxType](sessions)}
-			},
-			assert: func(t *testing.T, cookie *http.Cookie, sessions *mockSessionStore) {
-				authenticator, _ := authentication.New(
-					context.Background(), nil, testEncryptionKey, mockInitializer,
-					authentication.WithSessionStore[CtxType](sessions),
-				)
-				authedReq := httptest.NewRequest("GET", "/protected", nil)
-				authedReq.AddCookie(cookie)
-				_, err := authenticator.IsAuthenticated(authedReq)
-				require.NoError(t, err)
-				assert.True(t, sessions.GetWasCalled, "The session store's Get method should have been called")
-			},
-		},
-		{
-			name: "uses stateless cookie session when enabled",
-			options: func(sessions *mockSessionStore) []authentication.Option[CtxType] {
-				return []authentication.Option[CtxType]{authentication.WithCookieSession[CtxType](true)}
-			},
-			assert: func(t *testing.T, cookie *http.Cookie, sessions *mockSessionStore) {
-				// To prove statelessness, create a new authenticator with a new, empty session store.
-				newAuthenticator, _ := authentication.New(
-					context.Background(), nil, testEncryptionKey, mockInitializer,
-					authentication.WithCookieSession[CtxType](true),
-				)
-				authedReq := httptest.NewRequest("GET", "/protected", nil)
-				authedReq.AddCookie(cookie)
-				retrievedCtx, err := newAuthenticator.IsAuthenticated(authedReq)
-				require.NoError(t, err)
-				assert.Equal(t, authCtxToStore.GetUserInfo().GetSubject(), retrievedCtx.GetUserInfo().GetSubject())
-				assert.False(t, sessions.GetWasCalled, "The session store's Get method should not have been called")
-			},
+			name:        "default redirect URI",
+			requestURL:  "https://example.com/auth/logout",
+			expectedURI: "https://example.com/",
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			mockSessions := &mockSessionStore{}
-			authenticator, err := authentication.New(
-				context.Background(), nil, testEncryptionKey, mockInitializer,
-				tt.options(mockSessions)...,
-			)
-			require.NoError(t, err)
-			callbackReq := httptest.NewRequest("GET", "/auth/callback", nil)
-			recorder := httptest.NewRecorder()
-			authenticator.ServeHTTP(recorder, callbackReq)
-			require.Equal(t, http.StatusFound, recorder.Code)
-			cookie := recorder.Result().Cookies()[0]
-			require.NotNil(t, cookie)
-
-			tt.assert(t, cookie, mockSessions)
-		})
-	}
-}
-
-func TestAuthenticator_Logout(t *testing.T) {
-	tests := []struct {
-		name            string
-		customLogoutURL string
-		requestURL      string
-		useCustomURI    bool
-		expectedURI     string
-	}{
-		{
-			name:            "WithCustomURI",
-			customLogoutURL: "https://myapp.com/goodbye",
-			requestURL:      "/auth/logout",
-			useCustomURI:    true,
-			expectedURI:     "https://myapp.com/goodbye",
-		},
-		{
-			name:         "WithDefaultURI",
-			requestURL:   "https://example.com/auth/logout",
-			useCustomURI: false,
-			expectedURI:  "https://example.com/",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			mock := &mockHandler{}
-			mockInitializer := func(ctx context.Context, z *zitadel.Zitadel) (authentication.Handler[CtxType], error) {
-				return mock, nil
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			encKey := generateEncryptionKey()
+			handler := &stubHandler{encKey: encKey}
+			initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+				return handler, nil
 			}
 
-			// For logout, a valid session must exist first.
-			sessions := authentication.NewInMemorySessions[CtxType]()
-			sessionID := uuid.Must(uuid.NewRandom()).String()
-			require.NoError(t, sessions.Set(sessionID, newTestAuthContext("logout-user")))
+			sessions := authentication.NewInMemorySessions[testContext]()
+			sessionID := uuid.NewString()
+			_ = sessions.Set(sessionID, newAuthContext("user"))
 
-			options := []authentication.Option[CtxType]{
+			opts := []authentication.Option[testContext]{
 				authentication.WithSessionStore(sessions),
-				authentication.WithSessionCookieName[CtxType]("sid"),
+				authentication.WithSessionCookieName[testContext]("sid"),
+			}
+			if tc.customURI != "" {
+				opts = append(opts, authentication.WithPostLogoutRedirectURI[testContext](tc.customURI))
 			}
 
-			if tt.useCustomURI {
-				options = append(options, authentication.WithPostLogoutRedirectURI[CtxType](tt.customLogoutURL))
-			}
-
-			authenticator, err := authentication.New(context.Background(), nil, testEncryptionKey, mockInitializer, options...)
+			auth, err := authentication.New(context.Background(), nil, encKey, initHandler, opts...)
 			require.NoError(t, err)
 
-			req := httptest.NewRequest("GET", tt.requestURL, nil)
-			cookieValue, _ := crypto.EncryptAES(sessionID, testEncryptionKey)
-			req.AddCookie(&http.Cookie{Name: "sid", Value: cookieValue})
-			recorder := httptest.NewRecorder()
+			cookieVal, _ := crypto.EncryptAES(sessionID, encKey)
+			req := httptest.NewRequest(http.MethodGet, tc.requestURL, nil)
+			req.AddCookie(&http.Cookie{Name: "sid", Value: cookieVal})
 
-			authenticator.ServeHTTP(recorder, req)
+			auth.ServeHTTP(httptest.NewRecorder(), req)
 
-			assert.Equal(t, tt.expectedURI, mock.CapturedLogoutURI, fmt.Sprintf("Test: %s", tt.name))
+			assert.Equal(t, tc.expectedURI, handler.logoutURI)
 		})
 	}
+}
+
+func TestCallbackRedirectsToRootOnEmptyURI(t *testing.T) {
+	encKey := generateEncryptionKey()
+	handler := &emptyStateHandler{
+		callbackCtx: newAuthContext("user"),
+		encKey:      encKey,
+	}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+		authentication.WithCookieSession[testContext](true),
+	)
+	require.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+	auth.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusFound, rec.Code)
+	assert.Equal(t, "/", rec.Header().Get("Location"))
+}
+
+func TestStateEncryptionError(t *testing.T) {
+	s := &authentication.State{RequestedURI: "/test"}
+	_, err := s.Encrypt("bad-key")
+	assert.Error(t, err)
 }

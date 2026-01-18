@@ -6,10 +6,10 @@ import (
 )
 
 type Interceptor[T Ctx] struct {
-	authenticator *Authenticator[T]
+	authenticator AuthenticationChecker[T]
 }
 
-func Middleware[T Ctx](authenticator *Authenticator[T]) *Interceptor[T] {
+func Middleware[T Ctx](authenticator AuthenticationChecker[T]) *Interceptor[T] {
 	return &Interceptor[T]{
 		authenticator: authenticator,
 	}

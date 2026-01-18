@@ -19,6 +19,13 @@ var (
 	ErrNoSession = errors.New("no session")
 )
 
+// AuthenticationChecker defines the interface for checking authentication.
+// This interface allows for mocking in tests.
+type AuthenticationChecker[T Ctx] interface {
+	IsAuthenticated(req *http.Request) (T, error)
+	Authenticate(w http.ResponseWriter, r *http.Request, requestedURI string)
+}
+
 // Authenticator provides the functionality to handle authentication including check for existing session,
 // starting a new authentication by redirecting the user to the Login UI and more.
 type Authenticator[T Ctx] struct {
@@ -32,6 +39,9 @@ type Authenticator[T Ctx] struct {
 	useCookieSession      bool
 	postLogoutRedirectURI string
 }
+
+// compile-time check that Authenticator implements AuthenticationChecker
+var _ AuthenticationChecker[Ctx] = (*Authenticator[Ctx])(nil)
 
 // Option allows customization of the [Authenticator] such as logging and more.
 type Option[T Ctx] func(authorizer *Authenticator[T])
@@ -89,7 +99,7 @@ func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, encryptionKey str
 	}
 	authenticator := &Authenticator[T]{
 		authN:             authN,
-		sessions:          &InMemorySessions[T]{sessions: make(map[string]T)},
+		sessions:          NewInMemorySessions[T](),
 		encryptionKey:     encryptionKey,
 		sessionCookieName: "zitadel.session",
 		logger:            slog.Default(),
@@ -136,6 +146,11 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	redirectURI := state.RequestedURI
+	if redirectURI == "" {
+		redirectURI = "/"
+	}
+
 	if a.useCookieSession {
 		// Stateless mode: Serialize and encrypt the entire context into the cookie.
 		data, err := json.Marshal(authCtx)
@@ -149,7 +164,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "session could not be stored", http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, req, state.RequestedURI, http.StatusFound)
+		http.Redirect(w, req, redirectURI, http.StatusFound)
 		return
 	}
 
@@ -165,19 +180,19 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "session could not be stored", http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, req, state.RequestedURI, http.StatusFound)
+	http.Redirect(w, req, redirectURI, http.StatusFound)
 }
 
-// Logout will terminate the exising session.
+// Logout will terminate the existing session.
 func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
-	ctx, err := a.IsAuthenticated(req)
+	authCtx, err := a.IsAuthenticated(req)
 	if err != nil {
 		http.Redirect(w, req, "/", http.StatusFound)
 		return
 	}
+
 	s := &State{RequestedURI: ""}
 	stateParam, err := s.Encrypt(a.encryptionKey)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -194,7 +209,7 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 		postLogout = fmt.Sprintf("%s://%s/", proto, req.Host)
 	}
 
-	a.authN.Logout(w, req, ctx, stateParam, postLogout)
+	a.authN.Logout(w, req, authCtx, stateParam, postLogout)
 }
 
 // IsAuthenticated checks whether there is an existing session of not.
@@ -208,14 +223,14 @@ func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 	sessionValue, err := crypto.DecryptAES(cookie.Value, a.encryptionKey)
 	if err != nil {
 		a.logger.Log(req.Context(), slog.LevelWarn, "unable to decrypt session cookie")
-		return t, err
+		return t, ErrNoSession
 	}
 
 	if a.useCookieSession {
 		// Stateless mode: Deserialize the context directly from the cookie.
 		if err = json.Unmarshal([]byte(sessionValue), &t); err != nil {
 			a.logger.Log(req.Context(), slog.LevelWarn, "unable to deserialize auth context from cookie")
-			return t, err
+			return t, ErrNoSession
 		}
 		return t, nil
 	}
