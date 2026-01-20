@@ -66,7 +66,8 @@ func (h *emptyStateHandler) Callback(_ http.ResponseWriter, _ *http.Request) (te
 	return h.callbackCtx, state
 }
 
-func (h *emptyStateHandler) Logout(_ http.ResponseWriter, _ *http.Request, _ testContext, _, _ string) {}
+func (h *emptyStateHandler) Logout(_ http.ResponseWriter, _ *http.Request, _ testContext, _, _ string) {
+}
 
 func TestSessionHandling(t *testing.T) {
 	encKey := generateEncryptionKey()
@@ -118,7 +119,7 @@ func TestSessionHandling(t *testing.T) {
 	t.Run("stateless cookie session", func(t *testing.T) {
 		sessions := internal.NewMockSessionStore[testContext]()
 		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
-			authentication.WithCookieSession[testContext](true),
+			authentication.WithCookieSession[testContext](),
 		)
 		require.NoError(t, err)
 
@@ -129,7 +130,7 @@ func TestSessionHandling(t *testing.T) {
 
 		cookie := rec.Result().Cookies()[0]
 		auth2, _ := authentication.New(context.Background(), nil, encKey, initHandler,
-			authentication.WithCookieSession[testContext](true),
+			authentication.WithCookieSession[testContext](),
 		)
 		req2 := httptest.NewRequest(http.MethodGet, "/protected", nil)
 		req2.AddCookie(cookie)
@@ -206,7 +207,7 @@ func TestCallbackRedirectsToRootOnEmptyURI(t *testing.T) {
 	}
 
 	auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
-		authentication.WithCookieSession[testContext](true),
+		authentication.WithCookieSession[testContext](),
 	)
 	require.NoError(t, err)
 

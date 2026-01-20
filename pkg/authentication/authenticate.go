@@ -55,12 +55,12 @@ func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	}
 }
 
-// WithCookieSession enables a stateless session handling where the whole
-// context (including tokens) is stored in the session cookie, encrypted.
+// WithCookieSession enables stateless session handling where the whole context
+// (including tokens) is stored in the session cookie, encrypted.
 // This avoids the need for a server-side session store but increases cookie size.
-func WithCookieSession[T Ctx](enabled bool) Option[T] {
+func WithCookieSession[T Ctx]() Option[T] {
 	return func(a *Authenticator[T]) {
-		a.useCookieSession = enabled
+		a.useCookieSession = true
 	}
 }
 
