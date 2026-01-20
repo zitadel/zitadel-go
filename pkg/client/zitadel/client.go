@@ -151,7 +151,8 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 		// 1. We manually call the TokenSource generator.
 		// Because you set this up in NewConnection, it ALREADY uses
 		// the customHTTPClient that skips certificate checks.
-		ts, err := c.jwtProfileTokenSourceWithHTTPClient(jwtProfileTokenSource)
+		var ts oauth2.TokenSource
+		ts, err = c.jwtProfileTokenSourceWithHTTPClient(jwtProfileTokenSource)
 		if err != nil {
 			return err
 		}
