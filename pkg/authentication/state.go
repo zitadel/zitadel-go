@@ -15,7 +15,7 @@ type State struct {
 func (s *State) Encrypt(key string) (string, error) {
 	data, err := json.Marshal(s)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	return crypto.EncryptAES(string(data), key)
 }
