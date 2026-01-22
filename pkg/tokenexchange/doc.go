@@ -10,23 +10,26 @@
 // grant type enabled. For impersonation, the actor must have appropriate permissions
 // such as ORG_END_USER_IMPERSONATOR.
 //
-// # Impersonation
+// # Client Authentication
 //
-// Impersonation allows a service account to obtain a token that acts as another user.
-// The service account must have impersonation permissions. You can impersonate by
-// user ID (a ZITADEL-specific extension) or by providing an existing user token:
+// Token exchange requires client authentication. Use [ClientCredentials] for
+// applications configured with a client secret, or [JWTProfile] for applications
+// using JWT assertion authentication:
 //
-//	api, _ := client.New(ctx, z,
-//	    client.WithAuth(client.DefaultServiceUserAuthentication("/path/to/key.json", ...)),
-//	)
-//	actorToken, _ := api.GetValidToken()
+//	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 //
 //	result, err := tokenexchange.Impersonate(ctx, z,
 //	    "259242039378444290",
 //	    actorToken,
 //	    tokenexchange.SubjectIsUserID(),
+//	    tokenexchange.WithClientAuth(auth),
 //	)
 //
+// # Impersonation
+//
+// Impersonation allows a service account to obtain a token that acts as another user.
+// The service account must have impersonation permissions. You can impersonate by
+// user ID (a ZITADEL-specific extension) or by providing an existing user token.
 // The subject token type is specified using [SubjectIsUserID], [SubjectIsAccessToken],
 // [SubjectIsIDToken], or [SubjectIsJWT]. In ZITADEL, delegation and impersonation are
 // functionally equivalent, both resulting in a token with an `act` claim identifying
@@ -41,10 +44,11 @@
 //	    myAccessToken,
 //	    tokenexchange.SubjectIsAccessToken(),
 //	    tokenexchange.WithScopes("openid"),
+//	    tokenexchange.WithClientAuth(auth),
 //	)
 //
-// Use [WithScopes], [WithAudience], and [WithRequestedTokenType] to customize the
-// exchange request.
+// Use [WithScopes], [WithAudience], [WithResource], and [WithRequestedTokenType] to
+// customize the exchange request.
 //
 // # Creating a Client with the Exchanged Token
 //

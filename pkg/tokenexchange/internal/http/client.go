@@ -3,13 +3,19 @@ package http
 import (
 	"crypto/tls"
 	"net/http"
+	"time"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
 func NewClient(z *zitadel.Zitadel) *http.Client {
-	transport := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
+	var transport *http.Transport
+	if defaultTransport, ok := http.DefaultTransport.(*http.Transport); ok && defaultTransport != nil {
+		transport = defaultTransport.Clone()
+	} else {
+		transport = &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+		}
 	}
 
 	if z.IsInsecureSkipVerifyTLS() {
@@ -18,29 +24,30 @@ func NewClient(z *zitadel.Zitadel) *http.Client {
 		}
 	}
 
-	var rt http.RoundTripper = transport
+	var roundTripper http.RoundTripper = transport
 
 	if len(z.TransportHeaders()) > 0 {
-		rt = &headerRoundTripper{
-			rt:      transport,
+		roundTripper = &headerRoundTripper{
+			base:    transport,
 			headers: z.TransportHeaders(),
 		}
 	}
 
 	return &http.Client{
-		Transport: rt,
+		Transport: roundTripper,
+		Timeout:   30 * time.Second,
 	}
 }
 
 type headerRoundTripper struct {
-	rt      http.RoundTripper
+	base    http.RoundTripper
 	headers map[string]string
 }
 
 func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	newReq := req.Clone(req.Context())
-	for k, v := range h.headers {
-		newReq.Header.Set(k, v)
+	clonedReq := req.Clone(req.Context())
+	for name, value := range h.headers {
+		clonedReq.Header.Set(name, value)
 	}
-	return h.rt.RoundTrip(newReq)
+	return h.base.RoundTrip(clonedReq)
 }

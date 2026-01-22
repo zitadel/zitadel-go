@@ -4,11 +4,18 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
+
+type customRoundTripper struct{}
+
+func (c *customRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	return http.DefaultTransport.RoundTrip(req)
+}
 
 func TestNewClient(t *testing.T) {
 	t.Run("default config", func(t *testing.T) {
@@ -16,6 +23,7 @@ func TestNewClient(t *testing.T) {
 		client := NewClient(z)
 		assert.NotNil(t, client)
 		assert.NotNil(t, client.Transport)
+		assert.Equal(t, 30*time.Second, client.Timeout)
 	})
 
 	t.Run("insecure skip verify", func(t *testing.T) {
@@ -53,6 +61,33 @@ func TestNewClient(t *testing.T) {
 		require.True(t, ok)
 		assert.Equal(t, "value", hrt.headers["X-Custom"])
 	})
+
+	t.Run("fallback when DefaultTransport is overridden", func(t *testing.T) {
+		original := http.DefaultTransport
+		http.DefaultTransport = &customRoundTripper{}
+		defer func() { http.DefaultTransport = original }()
+
+		z := zitadel.New("example.zitadel.cloud")
+		client := NewClient(z)
+		assert.NotNil(t, client)
+		assert.NotNil(t, client.Transport)
+		assert.Equal(t, 30*time.Second, client.Timeout)
+
+		_, ok := client.Transport.(*http.Transport)
+		assert.True(t, ok)
+	})
+
+	t.Run("fallback when DefaultTransport is nil", func(t *testing.T) {
+		original := http.DefaultTransport
+		http.DefaultTransport = nil
+		defer func() { http.DefaultTransport = original }()
+
+		z := zitadel.New("example.zitadel.cloud")
+		client := NewClient(z)
+		assert.NotNil(t, client)
+		assert.NotNil(t, client.Transport)
+		assert.Equal(t, 30*time.Second, client.Timeout)
+	})
 }
 
 func TestHeaderRoundTripper(t *testing.T) {
@@ -63,15 +98,15 @@ func TestHeaderRoundTripper(t *testing.T) {
 	}))
 	defer server.Close()
 
-	rt := &headerRoundTripper{
-		rt: http.DefaultTransport,
+	roundTripper := &headerRoundTripper{
+		base: http.DefaultTransport,
 		headers: map[string]string{
 			"X-Header-1": "value1",
 			"X-Header-2": "value2",
 		},
 	}
 
-	client := &http.Client{Transport: rt}
+	client := &http.Client{Transport: roundTripper}
 	resp, err := client.Get(server.URL)
 	require.NoError(t, err)
 	defer func() { _ = resp.Body.Close() }()

@@ -2,9 +2,14 @@ package tokenexchange_test
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/go-jose/go-jose/v4"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
 	"github.com/zitadel/zitadel-go/v3/pkg/tokenexchange"
@@ -36,6 +41,7 @@ func Example_impersonateByUserID() {
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
+		tokenexchange.WithClientAuth(tokenexchange.ClientCredentials("client-id", "client-secret")),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -62,11 +68,13 @@ func Example_impersonateByAccessToken() {
 
 	actorToken, _ := api.GetValidToken()
 	userAccessToken := "NaUAPHy5mLFQlwUCeUGYeDyhcQYuNhzTiYgwMor9BxP..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		userAccessToken,
 		actorToken,
 		tokenexchange.SubjectIsAccessToken(),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -93,42 +101,13 @@ func Example_impersonateByIDToken() {
 
 	actorToken, _ := api.GetValidToken()
 	userIDToken := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		userIDToken,
 		actorToken,
 		tokenexchange.SubjectIsIDToken(),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Impersonated token type: %s\n", result.TokenType)
-}
-
-func Example_impersonateByJWT() {
-	ctx := context.Background()
-	z := zitadel.New("example.zitadel.cloud")
-
-	api, err := client.New(ctx, z,
-		client.WithAuth(client.DefaultServiceUserAuthentication(
-			"/path/to/key.json",
-			oidc.ScopeOpenID,
-			client.ScopeZitadelAPI(),
-		)),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() { _ = api.Close() }()
-
-	actorToken, _ := api.GetValidToken()
-	selfSignedJWT := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-
-	result, err := tokenexchange.Impersonate(ctx, z,
-		selfSignedJWT,
-		actorToken,
-		tokenexchange.SubjectIsJWT(),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -154,12 +133,14 @@ func Example_impersonateWithScopes() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.WithScopes("openid", "profile", "email"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -188,12 +169,47 @@ func Example_impersonateWithAudience() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.WithAudience("https://api.example.com"),
+		tokenexchange.WithClientAuth(auth),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Token type: %s\n", result.TokenType)
+}
+
+func Example_impersonateWithResource() {
+	ctx := context.Background()
+	z := zitadel.New("example.zitadel.cloud")
+
+	api, err := client.New(ctx, z,
+		client.WithAuth(client.DefaultServiceUserAuthentication(
+			"/path/to/key.json",
+			oidc.ScopeOpenID,
+			client.ScopeZitadelAPI(),
+		)),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() { _ = api.Close() }()
+
+	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
+
+	result, err := tokenexchange.Impersonate(ctx, z,
+		"259242039378444290",
+		actorToken,
+		tokenexchange.SubjectIsUserID(),
+		tokenexchange.WithResource("https://api.example.com/v1"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -219,12 +235,14 @@ func Example_impersonateRequestJWT() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.WithRequestedTokenType(oidc.JWTTokenType),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -238,12 +256,14 @@ func Example_impersonateWithActorIDToken() {
 	z := zitadel.New("example.zitadel.cloud")
 
 	actorIDToken := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorIDToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.ActorIsIDToken(),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -269,12 +289,14 @@ func Example_impersonateWithRefreshToken() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.WithScopes("openid", "offline_access"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -302,6 +324,7 @@ func Example_impersonateWithAllOptions() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
@@ -310,7 +333,9 @@ func Example_impersonateWithAllOptions() {
 		tokenexchange.ActorIsAccessToken(),
 		tokenexchange.WithScopes("openid", "profile", "email"),
 		tokenexchange.WithAudience("https://api.example.com"),
+		tokenexchange.WithResource("https://api.example.com/v1"),
 		tokenexchange.WithRequestedTokenType(oidc.JWTTokenType),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -336,11 +361,13 @@ func Example_delegate() {
 	defer func() { _ = api.Close() }()
 
 	actorToken, _ := api.GetValidToken()
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Delegate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -353,11 +380,13 @@ func Example_exchangeReduceScope() {
 	ctx := context.Background()
 	z := zitadel.New("example.zitadel.cloud")
 	myAccessToken := "existing-access-token..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Exchange(ctx, z,
 		myAccessToken,
 		tokenexchange.SubjectIsAccessToken(),
 		tokenexchange.WithScopes("openid"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -370,11 +399,13 @@ func Example_exchangeReduceAudience() {
 	ctx := context.Background()
 	z := zitadel.New("example.zitadel.cloud")
 	myAccessToken := "existing-access-token..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Exchange(ctx, z,
 		myAccessToken,
 		tokenexchange.SubjectIsAccessToken(),
 		tokenexchange.WithAudience("https://restricted-api.example.com"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -387,11 +418,13 @@ func Example_exchangeConvertToJWT() {
 	ctx := context.Background()
 	z := zitadel.New("example.zitadel.cloud")
 	opaqueToken := "NaUAPHy5mLFQlwUCeUGYeDyhcQYuNhzTiYgwMor9BxP..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Exchange(ctx, z,
 		opaqueToken,
 		tokenexchange.SubjectIsAccessToken(),
 		tokenexchange.WithRequestedTokenType(oidc.JWTTokenType),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -404,26 +437,12 @@ func Example_exchangeFromIDToken() {
 	ctx := context.Background()
 	z := zitadel.New("example.zitadel.cloud")
 	idToken := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Exchange(ctx, z,
 		idToken,
 		tokenexchange.SubjectIsIDToken(),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Exchanged token type: %s\n", result.TokenType)
-}
-
-func Example_exchangeFromJWT() {
-	ctx := context.Background()
-	z := zitadel.New("example.zitadel.cloud")
-	selfSignedJWT := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-
-	result, err := tokenexchange.Exchange(ctx, z,
-		selfSignedJWT,
-		tokenexchange.SubjectIsJWT(),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -436,19 +455,87 @@ func Example_exchangeWithAllOptions() {
 	ctx := context.Background()
 	z := zitadel.New("example.zitadel.cloud")
 	myAccessToken := "existing-access-token..."
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
 
 	result, err := tokenexchange.Exchange(ctx, z,
 		myAccessToken,
 		tokenexchange.SubjectIsAccessToken(),
 		tokenexchange.WithScopes("openid", "profile"),
 		tokenexchange.WithAudience("https://api.example.com"),
+		tokenexchange.WithResource("https://api.example.com/v1"),
 		tokenexchange.WithRequestedTokenType(oidc.JWTTokenType),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Printf("Full exchange result - Token: %s..., Scopes: %v\n", result.AccessToken[:20], result.Scopes)
+}
+
+func Example_impersonateWithJWTProfile() {
+	ctx := context.Background()
+	z := zitadel.New("example.zitadel.cloud")
+
+	// Load your private key (typically from a PEM file)
+	keyData, err := os.ReadFile("/path/to/private-key.pem")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	block, _ := pem.Decode(keyData)
+	if block == nil {
+		log.Fatal("failed to decode PEM block")
+	}
+
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		// Try PKCS8 format
+		key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if err != nil {
+			log.Fatal(err)
+		}
+		privateKey = key.(*rsa.PrivateKey)
+	}
+
+	// Create a jose.Signer from the private key
+	signer, err := jose.NewSigner(
+		jose.SigningKey{Algorithm: jose.RS256, Key: privateKey},
+		(&jose.SignerOptions{}).WithType("JWT"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Use JWTProfile for authentication instead of ClientCredentials
+	auth := tokenexchange.JWTProfile("your-client-id", signer)
+
+	api, err := client.New(ctx, z,
+		client.WithAuth(client.DefaultServiceUserAuthentication(
+			"/path/to/key.json",
+			oidc.ScopeOpenID,
+			client.ScopeZitadelAPI(),
+		)),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() { _ = api.Close() }()
+
+	actorToken, _ := api.GetValidToken()
+
+	result, err := tokenexchange.Impersonate(ctx, z,
+		"259242039378444290",
+		actorToken,
+		tokenexchange.SubjectIsUserID(),
+		tokenexchange.WithScopes("openid", "profile"),
+		tokenexchange.WithClientAuth(auth),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Impersonated with JWT profile auth, expires in %d seconds\n", result.ExpiresIn)
 }
 
 func Example_createImpersonatedClient() {
@@ -472,11 +559,14 @@ func Example_createImpersonatedClient() {
 		log.Fatal(err)
 	}
 
+	auth := tokenexchange.ClientCredentials("client-id", "client-secret")
+
 	result, err := tokenexchange.Impersonate(ctx, z,
 		"259242039378444290",
 		actorToken,
 		tokenexchange.SubjectIsUserID(),
 		tokenexchange.WithScopes("openid", "profile"),
+		tokenexchange.WithClientAuth(auth),
 	)
 	if err != nil {
 		log.Fatal(err)
