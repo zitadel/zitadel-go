@@ -52,6 +52,7 @@ type AddOrganizationRequest struct {
 	// which is the recommended way. The generated ID will be returned in the response.
 	//
 	// Deprecated: use 'organization_id' field instead.
+	// If both org_id and organization_id are set, organization_id will take precedence.
 	//
 	// Deprecated: Marked as deprecated in zitadel/org/v2/org_service.proto.
 	OrgId *string `protobuf:"bytes,3,opt,name=org_id,json=orgId,proto3,oneof" json:"org_id,omitempty"`
