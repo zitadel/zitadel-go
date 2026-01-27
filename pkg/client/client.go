@@ -121,12 +121,18 @@ type Client struct {
 }
 
 func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client, error) {
+	// Check for any initialization errors from zitadel options (e.g., invalid CA certificate)
+	if err := zitadel.InitErr(); err != nil {
+		return nil, err
+	}
+
 	var options clientOptions
 	for _, o := range opts {
 		o(&options)
 	}
 
-	if zitadel.IsInsecureSkipVerifyTLS() || len(zitadel.TransportHeaders()) > 0 {
+	var customHTTPClient *http.Client
+	if zitadel.IsInsecureSkipVerifyTLS() || zitadel.CACertPool() != nil || len(zitadel.TransportHeaders()) > 0 {
 		var baseTransport *http.Transport
 		if t, ok := http.DefaultTransport.(*http.Transport); ok {
 			baseTransport = t.Clone()
@@ -136,11 +142,17 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 			}
 		}
 
-		if zitadel.IsInsecureSkipVerifyTLS() {
+		if zitadel.IsInsecureSkipVerifyTLS() || zitadel.CACertPool() != nil {
 			if baseTransport.TLSClientConfig == nil {
 				baseTransport.TLSClientConfig = &tls.Config{}
 			}
-			baseTransport.TLSClientConfig.InsecureSkipVerify = true
+			if zitadel.IsInsecureSkipVerifyTLS() {
+				//nolint:gosec // InsecureSkipVerify is intentionally configurable for local development with self-signed certs.
+				baseTransport.TLSClientConfig.InsecureSkipVerify = true
+			}
+			if zitadel.CACertPool() != nil {
+				baseTransport.TLSClientConfig.RootCAs = zitadel.CACertPool()
+			}
 		}
 
 		var rt http.RoundTripper = baseTransport
@@ -151,15 +163,16 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 			}
 		}
 
-		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+		customHTTPClient = &http.Client{
 			Transport: rt,
-		})
+		}
+		ctx = context.WithValue(ctx, oauth2.HTTPClient, customHTTPClient)
 	}
 
 	var source oauth2.TokenSource
 	if options.initTokenSource != nil {
 		var err error
-		source, err = options.initTokenSource(ctx, zitadel.Origin())
+		source, err = initTokenSourceWithHTTPClient(ctx, zitadel.Origin(), options.initTokenSource, customHTTPClient)
 		if err != nil {
 			return nil, err
 		}
@@ -182,7 +195,7 @@ func newConnection(
 	tokenSource oauth2.TokenSource,
 	opts ...grpc.DialOption,
 ) (*grpc.ClientConn, error) {
-	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS())
+	transportCreds, err := transportCredentials(zitadel.Domain(), zitadel.IsTLS(), zitadel.IsInsecureSkipVerifyTLS(), zitadel.CACertPool())
 	if err != nil {
 		return nil, err
 	}
@@ -198,6 +211,12 @@ func newConnection(
 				ctx = metadata.AppendToOutgoingContext(ctx, k, v)
 			}
 			return invoker(ctx, method, req, reply, cc, opts...)
+		}))
+		dialOptions = append(dialOptions, grpc.WithStreamInterceptor(func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+			for k, v := range zitadel.TransportHeaders() {
+				ctx = metadata.AppendToOutgoingContext(ctx, k, v)
+			}
+			return streamer(ctx, desc, cc, method, opts...)
 		}))
 	}
 
@@ -452,4 +471,30 @@ func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error
 		newReq.Header.Set(k, v)
 	}
 	return h.rt.RoundTrip(&newReq)
+}
+
+// initTokenSourceWithHTTPClient initializes a token source, temporarily swapping
+// http.DefaultClient if a custom HTTP client is provided. This is necessary because
+// the OIDC library uses http.DefaultClient for discovery, not the oauth2.HTTPClient
+// context value.
+func initTokenSourceWithHTTPClient(ctx context.Context, issuer string, init TokenSourceInitializer, httpClient *http.Client) (oauth2.TokenSource, error) {
+	if httpClient == nil {
+		return init(ctx, issuer)
+	}
+
+	// Temporarily swap the global http.DefaultClient and http.DefaultTransport
+	// so that the OIDC library's discovery uses our custom TLS configuration.
+	originalDefaultClient := http.DefaultClient
+	originalDefaultTransport := http.DefaultTransport
+
+	http.DefaultClient = httpClient
+	if httpClient.Transport != nil {
+		http.DefaultTransport = httpClient.Transport
+	}
+	defer func() {
+		http.DefaultClient = originalDefaultClient
+		http.DefaultTransport = originalDefaultTransport
+	}()
+
+	return init(ctx, issuer)
 }
