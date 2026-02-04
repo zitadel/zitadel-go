@@ -1,6 +1,8 @@
 package zitadel
 
 import (
+	"crypto/x509"
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -13,7 +15,9 @@ type Zitadel struct {
 	port                  string
 	tls                   bool
 	insecureSkipVerifyTLS bool
+	caCertPool            *x509.CertPool
 	transportHeaders      map[string]string
+	initErr               error // stores any error from option initialization
 }
 
 func New(domain string, options ...Option) *Zitadel {
@@ -47,6 +51,27 @@ func WithInsecure(port string) Option {
 func WithInsecureSkipVerifyTLS() Option {
 	return func(z *Zitadel) {
 		z.insecureSkipVerifyTLS = true
+	}
+}
+
+// WithTrustStore adds custom CA certificates to the trust store for both gRPC and HTTP transports.
+// The certificates should be PEM-encoded. This is useful when connecting to servers using
+// certificates signed by a private CA (e.g., in development or enterprise environments).
+// The provided certificates are appended to the system certificate pool.
+// Any error will be returned when calling client.New().
+func WithTrustStore(caCerts ...[]byte) Option {
+	return func(z *Zitadel) {
+		pool, err := x509.SystemCertPool()
+		if err != nil {
+			pool = x509.NewCertPool()
+		}
+		for _, cert := range caCerts {
+			if !pool.AppendCertsFromPEM(cert) {
+				z.initErr = errors.New("failed to append CA certificate to trust store")
+				return
+			}
+		}
+		z.caCertPool = pool
 	}
 }
 
@@ -92,6 +117,14 @@ func (z *Zitadel) Domain() string {
 
 func (z *Zitadel) TransportHeaders() map[string]string {
 	return z.transportHeaders
+}
+
+func (z *Zitadel) CACertPool() *x509.CertPool {
+	return z.caCertPool
+}
+
+func (z *Zitadel) InitErr() error {
+	return z.initErr
 }
 
 func buildOrigin(hostname string, externalPort string, tls bool) string {

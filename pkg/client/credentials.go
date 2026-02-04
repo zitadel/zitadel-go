@@ -54,10 +54,11 @@ func requestMetadataFromToken(token *oauth2.Token) map[string]string {
 	}
 }
 
-func transportCredentials(domain string, withTLS bool, insecureSkipVerifyTLS bool) (credentials.TransportCredentials, error) {
+func transportCredentials(domain string, withTLS bool, insecureSkipVerifyTLS bool, caCertPool *x509.CertPool) (credentials.TransportCredentials, error) {
 	if !withTLS {
 		return insecure.NewCredentials(), nil
 	}
+	//nolint:gosec // InsecureSkipVerify is intentionally configurable for local development with self-signed certs.
 	tlsConfig := &tls.Config{
 		ServerName:         domain,
 		InsecureSkipVerify: insecureSkipVerifyTLS,
@@ -65,12 +66,18 @@ func transportCredentials(domain string, withTLS bool, insecureSkipVerifyTLS boo
 	if insecureSkipVerifyTLS {
 		return credentials.NewTLS(tlsConfig), nil
 	}
-	ca, err := x509.SystemCertPool()
-	if err != nil {
-		return nil, err
-	}
-	if ca == nil {
-		ca = x509.NewCertPool()
+	var ca *x509.CertPool
+	if caCertPool != nil {
+		ca = caCertPool
+	} else {
+		var err error
+		ca, err = x509.SystemCertPool()
+		if err != nil {
+			return nil, err
+		}
+		if ca == nil {
+			ca = x509.NewCertPool()
+		}
 	}
 	tlsConfig.RootCAs = ca
 	return credentials.NewTLS(tlsConfig), nil

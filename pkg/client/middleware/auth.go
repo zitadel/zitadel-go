@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"errors"
+	"net/http"
 	"os"
 
 	"github.com/zitadel/oidc/v3/pkg/client/profile"
@@ -29,27 +30,51 @@ type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSou
 type JWTDirectTokenSource func() (oauth2.TokenSource, error)
 
 func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSource {
+	return JWTProfileFromPathWithHTTPClient(ctx, keyPath, nil)
+}
+
+// JWTProfileFromPathWithHTTPClient creates a JWTProfileTokenSource from the key file at the provided path.
+// The httpClient is used for OIDC discovery and token requests. You can customize it to set timeouts,
+// TLS settings (e.g., custom CA), proxies, etc. If nil, the default HTTP client is used.
+func JWTProfileFromPathWithHTTPClient(ctx context.Context, keyPath string, httpClient *http.Client) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		keyData, err := client.ConfigFromKeyFile(keyPath)
 		if err != nil {
 			return nil, err
 		}
-		return JWTProfileFromKeyAndUserID(ctx, keyData.Key, keyData.KeyID, keyData.UserID)(issuer, scopes)
+		return JWTProfileFromKeyAndUserIDWithHTTPClient(ctx, keyData.Key, keyData.KeyID, keyData.UserID, httpClient)(issuer, scopes)
 	}
 }
 
 func JWTProfileFromFileData(ctx context.Context, fileData []byte) JWTProfileTokenSource {
+	return JWTProfileFromFileDataWithHTTPClient(ctx, fileData, nil)
+}
+
+// JWTProfileFromFileDataWithHTTPClient creates a JWTProfileTokenSource from the provided key file data.
+// The httpClient is used for OIDC discovery and token requests. You can customize it to set timeouts,
+// TLS settings (e.g., custom CA), proxies, etc. If nil, the default HTTP client is used.
+func JWTProfileFromFileDataWithHTTPClient(ctx context.Context, fileData []byte, httpClient *http.Client) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		keyData, err := client.ConfigFromKeyFileData(fileData)
 		if err != nil {
 			return nil, err
 		}
-		return JWTProfileFromKeyAndUserID(ctx, keyData.Key, keyData.KeyID, keyData.UserID)(issuer, scopes)
+		return JWTProfileFromKeyAndUserIDWithHTTPClient(ctx, keyData.Key, keyData.KeyID, keyData.UserID, httpClient)(issuer, scopes)
 	}
 }
 
 func JWTProfileFromKeyAndUserID(ctx context.Context, key []byte, keyID, userID string) JWTProfileTokenSource {
+	return JWTProfileFromKeyAndUserIDWithHTTPClient(ctx, key, keyID, userID, nil)
+}
+
+// JWTProfileFromKeyAndUserIDWithHTTPClient creates a JWTProfileTokenSource from the provided key, key ID, and user ID.
+// The httpClient is used for OIDC discovery and token requests. You can customize it to set timeouts,
+// TLS settings (e.g., custom CA), proxies, etc. If nil, the default HTTP client is used.
+func JWTProfileFromKeyAndUserIDWithHTTPClient(ctx context.Context, key []byte, keyID, userID string, httpClient *http.Client) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
+		if httpClient != nil {
+			return profile.NewJWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes, profile.WithHTTPClient(httpClient))
+		}
 		return profile.NewJWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)
 	}
 }
