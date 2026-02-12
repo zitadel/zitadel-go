@@ -30,6 +30,7 @@ type Connection struct {
 	unaryInterceptors     []grpc.UnaryClientInterceptor
 	streamInterceptors    []grpc.StreamClientInterceptor
 	dialOptions           []grpc.DialOption
+	transportCredentials  credentials.TransportCredentials
 	*grpc.ClientConn
 }
 
@@ -78,11 +79,14 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		),
 	}
 	dialOptions = append(dialOptions, c.dialOptions...)
-	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify)
+
+	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify, c.transportCredentials)
 	if err != nil {
 		return nil, err
 	}
+
 	dialOptions = append(dialOptions, opt)
+
 	//nolint:staticcheck // grpc.Dial is retained for compatibility with existing usage.
 	conn, err := grpc.Dial(c.api, dialOptions...)
 	if err != nil {
@@ -117,7 +121,13 @@ func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtP
 	return nil
 }
 
-func transportOption(api string, insecure bool, insecureSkipVerify bool) (grpc.DialOption, error) {
+func transportOption(api string, insecure bool, insecureSkipVerify bool, transportCreds credentials.TransportCredentials) (grpc.DialOption, error) {
+
+	// If custom transport credentials are provided, use them
+	if transportCreds != nil {
+		return grpc.WithTransportCredentials(transportCreds), nil
+	}
+
 	if insecure {
 		//nolint:staticcheck // WithInsecure is used for compatibility; callers control security.
 		return grpc.WithInsecure(), nil
@@ -245,6 +255,24 @@ func WithStreamInterceptors(interceptors ...grpc.StreamClientInterceptor) func(*
 func WithDialOptions(opts ...grpc.DialOption) func(*Connection) error {
 	return func(client *Connection) error {
 		client.dialOptions = append(client.dialOptions, opts...)
+		return nil
+	}
+}
+
+// WithTransportCredentials configures custom gRPC transport credentials for the connection.
+//
+// Use this option when you need full control over the TLS settings used by the client,
+// for example by providing credentials created with credentials.NewTLS and a custom
+// *tls.Config. A common use case is trusting server certificates that are issued by a
+// private or otherwise non-standard certificate authority by adding that CA to
+// tls.Config.RootCAs.
+//
+// When custom transport credentials are provided, they take precedence over any
+// security-related options configured via WithInsecure or WithInsecureSkipVerifyTLS;
+// the connection will use the supplied credentials as-is.
+func WithTransportCredentials(creds credentials.TransportCredentials) func(*Connection) error {
+	return func(client *Connection) error {
+		client.transportCredentials = creds
 		return nil
 	}
 }
