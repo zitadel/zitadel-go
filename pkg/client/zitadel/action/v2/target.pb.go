@@ -109,14 +109,14 @@ type Target struct {
 	//	*Target_RestCall
 	//	*Target_RestAsync
 	TargetType isTarget_TargetType `protobuf_oneof:"target_type"`
-	// Timeout defines the duration until ZITADEL cancels the execution.
+	// Timeout defines the duration until Zitadel cancels the execution.
 	// If the target doesn't respond before this timeout expires, the the connection is closed and the action fails. Depending on the target type and possible setting on `interrupt_on_error` following targets will not be called. In case of a `rest_async` target only this specific target will fail, without any influence on other targets of the same execution.
 	Timeout *durationpb.Duration `protobuf:"bytes,8,opt,name=timeout,proto3" json:"timeout,omitempty"`
 	// The URL that will be called in case of an execution.
 	Endpoint string `protobuf:"bytes,9,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
 	// The current signing key used to sign the request sent to the target.
 	// The key can be used to verify the integrity and authenticity of the request
-	// on the receiver side. The key should be treated as a secret and only known to ZITADEL and the receiver.
+	// on the receiver side. The key should be treated as a secret and only known to Zitadel and the receiver.
 	// The signature is included in the request header `X-ZITADEL-Signature`
 	// and calculated over the raw body of the request using HMAC with SHA256.
 	SigningKey string `protobuf:"bytes,10,opt,name=signing_key,json=signingKey,proto3" json:"signing_key,omitempty"`

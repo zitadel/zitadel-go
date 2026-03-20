@@ -90,7 +90,7 @@ type isLoginVersion_Version interface {
 }
 
 type LoginVersion_LoginV1 struct {
-	// Allow the user to sign in through the ZITADEL hosted login UI.
+	// Allow the user to sign in through the Zitadel hosted login UI.
 	LoginV1 *LoginV1 `protobuf:"bytes,1,opt,name=login_v1,json=loginV1,proto3,oneof"`
 }
 

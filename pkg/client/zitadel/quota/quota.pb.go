@@ -26,7 +26,7 @@ type Unit int32
 
 const (
 	Unit_UNIT_UNIMPLEMENTED Unit = 0
-	// The sum of all requests to the ZITADEL API with an authorization header,
+	// The sum of all requests to the Zitadel API with an authorization header,
 	// excluding the following exceptions
 	// - Calls to the System API
 	// - Calls that cause internal server errors

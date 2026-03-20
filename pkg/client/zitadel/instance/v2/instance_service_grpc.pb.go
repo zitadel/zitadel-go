@@ -79,8 +79,8 @@ type InstanceServiceClient interface {
 	ListInstances(ctx context.Context, in *ListInstancesRequest, opts ...grpc.CallOption) (*ListInstancesResponse, error)
 	// Add Custom Domain
 	//
-	// Adds a custom domain to the instance.
-	// The custom domain must be unique across all instances.
+	// Adds a Custom Domain to the instance.
+	// The Custom Domain must be unique across all instances.
 	// Once the domain is added, it will be used to route requests to this instance.
 	// This method requires system level permissions and cannot be called from an instance context.
 	//
@@ -89,7 +89,7 @@ type InstanceServiceClient interface {
 	AddCustomDomain(ctx context.Context, in *AddCustomDomainRequest, opts ...grpc.CallOption) (*AddCustomDomainResponse, error)
 	// Remove Custom Domain
 	//
-	// Removes a custom domain from the instance.
+	// Removes a Custom Domain from the instance.
 	// Be aware that this will stop routing requests from this domain to the instance and
 	// might break existing setups or integrations.
 	// This method requires system level permissions and cannot be called from an instance context.
@@ -99,7 +99,7 @@ type InstanceServiceClient interface {
 	RemoveCustomDomain(ctx context.Context, in *RemoveCustomDomainRequest, opts ...grpc.CallOption) (*RemoveCustomDomainResponse, error)
 	// List Custom Domains
 	//
-	// Lists custom domains of the instance.
+	// Lists Custom Domains of the instance.
 	//
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
@@ -112,7 +112,7 @@ type InstanceServiceClient interface {
 	ListCustomDomains(ctx context.Context, in *ListCustomDomainsRequest, opts ...grpc.CallOption) (*ListCustomDomainsResponse, error)
 	// Add Trusted Domain
 	//
-	// Adds a trusted domain to the instance.
+	// Adds a Trusted Domain to the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.
@@ -122,8 +122,8 @@ type InstanceServiceClient interface {
 	// Once the domain is added, it can be used in API responses like OIDC discovery,
 	// email templates, and more.
 	// This can be used in cases where the API is accessed through a different domain
-	// than the instance domain, e.g. proxy setups and custom login UIs.
-	// Unlike custom domain, trusted domains are not used to route requests to this instance
+	// than the Custom Domain, e.g. proxy setups and custom login UIs.
+	// Unlike Custom Domains, Trusted Domains are not used to route requests to this instance
 	// and therefore do not need to be uniquely assigned to an instance.
 	//
 	// Required permissions:
@@ -132,7 +132,7 @@ type InstanceServiceClient interface {
 	AddTrustedDomain(ctx context.Context, in *AddTrustedDomainRequest, opts ...grpc.CallOption) (*AddTrustedDomainResponse, error)
 	// Remove Trusted Domain
 	//
-	// Removes a trusted domain from the instance.
+	// Removes a Trusted Domain from the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.
@@ -144,7 +144,7 @@ type InstanceServiceClient interface {
 	RemoveTrustedDomain(ctx context.Context, in *RemoveTrustedDomainRequest, opts ...grpc.CallOption) (*RemoveTrustedDomainResponse, error)
 	// List Trusted Domains
 	//
-	// Lists trusted domains of the instance.
+	// Lists Trusted Domains of the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.
@@ -302,8 +302,8 @@ type InstanceServiceServer interface {
 	ListInstances(context.Context, *ListInstancesRequest) (*ListInstancesResponse, error)
 	// Add Custom Domain
 	//
-	// Adds a custom domain to the instance.
-	// The custom domain must be unique across all instances.
+	// Adds a Custom Domain to the instance.
+	// The Custom Domain must be unique across all instances.
 	// Once the domain is added, it will be used to route requests to this instance.
 	// This method requires system level permissions and cannot be called from an instance context.
 	//
@@ -312,7 +312,7 @@ type InstanceServiceServer interface {
 	AddCustomDomain(context.Context, *AddCustomDomainRequest) (*AddCustomDomainResponse, error)
 	// Remove Custom Domain
 	//
-	// Removes a custom domain from the instance.
+	// Removes a Custom Domain from the instance.
 	// Be aware that this will stop routing requests from this domain to the instance and
 	// might break existing setups or integrations.
 	// This method requires system level permissions and cannot be called from an instance context.
@@ -322,7 +322,7 @@ type InstanceServiceServer interface {
 	RemoveCustomDomain(context.Context, *RemoveCustomDomainRequest) (*RemoveCustomDomainResponse, error)
 	// List Custom Domains
 	//
-	// Lists custom domains of the instance.
+	// Lists Custom Domains of the instance.
 	//
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
@@ -335,7 +335,7 @@ type InstanceServiceServer interface {
 	ListCustomDomains(context.Context, *ListCustomDomainsRequest) (*ListCustomDomainsResponse, error)
 	// Add Trusted Domain
 	//
-	// Adds a trusted domain to the instance.
+	// Adds a Trusted Domain to the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.
@@ -345,8 +345,8 @@ type InstanceServiceServer interface {
 	// Once the domain is added, it can be used in API responses like OIDC discovery,
 	// email templates, and more.
 	// This can be used in cases where the API is accessed through a different domain
-	// than the instance domain, e.g. proxy setups and custom login UIs.
-	// Unlike custom domain, trusted domains are not used to route requests to this instance
+	// than the Custom Domain, e.g. proxy setups and custom login UIs.
+	// Unlike Custom Domains, Trusted Domains are not used to route requests to this instance
 	// and therefore do not need to be uniquely assigned to an instance.
 	//
 	// Required permissions:
@@ -355,7 +355,7 @@ type InstanceServiceServer interface {
 	AddTrustedDomain(context.Context, *AddTrustedDomainRequest) (*AddTrustedDomainResponse, error)
 	// Remove Trusted Domain
 	//
-	// Removes a trusted domain from the instance.
+	// Removes a Trusted Domain from the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.
@@ -367,7 +367,7 @@ type InstanceServiceServer interface {
 	RemoveTrustedDomain(context.Context, *RemoveTrustedDomainRequest) (*RemoveTrustedDomainResponse, error)
 	// List Trusted Domains
 	//
-	// Lists trusted domains of the instance.
+	// Lists Trusted Domains of the instance.
 	// By default the instance will be determined by the context of the request,
 	// e.g. the host header.
 	// You can optionally pass an InstanceID to list the domains of a specific instance.

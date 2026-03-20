@@ -128,7 +128,7 @@ type SettingsServiceClient interface {
 	GetLockoutSettings(ctx context.Context, in *GetLockoutSettingsRequest, opts ...grpc.CallOption) (*GetLockoutSettingsResponse, error)
 	// Get Security Settings
 	//
-	// Get the security settings of the ZITADEL instance.
+	// Get the security settings of the Zitadel instance.
 	// Security settings include settings like enabling impersonation and embedded iframe settings.
 	//
 	// Required permissions:
@@ -384,7 +384,7 @@ type SettingsServiceServer interface {
 	GetLockoutSettings(context.Context, *GetLockoutSettingsRequest) (*GetLockoutSettingsResponse, error)
 	// Get Security Settings
 	//
-	// Get the security settings of the ZITADEL instance.
+	// Get the security settings of the Zitadel instance.
 	// Security settings include settings like enabling impersonation and embedded iframe settings.
 	//
 	// Required permissions:

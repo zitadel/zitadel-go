@@ -87,20 +87,20 @@ const (
 type UserServiceClient interface {
 	// Create a User
 	//
-	// Create a new human or machine user in the specified organization.
+	// Create a new user or service account in the specified organization.
 	//
 	// Required permission:
 	//   - user.write
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// Create a new human user
+	// Create a new User (Human)
 	//
-	// Deprecated: Use [CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) to create a new user of type human instead.
+	// Deprecated: Use [CreateUser](/docs/reference/api/user/zitadel.user.v2.UserService.CreateUser) to create a new user.
 	//
-	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
+	// Create/import a new user. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
 	// User by ID
 	//
-	// Returns the full user object (human or machine) including the profile, email, etc..
+	// Returns the full user or Service Account including the profile, email, etc..
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 	// Search Users
 	//
@@ -108,7 +108,7 @@ type UserServiceClient interface {
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Change the user email
 	//
-	// Deprecated: [Update the users email field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	// Deprecated: [Update the users email field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser).
 	//
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(ctx context.Context, in *SetEmailRequest, opts ...grpc.CallOption) (*SetEmailResponse, error)
@@ -122,13 +122,13 @@ type UserServiceClient interface {
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
-	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	// Deprecated: [Update the users phone field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser).
 	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(ctx context.Context, in *SetPhoneRequest, opts ...grpc.CallOption) (*SetPhoneResponse, error)
 	// Delete the user phone
 	//
-	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx) to remove the phone number.
+	// Deprecated: [Update the users phone field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) to remove the phone number.
 	//
 	// Delete the phone number of a user.
 	RemovePhone(ctx context.Context, in *RemovePhoneRequest, opts ...grpc.CallOption) (*RemovePhoneResponse, error)
@@ -149,9 +149,9 @@ type UserServiceClient interface {
 	// Required permission:
 	//   - user.write
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
-	// Update Human User
+	// Update User (Human)
 	//
-	// Deprecated: Use [UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) to update a user of type human instead.
+	// Deprecated: Use [UpdateUser](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) to update a user.
 	//
 	// Update all information from a user.
 	UpdateHumanUser(ctx context.Context, in *UpdateHumanUserRequest, opts ...grpc.CallOption) (*UpdateHumanUserResponse, error)
@@ -221,11 +221,11 @@ type UserServiceClient interface {
 	RemoveTOTP(ctx context.Context, in *RemoveTOTPRequest, opts ...grpc.CallOption) (*RemoveTOTPResponse, error)
 	// Add OTP SMS for a user
 	//
-	// Add a new One-Time Password (OTP) SMS factor to the authenticated user. OTP SMS will enable the user to verify a OTP with the latest verified phone number. The phone number has to be verified to add the second factor..
+	// Add a new OTP SMS factor to the authenticated user. OTP SMS will enable the user to verify an OTP with the latest verified phone number. The phone number has to be verified to add the second factor..
 	AddOTPSMS(ctx context.Context, in *AddOTPSMSRequest, opts ...grpc.CallOption) (*AddOTPSMSResponse, error)
-	// Remove One-Time Password (OTP) SMS from a user
+	// Remove OTP SMS from a user
 	//
-	// Remove the configured One-Time Password (OTP) SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
+	// Remove the configured OTP SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveOTPSMS(ctx context.Context, in *RemoveOTPSMSRequest, opts ...grpc.CallOption) (*RemoveOTPSMSResponse, error)
 	// Generate single-use recovery codes for a user
 	//
@@ -237,11 +237,11 @@ type UserServiceClient interface {
 	RemoveRecoveryCodes(ctx context.Context, in *RemoveRecoveryCodesRequest, opts ...grpc.CallOption) (*RemoveRecoveryCodesResponse, error)
 	// Add OTP Email for a user
 	//
-	// Add a new One-Time Password (OTP) Email factor to the authenticated user. OTP Email will enable the user to verify a OTP with the latest verified email. The email has to be verified to add the second factor..
+	// Add a new OTP Email factor to the authenticated user. OTP Email will enable the user to verify an OTP with the latest verified email. The email has to be verified to add the second factor..
 	AddOTPEmail(ctx context.Context, in *AddOTPEmailRequest, opts ...grpc.CallOption) (*AddOTPEmailResponse, error)
-	// Remove One-Time Password (OTP) Email from a user
+	// Remove OTP Email from a user
 	//
-	// Remove the configured One-Time Password (OTP) Email factor of a user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
+	// Remove the configured OTP Email factor of a user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
 	RemoveOTPEmail(ctx context.Context, in *RemoveOTPEmailRequest, opts ...grpc.CallOption) (*RemoveOTPEmailResponse, error)
 	// Start flow with an identity provider
 	//
@@ -269,7 +269,7 @@ type UserServiceClient interface {
 	PasswordReset(ctx context.Context, in *PasswordResetRequest, opts ...grpc.CallOption) (*PasswordResetResponse, error)
 	// Change password
 	//
-	// Deprecated: [Update the users password](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
+	// Deprecated: [Update the users password](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) instead.
 	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(ctx context.Context, in *SetPasswordRequest, opts ...grpc.CallOption) (*SetPasswordResponse, error)
@@ -285,7 +285,7 @@ type UserServiceClient interface {
 	AddSecret(ctx context.Context, in *AddSecretRequest, opts ...grpc.CallOption) (*AddSecretResponse, error)
 	// Remove a Users Secret
 	//
-	// Remove the current client ID and client secret from a machine user.
+	// Remove the current client ID and client secret from a service account.
 	//
 	// Required permission:
 	//   - user.write
@@ -340,7 +340,7 @@ type UserServiceClient interface {
 	ListPersonalAccessTokens(ctx context.Context, in *ListPersonalAccessTokensRequest, opts ...grpc.CallOption) (*ListPersonalAccessTokensResponse, error)
 	// List all possible authentication methods of a user
 	//
-	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
+	// List all possible authentication methods of a user like password, passkey, (T)OTP and more..
 	ListAuthenticationMethodTypes(ctx context.Context, in *ListAuthenticationMethodTypesRequest, opts ...grpc.CallOption) (*ListAuthenticationMethodTypesResponse, error)
 	ListAuthenticationFactors(ctx context.Context, in *ListAuthenticationFactorsRequest, opts ...grpc.CallOption) (*ListAuthenticationFactorsResponse, error)
 	// Create an invite code for a user
@@ -352,7 +352,7 @@ type UserServiceClient interface {
 	CreateInviteCode(ctx context.Context, in *CreateInviteCodeRequest, opts ...grpc.CallOption) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
-	// Deprecated: Use [CreateInviteCode](apis/resources/user_service_v2/user-service-create-invite-code.api.mdx) instead.
+	// Deprecated: Use [CreateInviteCode](/docs/reference/api/user/zitadel.user.v2.UserService.CreateInviteCode) instead.
 	//
 	// Resend an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// A resend is only possible if a code has been created previously and sent to the user. If there is no code or it was directly returned, an error will be returned.
@@ -368,7 +368,7 @@ type UserServiceClient interface {
 	HumanMFAInitSkipped(ctx context.Context, in *HumanMFAInitSkippedRequest, opts ...grpc.CallOption) (*HumanMFAInitSkippedResponse, error)
 	// Set User Metadata
 	//
-	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](apis/resources/user_service_v2/user-service-delete-user-metadata.api.mdx). For HTTP requests, make sure the bytes array value is base64 encoded.
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](/docs/reference/api/user/zitadel.user.v2.UserService.DeleteUserMetadata). For HTTP requests, make sure the bytes array value is base64 encoded.
 	//
 	// Required permission:
 	//   - `user.write`
@@ -943,20 +943,20 @@ func (c *userServiceClient) DeleteUserMetadata(ctx context.Context, in *DeleteUs
 type UserServiceServer interface {
 	// Create a User
 	//
-	// Create a new human or machine user in the specified organization.
+	// Create a new user or service account in the specified organization.
 	//
 	// Required permission:
 	//   - user.write
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// Create a new human user
+	// Create a new User (Human)
 	//
-	// Deprecated: Use [CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) to create a new user of type human instead.
+	// Deprecated: Use [CreateUser](/docs/reference/api/user/zitadel.user.v2.UserService.CreateUser) to create a new user.
 	//
-	// Create/import a new user with the type human. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
+	// Create/import a new user. The newly created user will get a verification email if either the email address is not marked as verified and you did not request the verification to be returned.
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
 	// User by ID
 	//
-	// Returns the full user object (human or machine) including the profile, email, etc..
+	// Returns the full user or Service Account including the profile, email, etc..
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	// Search Users
 	//
@@ -964,7 +964,7 @@ type UserServiceServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Change the user email
 	//
-	// Deprecated: [Update the users email field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	// Deprecated: [Update the users email field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser).
 	//
 	// Change the email address of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by email..
 	SetEmail(context.Context, *SetEmailRequest) (*SetEmailResponse, error)
@@ -978,13 +978,13 @@ type UserServiceServer interface {
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	// Set the user phone
 	//
-	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx).
+	// Deprecated: [Update the users phone field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser).
 	//
 	// Set the phone number of a user. If the state is set to not verified, a verification code will be generated, which can be either returned or sent to the user by sms..
 	SetPhone(context.Context, *SetPhoneRequest) (*SetPhoneResponse, error)
 	// Delete the user phone
 	//
-	// Deprecated: [Update the users phone field](apis/resources/user_service_v2/user-service-update-user.api.mdx) to remove the phone number.
+	// Deprecated: [Update the users phone field](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) to remove the phone number.
 	//
 	// Delete the phone number of a user.
 	RemovePhone(context.Context, *RemovePhoneRequest) (*RemovePhoneResponse, error)
@@ -1005,9 +1005,9 @@ type UserServiceServer interface {
 	// Required permission:
 	//   - user.write
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
-	// Update Human User
+	// Update User (Human)
 	//
-	// Deprecated: Use [UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) to update a user of type human instead.
+	// Deprecated: Use [UpdateUser](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) to update a user.
 	//
 	// Update all information from a user.
 	UpdateHumanUser(context.Context, *UpdateHumanUserRequest) (*UpdateHumanUserResponse, error)
@@ -1077,11 +1077,11 @@ type UserServiceServer interface {
 	RemoveTOTP(context.Context, *RemoveTOTPRequest) (*RemoveTOTPResponse, error)
 	// Add OTP SMS for a user
 	//
-	// Add a new One-Time Password (OTP) SMS factor to the authenticated user. OTP SMS will enable the user to verify a OTP with the latest verified phone number. The phone number has to be verified to add the second factor..
+	// Add a new OTP SMS factor to the authenticated user. OTP SMS will enable the user to verify an OTP with the latest verified phone number. The phone number has to be verified to add the second factor..
 	AddOTPSMS(context.Context, *AddOTPSMSRequest) (*AddOTPSMSResponse, error)
-	// Remove One-Time Password (OTP) SMS from a user
+	// Remove OTP SMS from a user
 	//
-	// Remove the configured One-Time Password (OTP) SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
+	// Remove the configured OTP SMS factor of a user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveOTPSMS(context.Context, *RemoveOTPSMSRequest) (*RemoveOTPSMSResponse, error)
 	// Generate single-use recovery codes for a user
 	//
@@ -1093,11 +1093,11 @@ type UserServiceServer interface {
 	RemoveRecoveryCodes(context.Context, *RemoveRecoveryCodesRequest) (*RemoveRecoveryCodesResponse, error)
 	// Add OTP Email for a user
 	//
-	// Add a new One-Time Password (OTP) Email factor to the authenticated user. OTP Email will enable the user to verify a OTP with the latest verified email. The email has to be verified to add the second factor..
+	// Add a new OTP Email factor to the authenticated user. OTP Email will enable the user to verify an OTP with the latest verified email. The email has to be verified to add the second factor..
 	AddOTPEmail(context.Context, *AddOTPEmailRequest) (*AddOTPEmailResponse, error)
-	// Remove One-Time Password (OTP) Email from a user
+	// Remove OTP Email from a user
 	//
-	// Remove the configured One-Time Password (OTP) Email factor of a user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
+	// Remove the configured OTP Email factor of a user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
 	RemoveOTPEmail(context.Context, *RemoveOTPEmailRequest) (*RemoveOTPEmailResponse, error)
 	// Start flow with an identity provider
 	//
@@ -1125,7 +1125,7 @@ type UserServiceServer interface {
 	PasswordReset(context.Context, *PasswordResetRequest) (*PasswordResetResponse, error)
 	// Change password
 	//
-	// Deprecated: [Update the users password](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
+	// Deprecated: [Update the users password](/docs/reference/api/user/zitadel.user.v2.UserService.UpdateUser) instead.
 	//
 	// Change the password of a user with either a verification code or the current password..
 	SetPassword(context.Context, *SetPasswordRequest) (*SetPasswordResponse, error)
@@ -1141,7 +1141,7 @@ type UserServiceServer interface {
 	AddSecret(context.Context, *AddSecretRequest) (*AddSecretResponse, error)
 	// Remove a Users Secret
 	//
-	// Remove the current client ID and client secret from a machine user.
+	// Remove the current client ID and client secret from a service account.
 	//
 	// Required permission:
 	//   - user.write
@@ -1196,7 +1196,7 @@ type UserServiceServer interface {
 	ListPersonalAccessTokens(context.Context, *ListPersonalAccessTokensRequest) (*ListPersonalAccessTokensResponse, error)
 	// List all possible authentication methods of a user
 	//
-	// List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
+	// List all possible authentication methods of a user like password, passkey, (T)OTP and more..
 	ListAuthenticationMethodTypes(context.Context, *ListAuthenticationMethodTypesRequest) (*ListAuthenticationMethodTypesResponse, error)
 	ListAuthenticationFactors(context.Context, *ListAuthenticationFactorsRequest) (*ListAuthenticationFactorsResponse, error)
 	// Create an invite code for a user
@@ -1208,7 +1208,7 @@ type UserServiceServer interface {
 	CreateInviteCode(context.Context, *CreateInviteCodeRequest) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
-	// Deprecated: Use [CreateInviteCode](apis/resources/user_service_v2/user-service-create-invite-code.api.mdx) instead.
+	// Deprecated: Use [CreateInviteCode](/docs/reference/api/user/zitadel.user.v2.UserService.CreateInviteCode) instead.
 	//
 	// Resend an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
 	// A resend is only possible if a code has been created previously and sent to the user. If there is no code or it was directly returned, an error will be returned.
@@ -1224,7 +1224,7 @@ type UserServiceServer interface {
 	HumanMFAInitSkipped(context.Context, *HumanMFAInitSkippedRequest) (*HumanMFAInitSkippedResponse, error)
 	// Set User Metadata
 	//
-	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](apis/resources/user_service_v2/user-service-delete-user-metadata.api.mdx). For HTTP requests, make sure the bytes array value is base64 encoded.
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove metadata entries, use [DeleteUserMetadata](/docs/reference/api/user/zitadel.user.v2.UserService.DeleteUserMetadata). For HTTP requests, make sure the bytes array value is base64 encoded.
 	//
 	// Required permission:
 	//   - `user.write`

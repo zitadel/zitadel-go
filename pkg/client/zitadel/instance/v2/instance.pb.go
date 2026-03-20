@@ -510,7 +510,7 @@ type Filter_InIdsFilter struct {
 }
 
 type Filter_CustomDomainsFilter struct {
-	// Filter for instances that have at least one of the specified custom domains.
+	// Filter for instances that have at least one of the specified Custom Domains.
 	CustomDomainsFilter *CustomDomainsFilter `protobuf:"bytes,2,opt,name=custom_domains_filter,json=customDomainsFilter,proto3,oneof"`
 }
 
@@ -646,7 +646,7 @@ type isCustomDomainFilter_Filter interface {
 }
 
 type CustomDomainFilter_DomainFilter struct {
-	// Filter for a specific custom domain.
+	// Filter for a specific Custom Domain.
 	DomainFilter *DomainFilter `protobuf:"bytes,1,opt,name=domain_filter,json=domainFilter,proto3,oneof"`
 }
 
@@ -852,7 +852,7 @@ type isTrustedDomainFilter_Filter interface {
 }
 
 type TrustedDomainFilter_DomainFilter struct {
-	// Filter for a specific trusted domain.
+	// Filter for a specific Trusted Domain.
 	DomainFilter *DomainFilter `protobuf:"bytes,1,opt,name=domain_filter,json=domainFilter,proto3,oneof"`
 }
 

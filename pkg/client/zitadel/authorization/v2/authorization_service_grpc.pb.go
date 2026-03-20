@@ -35,6 +35,8 @@ type AuthorizationServiceClient interface {
 	//
 	// ListAuthorizations returns all authorizations matching the request and necessary permissions.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// Required permissions:
 	//   - "user.grant.read"
 	//   - no permissions required for listing own authorizations
@@ -43,12 +45,16 @@ type AuthorizationServiceClient interface {
 	//
 	// CreateAuthorization creates a new authorization for a user in an owned or granted project.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// Required permissions:
 	//   - "user.grant.write"
 	CreateAuthorization(ctx context.Context, in *CreateAuthorizationRequest, opts ...grpc.CallOption) (*CreateAuthorizationResponse, error)
 	// Update Authorization
 	//
 	// UpdateAuthorization updates the authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// Note that any role keys previously granted to the user and not present in the request will be revoked.
 	//
@@ -58,6 +64,8 @@ type AuthorizationServiceClient interface {
 	// Delete Authorization
 	//
 	// DeleteAuthorization deletes the authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// In case the authorization is not found, the request will return a successful response as
 	// the desired state is already achieved.
@@ -70,6 +78,8 @@ type AuthorizationServiceClient interface {
 	//
 	// ActivateAuthorization activates an existing but inactive authorization.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// In case the authorization is already active, the request will return a successful response as
 	// the desired state is already achieved.
 	// You can check the change date in the response to verify if the authorization was activated by the request.
@@ -80,6 +90,8 @@ type AuthorizationServiceClient interface {
 	// Deactivate Authorization
 	//
 	// DeactivateAuthorization deactivates an existing and active authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// In case the authorization is already inactive, the request will return a successful response as
 	// the desired state is already achieved.
@@ -160,6 +172,8 @@ type AuthorizationServiceServer interface {
 	//
 	// ListAuthorizations returns all authorizations matching the request and necessary permissions.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// Required permissions:
 	//   - "user.grant.read"
 	//   - no permissions required for listing own authorizations
@@ -168,12 +182,16 @@ type AuthorizationServiceServer interface {
 	//
 	// CreateAuthorization creates a new authorization for a user in an owned or granted project.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// Required permissions:
 	//   - "user.grant.write"
 	CreateAuthorization(context.Context, *CreateAuthorizationRequest) (*CreateAuthorizationResponse, error)
 	// Update Authorization
 	//
 	// UpdateAuthorization updates the authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// Note that any role keys previously granted to the user and not present in the request will be revoked.
 	//
@@ -183,6 +201,8 @@ type AuthorizationServiceServer interface {
 	// Delete Authorization
 	//
 	// DeleteAuthorization deletes the authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// In case the authorization is not found, the request will return a successful response as
 	// the desired state is already achieved.
@@ -195,6 +215,8 @@ type AuthorizationServiceServer interface {
 	//
 	// ActivateAuthorization activates an existing but inactive authorization.
 	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
+	//
 	// In case the authorization is already active, the request will return a successful response as
 	// the desired state is already achieved.
 	// You can check the change date in the response to verify if the authorization was activated by the request.
@@ -205,6 +227,8 @@ type AuthorizationServiceServer interface {
 	// Deactivate Authorization
 	//
 	// DeactivateAuthorization deactivates an existing and active authorization.
+	//
+	// Note: Authorization in this context refers to role assignments, not to OAuth authorization.
 	//
 	// In case the authorization is already inactive, the request will return a successful response as
 	// the desired state is already achieved.

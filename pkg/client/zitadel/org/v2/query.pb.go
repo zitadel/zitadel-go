@@ -560,7 +560,7 @@ type isDomainSearchFilter_Filter interface {
 }
 
 type DomainSearchFilter_DomainFilter struct {
-	// Filter organization domains by their domain name.
+	// Filter Organization Domains by their domain name.
 	DomainFilter *OrganizationDomainQuery `protobuf:"bytes,1,opt,name=domain_filter,json=domainFilter,proto3,oneof"`
 }
 

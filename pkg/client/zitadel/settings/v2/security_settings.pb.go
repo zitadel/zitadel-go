@@ -87,7 +87,7 @@ type EmbeddedIframeSettings struct {
 
 	// Enabled states if iframe embedding is enabled or disabled.
 	Enabled bool `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	// AllowedOrigins defines which origins are allowed to embed ZITADEL in an iframe.
+	// AllowedOrigins defines which origins are allowed to embed Zitadel in an iframe.
 	AllowedOrigins []string `protobuf:"bytes,2,rep,name=allowed_origins,json=allowedOrigins,proto3" json:"allowed_origins,omitempty"`
 }
 

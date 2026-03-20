@@ -119,7 +119,7 @@ type OrganizationServiceClient interface {
 	GenerateOrganizationDomainValidation(ctx context.Context, in *GenerateOrganizationDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`
@@ -358,7 +358,7 @@ type OrganizationServiceServer interface {
 	GenerateOrganizationDomainValidation(context.Context, *GenerateOrganizationDomainValidationRequest) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`
