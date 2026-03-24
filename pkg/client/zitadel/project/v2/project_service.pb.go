@@ -863,7 +863,7 @@ type AddProjectRoleRequest struct {
 
 	// ProjectID is the unique identifier of the project.
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	// RoleKey identifies the role. It's the only relevant attribute for ZITADEL and
+	// RoleKey identifies the role. It's the only relevant attribute for Zitadel and
 	// will be used for authorization checks and as claim in tokens and user info responses.
 	RoleKey string `protobuf:"bytes,2,opt,name=role_key,json=roleKey,proto3" json:"role_key,omitempty"`
 	// DisplayName is a human readable name for the role, which might be displayed to users.
@@ -989,7 +989,7 @@ type UpdateProjectRoleRequest struct {
 
 	// ProjectID is the unique identifier of the project.
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	// RoleKey identifies the role. It's the only relevant attribute for ZITADEL and
+	// RoleKey identifies the role. It's the only relevant attribute for Zitadel and
 	// will be used for authorization checks and as claim in tokens and user info responses.
 	// It cannot be changed. If you need a different key, remove the role and create a new one.
 	RoleKey string `protobuf:"bytes,2,opt,name=role_key,json=roleKey,proto3" json:"role_key,omitempty"`
@@ -1119,7 +1119,7 @@ type RemoveProjectRoleRequest struct {
 	// ProjectID is the unique identifier of the project.
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// RoleKey is the key of the role to be removed.
-	// All dependencies of this role will be removed as well, including project grants and user grants.
+	// All dependencies of this role will be removed as well, including project grants and user grants (role assignments).
 	// If the role is not found, the request will return a successful response as the desired state is already achieved.
 	RoleKey string `protobuf:"bytes,2,opt,name=role_key,json=roleKey,proto3" json:"role_key,omitempty"`
 }
@@ -1481,7 +1481,7 @@ type UpdateProjectGrantRequest struct {
 	// The roles are identified by their keys.
 	// Any roles not included in this list will be removed from the project grant.
 	// If you want to add a role, make sure to include all other existing roles as well.
-	// If any previous role is removed, all user grants for this project grant with this role will be removed as well.
+	// If any previous role is removed, all user grants (role assignments) for this project grant with this role will be removed as well.
 	RoleKeys []string `protobuf:"bytes,3,rep,name=role_keys,json=roleKeys,proto3" json:"role_keys,omitempty"`
 }
 

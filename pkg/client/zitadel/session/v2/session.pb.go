@@ -89,7 +89,7 @@ type Session struct {
 	// If a factor is set, the verified_at timestamp indicates when it was last checked.
 	Factors *Factors `protobuf:"bytes,5,opt,name=factors,proto3" json:"factors,omitempty"`
 	// Metadata contains custom key value pairs set by the user.
-	// The metadata is not interpreted by ZITADEL and can be used to store any information
+	// The metadata is not interpreted by Zitadel and can be used to store any information
 	// relevant to the session.
 	Metadata map[string][]byte `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// UserAgent contains information about the user agent used to create the session.
@@ -536,7 +536,7 @@ type TOTPFactor struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The timestamp when the Time-based One-Time Password was last verified.
+	// The timestamp when the TOTP was last verified.
 	VerifiedAt *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=verified_at,json=verifiedAt,proto3" json:"verified_at,omitempty"`
 }
 
@@ -584,7 +584,7 @@ type OTPFactor struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The timestamp when the One-Time Password was last verified either by SMS or Email.
+	// The timestamp when the OTP was last verified either by SMS or Email.
 	VerifiedAt *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=verified_at,json=verifiedAt,proto3" json:"verified_at,omitempty"`
 }
 

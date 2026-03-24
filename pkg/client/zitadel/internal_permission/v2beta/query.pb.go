@@ -237,7 +237,7 @@ type User struct {
 	// PreferredLoginName is the preferred login name of the user. This value is unique across the whole instance.
 	PreferredLoginName string `protobuf:"bytes,2,opt,name=preferred_login_name,json=preferredLoginName,proto3" json:"preferred_login_name,omitempty"`
 	// DisplayName is the public display name of the user.
-	// By default it's the user's given name and family name, their username or their email address.
+	// By default it's the user's first name and last name, their username or their email address.
 	DisplayName string `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	// The organization the user belong to.
 	OrganizationId string `protobuf:"bytes,4,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`

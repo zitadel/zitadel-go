@@ -1428,7 +1428,7 @@ type SecurityPolicy struct {
 	Details *object.ObjectDetails `protobuf:"bytes,1,opt,name=details,proto3" json:"details,omitempty"`
 	// states if iframe embedding is enabled or disabled
 	EnableIframeEmbedding bool `protobuf:"varint,2,opt,name=enable_iframe_embedding,json=enableIframeEmbedding,proto3" json:"enable_iframe_embedding,omitempty"`
-	// origins allowed loading ZITADEL in an iframe if enable_iframe_embedding is true
+	// origins allowed loading Zitadel in an iframe if enable_iframe_embedding is true
 	AllowedOrigins []string `protobuf:"bytes,3,rep,name=allowed_origins,json=allowedOrigins,proto3" json:"allowed_origins,omitempty"`
 	// allows users to impersonate other users. The impersonator needs the appropriate `*_IMPERSONATOR` roles assigned as well"
 	EnableImpersonation bool `protobuf:"varint,4,opt,name=enable_impersonation,json=enableImpersonation,proto3" json:"enable_impersonation,omitempty"`

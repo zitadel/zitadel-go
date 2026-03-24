@@ -31,7 +31,7 @@ const (
 	// An active authorization grants the user access with the roles specified on the project.
 	State_STATE_ACTIVE State = 1
 	// An inactive authorization temporarily deactivates the granted access and roles.
-	// ZITADEL will not include the specific authorization in any authorization information like an access token.
+	// Zitadel will not include the specific authorization in any authorization information like an access token.
 	// But the information can still be accessed using the API.
 	State_STATE_INACTIVE State = 2
 )

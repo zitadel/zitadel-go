@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TelemetryServiceClient interface {
-	// ReportBaseInformation is used to report the base information of the ZITADEL system,
+	// ReportBaseInformation is used to report the base information of the Zitadel system,
 	// including the version, instances, their creation date and domains.
 	// The response contains a report ID to link it to the resource counts or other reports.
 	// The report ID is only valid for the same system ID.
@@ -70,7 +70,7 @@ func (c *telemetryServiceClient) ReportResourceCounts(ctx context.Context, in *R
 // All implementations must embed UnimplementedTelemetryServiceServer
 // for forward compatibility
 type TelemetryServiceServer interface {
-	// ReportBaseInformation is used to report the base information of the ZITADEL system,
+	// ReportBaseInformation is used to report the base information of the Zitadel system,
 	// including the version, instances, their creation date and domains.
 	// The response contains a report ID to link it to the resource counts or other reports.
 	// The report ID is only valid for the same system ID.

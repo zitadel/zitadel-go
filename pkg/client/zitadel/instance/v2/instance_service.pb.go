@@ -460,7 +460,7 @@ type AddCustomDomainRequest struct {
 
 	// InstanceID is the unique ID of the instance to which the domain will be added.
 	InstanceId string `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	// Custom domain to add to the instance.
+	// Custom Domain to add to the instance.
 	// Must be a valid domain name.
 	// Once the domain is added, it will be used to route requests to this instance.
 	CustomDomain string `protobuf:"bytes,2,opt,name=custom_domain,json=customDomain,proto3" json:"custom_domain,omitempty"`
@@ -747,7 +747,7 @@ type ListCustomDomainsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The list of custom domains matching the query.
+	// The list of Custom Domains matching the query.
 	Domains []*CustomDomain `protobuf:"bytes,1,rep,name=domains,proto3" json:"domains,omitempty"`
 	// Contains the total number of domains matching the query and the applied limit.
 	Pagination *v2.PaginationResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -804,17 +804,17 @@ type AddTrustedDomainRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// InstanceID is the unique ID of the instance to which the trusted domain will be added.
+	// InstanceID is the unique ID of the instance to which the Trusted Domain will be added.
 	// If not set, the instance in the current context (e.g. identified by the host header) will be used.
 	// If an ID is set, the caller must have additional permissions.
 	InstanceId string `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	// Trusted domain to be added to the instance.
+	// Trusted Domain to be added to the instance.
 	// Must be a valid domain name.
 	// Once the domain is added, it can be used in API responses like OIDC discovery,
 	// email templates, and more.
 	// This can be used in cases where the API is accessed through a different domain
-	// than the instance domain, e.g. proxy setups and custom login UIs.
-	// Unlike custom domains, trusted domains are not used to route requests to this instance
+	// than the Custom Domain, e.g. proxy setups and custom login UIs.
+	// Unlike Custom Domains, Trusted Domains are not used to route requests to this instance
 	// and therefore do not need to be uniquely assigned to an instance.
 	TrustedDomain string `protobuf:"bytes,2,opt,name=trusted_domain,json=trustedDomain,proto3" json:"trusted_domain,omitempty"`
 }
@@ -870,7 +870,7 @@ type AddTrustedDomainResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// CreationDate is the timestamp when the trusted domain was added.
+	// CreationDate is the timestamp when the Trusted Domain was added.
 	CreationDate *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
 }
 
@@ -918,11 +918,11 @@ type RemoveTrustedDomainRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// InstanceID is the unique ID of the instance from which the trusted domain will be removed.
+	// InstanceID is the unique ID of the instance from which the Trusted Domain will be removed.
 	// If not set, the instance in the current context (e.g. identified by the host header) will be used.
 	// If an ID is set, the caller must have additional permissions.
 	InstanceId string `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	// The trusted domain to remove from the instance.
+	// The Trusted Domain to remove from the instance.
 	TrustedDomain string `protobuf:"bytes,2,opt,name=trusted_domain,json=trustedDomain,proto3" json:"trusted_domain,omitempty"`
 }
 
@@ -977,7 +977,7 @@ type RemoveTrustedDomainResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// DeletionDate is the timestamp when the trusted domain was removed.
+	// DeletionDate is the timestamp when the Trusted Domain was removed.
 	DeletionDate *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=deletion_date,json=deletionDate,proto3" json:"deletion_date,omitempty"`
 }
 
@@ -1025,7 +1025,7 @@ type ListTrustedDomainsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// InstanceID is the unique ID of the instance whose trusted domains will be listed.
+	// InstanceID is the unique ID of the instance whose Trusted Domains will be listed.
 	// If not set, the instance in the current context (e.g. identified by the host header) will be used.
 	// If an ID is set, the caller must have additional permissions.
 	InstanceId string `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
@@ -1102,7 +1102,7 @@ type ListTrustedDomainsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The list of trusted domains matching the query.
+	// The list of Trusted Domains matching the query.
 	TrustedDomain []*TrustedDomain `protobuf:"bytes,1,rep,name=trusted_domain,json=trustedDomain,proto3" json:"trusted_domain,omitempty"`
 	// Contains the total number of domains matching the query and the applied limit.
 	Pagination *v2.PaginationResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`

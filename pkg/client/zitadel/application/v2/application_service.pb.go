@@ -306,7 +306,7 @@ type CreateOIDCApplicationRequest struct {
 	DevelopmentMode bool `protobuf:"varint,8,opt,name=development_mode,json=developmentMode,proto3" json:"development_mode,omitempty"`
 	// The AccessTokenType defines the type of the access token returned from ZITADEL.
 	// Bearer tokens are opaque to clients. JWT tokens are self-contained and can be validated by the client.
-	// Bearer tokens must be introspected at the ZITADEL token endpoint.
+	// Bearer tokens must be introspected at the Zitadel token endpoint.
 	AccessTokenType OIDCTokenType `protobuf:"varint,9,opt,name=access_token_type,json=accessTokenType,proto3,enum=zitadel.application.v2.OIDCTokenType" json:"access_token_type,omitempty"`
 	// If AccessTokenRoleAssertion is enabled, the roles of the user are added to the access token.
 	// Ensure that the access token is a JWT token and not a bearer token. And either request the roles
@@ -325,7 +325,7 @@ type CreateOIDCApplicationRequest struct {
 	// leaking of personal information in the id token, which is often stored in the browser and
 	// therefore more vulnerable.
 	IdTokenUserinfoAssertion bool `protobuf:"varint,12,opt,name=id_token_userinfo_assertion,json=idTokenUserinfoAssertion,proto3" json:"id_token_userinfo_assertion,omitempty"`
-	// ClockSkew is used to compensate time differences between the servers of ZITADEL and the application.
+	// ClockSkew is used to compensate time differences between the servers of Zitadel and the application.
 	// It is added to the "exp" claim and subtracted from "iat", "auth_time" and "nbf" claims.
 	// The default is 0s, the maximum is 5s.
 	ClockSkew *durationpb.Duration `protobuf:"bytes,13,opt,name=clock_skew,json=clockSkew,proto3" json:"clock_skew,omitempty"`
@@ -1141,7 +1141,7 @@ type UpdateOIDCApplicationConfigurationRequest struct {
 	DevelopmentMode *bool `protobuf:"varint,8,opt,name=development_mode,json=developmentMode,proto3,oneof" json:"development_mode,omitempty"`
 	// The AccessTokenType defines the type of the access token returned from ZITADEL.
 	// Bearer tokens are opaque to clients. JWT tokens are self-contained and can be validated by the client.
-	// Bearer tokens must be introspected at the ZITADEL token endpoint.
+	// Bearer tokens must be introspected at the Zitadel token endpoint.
 	// If not set, the access token type will not be changed.
 	AccessTokenType *OIDCTokenType `protobuf:"varint,9,opt,name=access_token_type,json=accessTokenType,proto3,enum=zitadel.application.v2.OIDCTokenType,oneof" json:"access_token_type,omitempty"`
 	// If AccessTokenRoleAssertion is enabled, the roles of the user are added to the access token.
@@ -1164,7 +1164,7 @@ type UpdateOIDCApplicationConfigurationRequest struct {
 	// therefore more vulnerable.
 	// If not set, the id token userinfo assertion will not be changed.
 	IdTokenUserinfoAssertion *bool `protobuf:"varint,12,opt,name=id_token_userinfo_assertion,json=idTokenUserinfoAssertion,proto3,oneof" json:"id_token_userinfo_assertion,omitempty"`
-	// ClockSkew is used to compensate time differences between the servers of ZITADEL and the application.
+	// ClockSkew is used to compensate time differences between the servers of Zitadel and the application.
 	// It is added to the "exp" claim and subtracted from "iat", "auth_time" and "nbf" claims.
 	// The default is 0s, the maximum is 5s.
 	// If not set, the clock skew will not be changed.

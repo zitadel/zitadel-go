@@ -143,7 +143,7 @@ type Organization struct {
 	State OrganizationState `protobuf:"varint,3,opt,name=state,proto3,enum=zitadel.org.v2.OrganizationState" json:"state,omitempty"`
 	// Name of the organization.
 	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	// Primary domain used in the organization.
+	// Organization Domain used in the organization.
 	PrimaryDomain string `protobuf:"bytes,5,opt,name=primary_domain,json=primaryDomain,proto3" json:"primary_domain,omitempty"`
 }
 
@@ -225,7 +225,7 @@ type Domain struct {
 	Domain string `protobuf:"bytes,2,opt,name=domain,proto3" json:"domain,omitempty"`
 	// IsVerified is a boolean flag indicating if the domain has been verified.
 	IsVerified bool `protobuf:"varint,3,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
-	// IsPrimary is a boolean flag indicating if the domain is the primary domain of the organization.
+	// IsPrimary is a boolean flag indicating if the domain is the Organization Domain of the organization.
 	IsPrimary bool `protobuf:"varint,4,opt,name=is_primary,json=isPrimary,proto3" json:"is_primary,omitempty"`
 	// ValidationType indicates the protocol used to validate the domain ownership.
 	ValidationType DomainValidationType `protobuf:"varint,5,opt,name=validation_type,json=validationType,proto3,enum=zitadel.org.v2.DomainValidationType" json:"validation_type,omitempty"`

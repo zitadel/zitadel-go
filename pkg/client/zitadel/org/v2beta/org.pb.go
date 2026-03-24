@@ -184,13 +184,13 @@ type Organization struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The timestamp of the organization was created.
 	CreationDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
-	// The timestamp of the verification of the organization domain.
+	// The timestamp of the verification of the Organization Domain.
 	ChangedDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=changed_date,json=changedDate,proto3" json:"changed_date,omitempty"`
 	// Current state of the organization, for example active, inactive and deleted.
 	State OrgState `protobuf:"varint,4,opt,name=state,proto3,enum=zitadel.org.v2beta.OrgState" json:"state,omitempty"`
 	// Name of the organization.
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	// Primary domain used in the organization.
+	// Organization Domain used in the organization.
 	PrimaryDomain string `protobuf:"bytes,6,opt,name=primary_domain,json=primaryDomain,proto3" json:"primary_domain,omitempty"`
 }
 
@@ -725,7 +725,7 @@ type Domain struct {
 	DomainName string `protobuf:"bytes,2,opt,name=domain_name,json=domainName,proto3" json:"domain_name,omitempty"`
 	// Defines if the domain is verified.
 	IsVerified bool `protobuf:"varint,3,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
-	// Defines if the domain is the primary domain.
+	// Defines if the domain is the Organization Domain.
 	IsPrimary bool `protobuf:"varint,4,opt,name=is_primary,json=isPrimary,proto3" json:"is_primary,omitempty"`
 	// Defines the protocol the domain was validated with.
 	ValidationType DomainValidationType `protobuf:"varint,5,opt,name=validation_type,json=validationType,proto3,enum=zitadel.org.v2beta.DomainValidationType" json:"validation_type,omitempty"`

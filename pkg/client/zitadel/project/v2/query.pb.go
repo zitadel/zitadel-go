@@ -1065,7 +1065,7 @@ type ProjectRole struct {
 
 	// ProjectID is the ID of the project the role belongs to.
 	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	// Key of the project role. The key identifies the role. It's the only relevant attribute for ZITADEL and
+	// Key of the project role. The key identifies the role. It's the only relevant attribute for Zitadel and
 	// will be used for authorization checks and as claim in tokens and user info responses.
 	Key string `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
 	// CreationDate is the timestamp of the project role creation.

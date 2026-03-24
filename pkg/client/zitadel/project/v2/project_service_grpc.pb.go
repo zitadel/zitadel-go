@@ -115,7 +115,7 @@ type ProjectServiceClient interface {
 	// Remove Project Role
 	//
 	// Removes the role from the project and on every resource it has a dependency.
-	// This includes project grants and user grants.
+	// This includes project grants and user grants (role assignments).
 	//
 	// Required permission:
 	//   - `project.role.write`
@@ -147,7 +147,7 @@ type ProjectServiceClient interface {
 	UpdateProjectGrant(ctx context.Context, in *UpdateProjectGrantRequest, opts ...grpc.CallOption) (*UpdateProjectGrantResponse, error)
 	// Delete Project Grant
 	//
-	// Delete a project grant. All user grants for this project grant will also be removed.
+	// Delete a project grant. All user grants (role assignments) for this project grant will also be removed.
 	// A user will not have access to the project afterward (if permissions are checked).
 	// In case the project grant is not found, the request will return a successful response as
 	// the desired state is already achieved.
@@ -418,7 +418,7 @@ type ProjectServiceServer interface {
 	// Remove Project Role
 	//
 	// Removes the role from the project and on every resource it has a dependency.
-	// This includes project grants and user grants.
+	// This includes project grants and user grants (role assignments).
 	//
 	// Required permission:
 	//   - `project.role.write`
@@ -450,7 +450,7 @@ type ProjectServiceServer interface {
 	UpdateProjectGrant(context.Context, *UpdateProjectGrantRequest) (*UpdateProjectGrantResponse, error)
 	// Delete Project Grant
 	//
-	// Delete a project grant. All user grants for this project grant will also be removed.
+	// Delete a project grant. All user grants (role assignments) for this project grant will also be removed.
 	// A user will not have access to the project afterward (if permissions are checked).
 	// In case the project grant is not found, the request will return a successful response as
 	// the desired state is already achieved.

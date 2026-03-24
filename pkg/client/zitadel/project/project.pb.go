@@ -181,9 +181,9 @@ type Project struct {
 	State   ProjectState          `protobuf:"varint,4,opt,name=state,proto3,enum=zitadel.project.v1.ProjectState" json:"state,omitempty"`
 	// describes if the roles of the user should be added to the token
 	ProjectRoleAssertion bool `protobuf:"varint,5,opt,name=project_role_assertion,json=projectRoleAssertion,proto3" json:"project_role_assertion,omitempty"`
-	// ZITADEL checks if the user has at least one on this project
+	// Zitadel checks if the user has at least one on this project
 	ProjectRoleCheck bool `protobuf:"varint,6,opt,name=project_role_check,json=projectRoleCheck,proto3" json:"project_role_check,omitempty"`
-	// ZITADEL checks if the org of the user has permission for this project
+	// Zitadel checks if the org of the user has permission for this project
 	HasProjectCheck bool `protobuf:"varint,7,opt,name=has_project_check,json=hasProjectCheck,proto3" json:"has_project_check,omitempty"`
 	// Defines from where the private labeling should be triggered
 	PrivateLabelingSetting PrivateLabelingSetting `protobuf:"varint,8,opt,name=private_labeling_setting,json=privateLabelingSetting,proto3,enum=zitadel.project.v1.PrivateLabelingSetting" json:"private_labeling_setting,omitempty"`
