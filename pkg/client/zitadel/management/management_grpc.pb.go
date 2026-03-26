@@ -329,7 +329,7 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [user service v2 ListUsers with InUserIDQuery](apis/resources/user_service_v2/user-service-list-users.api.mdx) instead.
 	//
-	// Returns the full user object (human or machine) including the profile, email, etc.
+	// Returns the full user or Service Account including the profile, email, etc.
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 	// Get User by login name (globally)
 	//
@@ -354,13 +354,13 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [user service v2 CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) instead.
 	//
-	// Create a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
+	// Create a new user. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	AddHumanUser(ctx context.Context, in *AddHumanUserRequest, opts ...grpc.CallOption) (*AddHumanUserResponse, error)
 	// Create/Import User (Human)
 	//
 	// Deprecated: use [user service v2 UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
 	//
-	// Create/import a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
+	// Create/import a new user. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	ImportHumanUser(ctx context.Context, in *ImportHumanUserRequest, opts ...grpc.CallOption) (*ImportHumanUserResponse, error)
 	// Create User (Machine)
 	//
@@ -534,7 +534,7 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [user service v2 RemoveTOTP](apis/resources/user_service_v2/user-service-remove-totp.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) as a factor from the user. OTP is an authentication app, like Authy or Google/Microsoft Authenticator.
+	// Remove the configured OTP as a factor from the user. OTP is an authentication app, like Authy or Google/Microsoft Authenticator.
 	RemoveHumanAuthFactorOTP(ctx context.Context, in *RemoveHumanAuthFactorOTPRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPResponse, error)
 	// Remove Multi-Factor U2F
 	//
@@ -546,69 +546,69 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [user service v2 RemoveOTPSMS](apis/resources/user_service_v2/user-service-remove-otpsms.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) SMS as a factor from the user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
+	// Remove the configured OTP SMS as a factor from the user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveHumanAuthFactorOTPSMS(ctx context.Context, in *RemoveHumanAuthFactorOTPSMSRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPSMSResponse, error)
 	// Remove Multi-Factor OTP Email
 	//
 	// Deprecated: use [user service v2 RemoveOTPEmail](apis/resources/user_service_v2/user-service-remove-otp-email.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) Email as a factor from the user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
+	// Remove the configured OTP Email as a factor from the user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
 	RemoveHumanAuthFactorOTPEmail(ctx context.Context, in *RemoveHumanAuthFactorOTPEmailRequest, opts ...grpc.CallOption) (*RemoveHumanAuthFactorOTPEmailResponse, error)
-	// Search Passwordless/Passkey authentication
+	// Search Passkey authentication
 	//
 	// Deprecated: use [user service v2 ListPasskeys](apis/resources/user_service_v2/user-service-list-passkeys.api.mdx) instead.
 	//
-	// Get a list of configured passwordless/passkey authentication methods from the user. Passwordless/passkey is a device-dependent authentication like FingerScan, WindowsHello or a Hardware Token.
+	// Get a list of configured passkey authentication methods from the user. Passkey is a device-dependent authentication like FingerScan, WindowsHello or a Hardware Token.
 	ListHumanPasswordless(ctx context.Context, in *ListHumanPasswordlessRequest, opts ...grpc.CallOption) (*ListHumanPasswordlessResponse, error)
-	// Add Passwordless/Passkey Registration Link
+	// Add Passkey Registration Link
 	//
 	// Deprecated: use [user service v2 RegisterPasskey](apis/resources/user_service_v2/user-service-register-passkey.api.mdx) instead.
 	//
-	// Adds a new passwordless/passkey authenticator link to the user and returns it in the response. The link enables the user to register a new device if current passwordless/passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
+	// Adds a new passkey authenticator link to the user and returns it in the response. The link enables the user to register a new device if current passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
 	AddPasswordlessRegistration(ctx context.Context, in *AddPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*AddPasswordlessRegistrationResponse, error)
-	// Send Passwordless/Passkey Registration Link
+	// Send Passkey Registration Link
 	//
 	// Deprecated: use [user service v2 RegisterPasskey](apis/resources/user_service_v2/user-service-register-passkey.api.mdx) instead.
 	//
-	// Adds a new passwordless/passkey authenticator link to the user and sends it to the user per email. The link enables the user to register a new device if current passwordless/passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
+	// Adds a new passkey authenticator link to the user and sends it to the user per email. The link enables the user to register a new device if current passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
 	SendPasswordlessRegistration(ctx context.Context, in *SendPasswordlessRegistrationRequest, opts ...grpc.CallOption) (*SendPasswordlessRegistrationResponse, error)
-	// Delete Passwordless/Passkey
+	// Delete Passkey
 	//
 	// Deprecated: use [user service v2 RemovePasskey](apis/resources/user_service_v2/user-service-remove-passkey.api.mdx) instead.
 	//
-	// Remove a configured passwordless/passkey authentication method from the user. (e.g FaceID, FingerScane, WindowsHello, etc.).
+	// Remove a configured passkey authentication method from the user. (e.g FaceID, FingerScane, WindowsHello, etc.).
 	RemoveHumanPasswordless(ctx context.Context, in *RemoveHumanPasswordlessRequest, opts ...grpc.CallOption) (*RemoveHumanPasswordlessResponse, error)
-	// Update Machine User
+	// Update Service Account
 	//
 	// Deprecated: use [user service v2 UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
 	//
-	// Change a service account/machine user. It is used for accounts with non-interactive authentication possibilities.
+	// Change a service account/service account. It is used for accounts with non-interactive authentication possibilities.
 	UpdateMachine(ctx context.Context, in *UpdateMachineRequest, opts ...grpc.CallOption) (*UpdateMachineResponse, error)
-	// Create Secret for Machine User
+	// Create Secret for Service Account
 	//
 	// Deprecated: use [user service v2 AddSecret](apis/resources/user_service_v2/user-service-add-secret.api.mdx) instead.
 	//
-	// Create a new secret for a machine user/service account. It is used to authenticate the user (client credential grant).
+	// Create a new secret for a service account. It is used to authenticate the user (client credential grant).
 	GenerateMachineSecret(ctx context.Context, in *GenerateMachineSecretRequest, opts ...grpc.CallOption) (*GenerateMachineSecretResponse, error)
-	// Delete Secret of Machine User
+	// Delete Secret of Service Account
 	//
 	// Deprecated: use [user service v2 RemoveSecret](apis/resources/user_service_v2/user-service-remove-secret.api.mdx) instead.
 	//
-	// Delete a secret of a machine user/service account. The user will not be able to authenticate with the secret afterward.
+	// Delete a secret of a service account. The user will not be able to authenticate with the secret afterward.
 	RemoveMachineSecret(ctx context.Context, in *RemoveMachineSecretRequest, opts ...grpc.CallOption) (*RemoveMachineSecretResponse, error)
-	// Get Machine user Key By ID
+	// Get Service account Key By ID
 	//
 	// Deprecated: use [user service v2 ListUsers](apis/resources/user_service_v2/user-service-list-users.api.mdx) instead.
 	//
-	// Get a specific Key of a machine user by its id. Machine keys are used to authenticate with jwt profile authentication.
+	// Get a specific Key of a service account by its id. Machine keys are used to authenticate with jwt profile authentication.
 	GetMachineKeyByIDs(ctx context.Context, in *GetMachineKeyByIDsRequest, opts ...grpc.CallOption) (*GetMachineKeyByIDsResponse, error)
 	// List Machine Keys
 	//
 	// Deprecated: use [user service v2 ListKeys](apis/resources/user_service_v2/user-service-list-keys.api.mdx) instead.
 	//
-	// Get the list of keys of a machine user. Machine keys are used to authenticate with jwt profile authentication.
+	// Get the list of keys of a service account. Machine keys are used to authenticate with jwt profile authentication.
 	ListMachineKeys(ctx context.Context, in *ListMachineKeysRequest, opts ...grpc.CallOption) (*ListMachineKeysResponse, error)
-	// Create Key for machine user
+	// Create Key for service account
 	//
 	// Deprecated: use [user service v2 AddKey](apis/resources/user_service_v2/user-service-add-key.api.mdx) instead.
 	//
@@ -617,7 +617,7 @@ type ManagementServiceClient interface {
 	// If an RSA public key is supplied, the private key is omitted from the response.
 	// Machine keys are used to authenticate with jwt profile.
 	AddMachineKey(ctx context.Context, in *AddMachineKeyRequest, opts ...grpc.CallOption) (*AddMachineKeyResponse, error)
-	// Delete Key for machine user
+	// Delete Key for service account
 	//
 	// Deprecated: use [user service v2 RemoveKey](apis/resources/user_service_v2/user-service-remove-key.api.mdx) instead.
 	//
@@ -662,11 +662,11 @@ type ManagementServiceClient interface {
 	//
 	// Remove a configured social logins/identity providers of the user (e.g. Google, Microsoft, AzureAD, etc.). The user will not be able to log in with the given provider afterward. Make sure the user does have other possibilities to authenticate.
 	RemoveHumanLinkedIDP(ctx context.Context, in *RemoveHumanLinkedIDPRequest, opts ...grpc.CallOption) (*RemoveHumanLinkedIDPResponse, error)
-	// List ZITADEL Permissions
+	// List Zitadel Permissions
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Show all the permissions the user has in ZITADEL (ZITADEL Manager).
+	// Show all the permissions the user has in Zitadel (ZITADEL Manager).
 	ListUserMemberships(ctx context.Context, in *ListUserMembershipsRequest, opts ...grpc.CallOption) (*ListUserMembershipsResponse, error)
 	GetMyOrg(ctx context.Context, in *GetMyOrgRequest, opts ...grpc.CallOption) (*GetMyOrgResponse, error)
 	// Get Organization By Domain
@@ -680,7 +680,7 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead
 	//
-	// Create a new organization. Based on the given name a domain will be generated to be able to identify users within an organization.
+	// Create a new organization. Based on the provided name a domain will be generated to be able to identify users within an organization.
 	AddOrg(ctx context.Context, in *AddOrgRequest, opts ...grpc.CallOption) (*AddOrgResponse, error)
 	// Update Organization
 	//
@@ -770,7 +770,7 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-verify-organization-domain.api.mdx) instead.
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	ValidateOrgDomain(ctx context.Context, in *ValidateOrgDomainRequest, opts ...grpc.CallOption) (*ValidateOrgDomainResponse, error)
 	SetPrimaryOrgDomain(ctx context.Context, in *SetPrimaryOrgDomainRequest, opts ...grpc.CallOption) (*SetPrimaryOrgDomainResponse, error)
 	ListOrgMemberRoles(ctx context.Context, in *ListOrgMemberRolesRequest, opts ...grpc.CallOption) (*ListOrgMemberRolesResponse, error)
@@ -778,25 +778,25 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
 	ListOrgMembers(ctx context.Context, in *ListOrgMembersRequest, opts ...grpc.CallOption) (*ListOrgMembersResponse, error)
 	// Add Organization Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
+	// Members are users with permission to administrate Zitadel on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
 	AddOrgMember(ctx context.Context, in *AddOrgMemberRequest, opts ...grpc.CallOption) (*AddOrgMemberResponse, error)
 	// Update Organization Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateOrgMember(ctx context.Context, in *UpdateOrgMemberRequest, opts ...grpc.CallOption) (*UpdateOrgMemberResponse, error)
 	// Remove Organization Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
 	RemoveOrgMember(ctx context.Context, in *RemoveOrgMemberRequest, opts ...grpc.CallOption) (*RemoveOrgMemberResponse, error)
 	// Get Project By ID
 	//
@@ -887,32 +887,32 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-remove-project-role.api.mdx) instead.
 	//
-	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
+	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants (role assignments).
 	RemoveProjectRole(ctx context.Context, in *RemoveProjectRoleRequest, opts ...grpc.CallOption) (*RemoveProjectRoleResponse, error)
 	ListProjectMemberRoles(ctx context.Context, in *ListProjectMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectMemberRolesResponse, error)
 	// List Project Members
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
 	ListProjectMembers(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ListProjectMembersResponse, error)
 	// Add Project Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
+	// Members are users with permission to administrate Zitadel on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
 	AddProjectMember(ctx context.Context, in *AddProjectMemberRequest, opts ...grpc.CallOption) (*AddProjectMemberResponse, error)
 	// Update Project Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectMember(ctx context.Context, in *UpdateProjectMemberRequest, opts ...grpc.CallOption) (*UpdateProjectMemberResponse, error)
 	// Remove Project Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
 	RemoveProjectMember(ctx context.Context, in *RemoveProjectMemberRequest, opts ...grpc.CallOption) (*RemoveProjectMemberResponse, error)
 	// Get Application By ID
 	//
@@ -1047,13 +1047,13 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project-grant.api.mdx) instead.
 	//
-	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
+	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the role assignments for its users. Project Grant will be listed in the granted project of the granted organization.
 	AddProjectGrant(ctx context.Context, in *AddProjectGrantRequest, opts ...grpc.CallOption) (*AddProjectGrantResponse, error)
 	// Change Project Grant
 	//
 	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-grant.api.mdx) instead.
 	//
-	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
+	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the role assignments for its users. Project Grant will be listed in the granted project of the granted organization.
 	UpdateProjectGrant(ctx context.Context, in *UpdateProjectGrantRequest, opts ...grpc.CallOption) (*UpdateProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
@@ -1071,80 +1071,96 @@ type ManagementServiceClient interface {
 	//
 	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project-grant.api.mdx) instead.
 	//
-	// Remove a project grant. All user grants for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
+	// Remove a project grant. All user grants (role assignments) for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
 	RemoveProjectGrant(ctx context.Context, in *RemoveProjectGrantRequest, opts ...grpc.CallOption) (*RemoveProjectGrantResponse, error)
 	ListProjectGrantMemberRoles(ctx context.Context, in *ListProjectGrantMemberRolesRequest, opts ...grpc.CallOption) (*ListProjectGrantMemberRolesResponse, error)
 	// List Project Grant Members
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	ListProjectGrantMembers(ctx context.Context, in *ListProjectGrantMembersRequest, opts ...grpc.CallOption) (*ListProjectGrantMembersResponse, error)
 	// Add Project Grant Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	AddProjectGrantMember(ctx context.Context, in *AddProjectGrantMemberRequest, opts ...grpc.CallOption) (*AddProjectGrantMemberResponse, error)
 	// Update Project Grant Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectGrantMember(ctx context.Context, in *UpdateProjectGrantMemberRequest, opts ...grpc.CallOption) (*UpdateProjectGrantMemberResponse, error)
 	// Remove Project Grant Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
 	RemoveProjectGrantMember(ctx context.Context, in *RemoveProjectGrantMemberRequest, opts ...grpc.CallOption) (*RemoveProjectGrantMemberResponse, error)
 	// Get User Grant By ID
 	//
 	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and filter by its ID.
 	//
 	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	GetUserGrantByID(ctx context.Context, in *GetUserGrantByIDRequest, opts ...grpc.CallOption) (*GetUserGrantByIDResponse, error)
 	// Search User Grants
 	//
 	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
 	//
-	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
+	// Returns a list of user grants that match the search queries. User grants/role assignments are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	ListUserGrants(ctx context.Context, in *ListUserGrantRequest, opts ...grpc.CallOption) (*ListUserGrantResponse, error)
 	// Add User Grant
 	//
 	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
 	//
 	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	AddUserGrant(ctx context.Context, in *AddUserGrantRequest, opts ...grpc.CallOption) (*AddUserGrantResponse, error)
 	// Update User Grant
 	//
 	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
 	//
 	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	UpdateUserGrant(ctx context.Context, in *UpdateUserGrantRequest, opts ...grpc.CallOption) (*UpdateUserGrantResponse, error)
 	// Deactivate User Grant
 	//
 	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
 	//
 	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
+	//
+	// Note: User grant refers to role assignments.
 	DeactivateUserGrant(ctx context.Context, in *DeactivateUserGrantRequest, opts ...grpc.CallOption) (*DeactivateUserGrantResponse, error)
 	// Reactivate User Grant
 	//
 	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
 	//
 	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
+	//
+	// Note: User grant refers to role assignments.
 	ReactivateUserGrant(ctx context.Context, in *ReactivateUserGrantRequest, opts ...grpc.CallOption) (*ReactivateUserGrantResponse, error)
 	// Remove User Grant
 	//
 	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
 	//
 	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	//
+	// Note: User grant refers to role assignments.
 	RemoveUserGrant(ctx context.Context, in *RemoveUserGrantRequest, opts ...grpc.CallOption) (*RemoveUserGrantResponse, error)
 	// Bulk Remove User Grants
 	//
 	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
 	//
-	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	// Remove a list of user grants (role assignments). The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	//
+	// Note: User grant refers to role assignments.
 	BulkRemoveUserGrant(ctx context.Context, in *BulkRemoveUserGrantRequest, opts ...grpc.CallOption) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
 	GetOrgIAMPolicy(ctx context.Context, in *GetOrgIAMPolicyRequest, opts ...grpc.CallOption) (*GetOrgIAMPolicyResponse, error)
@@ -4012,7 +4028,7 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [user service v2 ListUsers with InUserIDQuery](apis/resources/user_service_v2/user-service-list-users.api.mdx) instead.
 	//
-	// Returns the full user object (human or machine) including the profile, email, etc.
+	// Returns the full user or Service Account including the profile, email, etc.
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	// Get User by login name (globally)
 	//
@@ -4037,13 +4053,13 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [user service v2 CreateUser](apis/resources/user_service_v2/user-service-create-user.api.mdx) instead.
 	//
-	// Create a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
+	// Create a new user. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	AddHumanUser(context.Context, *AddHumanUserRequest) (*AddHumanUserResponse, error)
 	// Create/Import User (Human)
 	//
 	// Deprecated: use [user service v2 UpdateHumanUser](apis/resources/user_service_v2/user-service-update-human-user.api.mdx) instead.
 	//
-	// Create/import a new user with the type human. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
+	// Create/import a new user. The newly created user will get an initialization email if either the email address is not marked as verified or no password is set. If a password is set the user will not be requested to set a new one on the first login.
 	ImportHumanUser(context.Context, *ImportHumanUserRequest) (*ImportHumanUserResponse, error)
 	// Create User (Machine)
 	//
@@ -4217,7 +4233,7 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [user service v2 RemoveTOTP](apis/resources/user_service_v2/user-service-remove-totp.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) as a factor from the user. OTP is an authentication app, like Authy or Google/Microsoft Authenticator.
+	// Remove the configured OTP as a factor from the user. OTP is an authentication app, like Authy or Google/Microsoft Authenticator.
 	RemoveHumanAuthFactorOTP(context.Context, *RemoveHumanAuthFactorOTPRequest) (*RemoveHumanAuthFactorOTPResponse, error)
 	// Remove Multi-Factor U2F
 	//
@@ -4229,69 +4245,69 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [user service v2 RemoveOTPSMS](apis/resources/user_service_v2/user-service-remove-otpsms.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) SMS as a factor from the user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
+	// Remove the configured OTP SMS as a factor from the user. As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
 	RemoveHumanAuthFactorOTPSMS(context.Context, *RemoveHumanAuthFactorOTPSMSRequest) (*RemoveHumanAuthFactorOTPSMSResponse, error)
 	// Remove Multi-Factor OTP Email
 	//
 	// Deprecated: use [user service v2 RemoveOTPEmail](apis/resources/user_service_v2/user-service-remove-otp-email.api.mdx) instead.
 	//
-	// Remove the configured One-Time Password (OTP) Email as a factor from the user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
+	// Remove the configured OTP Email as a factor from the user. As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
 	RemoveHumanAuthFactorOTPEmail(context.Context, *RemoveHumanAuthFactorOTPEmailRequest) (*RemoveHumanAuthFactorOTPEmailResponse, error)
-	// Search Passwordless/Passkey authentication
+	// Search Passkey authentication
 	//
 	// Deprecated: use [user service v2 ListPasskeys](apis/resources/user_service_v2/user-service-list-passkeys.api.mdx) instead.
 	//
-	// Get a list of configured passwordless/passkey authentication methods from the user. Passwordless/passkey is a device-dependent authentication like FingerScan, WindowsHello or a Hardware Token.
+	// Get a list of configured passkey authentication methods from the user. Passkey is a device-dependent authentication like FingerScan, WindowsHello or a Hardware Token.
 	ListHumanPasswordless(context.Context, *ListHumanPasswordlessRequest) (*ListHumanPasswordlessResponse, error)
-	// Add Passwordless/Passkey Registration Link
+	// Add Passkey Registration Link
 	//
 	// Deprecated: use [user service v2 RegisterPasskey](apis/resources/user_service_v2/user-service-register-passkey.api.mdx) instead.
 	//
-	// Adds a new passwordless/passkey authenticator link to the user and returns it in the response. The link enables the user to register a new device if current passwordless/passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
+	// Adds a new passkey authenticator link to the user and returns it in the response. The link enables the user to register a new device if current passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
 	AddPasswordlessRegistration(context.Context, *AddPasswordlessRegistrationRequest) (*AddPasswordlessRegistrationResponse, error)
-	// Send Passwordless/Passkey Registration Link
+	// Send Passkey Registration Link
 	//
 	// Deprecated: use [user service v2 RegisterPasskey](apis/resources/user_service_v2/user-service-register-passkey.api.mdx) instead.
 	//
-	// Adds a new passwordless/passkey authenticator link to the user and sends it to the user per email. The link enables the user to register a new device if current passwordless/passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
+	// Adds a new passkey authenticator link to the user and sends it to the user per email. The link enables the user to register a new device if current passkey devices are all platform authenticators. e.g. User has already registered Windows Hello and wants to register FaceID on the iPhone.
 	SendPasswordlessRegistration(context.Context, *SendPasswordlessRegistrationRequest) (*SendPasswordlessRegistrationResponse, error)
-	// Delete Passwordless/Passkey
+	// Delete Passkey
 	//
 	// Deprecated: use [user service v2 RemovePasskey](apis/resources/user_service_v2/user-service-remove-passkey.api.mdx) instead.
 	//
-	// Remove a configured passwordless/passkey authentication method from the user. (e.g FaceID, FingerScane, WindowsHello, etc.).
+	// Remove a configured passkey authentication method from the user. (e.g FaceID, FingerScane, WindowsHello, etc.).
 	RemoveHumanPasswordless(context.Context, *RemoveHumanPasswordlessRequest) (*RemoveHumanPasswordlessResponse, error)
-	// Update Machine User
+	// Update Service Account
 	//
 	// Deprecated: use [user service v2 UpdateUser](apis/resources/user_service_v2/user-service-update-user.api.mdx) instead.
 	//
-	// Change a service account/machine user. It is used for accounts with non-interactive authentication possibilities.
+	// Change a service account/service account. It is used for accounts with non-interactive authentication possibilities.
 	UpdateMachine(context.Context, *UpdateMachineRequest) (*UpdateMachineResponse, error)
-	// Create Secret for Machine User
+	// Create Secret for Service Account
 	//
 	// Deprecated: use [user service v2 AddSecret](apis/resources/user_service_v2/user-service-add-secret.api.mdx) instead.
 	//
-	// Create a new secret for a machine user/service account. It is used to authenticate the user (client credential grant).
+	// Create a new secret for a service account. It is used to authenticate the user (client credential grant).
 	GenerateMachineSecret(context.Context, *GenerateMachineSecretRequest) (*GenerateMachineSecretResponse, error)
-	// Delete Secret of Machine User
+	// Delete Secret of Service Account
 	//
 	// Deprecated: use [user service v2 RemoveSecret](apis/resources/user_service_v2/user-service-remove-secret.api.mdx) instead.
 	//
-	// Delete a secret of a machine user/service account. The user will not be able to authenticate with the secret afterward.
+	// Delete a secret of a service account. The user will not be able to authenticate with the secret afterward.
 	RemoveMachineSecret(context.Context, *RemoveMachineSecretRequest) (*RemoveMachineSecretResponse, error)
-	// Get Machine user Key By ID
+	// Get Service account Key By ID
 	//
 	// Deprecated: use [user service v2 ListUsers](apis/resources/user_service_v2/user-service-list-users.api.mdx) instead.
 	//
-	// Get a specific Key of a machine user by its id. Machine keys are used to authenticate with jwt profile authentication.
+	// Get a specific Key of a service account by its id. Machine keys are used to authenticate with jwt profile authentication.
 	GetMachineKeyByIDs(context.Context, *GetMachineKeyByIDsRequest) (*GetMachineKeyByIDsResponse, error)
 	// List Machine Keys
 	//
 	// Deprecated: use [user service v2 ListKeys](apis/resources/user_service_v2/user-service-list-keys.api.mdx) instead.
 	//
-	// Get the list of keys of a machine user. Machine keys are used to authenticate with jwt profile authentication.
+	// Get the list of keys of a service account. Machine keys are used to authenticate with jwt profile authentication.
 	ListMachineKeys(context.Context, *ListMachineKeysRequest) (*ListMachineKeysResponse, error)
-	// Create Key for machine user
+	// Create Key for service account
 	//
 	// Deprecated: use [user service v2 AddKey](apis/resources/user_service_v2/user-service-add-key.api.mdx) instead.
 	//
@@ -4300,7 +4316,7 @@ type ManagementServiceServer interface {
 	// If an RSA public key is supplied, the private key is omitted from the response.
 	// Machine keys are used to authenticate with jwt profile.
 	AddMachineKey(context.Context, *AddMachineKeyRequest) (*AddMachineKeyResponse, error)
-	// Delete Key for machine user
+	// Delete Key for service account
 	//
 	// Deprecated: use [user service v2 RemoveKey](apis/resources/user_service_v2/user-service-remove-key.api.mdx) instead.
 	//
@@ -4345,11 +4361,11 @@ type ManagementServiceServer interface {
 	//
 	// Remove a configured social logins/identity providers of the user (e.g. Google, Microsoft, AzureAD, etc.). The user will not be able to log in with the given provider afterward. Make sure the user does have other possibilities to authenticate.
 	RemoveHumanLinkedIDP(context.Context, *RemoveHumanLinkedIDPRequest) (*RemoveHumanLinkedIDPResponse, error)
-	// List ZITADEL Permissions
+	// List Zitadel Permissions
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Show all the permissions the user has in ZITADEL (ZITADEL Manager).
+	// Show all the permissions the user has in Zitadel (ZITADEL Manager).
 	ListUserMemberships(context.Context, *ListUserMembershipsRequest) (*ListUserMembershipsResponse, error)
 	GetMyOrg(context.Context, *GetMyOrgRequest) (*GetMyOrgResponse, error)
 	// Get Organization By Domain
@@ -4363,7 +4379,7 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [organization service v2 CreateOrganization](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-add-organization.api.mdx) instead
 	//
-	// Create a new organization. Based on the given name a domain will be generated to be able to identify users within an organization.
+	// Create a new organization. Based on the provided name a domain will be generated to be able to identify users within an organization.
 	AddOrg(context.Context, *AddOrgRequest) (*AddOrgResponse, error)
 	// Update Organization
 	//
@@ -4453,7 +4469,7 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [organization service v2 VerifyOrganizationDomain](apis/resources/org_service_v2/zitadel-org-v-2-organization-service-verify-organization-domain.api.mdx) instead.
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	ValidateOrgDomain(context.Context, *ValidateOrgDomainRequest) (*ValidateOrgDomainResponse, error)
 	SetPrimaryOrgDomain(context.Context, *SetPrimaryOrgDomainRequest) (*SetPrimaryOrgDomainResponse, error)
 	ListOrgMemberRoles(context.Context, *ListOrgMemberRolesRequest) (*ListOrgMemberRolesResponse, error)
@@ -4461,25 +4477,25 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the organization level, matching the search queries. The search queries will be AND linked.
 	ListOrgMembers(context.Context, *ListOrgMembersRequest) (*ListOrgMembersResponse, error)
 	// Add Organization Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
+	// Members are users with permission to administrate Zitadel on different levels. This request adds a new user to the members list on the organization level with one or multiple roles.
 	AddOrgMember(context.Context, *AddOrgMemberRequest) (*AddOrgMemberResponse, error)
 	// Update Organization Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateOrgMember(context.Context, *UpdateOrgMemberRequest) (*UpdateOrgMemberResponse, error)
 	// Remove Organization Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on an instance level. The user can still have roles on another level (iam, project).
 	RemoveOrgMember(context.Context, *RemoveOrgMemberRequest) (*RemoveOrgMemberResponse, error)
 	// Get Project By ID
 	//
@@ -4570,32 +4586,32 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [project v2 service RemoveProjectRole](apis/resources/project_service_v2/zitadel-project-v-2-project-service-remove-project-role.api.mdx) instead.
 	//
-	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants.
+	// Removes the role from the project and on every resource it has a dependency. This includes project grants and user grants (role assignments).
 	RemoveProjectRole(context.Context, *RemoveProjectRoleRequest) (*RemoveProjectRoleResponse, error)
 	ListProjectMemberRoles(context.Context, *ListProjectMemberRolesRequest) (*ListProjectMemberRolesResponse, error)
 	// List Project Members
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project level, matching the search queries. The search queries will be AND linked.
 	ListProjectMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error)
 	// Add Project Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
+	// Members are users with permission to administrate Zitadel on different levels. This request adds a new user to the members list on the project level with one or multiple roles.
 	AddProjectMember(context.Context, *AddProjectMemberRequest) (*AddProjectMemberResponse, error)
 	// Update Project Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectMember(context.Context, *UpdateProjectMemberRequest) (*UpdateProjectMemberResponse, error)
 	// Remove Project Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on an project level. The user can still have roles on another level (iam, organization).
 	RemoveProjectMember(context.Context, *RemoveProjectMemberRequest) (*RemoveProjectMemberResponse, error)
 	// Get Application By ID
 	//
@@ -4730,13 +4746,13 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [CreateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-create-project-grant.api.mdx) instead.
 	//
-	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
+	// Grant a project to another organization. The project grant will allow the granted organization to access the project and manage the role assignments for its users. Project Grant will be listed in the granted project of the granted organization.
 	AddProjectGrant(context.Context, *AddProjectGrantRequest) (*AddProjectGrantResponse, error)
 	// Change Project Grant
 	//
 	// Deprecated: use [UpdateProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-update-project-grant.api.mdx) instead.
 	//
-	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the authorizations for its users. Project Grant will be listed in the granted project of the granted organization.
+	// Change the roles of the project that is granted to another organization. The project grant will allow the granted organization to access the project and manage the role assignments for its users. Project Grant will be listed in the granted project of the granted organization.
 	UpdateProjectGrant(context.Context, *UpdateProjectGrantRequest) (*UpdateProjectGrantResponse, error)
 	// Deactivate Project Grant
 	//
@@ -4754,80 +4770,96 @@ type ManagementServiceServer interface {
 	//
 	// Deprecated: use [DeleteProjectGrant](apis/resources/project_service_v2/zitadel-project-v-2-project-service-delete-project-grant.api.mdx) instead.
 	//
-	// Remove a project grant. All user grants for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
+	// Remove a project grant. All user grants (role assignments) for this project grant will also be removed. A user will not have access to the project afterward (if permissions are checked).
 	RemoveProjectGrant(context.Context, *RemoveProjectGrantRequest) (*RemoveProjectGrantResponse, error)
 	ListProjectGrantMemberRoles(context.Context, *ListProjectGrantMemberRolesRequest) (*ListProjectGrantMemberRolesResponse, error)
 	// List Project Grant Members
 	//
 	// Deprecated: use [ListAdministrators](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-list-administrators.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	ListProjectGrantMembers(context.Context, *ListProjectGrantMembersRequest) (*ListProjectGrantMembersResponse, error)
 	// Add Project Grant Member
 	//
 	// Deprecated: use [CreateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-create-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
+	// Members are users with permission to administrate Zitadel on different levels. This request returns all users with memberships on the project grant level, matching the search queries. The search queries will be AND linked.
 	AddProjectGrantMember(context.Context, *AddProjectGrantMemberRequest) (*AddProjectGrantMemberResponse, error)
 	// Update Project Grant Member
 	//
 	// Deprecated: use [UpdateAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-update-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
+	// Members are users with permission to administrate Zitadel on different levels. This request changes the roles of an existing member. The whole roles list will be updated. Make sure to include roles that you don't want to change (remove).
 	UpdateProjectGrantMember(context.Context, *UpdateProjectGrantMemberRequest) (*UpdateProjectGrantMemberResponse, error)
 	// Remove Project Grant Member
 	//
 	// Deprecated: use [DeleteAdministrator](apis/resources/internal_permission_service_v2/zitadel-internal-permission-v-2-internal-permission-service-delete-administrator.api.mdx) instead.
 	//
-	// Members are users with permission to administrate ZITADEL on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
+	// Members are users with permission to administrate Zitadel on different levels. This request removes a user from the members list on a project grant level. The user can still have roles on another level (iam, organization, project).
 	RemoveProjectGrantMember(context.Context, *RemoveProjectGrantMemberRequest) (*RemoveProjectGrantMemberResponse, error)
 	// Get User Grant By ID
 	//
 	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and filter by its ID.
 	//
 	// Returns a user grant per ID. A user grant is a role a user has for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	GetUserGrantByID(context.Context, *GetUserGrantByIDRequest) (*GetUserGrantByIDResponse, error)
 	// Search User Grants
 	//
 	// Deprecated: [List authorizations](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-list-authorizations.api.mdx) and pass the user ID filter to search for a users grants on owned or granted projects.
 	//
-	// Returns a list of user grants that match the search queries. User grants are the roles users have for a specific project and organization.
+	// Returns a list of user grants that match the search queries. User grants/role assignments are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	ListUserGrants(context.Context, *ListUserGrantRequest) (*ListUserGrantResponse, error)
 	// Add User Grant
 	//
 	// Deprecated: [Add an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-create-authorization.api.mdx) to grant a user access to an owned or granted project.
 	//
 	// Add a user grant for a specific user. User grants are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	AddUserGrant(context.Context, *AddUserGrantRequest) (*AddUserGrantResponse, error)
 	// Update User Grant
 	//
 	// Deprecated: [Update an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-update-authorization.api.mdx) to update a user's roles on an owned or granted project.
 	//
 	// Update the roles of a user grant. User grants are the roles users have for a specific project and organization.
+	//
+	// Note: User grant refers to role assignments.
 	UpdateUserGrant(context.Context, *UpdateUserGrantRequest) (*UpdateUserGrantResponse, error)
 	// Deactivate User Grant
 	//
 	// Deprecated: [Deactivate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-deactivate-authorization.api.mdx) to disable a user's access to an owned or granted project.
 	//
 	// Deactivate the user grant. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested. An error will be returned if the user grant is already deactivated.
+	//
+	// Note: User grant refers to role assignments.
 	DeactivateUserGrant(context.Context, *DeactivateUserGrantRequest) (*DeactivateUserGrantResponse, error)
 	// Reactivate User Grant
 	//
 	// Deprecated: [Activate an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-activate-authorization.api.mdx) to enable a user's access to an owned or granted project.
 	//
 	// Reactivate a deactivated user grant. The user will be able to use the granted project again. An error will be returned if the user grant is not deactivated.
+	//
+	// Note: User grant refers to role assignments.
 	ReactivateUserGrant(context.Context, *ReactivateUserGrantRequest) (*ReactivateUserGrantResponse, error)
 	// Remove User Grant
 	//
 	// Deprecated: [Delete an authorization](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove a users access to an owned or granted project.
 	//
 	// Removes the user grant from the user. The user will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	//
+	// Note: User grant refers to role assignments.
 	RemoveUserGrant(context.Context, *RemoveUserGrantRequest) (*RemoveUserGrantResponse, error)
 	// Bulk Remove User Grants
 	//
 	// Deprecated: [Delete authorizations one after the other](apis/resources/authorization_service_v2/zitadel-authorization-v-2-authorization-service-delete-authorization.api.mdx) to remove access for multiple users on multiple owned or granted projects.
 	//
-	// Remove a list of user grants. The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	// Remove a list of user grants (role assignments). The users will not be able to use the granted project anymore. Also, the roles will not be included in the tokens when requested.
+	//
+	// Note: User grant refers to role assignments.
 	BulkRemoveUserGrant(context.Context, *BulkRemoveUserGrantRequest) (*BulkRemoveUserGrantResponse, error)
 	// deprecated: please use DomainPolicy instead
 	GetOrgIAMPolicy(context.Context, *GetOrgIAMPolicyRequest) (*GetOrgIAMPolicyResponse, error)

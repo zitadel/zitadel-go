@@ -122,7 +122,7 @@ type PasswordExpirySettings struct {
 
 	// Amount of days after which a password will expire. The user will be forced to change the password on the following authentication.
 	MaxAgeDays uint64 `protobuf:"varint,1,opt,name=max_age_days,json=maxAgeDays,proto3" json:"max_age_days,omitempty"`
-	// Amount of days after which the user should be notified of the upcoming expiry. ZITADEL will not notify the user.
+	// Amount of days after which the user should be notified of the upcoming expiry. Zitadel will not notify the user.
 	ExpireWarnDays uint64 `protobuf:"varint,2,opt,name=expire_warn_days,json=expireWarnDays,proto3" json:"expire_warn_days,omitempty"`
 	// ResourceOwnerType returns if the settings is managed on the organization explicitly or
 	// fail back on the instance settings.

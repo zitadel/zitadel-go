@@ -46,7 +46,7 @@ type OrganizationServiceClient interface {
 	// Required permission:
 	//   - `org.create`
 	//
-	// Deprecated: Use [AddOrganization](/apis/resources/org_service_v2/organization-service-add-organization.api.mdx) instead to create an organization.
+	// Deprecated: Use [AddOrganization](/docs/reference/api/org/zitadel.org.v2.OrganizationService.AddOrganization) instead to create an organization.
 	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
@@ -66,7 +66,7 @@ type OrganizationServiceClient interface {
 	// Required permission:
 	//   - `org.read`
 	//
-	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
+	// Deprecated: Use [ListOrganizations](/docs/reference/api/org/zitadel.org.v2.OrganizationService.ListOrganizations) instead to list organizations.
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
@@ -144,7 +144,7 @@ type OrganizationServiceClient interface {
 	//
 	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`
@@ -314,7 +314,7 @@ type OrganizationServiceServer interface {
 	// Required permission:
 	//   - `org.create`
 	//
-	// Deprecated: Use [AddOrganization](/apis/resources/org_service_v2/organization-service-add-organization.api.mdx) instead to create an organization.
+	// Deprecated: Use [AddOrganization](/docs/reference/api/org/zitadel.org.v2.OrganizationService.AddOrganization) instead to create an organization.
 	CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error)
 	// Update Organization
 	//
@@ -334,7 +334,7 @@ type OrganizationServiceServer interface {
 	// Required permission:
 	//   - `org.read`
 	//
-	// Deprecated: Use [ListOrganizations](/apis/resources/org_service_v2/organization-service-list-organizations.api.mdx) instead to list organizations.
+	// Deprecated: Use [ListOrganizations](/docs/reference/api/org/zitadel.org.v2.OrganizationService.ListOrganizations) instead to list organizations.
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	// Delete Organization
 	//
@@ -412,7 +412,7 @@ type OrganizationServiceServer interface {
 	//
 	// Deprecated: please move to the corresponding endpoint under organization service v2. This endpoint will be removed with the next major version of ZITADEL.
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`

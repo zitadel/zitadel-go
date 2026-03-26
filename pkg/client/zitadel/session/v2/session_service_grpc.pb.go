@@ -59,7 +59,7 @@ type SessionServiceClient interface {
 	// A token will be returned, which is required for using the session as authentication, e.g.
 	// when authenticating an OIDC auth request or SAML request.
 	// Additionally, the session token can be used as OAuth2 access token to authenticate against
-	// the ZITADEL APIs.
+	// the Zitadel APIs.
 	//
 	// Required permissions:
 	//   - `session.write`
@@ -77,7 +77,7 @@ type SessionServiceClient interface {
 	//
 	// Terminate an existing session. This invalidates the session and its token.
 	// The session can no longer be used for the authentication of other resources
-	// or to authenticate against the ZITADEL APIs.
+	// or to authenticate against the Zitadel APIs.
 	//
 	// You can only terminate your own session, unless you are granted the `session.delete` permission.
 	//
@@ -173,7 +173,7 @@ type SessionServiceServer interface {
 	// A token will be returned, which is required for using the session as authentication, e.g.
 	// when authenticating an OIDC auth request or SAML request.
 	// Additionally, the session token can be used as OAuth2 access token to authenticate against
-	// the ZITADEL APIs.
+	// the Zitadel APIs.
 	//
 	// Required permissions:
 	//   - `session.write`
@@ -191,7 +191,7 @@ type SessionServiceServer interface {
 	//
 	// Terminate an existing session. This invalidates the session and its token.
 	// The session can no longer be used for the authentication of other resources
-	// or to authenticate against the ZITADEL APIs.
+	// or to authenticate against the Zitadel APIs.
 	//
 	// You can only terminate your own session, unless you are granted the `session.delete` permission.
 	//

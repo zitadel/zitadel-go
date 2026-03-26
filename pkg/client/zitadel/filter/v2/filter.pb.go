@@ -240,7 +240,7 @@ type PaginationRequest struct {
 	Offset uint64 `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
 	// limit is the maximum amount of objects returned. The default is set to 100
 	// with a maximum of 1000 in the runtime configuration.
-	// If the limit exceeds the maximum configured ZITADEL will throw an error.
+	// If the limit exceeds the maximum configured Zitadel will throw an error.
 	// If no limit is present the default is taken.
 	Limit uint32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
 	// Asc is the sorting order. If true the list is sorted ascending, if false

@@ -70,7 +70,7 @@ type OrganizationServiceClient interface {
 	DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*DeleteOrganizationResponse, error)
 	// Set Organization Metadata
 	//
-	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove existing metadata entries, pass an empty metadata value or use [DeleteOrganizationMetadata](/docs/reference/api/org/zitadel.org.v2.OrganizationService.DeleteOrganizationMetadata). If no metadata entry exists for a given key, passing an empty value for that key has no effect (no-op). For HTTP requests, make sure the bytes array value is base64 encoded.
 	//
 	// Required permission:
 	//   - `org.write`
@@ -119,7 +119,7 @@ type OrganizationServiceClient interface {
 	GenerateOrganizationDomainValidation(ctx context.Context, in *GenerateOrganizationDomainValidationRequest, opts ...grpc.CallOption) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`
@@ -309,7 +309,7 @@ type OrganizationServiceServer interface {
 	DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*DeleteOrganizationResponse, error)
 	// Set Organization Metadata
 	//
-	// Adds or updates a metadata value for the requested key. Make sure the value is base64 encoded.
+	// Sets a list of key value pairs. Existing metadata entries with matching keys are overwritten. Existing metadata entries without matching keys are untouched. To remove existing metadata entries, pass an empty metadata value or use [DeleteOrganizationMetadata](/docs/reference/api/org/zitadel.org.v2.OrganizationService.DeleteOrganizationMetadata). If no metadata entry exists for a given key, passing an empty value for that key has no effect (no-op). For HTTP requests, make sure the bytes array value is base64 encoded.
 	//
 	// Required permission:
 	//   - `org.write`
@@ -358,7 +358,7 @@ type OrganizationServiceServer interface {
 	GenerateOrganizationDomainValidation(context.Context, *GenerateOrganizationDomainValidationRequest) (*GenerateOrganizationDomainValidationResponse, error)
 	// Verify Organization Domain
 	//
-	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). ZITADEL will check it and set the domain as verified if it was successful. A verify domain has to be unique.
+	// Make sure you have added the required verification to your domain, depending on the method you have chosen (HTTP or DNS challenge). Zitadel will check it and set the domain as verified if it was successful. A verify domain has to be unique.
 	//
 	// Required permission:
 	//   - `org.write`

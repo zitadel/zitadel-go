@@ -77,7 +77,7 @@ type InstanceInformation struct {
 
 	// The unique identifier of the instance.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The custom domains (incl. generated ones) of the instance.
+	// The Custom Domains (incl. generated ones) of the instance.
 	Domains []string `protobuf:"bytes,2,rep,name=domains,proto3" json:"domains,omitempty"`
 	// The creation date of the instance.
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`

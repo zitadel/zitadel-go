@@ -26,11 +26,11 @@ type ReportBaseInformationRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The system ID is a unique identifier for the ZITADEL system.
+	// The system ID is a unique identifier for the Zitadel system.
 	SystemId string `protobuf:"bytes,1,opt,name=system_id,json=systemId,proto3" json:"system_id,omitempty"`
-	// The current version of the ZITADEL system.
+	// The current version of the Zitadel system.
 	Version string `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	// A list of instances in the ZITADEL system and their information.
+	// A list of instances in the Zitadel system and their information.
 	Instances []*InstanceInformation `protobuf:"bytes,3,rep,name=instances,proto3" json:"instances,omitempty"`
 }
 
@@ -142,7 +142,7 @@ type ReportResourceCountsRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The system ID is a unique identifier for the ZITADEL system.
+	// The system ID is a unique identifier for the Zitadel system.
 	SystemId string `protobuf:"bytes,1,opt,name=system_id,json=systemId,proto3" json:"system_id,omitempty"`
 	// The previously returned report ID from the server to continue reporting.
 	// Note that the report ID is only valid for the same system ID.

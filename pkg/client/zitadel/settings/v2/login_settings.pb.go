@@ -326,7 +326,7 @@ type LoginSettings struct {
 	MultiFactors []MultiFactorType `protobuf:"varint,15,rep,packed,name=multi_factors,json=multiFactors,proto3,enum=zitadel.settings.v2.MultiFactorType" json:"multi_factors,omitempty"`
 	// Allow discovery of the organization and its authentication option by domain.
 	// If set to true, the suffix (@domain.com) of an unknown username input on the login screen
-	// will be matched against the organization domains and will redirect to the registration of that organization on success.
+	// will be matched against the Organization Domains and will redirect to the registration of that organization on success.
 	// The registration can either be locally (requires allow_register to be true) or through an external identity provider.
 	// In case only one identity provider is configured for the organization, the user will be redirected directly to the identity provider.
 	AllowDomainDiscovery bool `protobuf:"varint,16,opt,name=allow_domain_discovery,json=allowDomainDiscovery,proto3" json:"allow_domain_discovery,omitempty"`
