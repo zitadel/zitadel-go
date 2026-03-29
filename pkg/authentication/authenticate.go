@@ -38,6 +38,7 @@ type Authenticator[T Ctx] struct {
 	externalSecure        bool
 	useCookieSession      bool
 	postLogoutRedirectURI string
+	onAuthenticated       OnAuthenticatedFunc[T]
 }
 
 // compile-time check that Authenticator implements AuthenticationChecker
@@ -89,6 +90,18 @@ func WithExternalSecure[T Ctx](externalSecure bool) Option[T] {
 func WithPostLogoutRedirectURI[T Ctx](uri string) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.postLogoutRedirectURI = uri
+	}
+}
+
+// OnAuthenticatedFunc is called after a successful OIDC callback,
+// before the session is stored and the user is redirected.
+type OnAuthenticatedFunc[T Ctx] func(ctx context.Context, authCtx T) error
+
+// WithOnAuthenticated registers a hook that is invoked after a successful authentication
+// in the callback. If the hook returns an error, the login is aborted with a 500 status.
+func WithOnAuthenticated[T Ctx](fn OnAuthenticatedFunc[T]) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.onAuthenticated = fn
 	}
 }
 
@@ -144,6 +157,14 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		a.logger.Error("unable to decrypt state", "state", stateParam)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+
+	if a.onAuthenticated != nil {
+		if err := a.onAuthenticated(req.Context(), authCtx); err != nil {
+			a.logger.Error("on authenticated hook failed", "error", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	redirectURI := state.RequestedURI

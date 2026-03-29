@@ -3,6 +3,7 @@ package authentication_test
 import (
 	"context"
 	"crypto/rand"
+	"fmt"
 	"encoding/hex"
 	"net/http"
 	"net/http/httptest"
@@ -217,6 +218,51 @@ func TestCallbackRedirectsToRootOnEmptyURI(t *testing.T) {
 
 	assert.Equal(t, http.StatusFound, rec.Code)
 	assert.Equal(t, "/", rec.Header().Get("Location"))
+}
+
+func TestOnAuthenticated(t *testing.T) {
+	encKey := generateEncryptionKey()
+	handler := &stubHandler{callbackCtx: newAuthContext("user"), encKey: encKey}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	var called bool
+	auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+		authentication.WithOnAuthenticated(func(_ context.Context, _ testContext) error {
+			called = true
+			return nil
+		}),
+	)
+	require.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+	auth.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusFound, rec.Code)
+	assert.True(t, called)
+}
+
+func TestOnAuthenticatedError(t *testing.T) {
+	encKey := generateEncryptionKey()
+	handler := &stubHandler{callbackCtx: newAuthContext("user"), encKey: encKey}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+		authentication.WithOnAuthenticated(func(_ context.Context, _ testContext) error {
+			return fmt.Errorf("hook failed")
+		}),
+	)
+	require.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+	auth.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
 }
 
 func TestStateEncryptionError(t *testing.T) {
