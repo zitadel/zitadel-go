@@ -346,9 +346,8 @@ type UserServiceClient interface {
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
-	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
+	// If an invite code has been created previously, its URL template and application name will be used as defaults for the new code.
 	// The new code will overwrite the previous one and make it invalid.
-	// Note: It is possible to reissue a new code only when the previous code has expired, or when the user provides a wrong code three or more times during verification.
 	CreateInviteCode(ctx context.Context, in *CreateInviteCodeRequest, opts ...grpc.CallOption) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
@@ -1202,9 +1201,8 @@ type UserServiceServer interface {
 	// Create an invite code for a user
 	//
 	// Create an invite code for a user to initialize their first authentication method (password, passkeys, IdP) depending on the organization's available methods.
-	// If an invite code has been created previously, it's url template and application name will be used as defaults for the new code.
+	// If an invite code has been created previously, its URL template and application name will be used as defaults for the new code.
 	// The new code will overwrite the previous one and make it invalid.
-	// Note: It is possible to reissue a new code only when the previous code has expired, or when the user provides a wrong code three or more times during verification.
 	CreateInviteCode(context.Context, *CreateInviteCodeRequest) (*CreateInviteCodeResponse, error)
 	// Resend an invite code for a user
 	//
