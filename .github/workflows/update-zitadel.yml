@@ -10,7 +10,7 @@ on:
 
 jobs:
   update:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: update zitadel api
     steps:
       - name: checkout source
