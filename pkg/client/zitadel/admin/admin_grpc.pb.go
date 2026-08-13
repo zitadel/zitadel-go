@@ -118,6 +118,8 @@ const (
 	AdminService_AddSAMLProvider_FullMethodName                                         = "/zitadel.admin.v1.AdminService/AddSAMLProvider"
 	AdminService_UpdateSAMLProvider_FullMethodName                                      = "/zitadel.admin.v1.AdminService/UpdateSAMLProvider"
 	AdminService_RegenerateSAMLProviderCertificate_FullMethodName                       = "/zitadel.admin.v1.AdminService/RegenerateSAMLProviderCertificate"
+	AdminService_AddZitadelProvider_FullMethodName                                      = "/zitadel.admin.v1.AdminService/AddZitadelProvider"
+	AdminService_UpdateZitadelProvider_FullMethodName                                   = "/zitadel.admin.v1.AdminService/UpdateZitadelProvider"
 	AdminService_DeleteProvider_FullMethodName                                          = "/zitadel.admin.v1.AdminService/DeleteProvider"
 	AdminService_GetOrgIAMPolicy_FullMethodName                                         = "/zitadel.admin.v1.AdminService/GetOrgIAMPolicy"
 	AdminService_UpdateOrgIAMPolicy_FullMethodName                                      = "/zitadel.admin.v1.AdminService/UpdateOrgIAMPolicy"
@@ -467,6 +469,10 @@ type AdminServiceClient interface {
 	UpdateSAMLProvider(ctx context.Context, in *UpdateSAMLProviderRequest, opts ...grpc.CallOption) (*UpdateSAMLProviderResponse, error)
 	// Regenerate certificate for an existing SAML identity provider in the organization
 	RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error)
+	// Add a new Zitadel identity provider in the instance
+	AddZitadelProvider(ctx context.Context, in *AddZitadelProviderRequest, opts ...grpc.CallOption) (*AddZitadelProviderResponse, error)
+	// Change an existing Zitadel identity provider on the instance
+	UpdateZitadelProvider(ctx context.Context, in *UpdateZitadelProviderRequest, opts ...grpc.CallOption) (*UpdateZitadelProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(ctx context.Context, in *DeleteProviderRequest, opts ...grpc.CallOption) (*DeleteProviderResponse, error)
@@ -1495,6 +1501,24 @@ func (c *adminServiceClient) UpdateSAMLProvider(ctx context.Context, in *UpdateS
 func (c *adminServiceClient) RegenerateSAMLProviderCertificate(ctx context.Context, in *RegenerateSAMLProviderCertificateRequest, opts ...grpc.CallOption) (*RegenerateSAMLProviderCertificateResponse, error) {
 	out := new(RegenerateSAMLProviderCertificateResponse)
 	err := c.cc.Invoke(ctx, AdminService_RegenerateSAMLProviderCertificate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddZitadelProvider(ctx context.Context, in *AddZitadelProviderRequest, opts ...grpc.CallOption) (*AddZitadelProviderResponse, error) {
+	out := new(AddZitadelProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_AddZitadelProvider_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateZitadelProvider(ctx context.Context, in *UpdateZitadelProviderRequest, opts ...grpc.CallOption) (*UpdateZitadelProviderResponse, error) {
+	out := new(UpdateZitadelProviderResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateZitadelProvider_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2688,6 +2712,10 @@ type AdminServiceServer interface {
 	UpdateSAMLProvider(context.Context, *UpdateSAMLProviderRequest) (*UpdateSAMLProviderResponse, error)
 	// Regenerate certificate for an existing SAML identity provider in the organization
 	RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error)
+	// Add a new Zitadel identity provider in the instance
+	AddZitadelProvider(context.Context, *AddZitadelProviderRequest) (*AddZitadelProviderResponse, error)
+	// Change an existing Zitadel identity provider on the instance
+	UpdateZitadelProvider(context.Context, *UpdateZitadelProviderRequest) (*UpdateZitadelProviderResponse, error)
 	// Remove an identity provider
 	// Will remove all linked providers of this configuration on the users
 	DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error)
@@ -3124,6 +3152,12 @@ func (UnimplementedAdminServiceServer) UpdateSAMLProvider(context.Context, *Upda
 }
 func (UnimplementedAdminServiceServer) RegenerateSAMLProviderCertificate(context.Context, *RegenerateSAMLProviderCertificateRequest) (*RegenerateSAMLProviderCertificateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegenerateSAMLProviderCertificate not implemented")
+}
+func (UnimplementedAdminServiceServer) AddZitadelProvider(context.Context, *AddZitadelProviderRequest) (*AddZitadelProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddZitadelProvider not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateZitadelProvider(context.Context, *UpdateZitadelProviderRequest) (*UpdateZitadelProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateZitadelProvider not implemented")
 }
 func (UnimplementedAdminServiceServer) DeleteProvider(context.Context, *DeleteProviderRequest) (*DeleteProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProvider not implemented")
@@ -5231,6 +5265,42 @@ func _AdminService_RegenerateSAMLProviderCertificate_Handler(srv interface{}, ct
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).RegenerateSAMLProviderCertificate(ctx, req.(*RegenerateSAMLProviderCertificateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddZitadelProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddZitadelProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddZitadelProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddZitadelProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddZitadelProvider(ctx, req.(*AddZitadelProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateZitadelProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateZitadelProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateZitadelProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateZitadelProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateZitadelProvider(ctx, req.(*UpdateZitadelProviderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7527,6 +7597,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegenerateSAMLProviderCertificate",
 			Handler:    _AdminService_RegenerateSAMLProviderCertificate_Handler,
+		},
+		{
+			MethodName: "AddZitadelProvider",
+			Handler:    _AdminService_AddZitadelProvider_Handler,
+		},
+		{
+			MethodName: "UpdateZitadelProvider",
+			Handler:    _AdminService_UpdateZitadelProvider_Handler,
 		},
 		{
 			MethodName: "DeleteProvider",
