@@ -231,9 +231,11 @@ func TestClient_GetValidToken(t *testing.T) {
 type mockTokenSource struct {
 	token *oauth2.Token
 	err   error
+	calls int
 }
 
 func (m *mockTokenSource) Token() (*oauth2.Token, error) {
+	m.calls++
 	return m.token, m.err
 }
 
@@ -266,5 +268,7 @@ func TestClient_TokenSourceReused(t *testing.T) {
 	tok2, err := c.GetValidToken()
 	require.NoError(t, err)
 	assert.Equal(t, "cached-token-123", tok2)
+
+	assert.Equal(t, 1, underlyingSource.calls)
 }
 
