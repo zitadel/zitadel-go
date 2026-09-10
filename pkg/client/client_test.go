@@ -231,8 +231,44 @@ func TestClient_GetValidToken(t *testing.T) {
 type mockTokenSource struct {
 	token *oauth2.Token
 	err   error
+	calls int
 }
 
 func (m *mockTokenSource) Token() (*oauth2.Token, error) {
+	m.calls++
 	return m.token, m.err
 }
+
+func TestClient_TokenSourceReused(t *testing.T) {
+	underlyingSource := &mockTokenSource{
+		token: &oauth2.Token{
+			AccessToken: "cached-token-123",
+			Expiry:      time.Now().Add(1 * time.Hour),
+		},
+	}
+	initCount := 0
+	initSource := func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
+		initCount++
+		return underlyingSource, nil
+	}
+
+	ctx := context.Background()
+	c, err := New(ctx, zitadel.New("localhost", zitadel.WithInsecure("8080")),
+		WithAuth(initSource),
+	)
+	require.NoError(t, err)
+	defer c.Close()
+
+	assert.Equal(t, 1, initCount)
+
+	tok1, err := c.GetValidToken()
+	require.NoError(t, err)
+	assert.Equal(t, "cached-token-123", tok1)
+
+	tok2, err := c.GetValidToken()
+	require.NoError(t, err)
+	assert.Equal(t, "cached-token-123", tok2)
+
+	assert.Equal(t, 1, underlyingSource.calls)
+}
+

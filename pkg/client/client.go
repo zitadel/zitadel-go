@@ -163,6 +163,9 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 		if err != nil {
 			return nil, err
 		}
+		if source != nil {
+			source = oauth2.ReuseTokenSource(nil, source)
+		}
 	}
 
 	conn, err := newConnection(ctx, zitadel, source, options.grpcDialOptions...)
