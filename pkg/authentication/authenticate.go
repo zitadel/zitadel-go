@@ -253,6 +253,11 @@ func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 			a.logger.Log(req.Context(), slog.LevelWarn, "unable to deserialize auth context from cookie")
 			return t, ErrNoSession
 		}
+		if !t.IsAuthenticated() {
+			a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated")
+			var invalid T
+			return invalid, ErrNoSession
+		}
 		return t, nil
 	}
 
@@ -261,6 +266,11 @@ func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
 	if err != nil {
 		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", sessionValue)
 		return t, ErrNoSession
+	}
+	if !session.IsAuthenticated() {
+		a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated", "sessionID", sessionValue)
+		var invalid T
+		return invalid, ErrNoSession
 	}
 	return session, nil
 }
