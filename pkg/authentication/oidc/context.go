@@ -1,6 +1,8 @@
 package oidc
 
 import (
+	"time"
+
 	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 )
@@ -15,9 +17,14 @@ func (c *UserInfoContext[C, S]) New() Ctx[C, S] {
 	return &UserInfoContext[C, S]{}
 }
 
-// IsAuthenticated implements [authentication.Ctx] by checking the `sub` claim of the [oidc.UserInfo].
+// IsAuthenticated implements [authentication.Ctx] by checking the `sub` claim of the [oidc.UserInfo]
+// and the `Expiry` of the [oidc.Tokens].
 func (c *UserInfoContext[C, S]) IsAuthenticated() bool {
 	if c == nil {
+		return false
+	}
+	if c.Tokens != nil && c.Tokens.Token != nil &&
+		!c.Tokens.Expiry.IsZero() && !time.Now().Before(c.Tokens.Expiry) {
 		return false
 	}
 	return c.UserInfo.GetSubject() != ""
