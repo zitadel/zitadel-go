@@ -48,8 +48,6 @@ var _ AuthenticationChecker[Ctx] = (*Authenticator[Ctx])(nil)
 type Option[T Ctx] func(authorizer *Authenticator[T])
 
 // WithLogger allows a logger other than slog.Default().
-//
-// EXPERIMENTAL: Will change to log/slog import after we drop support for Go 1.20
 func WithLogger[T Ctx](logger *slog.Logger) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.logger = logger
