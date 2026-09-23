@@ -3,9 +3,9 @@ package authentication_test
 import (
 	"context"
 	"crypto/rand"
-	"fmt"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
