@@ -37,6 +37,11 @@ func (c *UserInfoContext[C, S]) IsAuthenticated() bool {
 // compile and comparing the boxed `any(claims) != nil` doesn't catch a typed nil pointer.
 func isNilClaims[C oidc.IDClaims](claims C) bool {
 	v := reflect.ValueOf(claims)
+	if !v.IsValid() {
+		// claims is a nil interface value (e.g. C is instantiated as the
+		// oidc.IDClaims interface itself rather than a concrete pointer type).
+		return true
+	}
 	switch v.Kind() {
 	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice:
 		return v.IsNil()
