@@ -5,9 +5,11 @@ import (
 	"crypto/rand"
 	"fmt"
 	"encoding/hex"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -140,6 +142,69 @@ func TestSessionHandling(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, authCtx.GetUserInfo().GetSubject(), ctx.GetUserInfo().GetSubject())
 		assert.False(t, sessions.GetCalled)
+	})
+}
+
+func newExpiredAuthContext(subject string) testContext {
+	return &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+		UserInfo: &oidc.UserInfo{Subject: subject},
+		Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{
+			IDToken: "id-token",
+			IDTokenClaims: &oidc.IDTokenClaims{
+				TokenClaims: oidc.TokenClaims{
+					Expiration: oidc.FromTime(time.Now().Add(-time.Hour)),
+				},
+			},
+		},
+	}
+}
+
+// TestIsAuthenticated_ExpiredSession asserts that a session which was valid when it was
+// stored, but has since expired, is rejected instead of being treated as still authenticated.
+func TestIsAuthenticated_ExpiredSession(t *testing.T) {
+	handler := &stubHandler{}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	t.Run("stateful session lookup", func(t *testing.T) {
+		encKey := generateEncryptionKey()
+		sessions := authentication.NewInMemorySessions[testContext]()
+		sessionID := uuid.NewString()
+		require.NoError(t, sessions.Set(sessionID, newExpiredAuthContext("test-user")))
+
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithSessionStore(sessions),
+		)
+		require.NoError(t, err)
+
+		cookieVal, err := crypto.EncryptAES(sessionID, encKey)
+		require.NoError(t, err)
+		req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+		req.AddCookie(&http.Cookie{Name: "zitadel.session", Value: cookieVal})
+
+		_, err = auth.IsAuthenticated(req)
+
+		assert.ErrorIs(t, err, authentication.ErrNoSession)
+	})
+
+	t.Run("stateless cookie session", func(t *testing.T) {
+		encKey := generateEncryptionKey()
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithCookieSession[testContext](),
+		)
+		require.NoError(t, err)
+
+		data, err := json.Marshal(newExpiredAuthContext("test-user"))
+		require.NoError(t, err)
+		cookieVal, err := crypto.EncryptAES(string(data), encKey)
+		require.NoError(t, err)
+		req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+		req.AddCookie(&http.Cookie{Name: "zitadel.session", Value: cookieVal})
+
+		_, err = auth.IsAuthenticated(req)
+
+		assert.ErrorIs(t, err, authentication.ErrNoSession)
 	})
 }
 
