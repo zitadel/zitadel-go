@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
@@ -170,6 +171,14 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		redirectURI = "/"
 	}
 
+	var maxAge int
+	if expAuthCtx, ok := any(authCtx).(interface{ GetExpiration() time.Time }); ok {
+		if exp := expAuthCtx.GetExpiration(); !exp.IsZero() {
+			// Avoid rounding down to 0 which turns it into a browser-session
+			maxAge = max(int(time.Until(exp).Seconds()), 1)
+		}
+	}
+
 	if a.useCookieSession {
 		// Stateless mode: Serialize and encrypt the entire context into the cookie.
 		data, err := json.Marshal(authCtx)
@@ -178,7 +187,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "unable to serialize auth context", http.StatusInternalServerError)
 			return
 		}
-		if err = a.setSessionCookie(w, string(data)); err != nil {
+		if err = a.setSessionCookie(w, string(data), maxAge); err != nil {
 			a.logger.Error("unable to save session cookie", "error", err)
 			http.Error(w, "session could not be stored", http.StatusInternalServerError)
 			return
@@ -194,7 +203,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "session could not be stored", http.StatusInternalServerError)
 		return
 	}
-	if err = a.setSessionCookie(w, id); err != nil {
+	if err = a.setSessionCookie(w, id, maxAge); err != nil {
 		a.logger.Error("unable to save session cookie", "error", err, "id", id)
 		http.Error(w, "session could not be stored", http.StatusInternalServerError)
 		return
@@ -286,7 +295,7 @@ func (a *Authenticator[T]) createRouter() {
 	}))
 }
 
-func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string) error {
+func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string, maxAge int) error {
 	value, err := crypto.EncryptAES(sessionID, a.encryptionKey)
 	if err != nil {
 		return err
@@ -296,7 +305,7 @@ func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID str
 		Value:    value,
 		Path:     "/",
 		Domain:   "",
-		MaxAge:   0,
+		MaxAge:   maxAge,
 		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
