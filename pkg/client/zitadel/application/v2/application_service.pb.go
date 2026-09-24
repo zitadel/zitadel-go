@@ -349,13 +349,11 @@ type CreateOIDCApplicationRequest struct {
 	// IOS is iOS Associated Domains / passkey trust config.
 	// Served in /.well-known/apple-app-site-association as webcredentials.apps entry
 	// "{team_id}.{bundle_id}" (Apple's full App ID = Team ID prefix + Bundle ID).
-	// That response may be HTTP-cached (Cache-Control), and platform verifiers may cache longer;
-	// changes can take time to take effect.
+	// Platform verifiers may cache the file; changes can take time to take effect.
 	Ios *IOSAppLinkConfig `protobuf:"bytes,18,opt,name=ios,proto3" json:"ios,omitempty"`
 	// Android is Android Digital Asset Links / passkey trust config.
-	// Served in /.well-known/assetlinks.json for delegate_permission/common.get_login_creds.
-	// That response may be HTTP-cached (Cache-Control), and platform verifiers may cache longer;
-	// changes can take time to take effect.
+	// Served in /.well-known/assetlinks.json for delegate_permission/common.handle_all_urls and delegate_permission/common.get_login_creds.
+	// Platform verifiers may cache the file; changes can take time to take effect.
 	Android *AndroidAppLinkConfig `protobuf:"bytes,19,opt,name=android,proto3" json:"android,omitempty"`
 }
 
@@ -1218,14 +1216,12 @@ type UpdateOIDCApplicationConfigurationRequest struct {
 	// IOS is iOS Associated Domains / passkey trust config.
 	// Served in /.well-known/apple-app-site-association as webcredentials.apps entry
 	// "{team_id}.{bundle_id}" (Apple's full App ID = Team ID prefix + Bundle ID).
-	// That response may be HTTP-cached (Cache-Control), and platform verifiers may cache longer;
-	// changes can take time to take effect.
+	// Platform verifiers may cache the file; changes can take time to take effect.
 	// If not set, the iOS config will not be changed.
 	Ios *IOSAppLinkConfig `protobuf:"bytes,18,opt,name=ios,proto3,oneof" json:"ios,omitempty"`
 	// Android is Android Digital Asset Links / passkey trust config.
-	// Served in /.well-known/assetlinks.json for delegate_permission/common.get_login_creds.
-	// That response may be HTTP-cached (Cache-Control), and platform verifiers may cache longer;
-	// changes can take time to take effect.
+	// Served in /.well-known/assetlinks.json for delegate_permission/common.handle_all_urls and delegate_permission/common.get_login_creds.
+	// Platform verifiers may cache the file; changes can take time to take effect.
 	// If not set, the Android config will not be changed.
 	Android *AndroidAppLinkConfig `protobuf:"bytes,19,opt,name=android,proto3,oneof" json:"android,omitempty"`
 }
