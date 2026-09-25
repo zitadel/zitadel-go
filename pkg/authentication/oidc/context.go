@@ -69,3 +69,11 @@ func (c *UserInfoContext[C, S]) SetUserInfo(info S) {
 func (c *UserInfoContext[C, S]) GetUserInfo() S {
 	return c.UserInfo
 }
+
+// GetExpiration returns the expiration time of the ID token, or zero time if not set.
+func (c *UserInfoContext[C, S]) GetExpiration() time.Time {
+	if c == nil || c.Tokens == nil || isNilClaims(c.Tokens.IDTokenClaims) {
+		return time.Time{}
+	}
+	return c.Tokens.IDTokenClaims.GetExpiration()
+}
