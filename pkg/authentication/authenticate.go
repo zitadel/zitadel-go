@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zitadel/oidc/v3/pkg/crypto"
@@ -170,6 +171,8 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		redirectURI = "/"
 	}
 
+	maxAge, expires := getSessionExpiration(authCtx)
+
 	if a.useCookieSession {
 		// Stateless mode: Serialize and encrypt the entire context into the cookie.
 		data, err := json.Marshal(authCtx)
@@ -178,7 +181,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "unable to serialize auth context", http.StatusInternalServerError)
 			return
 		}
-		if err = a.setSessionCookie(w, string(data)); err != nil {
+		if err = a.setSessionCookie(w, string(data), maxAge, expires); err != nil {
 			a.logger.Error("unable to save session cookie", "error", err)
 			http.Error(w, "session could not be stored", http.StatusInternalServerError)
 			return
@@ -194,7 +197,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "session could not be stored", http.StatusInternalServerError)
 		return
 	}
-	if err = a.setSessionCookie(w, id); err != nil {
+	if err = a.setSessionCookie(w, id, maxAge, expires); err != nil {
 		a.logger.Error("unable to save session cookie", "error", err, "id", id)
 		http.Error(w, "session could not be stored", http.StatusInternalServerError)
 		return
@@ -286,22 +289,45 @@ func (a *Authenticator[T]) createRouter() {
 	}))
 }
 
-func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string) error {
+func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID string, maxAge int, expires time.Time) error {
 	value, err := crypto.EncryptAES(sessionID, a.encryptionKey)
 	if err != nil {
 		return err
 	}
-	http.SetCookie(w, &http.Cookie{
+	cookie := &http.Cookie{
 		Name:     a.sessionCookieName,
 		Value:    value,
 		Path:     "/",
 		Domain:   "",
-		MaxAge:   0,
+		MaxAge:   maxAge,
 		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
-	})
+	}
+	if !expires.IsZero() {
+		cookie.Expires = expires
+	}
+	http.SetCookie(w, cookie)
 	return nil
+}
+
+func getSessionExpiration(authCtx any) (int, time.Time) {
+	var exp time.Time
+	if expirer, ok := authCtx.(interface{ GetExpiration() time.Time }); ok {
+		exp = expirer.GetExpiration()
+	} else if expirer, ok := authCtx.(interface{ ExpiresAt() time.Time }); ok {
+		exp = expirer.ExpiresAt()
+	} else if expirer, ok := authCtx.(interface{ Expiration() time.Time }); ok {
+		exp = expirer.Expiration()
+	}
+	if exp.IsZero() {
+		return 0, time.Time{}
+	}
+	remaining := time.Until(exp)
+	if remaining <= 0 {
+		return 0, time.Time{}
+	}
+	return int(remaining.Seconds()), exp
 }
 
 func (a *Authenticator[T]) deleteSessionCookie(w http.ResponseWriter) {

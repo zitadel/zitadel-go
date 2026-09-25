@@ -335,3 +335,79 @@ func TestStateEncryptionError(t *testing.T) {
 	_, err := s.Encrypt("bad-key")
 	assert.Error(t, err)
 }
+
+func TestCallbackCookieMaxAgeFromExpiration(t *testing.T) {
+	encKey := generateEncryptionKey()
+	exp := time.Now().Add(2 * time.Hour)
+	authCtx := &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+		UserInfo: &oidc.UserInfo{Subject: "user-123"},
+		Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{
+			IDToken: "id-token",
+			IDTokenClaims: &oidc.IDTokenClaims{
+				TokenClaims: oidc.TokenClaims{
+					Expiration: oidc.FromTime(exp),
+				},
+			},
+		},
+	}
+	handler := &stubHandler{callbackCtx: authCtx, encKey: encKey}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	t.Run("stateful session", func(t *testing.T) {
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+
+		require.Equal(t, http.StatusFound, rec.Code)
+		cookies := rec.Result().Cookies()
+		require.Len(t, cookies, 1)
+		cookie := cookies[0]
+		assert.Equal(t, "zitadel.session", cookie.Name)
+		assert.InDelta(t, 7200, cookie.MaxAge, 10)
+		assert.WithinDuration(t, exp, cookie.Expires, 2*time.Second)
+	})
+
+	t.Run("cookie session (stateless)", func(t *testing.T) {
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler,
+			authentication.WithCookieSession[testContext](),
+		)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+
+		require.Equal(t, http.StatusFound, rec.Code)
+		cookies := rec.Result().Cookies()
+		require.Len(t, cookies, 1)
+		cookie := cookies[0]
+		assert.Equal(t, "zitadel.session", cookie.Name)
+		assert.InDelta(t, 7200, cookie.MaxAge, 10)
+		assert.WithinDuration(t, exp, cookie.Expires, 2*time.Second)
+	})
+
+	t.Run("no expiration derives MaxAge 0", func(t *testing.T) {
+		noExpCtx := newAuthContext("user-no-exp")
+		h := &stubHandler{callbackCtx: noExpCtx, encKey: encKey}
+		initH := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+			return h, nil
+		}
+		auth, err := authentication.New(context.Background(), nil, encKey, initH)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+
+		require.Equal(t, http.StatusFound, rec.Code)
+		cookies := rec.Result().Cookies()
+		require.Len(t, cookies, 1)
+		assert.Equal(t, 0, cookies[0].MaxAge)
+		assert.True(t, cookies[0].Expires.IsZero())
+	})
+}
