@@ -122,3 +122,68 @@ func TestUserInfoContext_IsAuthenticated_NilInterfaceClaims(t *testing.T) {
 	}
 	assert.True(t, ctx.IsAuthenticated())
 }
+
+func TestUserInfoContext_GetExpiration(t *testing.T) {
+	exp := time.Now().Add(time.Hour).Truncate(time.Second)
+	tests := []struct {
+		name string
+		ctx  testContext
+		want time.Time
+	}{
+		{
+			name: "nil context",
+			ctx:  nil,
+			want: time.Time{},
+		},
+		{
+			name: "nil tokens",
+			ctx: &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+				UserInfo: &oidc.UserInfo{Subject: "user-1"},
+				Tokens:   nil,
+			},
+			want: time.Time{},
+		},
+		{
+			name: "tokens with nil IDTokenClaims",
+			ctx: &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+				UserInfo: &oidc.UserInfo{Subject: "user-1"},
+				Tokens:   &oidc.Tokens[*oidc.IDTokenClaims]{IDToken: "token"},
+			},
+			want: time.Time{},
+		},
+		{
+			name: "valid expiration",
+			ctx: &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+				UserInfo: &oidc.UserInfo{Subject: "user-1"},
+				Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{
+					IDTokenClaims: &oidc.IDTokenClaims{
+						TokenClaims: oidc.TokenClaims{
+							Expiration: oidc.FromTime(exp),
+						},
+					},
+				},
+			},
+			want: exp,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := tc.ctx.GetExpiration()
+			if tc.want.IsZero() {
+				assert.True(t, got.IsZero())
+			} else {
+				assert.WithinDuration(t, tc.want, got, time.Second)
+			}
+		})
+	}
+}
+
+func TestUserInfoContext_GetExpiration_NilInterfaceClaims(t *testing.T) {
+	ctx := &zitadeloidc.UserInfoContext[oidc.IDClaims, *oidc.UserInfo]{
+		UserInfo: &oidc.UserInfo{Subject: "user-1"},
+		Tokens:   &oidc.Tokens[oidc.IDClaims]{IDToken: "id-token"},
+	}
+	assert.True(t, ctx.GetExpiration().IsZero())
+}
+

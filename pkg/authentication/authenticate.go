@@ -325,7 +325,7 @@ func getSessionExpiration(authCtx any) (int, time.Time) {
 	}
 	remaining := time.Until(exp)
 	if remaining <= 0 {
-		return 0, time.Time{}
+		return -1, exp
 	}
 	return int(remaining.Seconds()), exp
 }
