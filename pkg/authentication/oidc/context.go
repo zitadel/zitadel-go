@@ -24,12 +24,18 @@ func (c *UserInfoContext[C, S]) IsAuthenticated() bool {
 	if c == nil {
 		return false
 	}
-	if c.Tokens != nil && !isNilClaims(c.Tokens.IDTokenClaims) {
-		if expiration := c.Tokens.IDTokenClaims.GetExpiration(); !expiration.IsZero() && !time.Now().Before(expiration) {
-			return false
-		}
+	if exp := c.GetExpiration(); !exp.IsZero() && !time.Now().Before(exp) {
+		return false
 	}
 	return c.UserInfo.GetSubject() != ""
+}
+
+// GetExpiration returns the `exp` claim of the [oidc.Tokens] ID token. If one does not exist, the zero value is returned.
+func (c *UserInfoContext[C, S]) GetExpiration() time.Time {
+	if c == nil || c.Tokens == nil || isNilClaims(c.Tokens.IDTokenClaims) {
+		return time.Time{}
+	}
+	return c.Tokens.IDTokenClaims.GetExpiration()
 }
 
 // isNilClaims reports whether claims is a nil pointer/interface. It's needed because

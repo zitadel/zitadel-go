@@ -208,6 +208,58 @@ func TestIsAuthenticated_ExpiredSession(t *testing.T) {
 	})
 }
 
+func newAuthContextWithExpiry(subject string, exp time.Time) testContext {
+	return &zitadeloidc.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]{
+		UserInfo: &oidc.UserInfo{Subject: subject},
+		Tokens: &oidc.Tokens[*oidc.IDTokenClaims]{
+			IDToken: "id-token",
+			IDTokenClaims: &oidc.IDTokenClaims{
+				TokenClaims: oidc.TokenClaims{
+					Expiration: oidc.FromTime(exp),
+				},
+			},
+		},
+	}
+}
+
+// TestCallback_CookieMaxAge asserts that the session cookie's Max-Age matches
+// the remaining lifetime of the ID token.
+func TestCallback_CookieMaxAge(t *testing.T) {
+	encKey := generateEncryptionKey()
+	handler := &stubHandler{encKey: encKey}
+	initHandler := func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+		return handler, nil
+	}
+
+	t.Run("no expiry", func(t *testing.T) {
+		handler.callbackCtx = newAuthContext("test-user")
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+		require.Equal(t, http.StatusFound, rec.Code)
+
+		cookie := rec.Result().Cookies()[0]
+		assert.Equal(t, 0, cookie.MaxAge)
+	})
+
+	t.Run("expires in one hour", func(t *testing.T) {
+		handler.callbackCtx = newAuthContextWithExpiry("test-user", time.Now().Add(time.Hour))
+		auth, err := authentication.New(context.Background(), nil, encKey, initHandler)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+		require.Equal(t, http.StatusFound, rec.Code)
+
+		cookie := rec.Result().Cookies()[0]
+		assert.InDelta(t, 3600, cookie.MaxAge, 2)
+	})
+}
+
 func TestLogout(t *testing.T) {
 	tests := []struct {
 		name        string
