@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"context"
+	"errors"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ func Middleware[T Ctx](authenticator AuthenticationChecker[T]) *Interceptor[T] {
 func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, err := i.authenticator.IsAuthenticated(req)
+			ctx, err := i.isAuthenticated(w, req)
 			if err != nil {
 				i.authenticator.Authenticate(w, req, req.RequestURI)
 				return
@@ -36,13 +37,32 @@ func (i *Interceptor[T]) RequireAuthentication() func(next http.Handler) http.Ha
 func (i *Interceptor[T]) CheckAuthentication() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, err := i.authenticator.IsAuthenticated(req)
+			ctx, err := i.isAuthenticated(w, req)
 			if err == nil {
 				req = req.WithContext(WithAuthContext(req.Context(), ctx))
 			}
 			next.ServeHTTP(w, req)
 		})
 	}
+}
+
+// isAuthenticated checks for a valid session, falling back to refreshing it if the
+// authenticator can refresh sessions and the session exists but is not valid.
+func (i *Interceptor[T]) isAuthenticated(w http.ResponseWriter, req *http.Request) (T, error) {
+	ctx, err := i.authenticator.IsAuthenticated(req)
+	if err == nil || errors.Is(err, ErrNoCookie) {
+		return ctx, err
+	}
+	refresher, ok := i.authenticator.(interface {
+		Refresh(w http.ResponseWriter, req *http.Request) (T, error)
+	})
+	if !ok {
+		return ctx, err
+	}
+	if refreshed, refreshErr := refresher.Refresh(w, req); refreshErr == nil {
+		return refreshed, nil
+	}
+	return ctx, err
 }
 
 func (i *Interceptor[T]) Context(ctx context.Context) T {

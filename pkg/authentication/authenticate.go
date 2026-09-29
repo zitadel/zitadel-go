@@ -40,6 +40,7 @@ type Authenticator[T Ctx] struct {
 	useCookieSession      bool
 	postLogoutRedirectURI string
 	onAuthenticated       OnAuthenticatedFunc[T]
+	maxAge                time.Duration
 }
 
 // compile-time check that Authenticator implements AuthenticationChecker
@@ -75,6 +76,20 @@ func WithSessionStore[T Ctx](sessions Sessions[T]) Option[T] {
 func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
 	return func(a *Authenticator[T]) {
 		a.sessionCookieName = cookieName
+	}
+}
+
+// defaultMaxAge is the default session cookie Max-Age: 400 days, the maximum browsers accept.
+const defaultMaxAge = 400 * 24 * time.Hour
+
+// WithMaxAge sets the session cookie's Max-Age (default 400 days). It only controls how long
+// the browser keeps the cookie; whether the session is still valid is decided by
+// its expiration. When refreshing sessions, it should match the IdP's refresh
+// token idle expiration: a shorter value discards a still-usable refresh token
+// along with the cookie.
+func WithMaxAge[T Ctx](maxAge time.Duration) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.maxAge = maxAge
 	}
 }
 
@@ -114,6 +129,7 @@ func New[T Ctx](ctx context.Context, zitadel *zitadel.Zitadel, encryptionKey str
 		sessions:          NewInMemorySessions[T](),
 		encryptionKey:     encryptionKey,
 		sessionCookieName: "zitadel.session",
+		maxAge:            defaultMaxAge,
 		logger:            slog.Default(),
 	}
 	for _, option := range options {
@@ -171,13 +187,7 @@ func (a *Authenticator[T]) Callback(w http.ResponseWriter, req *http.Request) {
 		redirectURI = "/"
 	}
 
-	var maxAge int
-	if expAuthCtx, ok := any(authCtx).(interface{ GetExpiration() time.Time }); ok {
-		if exp := expAuthCtx.GetExpiration(); !exp.IsZero() {
-			// Avoid rounding down to 0 which turns it into a browser-session
-			maxAge = max(int(time.Until(exp).Seconds()), 1)
-		}
-	}
+	maxAge := int(a.maxAge.Seconds())
 
 	if a.useCookieSession {
 		// Stateless mode: Serialize and encrypt the entire context into the cookie.
@@ -243,43 +253,53 @@ func (a *Authenticator[T]) Logout(w http.ResponseWriter, req *http.Request) {
 // IsAuthenticated checks whether there is an existing session of not.
 // In case there is one, it will be returned.
 func (a *Authenticator[T]) IsAuthenticated(req *http.Request) (T, error) {
+	session, sessionID, err := a.loadSession(req)
+	if err != nil {
+		return session, err
+	}
+	if !session.IsAuthenticated() {
+		if sessionID == "" {
+			a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated")
+		} else {
+			a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated", "sessionID", sessionID)
+		}
+		var invalid T
+		return invalid, ErrNoSession
+	}
+	return session, nil
+}
+
+// loadSession reads the session referenced by the request's cookie without checking
+// whether it is still authenticated, so that an expired session can be refreshed.
+// The returned session ID is empty in cookie session mode.
+func (a *Authenticator[T]) loadSession(req *http.Request) (T, string, error) {
 	var t T
 	cookie, err := req.Cookie(a.sessionCookieName)
 	if err != nil {
-		return t, ErrNoCookie
+		return t, "", ErrNoCookie
 	}
 	sessionValue, err := crypto.DecryptAES(cookie.Value, a.encryptionKey)
 	if err != nil {
 		a.logger.Log(req.Context(), slog.LevelWarn, "unable to decrypt session cookie")
-		return t, ErrNoSession
+		return t, "", ErrNoSession
 	}
 
 	if a.useCookieSession {
 		// Stateless mode: Deserialize the context directly from the cookie.
 		if err = json.Unmarshal([]byte(sessionValue), &t); err != nil {
 			a.logger.Log(req.Context(), slog.LevelWarn, "unable to deserialize auth context from cookie")
-			return t, ErrNoSession
+			return t, "", ErrNoSession
 		}
-		if !t.IsAuthenticated() {
-			a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated")
-			var invalid T
-			return invalid, ErrNoSession
-		}
-		return t, nil
+		return t, "", nil
 	}
 
 	// Original stateful mode: Use decrypted value as session ID to look up in the store.
 	session, err := a.sessions.Get(sessionValue)
 	if err != nil {
 		a.logger.Log(req.Context(), slog.LevelWarn, "no session found for cookie", "sessionID", sessionValue)
-		return t, ErrNoSession
+		return t, "", ErrNoSession
 	}
-	if !session.IsAuthenticated() {
-		a.logger.Log(req.Context(), slog.LevelWarn, "session is no longer authenticated", "sessionID", sessionValue)
-		var invalid T
-		return invalid, ErrNoSession
-	}
-	return session, nil
+	return session, sessionValue, nil
 }
 
 func (a *Authenticator[T]) createRouter() {
