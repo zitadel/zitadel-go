@@ -30,12 +30,35 @@ type Ctx[C oidc.IDClaims, S rp.SubjectGetter] interface {
 // Use [WithCodeFlow] for implementation.
 type codeFlowAuthentication[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter] struct {
 	relyingParty rp.RelyingParty
+	refresh      bool
+}
+
+type codeFlowConfig struct {
+	refresh bool
+}
+
+// CodeFlowOption allows customization of the Authorization Code Flow created by [WithCodeFlow].
+type CodeFlowOption func(*codeFlowConfig)
+
+// WithRefresh enables renewing expired sessions with the refresh token grant.
+// The offline_access scope must be requested, or no refresh token is issued and
+// sessions end at their expiration as before. A refresh response must include an
+// ID token, since its exp claim is the session's expiration; one without is
+// treated as a failed refresh.
+func WithRefresh() CodeFlowOption {
+	return func(c *codeFlowConfig) {
+		c.refresh = true
+	}
 }
 
 // WithCodeFlow creates the OIDC/OAuth2 Authorization Code Flow implementation of the [authentication.Handler] interface.
 // The token endpoint itself requires some [ClientAuthentication] of the client.
 // Possible implementation are [PKCEAuthentication] and [ClientIDSecretAuthentication].
-func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientAuthentication) authentication.HandlerInitializer[T] {
+func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientAuthentication, options ...CodeFlowOption) authentication.HandlerInitializer[T] {
+	var config codeFlowConfig
+	for _, option := range options {
+		option(&config)
+	}
 	return func(ctx context.Context, zitadel *zitadel.Zitadel) (authentication.Handler[T], error) {
 		relyingParty, err := auth(ctx, zitadel.Origin())
 		if err != nil {
@@ -43,6 +66,7 @@ func WithCodeFlow[T Ctx[C, S], C oidc.IDClaims, S rp.SubjectGetter](auth ClientA
 		}
 		return &codeFlowAuthentication[T, C, S]{
 			relyingParty: relyingParty,
+			refresh:      config.refresh,
 		}, nil
 	}
 }
