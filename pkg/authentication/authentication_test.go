@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -142,6 +143,26 @@ func TestSessionHandling(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, authCtx.GetUserInfo().GetSubject(), ctx.GetUserInfo().GetSubject())
 		assert.False(t, sessions.GetCalled)
+	})
+
+	t.Run("stateless cookie session too large", func(t *testing.T) {
+		largeCtx := newAuthContext("test-user")
+		largeCtx.Tokens.IDToken = strings.Repeat("x", 4096)
+		largeHandler := &stubHandler{callbackCtx: largeCtx, encKey: encKey}
+		auth, err := authentication.New(context.Background(), nil, encKey,
+			func(_ context.Context, _ *zitadel.Zitadel) (authentication.Handler[testContext], error) {
+				return largeHandler, nil
+			},
+			authentication.WithCookieSession[testContext](),
+		)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback", nil)
+		auth.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+		assert.Empty(t, rec.Result().Cookies())
 	})
 }
 
