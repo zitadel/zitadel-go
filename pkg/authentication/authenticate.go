@@ -20,6 +20,11 @@ var (
 	ErrNoSession = errors.New("no session")
 )
 
+// maxCookieSize is the largest cookie, counting its name and value, that
+// browsers accept. RFC 6265bis requires user agents to ignore a Set-Cookie
+// whose name and value together exceed it.
+const maxCookieSize = 4096
+
 // AuthenticationChecker defines the interface for checking authentication.
 // This interface allows for mocking in tests.
 type AuthenticationChecker[T Ctx] interface {
@@ -299,6 +304,9 @@ func (a *Authenticator[T]) setSessionCookie(w http.ResponseWriter, sessionID str
 	value, err := crypto.EncryptAES(sessionID, a.encryptionKey)
 	if err != nil {
 		return err
+	}
+	if size := len(a.sessionCookieName) + len(value); size > maxCookieSize {
+		return fmt.Errorf("session cookie is %d bytes, browsers ignore cookies over %d bytes", size, maxCookieSize)
 	}
 	http.SetCookie(w, &http.Cookie{
 		Name:     a.sessionCookieName,
