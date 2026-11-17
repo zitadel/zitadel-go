@@ -5,36 +5,112 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"golang.org/x/oauth2"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
 )
 
-func TestNew_NothingRequested_ReturnsNil(t *testing.T) {
-	assert.Nil(t, New(false, nil))
-	assert.Nil(t, New(false, map[string]string{}))
+func TestConfigure_NothingRequested_ReturnsTheSameContext(t *testing.T) {
+	ctx := context.Background()
+
+	assert.Equal(t, ctx, Configure(ctx, false, nil))
+	assert.Equal(t, ctx, Configure(ctx, false, map[string]string{}))
+	assert.Nil(t, FromContext(Configure(ctx, false, nil)))
 }
 
-func TestNew_AddsHeadersToEveryRequest(t *testing.T) {
+func TestConfigure_AddsHeadersToEveryRequest(t *testing.T) {
 	idp := testidp.New(t, false)
 
-	resp, err := New(false, map[string]string{"x-foo": "bar"}).Get(idp.URL + "/anything")
+	resp, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
 	require.NoError(t, err)
 	require.NoError(t, resp.Body.Close())
 
 	assert.Equal(t, "bar", idp.Header("/anything", "x-foo"))
 }
 
-func TestNew_SkipsCertificateVerification(t *testing.T) {
+func TestConfigure_CopiesTheHeaders(t *testing.T) {
+	idp := testidp.New(t, false)
+	headers := map[string]string{"x-foo": "bar"}
+	c := FromContext(Configure(context.Background(), false, headers))
+	headers["x-foo"] = "changed"
+	headers["x-late"] = "added"
+
+	resp, err := c.Get(idp.URL + "/anything")
+	require.NoError(t, err)
+	require.NoError(t, resp.Body.Close())
+
+	assert.Equal(t, "bar", idp.Header("/anything", "x-foo"))
+	assert.Empty(t, idp.Header("/anything", "x-late"))
+}
+
+func TestConfigure_SkipsCertificateVerification(t *testing.T) {
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	defer srv.Close()
 
-	_, err := New(false, map[string]string{"x-foo": "bar"}).Get(srv.URL)
+	_, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(srv.URL)
 	assert.Error(t, err, "a self-signed certificate must be rejected unless skipping is requested")
 
-	resp, err := New(true, nil).Get(srv.URL)
+	resp, err := FromContext(Configure(context.Background(), true, nil)).Get(srv.URL)
+	require.NoError(t, err)
+	require.NoError(t, resp.Body.Close())
+}
+
+func TestConfigure_KeepsTheInjectedClient(t *testing.T) {
+	idp := testidp.New(t, true)
+	injected := idp.Client()
+	injected.Timeout = 7 * time.Second
+	original := injected.Transport
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, injected)
+
+	configured := FromContext(Configure(ctx, false, map[string]string{"x-foo": "bar"}))
+
+	resp, err := configured.Get(idp.URL + "/anything")
+	require.NoError(t, err, "the certificates trusted by the injected client must still be trusted")
+	require.NoError(t, resp.Body.Close())
+	assert.Equal(t, "bar", idp.Header("/anything", "x-foo"))
+	assert.Equal(t, 7*time.Second, configured.Timeout)
+	assert.Same(t, original, injected.Transport, "the injected client must not be modified")
+	assert.Same(t, injected, FromContext(ctx))
+}
+
+type markingTransport struct {
+	base http.RoundTripper
+}
+
+func (m markingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req = req.Clone(req.Context())
+	req.Header.Set("x-wrapped", "yes")
+	return m.base.RoundTrip(req)
+}
+
+func TestConfigure_WrapsAReplacedDefaultTransport(t *testing.T) {
+	original := http.DefaultTransport
+	http.DefaultTransport = markingTransport{base: original}
+	t.Cleanup(func() { http.DefaultTransport = original })
+	idp := testidp.New(t, false)
+
+	resp, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
+	require.NoError(t, err)
+	require.NoError(t, resp.Body.Close())
+
+	assert.Equal(t, "bar", idp.Header("/anything", "x-foo"))
+	assert.Equal(t, "yes", idp.Header("/anything", "x-wrapped"), "the replaced default transport must stay in use")
+}
+
+func TestConfigure_SkipVerifyWithAReplacedDefaultTransport(t *testing.T) {
+	original := http.DefaultTransport
+	http.DefaultTransport = markingTransport{base: original}
+	t.Cleanup(func() { http.DefaultTransport = original })
+	srv := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+	defer srv.Close()
+
+	c := FromContext(Configure(context.Background(), true, nil))
+
+	resp, err := c.Get(srv.URL)
 	require.NoError(t, err)
 	require.NoError(t, resp.Body.Close())
 }
@@ -44,11 +120,11 @@ func TestFromContext(t *testing.T) {
 	assert.Same(t, http.DefaultClient, OrDefault(context.Background()))
 
 	c := &http.Client{}
-	ctx := WithContext(context.Background(), c)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c)
 	assert.Same(t, c, FromContext(ctx))
 	assert.Same(t, c, OrDefault(ctx))
 
-	assert.Nil(t, FromContext(WithContext(context.Background(), nil)))
+	assert.Nil(t, FromContext(context.WithValue(context.Background(), oauth2.HTTPClient, "not a client")))
 }
 
 func TestJWTProfileTokenSource(t *testing.T) {
@@ -65,7 +141,7 @@ func TestJWTProfileTokenSource(t *testing.T) {
 			idp := testidp.New(t, false)
 			ctx := context.Background()
 			if tt.withClient {
-				ctx = WithContext(ctx, New(false, map[string]string{"x-foo": "bar"}))
+				ctx = Configure(ctx, false, map[string]string{"x-foo": "bar"})
 			}
 
 			ts, err := JWTProfileTokenSource(ctx, idp.URL, "user", "key", testidp.PrivateKey(t), nil)

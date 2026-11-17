@@ -65,7 +65,7 @@ func TestJWTProfileHelpers_UseTheContextHTTPClient(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			idp := testidp.New(t, false)
-			ctx := httpclient.WithContext(context.Background(), httpclient.New(false, map[string]string{"x-foo": "bar"}))
+			ctx := httpclient.Configure(context.Background(), false, map[string]string{"x-foo": "bar"})
 
 			ts, err := tt.source(ctx, idp.URL)
 			require.NoError(t, err)

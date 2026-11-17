@@ -6,49 +6,74 @@ package httpclient
 import (
 	"context"
 	"crypto/tls"
+	"maps"
+	"net"
 	"net/http"
+	"time"
 
 	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"golang.org/x/oauth2"
 )
 
-// New returns an HTTP client that skips certificate verification and/or adds the
-// given headers to every request. It returns nil if neither is requested, so that
-// callers keep using the default client.
-func New(insecureSkipVerify bool, headers map[string]string) *http.Client {
+// Configure returns a context carrying an HTTP client that skips the certificate verification
+// and/or adds the headers to every request, under the key the oauth2 package uses for its own
+// HTTP client. The context is returned unchanged if neither is requested.
+//
+// If the context already carries a client, the returned client is a copy of it with the options
+// applied on top, so its timeout, redirect policy and trusted certificates are kept. The headers
+// are copied, so later changes to the map have no effect.
+func Configure(ctx context.Context, insecureSkipVerify bool, headers map[string]string) context.Context {
 	if !insecureSkipVerify && len(headers) == 0 {
-		return nil
-	}
-
-	var base *http.Transport
-	if t, ok := http.DefaultTransport.(*http.Transport); ok {
-		base = t.Clone()
-	} else {
-		base = &http.Transport{Proxy: http.ProxyFromEnvironment}
-	}
-
-	if insecureSkipVerify {
-		if base.TLSClientConfig == nil {
-			base.TLSClientConfig = &tls.Config{}
-		}
-		//nolint:gosec // InsecureSkipVerify is intentionally configurable for local development with self-signed certs.
-		base.TLSClientConfig.InsecureSkipVerify = true
-	}
-
-	var rt http.RoundTripper = base
-	if len(headers) > 0 {
-		rt = &headerRoundTripper{rt: base, headers: headers}
-	}
-	return &http.Client{Transport: rt}
-}
-
-// WithContext returns a context carrying the client under the key the oauth2
-// package uses for its own HTTP client.
-func WithContext(ctx context.Context, c *http.Client) context.Context {
-	if c == nil {
 		return ctx
 	}
+
+	c := &http.Client{}
+	if existing := FromContext(ctx); existing != nil {
+		clone := *existing
+		c = &clone
+	}
+
+	rt := c.Transport
+	if rt == nil {
+		rt = http.DefaultTransport
+	}
+	if insecureSkipVerify {
+		rt = skipVerify(rt)
+	}
+	if len(headers) > 0 {
+		rt = &headerRoundTripper{rt: rt, headers: maps.Clone(headers)}
+	}
+	c.Transport = rt
+
 	return context.WithValue(ctx, oauth2.HTTPClient, c)
+}
+
+// skipVerify returns a copy of the transport that does not verify the server certificate. A round
+// tripper that is not a *http.Transport cannot be configured, so it is replaced by a transport
+// with the settings of the default one.
+func skipVerify(rt http.RoundTripper) *http.Transport {
+	var t *http.Transport
+	if base, ok := rt.(*http.Transport); ok {
+		t = base.Clone()
+	} else if base, ok := http.DefaultTransport.(*http.Transport); ok {
+		t = base.Clone()
+	} else {
+		t = &http.Transport{
+			Proxy:                 http.ProxyFromEnvironment,
+			DialContext:           (&net.Dialer{Timeout: 30 * time.Second, KeepAlive: 30 * time.Second}).DialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: time.Second,
+		}
+	}
+	if t.TLSClientConfig == nil {
+		t.TLSClientConfig = &tls.Config{}
+	}
+	//nolint:gosec // InsecureSkipVerify is intentionally configurable for local development with self-signed certs.
+	t.TLSClientConfig.InsecureSkipVerify = true
+	return t
 }
 
 // FromContext returns the HTTP client stored in the context, or nil.
@@ -74,19 +99,16 @@ func JWTProfileTokenSource(ctx context.Context, issuer, clientID, keyID string, 
 	return profile.NewJWTProfileTokenSource(ctx, issuer, clientID, keyID, key, scopes)
 }
 
+// headerRoundTripper adds the headers to a copy of every request before handing it to the wrapped round tripper.
 type headerRoundTripper struct {
 	rt      http.RoundTripper
 	headers map[string]string
 }
 
 func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	newReq := *req
-	newReq.Header = make(http.Header, len(req.Header))
-	for k, s := range req.Header {
-		newReq.Header[k] = s
-	}
+	newReq := req.Clone(req.Context())
 	for k, v := range h.headers {
 		newReq.Header.Set(k, v)
 	}
-	return h.rt.RoundTrip(&newReq)
+	return h.rt.RoundTrip(newReq)
 }

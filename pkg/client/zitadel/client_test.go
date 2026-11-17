@@ -2,6 +2,7 @@ package zitadel
 
 import (
 	"context"
+	"errors"
 	"net"
 	"os"
 	"path/filepath"
@@ -231,4 +232,138 @@ func TestWithJWTProfileTokenSourceContext_ReplacesTheLegacyProvider(t *testing.T
 	require.NoError(t, legacy(c))
 	assert.NotNil(t, c.jwtProfileTokenSource)
 	assert.Nil(t, c.jwtProfileTokenSourceContext)
+}
+
+// TestNewConnection_JWTProfileProvider verifies which provider authenticates the connection,
+// and that the providers of both options are called with the issuer and the scopes.
+func TestNewConnection_JWTProfileProvider(t *testing.T) {
+	scopes := []string{"openid", "scope"}
+	static := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "token", TokenType: "Bearer"})
+
+	tests := []struct {
+		name            string
+		options         func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option
+		expectLegacy    int
+		expectWithCtx   int
+		expectedErrText string
+	}{
+		{
+			name: "the legacy provider is called with the issuer and the scopes",
+			options: func(legacy middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy)}
+			},
+			expectLegacy: 1,
+		},
+		{
+			name: "the context provider is called with the issuer and the scopes",
+			options: func(_ middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(withContext)}
+			},
+			expectWithCtx: 1,
+		},
+		{
+			name: "the last of both providers wins, the legacy one",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(withContext), WithJWTProfileTokenSource(legacy)}
+			},
+			expectLegacy: 1,
+		},
+		{
+			name: "the last of both providers wins, the context one",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTProfileTokenSourceContext(withContext)}
+			},
+			expectWithCtx: 1,
+		},
+		{
+			name: "a token source takes precedence over the providers",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTProfileTokenSourceContext(withContext), WithTokenSource(static)}
+			},
+		},
+		{
+			name: "a pre-signed JWT takes precedence over the providers",
+			options: func(legacy middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTDirectTokenSource("jwt")}
+			},
+		},
+		{
+			name: "an error of the legacy provider is returned",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(func(string, []string) (oauth2.TokenSource, error) {
+					return nil, errors.New("legacy failed")
+				})}
+			},
+			expectedErrText: "legacy failed",
+		},
+		{
+			name: "an error of the context provider is returned",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(func(context.Context, string, []string) (oauth2.TokenSource, error) {
+					return nil, errors.New("context failed")
+				})}
+			},
+			expectedErrText: "context failed",
+		},
+		{
+			name: "a nil legacy provider is rejected",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(nil)}
+			},
+			expectedErrText: "must not be nil",
+		},
+		{
+			name: "a nil context provider is rejected",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(nil)}
+			},
+			expectedErrText: "must not be nil",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var legacyCalls, ctxCalls int
+			legacy := func(issuer string, s []string) (oauth2.TokenSource, error) {
+				legacyCalls++
+				assert.Equal(t, "https://issuer.example", issuer)
+				assert.Equal(t, scopes, s)
+				return static, nil
+			}
+			withContext := func(_ context.Context, issuer string, s []string) (oauth2.TokenSource, error) {
+				ctxCalls++
+				assert.Equal(t, "https://issuer.example", issuer)
+				assert.Equal(t, scopes, s)
+				return static, nil
+			}
+
+			_, err := NewConnection(context.Background(), "https://issuer.example", startMockGRPCServer(t), scopes,
+				append(tt.options(legacy, withContext), WithInsecure())...)
+
+			if tt.expectedErrText != "" {
+				require.ErrorContains(t, err, tt.expectedErrText)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.expectLegacy, legacyCalls)
+			assert.Equal(t, tt.expectWithCtx, ctxCalls)
+		})
+	}
+}
+
+// TestNewConnection_KeepsAnInjectedHTTPClient verifies that a client in the context, e.g. one that
+// trusts a private CA, keeps being used for the OIDC requests next to the transport options.
+func TestNewConnection_KeepsAnInjectedHTTPClient(t *testing.T) {
+	idp := testidp.New(t, true)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	conn, err := NewConnection(ctx, idp.URL, startMockGRPCServer(t), nil,
+		WithInsecure(),
+		WithTransportHeader("x-foo", "bar"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
 }

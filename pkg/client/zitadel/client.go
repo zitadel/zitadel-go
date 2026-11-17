@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/oidc"
@@ -50,7 +51,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		}
 	}
 
-	err := c.setInterceptors(httpclient.WithContext(ctx, httpclient.New(c.insecureSkipVerify, c.transportHeaders)))
+	err := c.setInterceptors(httpclient.Configure(ctx, c.insecureSkipVerify, c.transportHeaders))
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,6 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 // setInterceptors adds the authentication and organization interceptors. The context carries the
 // HTTP client for the OIDC discovery and token requests, built from the TLS and transport header options.
 func (c *Connection) setInterceptors(ctx context.Context) error {
-	orgID := c.orgID
 	var auth *middleware.AuthInterceptor
 	var err error
 	switch {
@@ -121,8 +121,8 @@ func (c *Connection) setInterceptors(ctx context.Context) error {
 
 	c.unaryInterceptors = append(c.unaryInterceptors, auth.Unary())
 	c.streamInterceptors = append(c.streamInterceptors, auth.Stream())
-	if orgID != "" {
-		org := middleware.NewOrgInterceptor(orgID)
+	if c.orgID != "" {
+		org := middleware.NewOrgInterceptor(c.orgID)
 		c.unaryInterceptors = append(c.unaryInterceptors, org.Unary())
 		c.streamInterceptors = append(c.streamInterceptors, org.Stream())
 	}
@@ -185,8 +185,12 @@ func WithTokenSource(ts oauth2.TokenSource) Option {
 //
 // The provider does not receive the HTTP client built from [WithInsecureSkipVerifyTLS] and [WithTransportHeader],
 // so these do not apply to its OIDC discovery and token requests; use [WithJWTProfileTokenSourceContext] for that.
+// A middleware.JWTProfileFrom* helper does use the client of the context it was created with.
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
+		if provider == nil {
+			return errors.New("zitadel: the JWT profile token source must not be nil")
+		}
 		client.jwtProfileTokenSource = provider
 		client.jwtProfileTokenSourceContext = nil
 		return nil
@@ -199,6 +203,9 @@ func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*
 // is one of the middleware.JWTProfileFrom*Context helpers.
 func WithJWTProfileTokenSourceContext(provider middleware.JWTProfileTokenSourceContext) func(*Connection) error {
 	return func(client *Connection) error {
+		if provider == nil {
+			return errors.New("zitadel: the JWT profile token source must not be nil")
+		}
 		client.jwtProfileTokenSourceContext = provider
 		client.jwtProfileTokenSource = nil
 		return nil
@@ -236,7 +243,8 @@ func WithInsecure() func(*Connection) error {
 	}
 }
 
-// WithInsecureSkipVerifyTLS skips certificate verification when using TLS.
+// WithInsecureSkipVerifyTLS skips certificate verification when using TLS, for the gRPC connection as well as
+// for the HTTP requests of the OIDC discovery and token exchange.
 // Use only for local development with self-signed certs.
 func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	return func(client *Connection) error {
@@ -245,8 +253,10 @@ func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	}
 }
 
-// WithTransportHeader sets a custom header on outgoing gRPC requests and on the HTTP requests
-// for the OIDC discovery and token exchange.
+// WithTransportHeader sets a custom header (e.g. Proxy-Authorization) on outgoing gRPC requests and on the HTTP
+// requests for the OIDC discovery and token exchange. The HTTP client ignores a Host header set this way, and
+// the headers are sent to every host those requests are made to, including a token endpoint named by the
+// discovery document.
 func WithTransportHeader(key, value string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.transportHeaders[key] = value

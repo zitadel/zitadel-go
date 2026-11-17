@@ -34,6 +34,9 @@ type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSou
 type JWTProfileTokenSourceContext func(ctx context.Context, issuer string, scopes []string) (oauth2.TokenSource, error)
 type JWTDirectTokenSource func() (oauth2.TokenSource, error)
 
+// JWTProfileFromPath creates a JWTProfileTokenSource. If the ctx carries an HTTP client (see [oauth2.HTTPClient]),
+// it is used for the OIDC discovery and token requests. Use [JWTProfileFromPathContext] to have the connection's
+// TLS and transport header options applied.
 func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		keyData, err := client.ConfigFromKeyFile(keyPath)
@@ -44,6 +47,9 @@ func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSour
 	}
 }
 
+// JWTProfileFromFileData creates a JWTProfileTokenSource. If the ctx carries an HTTP client (see [oauth2.HTTPClient]),
+// it is used for the OIDC discovery and token requests. Use [JWTProfileFromFileDataContext] to have the connection's
+// TLS and transport header options applied.
 func JWTProfileFromFileData(ctx context.Context, fileData []byte) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		keyData, err := client.ConfigFromKeyFileData(fileData)
@@ -54,6 +60,9 @@ func JWTProfileFromFileData(ctx context.Context, fileData []byte) JWTProfileToke
 	}
 }
 
+// JWTProfileFromKeyAndUserID creates a JWTProfileTokenSource. If the ctx carries an HTTP client (see [oauth2.HTTPClient]),
+// it is used for the OIDC discovery and token requests. Use [JWTProfileFromKeyAndUserIDContext] to have the connection's
+// TLS and transport header options applied.
 func JWTProfileFromKeyAndUserID(ctx context.Context, key []byte, keyID, userID string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
 		return httpclient.JWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)

@@ -324,3 +324,27 @@ func TestNew_Authentication_AppliesTransportOptionsToHTTP(t *testing.T) {
 		}
 	}
 }
+
+// TestNew_KeepsAnInjectedHTTPClient verifies that a client in the context, e.g. one that trusts a
+// private CA, keeps being used for the OIDC requests next to the transport options.
+func TestNew_KeepsAnInjectedHTTPClient(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	c, err := New(ctx,
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber)), zitadel.WithTransportHeader("x-foo", "bar")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+	)
+	require.NoError(t, err)
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+}
