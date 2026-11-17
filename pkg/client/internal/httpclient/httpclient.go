@@ -20,19 +20,17 @@ import (
 // and/or adds the headers to every request, under the key the oauth2 package uses for its own
 // HTTP client. The context is returned unchanged if neither is requested.
 //
-// If the context already carries a client, the returned client is a copy of it with the options
-// applied on top, so its timeout, redirect policy and trusted certificates are kept. The headers
+// The returned client is a copy of the one the context carries, or of [http.DefaultClient] if it
+// carries none, with the options applied on top, so its timeout, redirect policy, cookie jar and
+// trusted certificates are kept. The headers
 // are copied, so later changes to the map have no effect.
 func Configure(ctx context.Context, insecureSkipVerify bool, headers map[string]string) context.Context {
 	if !insecureSkipVerify && len(headers) == 0 {
 		return ctx
 	}
 
-	c := &http.Client{}
-	if existing := FromContext(ctx); existing != nil {
-		clone := *existing
-		c = &clone
-	}
+	clone := *OrDefault(ctx)
+	c := &clone
 
 	rt := c.Transport
 	if rt == nil {

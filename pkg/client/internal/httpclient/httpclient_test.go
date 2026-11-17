@@ -216,3 +216,16 @@ func TestHost(t *testing.T) {
 	_, ok = Host(nil)
 	assert.False(t, ok)
 }
+
+func TestConfigure_BuildsOnTheDefaultClient(t *testing.T) {
+	original := *http.DefaultClient
+	http.DefaultClient.Timeout = 11 * time.Second
+	http.DefaultClient.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	t.Cleanup(func() { *http.DefaultClient = original })
+
+	configured := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"}))
+
+	assert.Equal(t, 11*time.Second, configured.Timeout)
+	assert.NotNil(t, configured.CheckRedirect)
+	assert.NotSame(t, http.DefaultClient, configured, "the default client must not be modified")
+}
