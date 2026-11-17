@@ -6,6 +6,8 @@ package httpclient
 import (
 	"context"
 	"crypto/tls"
+	"encoding/json"
+	"fmt"
 	"maps"
 	"net"
 	"net/http"
@@ -13,7 +15,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zitadel/oidc/v3/pkg/client"
 	"github.com/zitadel/oidc/v3/pkg/client/profile"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
 )
 
@@ -23,11 +27,22 @@ import (
 //
 // The returned client is a copy of the one the context carries, or of [http.DefaultClient] if it
 // carries none, with the options applied on top, so its timeout, redirect policy, cookie jar and
-// trusted certificates are kept. The headers
-// are copied, so later changes to the map have no effect.
-func Configure(ctx context.Context, insecureSkipVerify bool, headers map[string]string) context.Context {
+// trusted certificates are kept. The headers are copied, so later changes to the map have no effect.
+// An error is returned if the certificate verification is to be skipped but the transport of the
+// client the context carries is not an *http.Transport, as it cannot be configured.
+//
+// The origin is where ZITADEL is reached. If a Host header names another host, ZITADEL serves its
+// OIDC discovery document for that host, so the requests for that host, such as the token endpoint
+// of the document, are sent to the origin instead, with the Host header. See [JWTProfileTokenSource].
+func Configure(ctx context.Context, origin string, insecureSkipVerify bool, headers map[string]string) (context.Context, error) {
 	if !insecureSkipVerify && len(headers) == 0 {
-		return ctx
+		return ctx, nil
+	}
+
+	if injected := FromContext(ctx); insecureSkipVerify && injected != nil && injected.Transport != nil {
+		if _, ok := injected.Transport.(*http.Transport); !ok {
+			return nil, fmt.Errorf("zitadel: cannot skip the TLS verification of the injected HTTP client, its transport is a %T and not an *http.Transport", injected.Transport)
+		}
 	}
 
 	clone := *OrDefault(ctx)
@@ -44,11 +59,36 @@ func Configure(ctx context.Context, insecureSkipVerify bool, headers map[string]
 		rt = proxyConnectHeader(rt, value)
 	}
 	if len(headers) > 0 {
-		rt = &headerRoundTripper{rt: rt, headers: maps.Clone(headers)}
+		hrt := &headerRoundTripper{rt: rt, headers: maps.Clone(headers)}
+		if host, ok := lookup(headers, "Host"); ok {
+			if u, err := url.Parse(origin); err == nil && u.Host != "" && !sameHost(u.Host, host) {
+				hrt.redirect = &redirect{origin: u, host: host}
+				ctx = context.WithValue(ctx, redirectKey{}, hrt.redirect)
+			}
+		}
+		rt = hrt
 	}
 	c.Transport = rt
 
-	return context.WithValue(ctx, oauth2.HTTPClient, c)
+	return context.WithValue(ctx, oauth2.HTTPClient, c), nil
+}
+
+// redirect sends the requests for the host, which the Host header names, to the origin.
+type redirect struct {
+	origin *url.URL
+	host   string
+}
+
+type redirectKey struct{}
+
+// sameHost reports whether the hosts are equal, ignoring the case and a default port.
+func sameHost(a, b string) bool {
+	trim := func(host string) string {
+		host = strings.ToLower(host)
+		host = strings.TrimSuffix(host, ":443")
+		return strings.TrimSuffix(host, ":80")
+	}
+	return trim(a) == trim(b)
 }
 
 // skipVerify returns a copy of the transport that does not verify the server certificate. A round
@@ -126,10 +166,47 @@ func OrDefault(ctx context.Context) *http.Client {
 // JWTProfileTokenSource creates a JWT profile token source whose discovery and token
 // requests use the HTTP client stored in the context, if there is one.
 func JWTProfileTokenSource(ctx context.Context, issuer, clientID, keyID string, key []byte, scopes []string) (profile.TokenSource, error) {
+	issuer = resolveIssuer(ctx, issuer)
 	if c := FromContext(ctx); c != nil {
 		return profile.NewJWTProfileTokenSource(ctx, issuer, clientID, keyID, key, scopes, profile.WithHTTPClient(c))
 	}
 	return profile.NewJWTProfileTokenSource(ctx, issuer, clientID, keyID, key, scopes)
+}
+
+// Discover fetches the OIDC discovery document of the issuer using the HTTP client stored in the context,
+// or the default client.
+func Discover(ctx context.Context, issuer string) (*oidc.DiscoveryConfiguration, error) {
+	return client.Discover(ctx, resolveIssuer(ctx, issuer), OrDefault(ctx))
+}
+
+// resolveIssuer returns the issuer ZITADEL announces if the context redirects the requests for another host to
+// the issuer, and the issuer otherwise. ZITADEL announces the host of the request, so with a Host header it is not
+// the origin ZITADEL is reached on, and both the discovery check and the audience of a JWT assertion need the
+// announced one. If it cannot be read, the issuer is returned, so that the discovery reports the actual error.
+func resolveIssuer(ctx context.Context, issuer string) string {
+	r, _ := ctx.Value(redirectKey{}).(*redirect)
+	if r == nil {
+		return issuer
+	}
+	if u, err := url.Parse(issuer); err != nil || u.Scheme != r.origin.Scheme || u.Host != r.origin.Host {
+		return issuer
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, strings.TrimSuffix(issuer, "/")+oidc.DiscoveryEndpoint, nil)
+	if err != nil {
+		return issuer
+	}
+	resp, err := OrDefault(ctx).Do(req)
+	if err != nil {
+		return issuer
+	}
+	defer func() { _ = resp.Body.Close() }()
+	var discovery struct {
+		Issuer string `json:"issuer"`
+	}
+	if resp.StatusCode != http.StatusOK || json.NewDecoder(resp.Body).Decode(&discovery) != nil || discovery.Issuer == "" {
+		return issuer
+	}
+	return discovery.Issuer
 }
 
 // Host returns the value of the Host header in the headers, matching the name case-insensitively.
@@ -149,17 +226,27 @@ func lookup(headers map[string]string, name string) (string, bool) {
 }
 
 // headerRoundTripper adds the headers to a copy of every request before handing it to the wrapped round tripper.
-// A Host header sets the host of the request, as the HTTP client ignores it in the header.
+// A Host header sets the host of the request, as the HTTP client ignores it in the header. Requests for that host
+// are sent to the redirect's origin, if there is one. Proxy-Authorization is not added to requests over TLS, as it
+// is meant for the proxy, which receives it with the CONNECT request, and not for the server behind the tunnel.
 type headerRoundTripper struct {
-	rt      http.RoundTripper
-	headers map[string]string
+	rt       http.RoundTripper
+	headers  map[string]string
+	redirect *redirect
 }
 
 func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	newReq := req.Clone(req.Context())
+	if h.redirect != nil && sameHost(req.URL.Host, h.redirect.host) {
+		newReq.URL.Scheme = h.redirect.origin.Scheme
+		newReq.URL.Host = h.redirect.origin.Host
+	}
 	for k, v := range h.headers {
 		if strings.EqualFold(k, "Host") {
 			newReq.Host = v
+			continue
+		}
+		if newReq.URL.Scheme == "https" && strings.EqualFold(k, "Proxy-Authorization") {
 			continue
 		}
 		newReq.Header.Set(k, v)

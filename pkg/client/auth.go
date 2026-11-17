@@ -37,7 +37,7 @@ func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitia
 // of a service user provided by ZITADEL.
 func PasswordAuthentication(username, password string, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
-		discovery, err := client.Discover(ctx, issuer, httpclient.OrDefault(ctx))
+		discovery, err := httpclient.Discover(ctx, issuer)
 		if err != nil {
 			return nil, err
 		}

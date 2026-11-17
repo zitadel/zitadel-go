@@ -125,11 +125,13 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 		o(&options)
 	}
 
-	ctx = httpclient.Configure(ctx, zitadel.IsInsecureSkipVerifyTLS(), zitadel.TransportHeaders())
+	ctx, err := httpclient.Configure(ctx, zitadel.Origin(), zitadel.IsInsecureSkipVerifyTLS(), zitadel.TransportHeaders())
+	if err != nil {
+		return nil, err
+	}
 
 	var source oauth2.TokenSource
 	if options.initTokenSource != nil {
-		var err error
 		source, err = options.initTokenSource(ctx, zitadel.Origin())
 		if err != nil {
 			return nil, err

@@ -1,5 +1,6 @@
 // Package testidp provides a minimal OIDC provider for tests. It serves the discovery
-// document and a token endpoint, and records the headers of the requests it receives.
+// document and a token endpoint, and records the headers of the requests it receives. Like ZITADEL,
+// it announces the host a request was made for as the issuer, so a Host header changes the issuer.
 package testidp
 
 import (
@@ -42,9 +43,14 @@ func New(t *testing.T, useTLS bool) *Server {
 		w.Header().Set("Content-Type", "application/json")
 		switch r.URL.Path {
 		case DiscoveryPath:
+			// like ZITADEL, announce the host the request was made for
+			origin := "http://" + r.Host
+			if r.TLS != nil {
+				origin = "https://" + r.Host
+			}
 			_ = json.NewEncoder(w).Encode(map[string]string{
-				"issuer":         s.URL,
-				"token_endpoint": s.URL + TokenPath,
+				"issuer":         origin,
+				"token_endpoint": origin + TokenPath,
 			})
 		case TokenPath:
 			_ = json.NewEncoder(w).Encode(map[string]any{

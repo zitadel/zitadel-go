@@ -113,8 +113,13 @@ func (c *Connection) setInterceptors(ctx context.Context) error {
 	case c.jwtProfileTokenSource != nil:
 		auth, err = middleware.NewAuthenticator(c.issuer, c.jwtProfileTokenSource, c.scopes...)
 	case c.jwtProfileTokenSourceContext != nil:
+		var configured context.Context
+		configured, err = httpclient.Configure(ctx, c.issuer, c.insecureSkipVerify, c.transportHeaders)
+		if err != nil {
+			return err
+		}
 		var ts oauth2.TokenSource
-		ts, err = c.jwtProfileTokenSourceContext(httpclient.Configure(ctx, c.insecureSkipVerify, c.transportHeaders), c.issuer, c.scopes)
+		ts, err = c.jwtProfileTokenSourceContext(configured, c.issuer, c.scopes)
 		if err == nil {
 			auth, err = middleware.NewGenericAuthenticator(ts)
 		}
@@ -244,8 +249,8 @@ func WithInsecure() func(*Connection) error {
 }
 
 // WithInsecureSkipVerifyTLS skips certificate verification when using TLS, for the gRPC connection as well as
-// for the HTTP requests of the OIDC discovery and token exchange. For the latter, a custom transport of an
-// HTTP client in the context that is not a *http.Transport is replaced by one with the default settings.
+// for the HTTP requests of the OIDC discovery and token exchange. For the latter, an error is returned if the
+// HTTP client in the context has a transport that is not a *http.Transport, as it cannot be configured.
 // Use only for local development with self-signed certs.
 func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	return func(client *Connection) error {
@@ -255,11 +260,12 @@ func WithInsecureSkipVerifyTLS() func(*Connection) error {
 }
 
 // WithTransportHeader sets a custom header (e.g. Proxy-Authorization) on outgoing gRPC requests and on the HTTP
-// requests for the OIDC discovery and token exchange. A Host header sets the host of the HTTP requests and,
-// without TLS (see [WithInsecure]), the authority of the gRPC calls; with TLS the authority stays the TLS
-// server name. A Proxy-Authorization header is also sent to the proxy when the HTTP requests are tunneled
-// through it. The headers are sent to every host those requests are made to, including a token endpoint
-// named by the discovery document.
+// requests for the OIDC discovery and token exchange. A Host header sets the host of the HTTP requests,
+// which are sent to the issuer given to [NewConnection] and not to that host, and, without TLS (see [WithInsecure]),
+// the authority of the gRPC calls; with TLS the authority stays the TLS server name. The issuer of the OIDC requests
+// is then the one ZITADEL announces for that host. A Proxy-Authorization header is sent to the proxy with the
+// CONNECT request of the tunnel, and not to the server, when the HTTP requests are over TLS. The other headers
+// are sent to every host those requests are made to, including a token endpoint named by the discovery document.
 func WithTransportHeader(key, value string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.transportHeaders[key] = value

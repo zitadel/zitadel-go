@@ -8,29 +8,38 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
 )
 
+func mustConfigure(t *testing.T, ctx context.Context, insecureSkipVerify bool, headers map[string]string) context.Context {
+	t.Helper()
+	configured, err := Configure(ctx, "", insecureSkipVerify, headers)
+	require.NoError(t, err)
+	return configured
+}
+
 func TestConfigure_NothingRequested_ReturnsTheSameContext(t *testing.T) {
 	ctx := context.Background()
 
-	assert.Equal(t, ctx, Configure(ctx, false, nil))
-	assert.Equal(t, ctx, Configure(ctx, false, map[string]string{}))
-	assert.Nil(t, FromContext(Configure(ctx, false, nil)))
+	assert.Equal(t, ctx, mustConfigure(t, ctx, false, nil))
+	assert.Equal(t, ctx, mustConfigure(t, ctx, false, map[string]string{}))
+	assert.Nil(t, FromContext(mustConfigure(t, ctx, false, nil)))
 }
 
 func TestConfigure_AddsHeadersToEveryRequest(t *testing.T) {
 	idp := testidp.New(t, false)
 
-	resp, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
+	resp, err := FromContext(mustConfigure(t, context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
 	require.NoError(t, err)
 	require.NoError(t, resp.Body.Close())
 
@@ -40,7 +49,7 @@ func TestConfigure_AddsHeadersToEveryRequest(t *testing.T) {
 func TestConfigure_CopiesTheHeaders(t *testing.T) {
 	idp := testidp.New(t, false)
 	headers := map[string]string{"x-foo": "bar"}
-	c := FromContext(Configure(context.Background(), false, headers))
+	c := FromContext(mustConfigure(t, context.Background(), false, headers))
 	headers["x-foo"] = "changed"
 	headers["x-late"] = "added"
 
@@ -56,10 +65,10 @@ func TestConfigure_SkipsCertificateVerification(t *testing.T) {
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	defer srv.Close()
 
-	_, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(srv.URL)
+	_, err := FromContext(mustConfigure(t, context.Background(), false, map[string]string{"x-foo": "bar"})).Get(srv.URL)
 	assert.Error(t, err, "a self-signed certificate must be rejected unless skipping is requested")
 
-	resp, err := FromContext(Configure(context.Background(), true, nil)).Get(srv.URL)
+	resp, err := FromContext(mustConfigure(t, context.Background(), true, nil)).Get(srv.URL)
 	require.NoError(t, err)
 	require.NoError(t, resp.Body.Close())
 }
@@ -71,7 +80,7 @@ func TestConfigure_KeepsTheInjectedClient(t *testing.T) {
 	original := injected.Transport
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, injected)
 
-	configured := FromContext(Configure(ctx, false, map[string]string{"x-foo": "bar"}))
+	configured := FromContext(mustConfigure(t, ctx, false, map[string]string{"x-foo": "bar"}))
 
 	resp, err := configured.Get(idp.URL + "/anything")
 	require.NoError(t, err, "the certificates trusted by the injected client must still be trusted")
@@ -98,7 +107,7 @@ func TestConfigure_WrapsAReplacedDefaultTransport(t *testing.T) {
 	t.Cleanup(func() { http.DefaultTransport = original })
 	idp := testidp.New(t, false)
 
-	resp, err := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
+	resp, err := FromContext(mustConfigure(t, context.Background(), false, map[string]string{"x-foo": "bar"})).Get(idp.URL + "/anything")
 	require.NoError(t, err)
 	require.NoError(t, resp.Body.Close())
 
@@ -113,7 +122,7 @@ func TestConfigure_SkipVerifyWithAReplacedDefaultTransport(t *testing.T) {
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	defer srv.Close()
 
-	c := FromContext(Configure(context.Background(), true, nil))
+	c := FromContext(mustConfigure(t, context.Background(), true, nil))
 
 	resp, err := c.Get(srv.URL)
 	require.NoError(t, err)
@@ -146,7 +155,7 @@ func TestJWTProfileTokenSource(t *testing.T) {
 			idp := testidp.New(t, false)
 			ctx := context.Background()
 			if tt.withClient {
-				ctx = Configure(ctx, false, map[string]string{"x-foo": "bar"})
+				ctx = mustConfigure(t, ctx, false, map[string]string{"x-foo": "bar"})
 			}
 
 			ts, err := JWTProfileTokenSource(ctx, idp.URL, "user", "key", testidp.PrivateKey(t), nil)
@@ -175,7 +184,7 @@ func TestConfigure_ForwardsCloseIdleConnections(t *testing.T) {
 	injected := &http.Client{Transport: closeTrackingTransport{Transport: http.DefaultTransport.(*http.Transport).Clone(), closed: &closed}}
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, injected)
 
-	FromContext(Configure(ctx, false, map[string]string{"x-foo": "bar"})).CloseIdleConnections()
+	FromContext(mustConfigure(t, ctx, false, map[string]string{"x-foo": "bar"})).CloseIdleConnections()
 
 	assert.True(t, closed)
 }
@@ -186,8 +195,8 @@ func TestConfigure_SkipVerifyLeavesSharedTransportsUntouched(t *testing.T) {
 	injectedTransport.TLSClientConfig = &tls.Config{MinVersion: tls.VersionTLS12}
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: injectedTransport})
 
-	Configure(context.Background(), true, nil)
-	Configure(ctx, true, map[string]string{"x-foo": "bar"})
+	mustConfigure(t, context.Background(), true, nil)
+	mustConfigure(t, ctx, true, map[string]string{"x-foo": "bar"})
 
 	if defaultTransport.TLSClientConfig != nil {
 		assert.False(t, defaultTransport.TLSClientConfig.InsecureSkipVerify)
@@ -201,7 +210,7 @@ func TestConfigure_HostHeaderSetsTheRequestHost(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			idp := testidp.New(t, false)
 
-			resp, err := FromContext(Configure(context.Background(), false, map[string]string{name: "external.example"})).Get(idp.URL + "/anything")
+			resp, err := FromContext(mustConfigure(t, context.Background(), false, map[string]string{name: "external.example"})).Get(idp.URL + "/anything")
 			require.NoError(t, err)
 			require.NoError(t, resp.Body.Close())
 
@@ -227,7 +236,7 @@ func TestConfigure_BuildsOnTheDefaultClient(t *testing.T) {
 	http.DefaultClient.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 	t.Cleanup(func() { *http.DefaultClient = original })
 
-	configured := FromContext(Configure(context.Background(), false, map[string]string{"x-foo": "bar"}))
+	configured := FromContext(mustConfigure(t, context.Background(), false, map[string]string{"x-foo": "bar"}))
 
 	assert.Equal(t, 11*time.Second, configured.Timeout)
 	assert.NotNil(t, configured.CheckRedirect)
@@ -306,7 +315,7 @@ func TestConfigure_ProxyAuthorizationReachesTheConnectRequest(t *testing.T) {
 			tt.customize(transport)
 			ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: transport})
 
-			resp, err := FromContext(Configure(ctx, true, map[string]string{"proxy-authorization": "Basic abc"})).Get(target.URL)
+			resp, err := FromContext(mustConfigure(t, ctx, true, map[string]string{"proxy-authorization": "Basic abc"})).Get(target.URL)
 			require.NoError(t, err)
 			require.NoError(t, resp.Body.Close())
 
@@ -316,4 +325,114 @@ func TestConfigure_ProxyAuthorizationReachesTheConnectRequest(t *testing.T) {
 			assert.Empty(t, transport.ProxyConnectHeader.Get("Proxy-Authorization"), "the injected transport must not be modified")
 		})
 	}
+}
+
+func TestConfigure_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testing.T) {
+	injected := &http.Client{Transport: markingTransport{base: http.DefaultTransport}}
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, injected)
+
+	_, err := Configure(ctx, "", true, nil)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "markingTransport")
+
+	_, err = Configure(ctx, "", false, map[string]string{"x-foo": "bar"})
+	assert.NoError(t, err, "headers do not need an *http.Transport")
+}
+
+func TestConfigure_ProxyAuthorizationIsOnlySentOverPlainHTTP(t *testing.T) {
+	tests := []struct {
+		name   string
+		useTLS bool
+		expect string
+	}{
+		{name: "plain http", useTLS: false, expect: "Basic abc"},
+		{name: "tls", useTLS: true, expect: ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			idp := testidp.New(t, tt.useTLS)
+
+			resp, err := FromContext(mustConfigure(t, context.Background(), true, map[string]string{"proxy-authorization": "Basic abc", "x-foo": "bar"})).Get(idp.URL + "/anything")
+			require.NoError(t, err)
+			require.NoError(t, resp.Body.Close())
+
+			assert.Equal(t, tt.expect, idp.Header("/anything", "Proxy-Authorization"))
+			assert.Equal(t, "bar", idp.Header("/anything", "x-foo"), "the other headers are sent over TLS")
+		})
+	}
+}
+
+func TestSameHost(t *testing.T) {
+	tests := []struct {
+		a, b   string
+		expect bool
+	}{
+		{a: "zitadel.example", b: "zitadel.example", expect: true},
+		{a: "Zitadel.Example", b: "zitadel.example", expect: true},
+		{a: "zitadel.example:443", b: "zitadel.example", expect: true},
+		{a: "zitadel.example:80", b: "zitadel.example", expect: true},
+		{a: "zitadel.example:8443", b: "zitadel.example", expect: false},
+		{a: "zitadel.example:8443", b: "zitadel.example:8443", expect: true},
+		{a: "zitadel.internal", b: "zitadel.example", expect: false},
+	}
+	for _, tt := range tests {
+		assert.Equal(t, tt.expect, sameHost(tt.a, tt.b), "%s %s", tt.a, tt.b)
+	}
+}
+
+// TestJWTProfileTokenSource_HostOverride verifies the case of ZITADEL being reached on an internal address, with
+// the external host as Host header: ZITADEL announces the external host as issuer and as host of the token endpoint.
+func TestJWTProfileTokenSource_HostOverride(t *testing.T) {
+	for _, useTLS := range []bool{false, true} {
+		t.Run("tls="+strconv.FormatBool(useTLS), func(t *testing.T) {
+			idp := testidp.New(t, useTLS)
+			ctx, err := Configure(context.Background(), idp.URL, true, map[string]string{"Host": "zitadel.example"})
+			require.NoError(t, err)
+
+			ts, err := JWTProfileTokenSource(ctx, idp.URL, "user", "key", testidp.PrivateKey(t), nil)
+			require.NoError(t, err, "the issuer is the announced one, not the address it is reached on")
+			_, err = ts.Token()
+			require.NoError(t, err, "the token endpoint on the external host is reached on the address of the origin")
+
+			assert.Equal(t, "zitadel.example", idp.Host(testidp.DiscoveryPath))
+			assert.Equal(t, "zitadel.example", idp.Host(testidp.TokenPath))
+		})
+	}
+}
+
+func TestDiscover_HostOverride(t *testing.T) {
+	idp := testidp.New(t, false)
+	ctx, err := Configure(context.Background(), idp.URL, false, map[string]string{"Host": "zitadel.example"})
+	require.NoError(t, err)
+
+	discovery, err := Discover(ctx, idp.URL)
+	require.NoError(t, err)
+
+	assert.Equal(t, "http://zitadel.example", discovery.Issuer)
+	assert.Equal(t, "http://zitadel.example"+testidp.TokenPath, discovery.TokenEndpoint)
+}
+
+func TestJWTProfileTokenSource_HostOverride_UnreachableOrigin_ReportsTheDiscoveryError(t *testing.T) {
+	idp := testidp.New(t, false)
+	origin := idp.URL
+	idp.Close()
+	ctx, err := Configure(context.Background(), origin, false, map[string]string{"Host": "zitadel.example"})
+	require.NoError(t, err)
+
+	_, err = JWTProfileTokenSource(ctx, origin, "user", "key", testidp.PrivateKey(t), nil)
+
+	assert.ErrorIs(t, err, oidc.ErrDiscoveryFailed)
+}
+
+func TestJWTProfileTokenSource_HostOverrideEqualToTheOrigin_KeepsTheIssuer(t *testing.T) {
+	idp := testidp.New(t, false)
+	u, err := url.Parse(idp.URL)
+	require.NoError(t, err)
+	ctx, err := Configure(context.Background(), idp.URL, false, map[string]string{"Host": u.Host})
+	require.NoError(t, err)
+
+	ts, err := JWTProfileTokenSource(ctx, idp.URL, "user", "key", testidp.PrivateKey(t), nil)
+	require.NoError(t, err)
+	_, err = ts.Token()
+	require.NoError(t, err)
 }

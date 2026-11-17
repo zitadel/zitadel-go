@@ -261,11 +261,16 @@ environment and security requirements. For more details, please refer to the
 `zitadel.WithInsecureSkipVerifyTLS` skips the certificate verification for every
 request the client makes: the gRPC calls as well as the OIDC discovery and token
 requests of the JWT profile and client credentials authentication. Use them if ZITADEL is only reachable through a proxy that
-requires authentication or serves a self-signed certificate. A `Host` header
-sets the host of the HTTP requests and, if the gRPC connection does not use
-TLS, the authority of the gRPC calls, for an instance that is reached by another
-name than the one it is served under. With TLS the authority stays the name of
-the TLS server.
+requires authentication or serves a self-signed certificate.
+
+A `Host` header is for an instance that is reached by another name than the one
+it is served under, such as an internal service name with the external domain as
+`Host`. The HTTP requests go to the name the client is created with, with the
+`Host` header, and the issuer is the one ZITADEL announces for that host, so the
+discovery and the token request work against the internal name. The authority of
+the gRPC calls is set to the `Host` too, if the gRPC connection does not use TLS.
+With TLS the authority stays the name of the TLS server, so the API calls reach
+the instance the internal name resolves to.
 
 ```go
 api, err := client.New(ctx,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -461,3 +462,20 @@ func TestNewConnection_HostHeaderWithTLS(t *testing.T) {
 	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
 	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
 }
+
+func TestNewConnection_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testing.T) {
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		return nil, errors.New("must not be used")
+	})})
+
+	_, err := NewConnection(ctx, "https://127.0.0.1", "127.0.0.1:443", nil,
+		WithInsecureSkipVerifyTLS(),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+
+	assert.ErrorContains(t, err, "cannot skip the TLS verification")
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }

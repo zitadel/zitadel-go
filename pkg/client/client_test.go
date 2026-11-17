@@ -438,3 +438,36 @@ func TestNew_HostHeaderWithTLS(t *testing.T) {
 	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
 	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
 }
+
+// TestNew_HostHeader_PasswordAuthentication verifies the same for the discovery and token request of the
+// client credentials grant: ZITADEL is reached on its internal address and announces the external host.
+func TestNew_HostHeader_PasswordAuthentication(t *testing.T) {
+	idp := testidp.New(t, false)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithInsecure(port), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(PasswordAuthentication("user", "secret")),
+	)
+	require.NoError(t, err)
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}
+
+func TestNew_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testing.T) {
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		return nil, errors.New("must not be used")
+	})})
+
+	_, err := New(ctx, zitadel.New("127.0.0.1", zitadel.WithInsecureSkipVerifyTLS()), WithAuth(PAT("pat")))
+
+	assert.ErrorContains(t, err, "cannot skip the TLS verification")
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
