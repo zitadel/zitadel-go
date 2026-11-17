@@ -3,6 +3,8 @@ package zitadel
 import (
 	"context"
 	"net"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,6 +13,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
 // startMockGRPCServer sets up a minimal, non-functional gRPC server that
@@ -150,4 +156,79 @@ func TestWithDialOptions(t *testing.T) {
 	require.NoError(t, err, "NewConnection should not fail")
 
 	assert.Len(t, conn.dialOptions, 1)
+}
+
+// TestNewConnection_JWTProfile_AppliesTransportOptionsToHTTP verifies that the TLS and header options
+// also apply to the OIDC discovery and token requests made for the JWT profile authentication.
+func TestNewConnection_JWTProfile_AppliesTransportOptionsToHTTP(t *testing.T) {
+	keyFile := testidp.KeyFileJSON(t)
+	keyPath := filepath.Join(t.TempDir(), "key.json")
+	require.NoError(t, os.WriteFile(keyPath, keyFile, 0o600))
+
+	tests := []struct {
+		name    string
+		useTLS  bool
+		options func(t *testing.T) []Option
+	}{
+		{
+			name: "context aware helper",
+			options: func(t *testing.T) []Option {
+				return []Option{
+					WithInsecure(),
+					WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(keyFile)),
+				}
+			},
+		},
+		{
+			name: "key file from the environment",
+			options: func(t *testing.T) []Option {
+				t.Setenv(middleware.ZitadelKeyPath, keyPath)
+				return []Option{WithInsecure()}
+			},
+		},
+		{
+			name:   "self-signed certificate",
+			useTLS: true,
+			options: func(t *testing.T) []Option {
+				return []Option{
+					WithInsecureSkipVerifyTLS(),
+					WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(keyFile)),
+				}
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			idp := testidp.New(t, tt.useTLS)
+			options := append(tt.options(t), WithTransportHeader("x-foo", "bar"))
+
+			conn, err := NewConnection(context.Background(), idp.URL, startMockGRPCServer(t), nil, options...)
+			require.NoError(t, err)
+
+			// the token is requested before the call is made, so the call itself is expected to fail
+			_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+			assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+			assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+		})
+	}
+}
+
+// TestWithJWTProfileTokenSourceContext_ReplacesTheLegacyProvider verifies that the last of the two options wins.
+func TestWithJWTProfileTokenSourceContext_ReplacesTheLegacyProvider(t *testing.T) {
+	legacy := WithJWTProfileTokenSource(middleware.JWTProfileFromFileData(context.Background(), nil))
+	withContext := WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(nil))
+
+	c := &Connection{}
+	require.NoError(t, legacy(c))
+	assert.NotNil(t, c.jwtProfileTokenSource)
+	assert.Nil(t, c.jwtProfileTokenSourceContext)
+
+	require.NoError(t, withContext(c))
+	assert.Nil(t, c.jwtProfileTokenSource)
+	assert.NotNil(t, c.jwtProfileTokenSourceContext)
+
+	require.NoError(t, legacy(c))
+	assert.NotNil(t, c.jwtProfileTokenSource)
+	assert.Nil(t, c.jwtProfileTokenSourceContext)
 }

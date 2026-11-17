@@ -13,33 +13,35 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/httpclient"
 	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
 type Connection struct {
-	issuer                string
-	api                   string
-	jwtProfileTokenSource middleware.JWTProfileTokenSource
-	jwtDirectTokenSource  middleware.JWTDirectTokenSource
-	tokenSource           oauth2.TokenSource
-	scopes                []string
-	orgID                 string
-	insecure              bool
-	insecureSkipVerify    bool
-	transportHeaders      map[string]string
-	unaryInterceptors     []grpc.UnaryClientInterceptor
-	streamInterceptors    []grpc.StreamClientInterceptor
-	dialOptions           []grpc.DialOption
+	issuer                       string
+	api                          string
+	jwtProfileTokenSource        middleware.JWTProfileTokenSource
+	jwtProfileTokenSourceContext middleware.JWTProfileTokenSourceContext
+	jwtDirectTokenSource         middleware.JWTDirectTokenSource
+	tokenSource                  oauth2.TokenSource
+	scopes                       []string
+	orgID                        string
+	insecure                     bool
+	insecureSkipVerify           bool
+	transportHeaders             map[string]string
+	unaryInterceptors            []grpc.UnaryClientInterceptor
+	streamInterceptors           []grpc.StreamClientInterceptor
+	dialOptions                  []grpc.DialOption
 	*grpc.ClientConn
 }
 
 func NewConnection(ctx context.Context, issuer, api string, scopes []string, options ...Option) (*Connection, error) {
 	c := &Connection{
-		issuer:                issuer,
-		api:                   api,
-		jwtProfileTokenSource: middleware.JWTProfileFromPath(ctx, middleware.OSKeyPath()),
-		scopes:                scopes,
-		transportHeaders:      make(map[string]string),
+		issuer:                       issuer,
+		api:                          api,
+		jwtProfileTokenSourceContext: middleware.JWTProfileFromPathContext(middleware.OSKeyPath()),
+		scopes:                       scopes,
+		transportHeaders:             make(map[string]string),
 	}
 
 	for _, option := range options {
@@ -48,7 +50,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		}
 	}
 
-	err := c.setInterceptors(c.issuer, c.orgID, c.scopes, c.jwtProfileTokenSource)
+	err := c.setInterceptors(httpclient.WithContext(ctx, httpclient.New(c.insecureSkipVerify, c.transportHeaders)))
 	if err != nil {
 		return nil, err
 	}
@@ -93,15 +95,25 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 	return c, nil
 }
 
-func (c *Connection) setInterceptors(issuer, orgID string, scopes []string, jwtProfileTokenSource middleware.JWTProfileTokenSource) error {
+// setInterceptors adds the authentication and organization interceptors. The context carries the
+// HTTP client for the OIDC discovery and token requests, built from the TLS and transport header options.
+func (c *Connection) setInterceptors(ctx context.Context) error {
+	orgID := c.orgID
 	var auth *middleware.AuthInterceptor
 	var err error
-	if c.tokenSource != nil {
+	switch {
+	case c.tokenSource != nil:
 		auth, err = middleware.NewGenericAuthenticator(c.tokenSource)
-	} else if c.jwtDirectTokenSource != nil {
+	case c.jwtDirectTokenSource != nil:
 		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
-	} else {
+	case c.jwtProfileTokenSource != nil:
 		auth, err = middleware.NewAuthenticator(c.issuer, c.jwtProfileTokenSource, c.scopes...)
+	default:
+		var ts oauth2.TokenSource
+		ts, err = c.jwtProfileTokenSourceContext(ctx, c.issuer, c.scopes)
+		if err == nil {
+			auth, err = middleware.NewGenericAuthenticator(ts)
+		}
 	}
 	if err != nil {
 		return err
@@ -170,9 +182,25 @@ func WithTokenSource(ts oauth2.TokenSource) Option {
 
 // WithJWTProfileTokenSource sets the provider used for the authentication
 // if not set, the key file will be read from the path set in env var ZITADEL_KEY_PATH
+//
+// The provider does not receive the HTTP client built from [WithInsecureSkipVerifyTLS] and [WithTransportHeader],
+// so these do not apply to its OIDC discovery and token requests; use [WithJWTProfileTokenSourceContext] for that.
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
 		client.jwtProfileTokenSource = provider
+		client.jwtProfileTokenSourceContext = nil
+		return nil
+	}
+}
+
+// WithJWTProfileTokenSourceContext sets the provider used for the authentication, like [WithJWTProfileTokenSource].
+// The provider is called with a context carrying the HTTP client built from [WithInsecureSkipVerifyTLS] and
+// [WithTransportHeader], so those also apply to the OIDC discovery and token requests when the provider
+// is one of the middleware.JWTProfileFrom*Context helpers.
+func WithJWTProfileTokenSourceContext(provider middleware.JWTProfileTokenSourceContext) func(*Connection) error {
+	return func(client *Connection) error {
+		client.jwtProfileTokenSourceContext = provider
+		client.jwtProfileTokenSource = nil
 		return nil
 	}
 }
@@ -217,7 +245,8 @@ func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	}
 }
 
-// WithTransportHeader sets a custom header on outgoing gRPC requests.
+// WithTransportHeader sets a custom header on outgoing gRPC requests and on the HTTP requests
+// for the OIDC discovery and token exchange.
 func WithTransportHeader(key, value string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.transportHeaders[key] = value

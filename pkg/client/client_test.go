@@ -7,12 +7,16 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strconv"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	oidcclient "github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -272,3 +276,51 @@ func TestClient_TokenSourceReused(t *testing.T) {
 	assert.Equal(t, 1, underlyingSource.calls)
 }
 
+// TestNew_Authentication_AppliesTransportOptionsToHTTP verifies that the TLS and header options also apply
+// to the OIDC discovery and token requests made by the authentication initializers.
+func TestNew_Authentication_AppliesTransportOptionsToHTTP(t *testing.T) {
+	keyData := testidp.KeyFileJSON(t)
+	keyPath := filepath.Join(t.TempDir(), "key.json")
+	require.NoError(t, os.WriteFile(keyPath, keyData, 0o600))
+	keyFile, err := ConfigFromKeyFileData(keyData)
+	require.NoError(t, err)
+
+	tests := []struct {
+		name string
+		auth TokenSourceInitializer
+	}{
+		{name: "AuthenticationJWTProfile", auth: AuthenticationJWTProfile(keyFile)},
+		{
+			name: "JWTAuthentication",
+			auth: JWTAuthentication(&oidcclient.KeyFile{UserID: keyFile.UserID, KeyID: keyFile.KeyID, Key: string(keyFile.Key)}),
+		},
+		{name: "DefaultServiceUserAuthentication", auth: DefaultServiceUserAuthentication(keyPath)},
+		{name: "PasswordAuthentication", auth: PasswordAuthentication("user", "secret")},
+	}
+	for _, tt := range tests {
+		for _, useTLS := range []bool{false, true} {
+			t.Run(tt.name+"/tls="+strconv.FormatBool(useTLS), func(t *testing.T) {
+				idp := testidp.New(t, useTLS)
+				_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+				require.NoError(t, err)
+
+				opts := []zitadel.Option{zitadel.WithTransportHeader("x-foo", "bar")}
+				if useTLS {
+					portNumber, err := strconv.Atoi(port)
+					require.NoError(t, err)
+					opts = append(opts, zitadel.WithPort(uint16(portNumber)), zitadel.WithInsecureSkipVerifyTLS())
+				} else {
+					opts = append(opts, zitadel.WithInsecure(port))
+				}
+
+				c, err := New(context.Background(), zitadel.New("127.0.0.1", opts...), WithAuth(tt.auth))
+				require.NoError(t, err)
+				_, err = c.tokenSource.Token()
+				require.NoError(t, err)
+
+				assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+				assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+			})
+		}
+	}
+}

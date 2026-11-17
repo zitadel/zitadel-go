@@ -5,12 +5,12 @@ import (
 	"errors"
 	"os"
 
-	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/httpclient"
 )
 
 const (
@@ -26,6 +26,12 @@ type AuthInterceptor struct {
 }
 
 type JWTProfileTokenSource func(issuer string, scopes []string) (oauth2.TokenSource, error)
+
+// JWTProfileTokenSourceContext is like [JWTProfileTokenSource], but receives the context of the
+// connection being created. That context carries the HTTP client (see [oauth2.HTTPClient]) configured
+// through the connection's TLS and transport header options, which the token source should use for
+// the OIDC discovery and token requests. The helpers in this package do so.
+type JWTProfileTokenSourceContext func(ctx context.Context, issuer string, scopes []string) (oauth2.TokenSource, error)
 type JWTDirectTokenSource func() (oauth2.TokenSource, error)
 
 func JWTProfileFromPath(ctx context.Context, keyPath string) JWTProfileTokenSource {
@@ -50,7 +56,39 @@ func JWTProfileFromFileData(ctx context.Context, fileData []byte) JWTProfileToke
 
 func JWTProfileFromKeyAndUserID(ctx context.Context, key []byte, keyID, userID string) JWTProfileTokenSource {
 	return func(issuer string, scopes []string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)
+		return httpclient.JWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)
+	}
+}
+
+// JWTProfileFromPathContext is like [JWTProfileFromPath], but uses the context passed when the
+// token source is created, so the connection's HTTP client applies to the discovery and token requests.
+func JWTProfileFromPathContext(keyPath string) JWTProfileTokenSourceContext {
+	return func(ctx context.Context, issuer string, scopes []string) (oauth2.TokenSource, error) {
+		keyData, err := client.ConfigFromKeyFile(keyPath)
+		if err != nil {
+			return nil, err
+		}
+		return httpclient.JWTProfileTokenSource(ctx, issuer, keyData.UserID, keyData.KeyID, keyData.Key, scopes)
+	}
+}
+
+// JWTProfileFromFileDataContext is like [JWTProfileFromFileData], but uses the context passed when the
+// token source is created, so the connection's HTTP client applies to the discovery and token requests.
+func JWTProfileFromFileDataContext(fileData []byte) JWTProfileTokenSourceContext {
+	return func(ctx context.Context, issuer string, scopes []string) (oauth2.TokenSource, error) {
+		keyData, err := client.ConfigFromKeyFileData(fileData)
+		if err != nil {
+			return nil, err
+		}
+		return httpclient.JWTProfileTokenSource(ctx, issuer, keyData.UserID, keyData.KeyID, keyData.Key, scopes)
+	}
+}
+
+// JWTProfileFromKeyAndUserIDContext is like [JWTProfileFromKeyAndUserID], but uses the context passed when the
+// token source is created, so the connection's HTTP client applies to the discovery and token requests.
+func JWTProfileFromKeyAndUserIDContext(key []byte, keyID, userID string) JWTProfileTokenSourceContext {
+	return func(ctx context.Context, issuer string, scopes []string) (oauth2.TokenSource, error) {
+		return httpclient.JWTProfileTokenSource(ctx, issuer, userID, keyID, key, scopes)
 	}
 }
 
