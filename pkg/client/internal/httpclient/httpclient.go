@@ -227,8 +227,7 @@ func lookup(headers map[string]string, name string) (string, bool) {
 
 // headerRoundTripper adds the headers to a copy of every request before handing it to the wrapped round tripper.
 // A Host header sets the host of the request, as the HTTP client ignores it in the header. Requests for that host
-// are sent to the redirect's origin, if there is one. Proxy-Authorization is not added to requests over TLS, as it
-// is meant for the proxy, which receives it with the CONNECT request, and not for the server behind the tunnel.
+// are sent to the redirect's origin, if there is one.
 type headerRoundTripper struct {
 	rt       http.RoundTripper
 	headers  map[string]string
@@ -244,9 +243,6 @@ func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error
 	for k, v := range h.headers {
 		if strings.EqualFold(k, "Host") {
 			newReq.Host = v
-			continue
-		}
-		if newReq.URL.Scheme == "https" && strings.EqualFold(k, "Proxy-Authorization") {
 			continue
 		}
 		newReq.Header.Set(k, v)

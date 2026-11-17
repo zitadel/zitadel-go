@@ -62,7 +62,7 @@ func WithPort(port uint16) Option {
 // which are sent to the address of the client and not to that host, and, without TLS, the authority of the
 // gRPC calls; with TLS the authority stays the TLS server name. The issuer of the OIDC requests is then the one
 // ZITADEL announces for that host.
-// A Proxy-Authorization header is sent to the proxy with the CONNECT request of the tunnel, and not to the server, when the HTTP requests are over TLS.
+// A Proxy-Authorization header is also sent to a forward proxy with the CONNECT request of the tunnel when the HTTP requests are over TLS.
 // The headers are sent to every host those requests are made to, including a token endpoint named by the
 // OIDC discovery document.
 func WithTransportHeader(key, value string) Option {

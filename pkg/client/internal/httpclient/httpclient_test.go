@@ -339,27 +339,14 @@ func TestConfigure_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testin
 	assert.NoError(t, err, "headers do not need an *http.Transport")
 }
 
-func TestConfigure_ProxyAuthorizationIsOnlySentOverPlainHTTP(t *testing.T) {
-	tests := []struct {
-		name   string
-		useTLS bool
-		expect string
-	}{
-		{name: "plain http", useTLS: false, expect: "Basic abc"},
-		{name: "tls", useTLS: true, expect: ""},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			idp := testidp.New(t, tt.useTLS)
+func TestConfigure_ProxyAuthorizationIsSentOnTheRequestOverTLS(t *testing.T) {
+	idp := testidp.New(t, true)
 
-			resp, err := FromContext(mustConfigure(t, context.Background(), true, map[string]string{"proxy-authorization": "Basic abc", "x-foo": "bar"})).Get(idp.URL + "/anything")
-			require.NoError(t, err)
-			require.NoError(t, resp.Body.Close())
+	resp, err := FromContext(mustConfigure(t, context.Background(), true, map[string]string{"proxy-authorization": "Basic abc"})).Get(idp.URL + "/anything")
+	require.NoError(t, err)
+	require.NoError(t, resp.Body.Close())
 
-			assert.Equal(t, tt.expect, idp.Header("/anything", "Proxy-Authorization"))
-			assert.Equal(t, "bar", idp.Header("/anything", "x-foo"), "the other headers are sent over TLS")
-		})
-	}
+	assert.Equal(t, "Basic abc", idp.Header("/anything", "Proxy-Authorization"), "a reverse proxy that authenticates on the header needs it on the request")
 }
 
 func TestSameHost(t *testing.T) {
