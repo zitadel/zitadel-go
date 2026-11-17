@@ -2,6 +2,7 @@ package httpclient
 
 import (
 	"context"
+	"crypto/tls"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -173,4 +174,20 @@ func TestConfigure_ForwardsCloseIdleConnections(t *testing.T) {
 	FromContext(Configure(ctx, false, map[string]string{"x-foo": "bar"})).CloseIdleConnections()
 
 	assert.True(t, closed)
+}
+
+func TestConfigure_SkipVerifyLeavesSharedTransportsUntouched(t *testing.T) {
+	defaultTransport := http.DefaultTransport.(*http.Transport)
+	injectedTransport := http.DefaultTransport.(*http.Transport).Clone()
+	injectedTransport.TLSClientConfig = &tls.Config{MinVersion: tls.VersionTLS12}
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: injectedTransport})
+
+	Configure(context.Background(), true, nil)
+	Configure(ctx, true, map[string]string{"x-foo": "bar"})
+
+	if defaultTransport.TLSClientConfig != nil {
+		assert.False(t, defaultTransport.TLSClientConfig.InsecureSkipVerify)
+	}
+	assert.False(t, injectedTransport.TLSClientConfig.InsecureSkipVerify)
+	assert.Equal(t, uint16(tls.VersionTLS12), injectedTransport.TLSClientConfig.MinVersion)
 }

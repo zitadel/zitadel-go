@@ -280,7 +280,7 @@ the JWT profile with `WithJWTProfileTokenSourceContext` and one of the
 from the path in `ZITADEL_KEY_PATH`, already does):
 
 ```go
-api, err := management.NewClient(ctx, issuer, "zitadel.internal.example:443",
+api, err := management.NewClient(ctx, "https://zitadel.internal.example", "zitadel.internal.example:443",
 	[]string{oidc.ScopeOpenID, client.ScopeZitadelAPI()},
 	zitadel.WithTransportHeader("Proxy-Authorization", "Bearer <proxy token>"),
 	zitadel.WithJWTProfileTokenSourceContext(middleware.JWTProfileFromPathContext("key.json")),

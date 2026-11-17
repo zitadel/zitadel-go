@@ -241,7 +241,8 @@ func WithInsecure() func(*Connection) error {
 }
 
 // WithInsecureSkipVerifyTLS skips certificate verification when using TLS, for the gRPC connection as well as
-// for the HTTP requests of the OIDC discovery and token exchange.
+// for the HTTP requests of the OIDC discovery and token exchange. For the latter, a custom transport of an
+// HTTP client in the context that is not a *http.Transport is replaced by one with the default settings.
 // Use only for local development with self-signed certs.
 func WithInsecureSkipVerifyTLS() func(*Connection) error {
 	return func(client *Connection) error {

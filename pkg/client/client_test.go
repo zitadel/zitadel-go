@@ -348,3 +348,24 @@ func TestNew_KeepsAnInjectedHTTPClient(t *testing.T) {
 	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
 	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
 }
+
+// TestNew_PasswordAuthentication_UsesAnInjectedHTTPClient verifies that the discovery of the client credentials
+// authentication goes through a client in the context, e.g. one that trusts a private CA.
+func TestNew_PasswordAuthentication_UsesAnInjectedHTTPClient(t *testing.T) {
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	c, err := New(ctx,
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber))),
+		WithAuth(PasswordAuthentication("user", "secret")),
+	)
+	require.NoError(t, err, "the discovery must trust the certificate of the injected client")
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.True(t, idp.Requested(testidp.DiscoveryPath))
+}
