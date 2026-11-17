@@ -2,7 +2,13 @@ package zitadel
 
 import (
 	"context"
+	"errors"
 	"net"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,7 +16,12 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/middleware"
 )
 
 // startMockGRPCServer sets up a minimal, non-functional gRPC server that
@@ -151,3 +162,320 @@ func TestWithDialOptions(t *testing.T) {
 
 	assert.Len(t, conn.dialOptions, 1)
 }
+
+// TestNewConnection_JWTProfile_AppliesTransportOptionsToHTTP verifies that the TLS and header options
+// also apply to the OIDC discovery and token requests made for the JWT profile authentication.
+func TestNewConnection_JWTProfile_AppliesTransportOptionsToHTTP(t *testing.T) {
+	keyFile := testidp.KeyFileJSON(t)
+	keyPath := filepath.Join(t.TempDir(), "key.json")
+	require.NoError(t, os.WriteFile(keyPath, keyFile, 0o600))
+
+	tests := []struct {
+		name    string
+		useTLS  bool
+		options func(t *testing.T) []Option
+	}{
+		{
+			name: "context aware helper",
+			options: func(t *testing.T) []Option {
+				return []Option{
+					WithInsecure(),
+					WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(keyFile)),
+				}
+			},
+		},
+		{
+			name: "key file from the environment",
+			options: func(t *testing.T) []Option {
+				t.Setenv(middleware.ZitadelKeyPath, keyPath)
+				return []Option{WithInsecure()}
+			},
+		},
+		{
+			name:   "self-signed certificate",
+			useTLS: true,
+			options: func(t *testing.T) []Option {
+				return []Option{
+					WithInsecureSkipVerifyTLS(),
+					WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(keyFile)),
+				}
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			idp := testidp.New(t, tt.useTLS)
+			options := append(tt.options(t), WithTransportHeader("x-foo", "bar"))
+
+			conn, err := NewConnection(context.Background(), idp.URL, startMockGRPCServer(t), nil, options...)
+			require.NoError(t, err)
+
+			// the token is requested before the call is made, so the call itself is expected to fail
+			_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+			assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+			assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+		})
+	}
+}
+
+// TestWithJWTProfileTokenSourceContext_ReplacesTheLegacyProvider verifies that the last of the two options wins.
+func TestWithJWTProfileTokenSourceContext_ReplacesTheLegacyProvider(t *testing.T) {
+	legacy := WithJWTProfileTokenSource(middleware.JWTProfileFromFileData(context.Background(), nil))
+	withContext := WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(nil))
+
+	c := &Connection{}
+	require.NoError(t, legacy(c))
+	assert.NotNil(t, c.jwtProfileTokenSource)
+	assert.Nil(t, c.jwtProfileTokenSourceContext)
+
+	require.NoError(t, withContext(c))
+	assert.Nil(t, c.jwtProfileTokenSource)
+	assert.NotNil(t, c.jwtProfileTokenSourceContext)
+
+	require.NoError(t, legacy(c))
+	assert.NotNil(t, c.jwtProfileTokenSource)
+	assert.Nil(t, c.jwtProfileTokenSourceContext)
+}
+
+// TestNewConnection_JWTProfileProvider verifies which provider authenticates the connection,
+// and that the providers of both options are called with the issuer and the scopes.
+func TestNewConnection_JWTProfileProvider(t *testing.T) {
+	scopes := []string{"openid", "scope"}
+	static := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "token", TokenType: "Bearer"})
+
+	tests := []struct {
+		name            string
+		options         func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option
+		expectLegacy    int
+		expectWithCtx   int
+		expectedErrText string
+	}{
+		{
+			name: "the legacy provider is called with the issuer and the scopes",
+			options: func(legacy middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy)}
+			},
+			expectLegacy: 1,
+		},
+		{
+			name: "the context provider is called with the issuer and the scopes",
+			options: func(_ middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(withContext)}
+			},
+			expectWithCtx: 1,
+		},
+		{
+			name: "the last of both providers wins, the legacy one",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(withContext), WithJWTProfileTokenSource(legacy)}
+			},
+			expectLegacy: 1,
+		},
+		{
+			name: "the last of both providers wins, the context one",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTProfileTokenSourceContext(withContext)}
+			},
+			expectWithCtx: 1,
+		},
+		{
+			name: "a token source takes precedence over the providers",
+			options: func(legacy middleware.JWTProfileTokenSource, withContext middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTProfileTokenSourceContext(withContext), WithTokenSource(static)}
+			},
+		},
+		{
+			name: "a pre-signed JWT takes precedence over the providers",
+			options: func(legacy middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(legacy), WithJWTDirectTokenSource("jwt")}
+			},
+		},
+		{
+			name: "an error of the legacy provider is returned",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(func(string, []string) (oauth2.TokenSource, error) {
+					return nil, errors.New("legacy failed")
+				})}
+			},
+			expectedErrText: "legacy failed",
+		},
+		{
+			name: "an error of the context provider is returned",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(func(context.Context, string, []string) (oauth2.TokenSource, error) {
+					return nil, errors.New("context failed")
+				})}
+			},
+			expectedErrText: "context failed",
+		},
+		{
+			name: "a nil legacy provider is ignored next to a token source",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(nil), WithTokenSource(static)}
+			},
+		},
+		{
+			name: "a nil context provider is ignored next to a pre-signed JWT",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(nil), WithJWTDirectTokenSource("jwt")}
+			},
+		},
+		{
+			name: "a nil legacy provider alone is an error",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(nil)}
+			},
+			expectedErrText: "no token source",
+		},
+		{
+			name: "a nil context provider alone is an error",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(nil)}
+			},
+			expectedErrText: "no token source",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var legacyCalls, ctxCalls int
+			legacy := func(issuer string, s []string) (oauth2.TokenSource, error) {
+				legacyCalls++
+				assert.Equal(t, "https://issuer.example", issuer)
+				assert.Equal(t, scopes, s)
+				return static, nil
+			}
+			withContext := func(_ context.Context, issuer string, s []string) (oauth2.TokenSource, error) {
+				ctxCalls++
+				assert.Equal(t, "https://issuer.example", issuer)
+				assert.Equal(t, scopes, s)
+				return static, nil
+			}
+
+			_, err := NewConnection(context.Background(), "https://issuer.example", startMockGRPCServer(t), scopes,
+				append(tt.options(legacy, withContext), WithInsecure())...)
+
+			if tt.expectedErrText != "" {
+				require.ErrorContains(t, err, tt.expectedErrText)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.expectLegacy, legacyCalls)
+			assert.Equal(t, tt.expectWithCtx, ctxCalls)
+		})
+	}
+}
+
+// TestNewConnection_KeepsAnInjectedHTTPClient verifies that a client in the context, e.g. one that
+// trusts a private CA, keeps being used for the OIDC requests next to the transport options.
+func TestNewConnection_KeepsAnInjectedHTTPClient(t *testing.T) {
+	idp := testidp.New(t, true)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	conn, err := NewConnection(ctx, idp.URL, startMockGRPCServer(t), nil,
+		WithInsecure(),
+		WithTransportHeader("x-foo", "bar"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+}
+
+// authorityServer starts a gRPC server which records the authority of the last call.
+func authorityServer(t *testing.T) (string, func() string) {
+	t.Helper()
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err)
+	var mu sync.Mutex
+	var authority string
+	s := grpc.NewServer(grpc.UnknownServiceHandler(func(_ any, stream grpc.ServerStream) error {
+		md, _ := metadata.FromIncomingContext(stream.Context())
+		mu.Lock()
+		authority = strings.Join(md.Get(":authority"), ",")
+		mu.Unlock()
+		return status.Error(codes.Unimplemented, "not implemented")
+	}))
+	go func() { _ = s.Serve(lis) }()
+	t.Cleanup(s.GracefulStop)
+	return lis.Addr().String(), func() string {
+		mu.Lock()
+		defer mu.Unlock()
+		return authority
+	}
+}
+
+// TestNewConnection_HostHeader verifies that a Host transport header sets the host of the OIDC requests
+// and the authority of the gRPC calls.
+func TestNewConnection_HostHeader(t *testing.T) {
+	idp := testidp.New(t, false)
+	api, authority := authorityServer(t)
+
+	conn, err := NewConnection(context.Background(), idp.URL, api, nil,
+		WithInsecure(),
+		WithTransportHeader("Host", "external.example"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+	assert.Equal(t, "external.example", authority())
+}
+
+// TestNewConnection_WithoutHostHeader_KeepsTheAuthority verifies that the authority is the dialed address unless
+// a Host header is set, and that a dial option overrides it.
+func TestNewConnection_WithoutHostHeader_KeepsTheAuthority(t *testing.T) {
+	static := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "token", TokenType: "Bearer"})
+
+	api, authority := authorityServer(t)
+	conn, err := NewConnection(context.Background(), "https://issuer.example", api, nil, WithInsecure(), WithTokenSource(static))
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	assert.Equal(t, api, authority())
+
+	api, authority = authorityServer(t)
+	conn, err = NewConnection(context.Background(), "https://issuer.example", api, nil, WithInsecure(), WithTokenSource(static),
+		WithTransportHeader("Host", "external.example"), WithDialOptions(grpc.WithAuthority("dial.example")))
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	assert.Equal(t, "dial.example", authority(), "an explicit dial option must win over the header")
+}
+
+// TestNewConnection_HostHeaderWithTLS verifies that a Host header does not conflict with the TLS server name
+// of the gRPC connection, and still sets the host of the OIDC requests.
+func TestNewConnection_HostHeaderWithTLS(t *testing.T) {
+	idp := testidp.New(t, true)
+
+	conn, err := NewConnection(context.Background(), idp.URL, startMockGRPCServer(t), nil,
+		WithInsecureSkipVerifyTLS(),
+		WithTransportHeader("Host", "external.example"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err, "the authority must not conflict with the TLS server name")
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	require.NoError(t, conn.Close())
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}
+
+func TestNewConnection_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testing.T) {
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		return nil, errors.New("must not be used")
+	})})
+
+	_, err := NewConnection(ctx, "https://127.0.0.1", "127.0.0.1:443", nil,
+		WithInsecureSkipVerifyTLS(),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+
+	assert.ErrorContains(t, err, "cannot skip the TLS verification")
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }

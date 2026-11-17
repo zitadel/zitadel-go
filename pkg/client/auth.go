@@ -3,16 +3,15 @@ package client
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/zitadel/oidc/v3/pkg/client"
-	"github.com/zitadel/oidc/v3/pkg/client/profile"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/httpclient"
 )
 
 type TokenSourceInitializer func(ctx context.Context, issuer string) (oauth2.TokenSource, error)
@@ -20,7 +19,7 @@ type TokenSourceInitializer func(ctx context.Context, issuer string) (oauth2.Tok
 // AuthenticationJWTProfile allows using the OAuth2 JWT Profile Grant to get a token using a key.json of a service user provided by ZITADEL.
 func AuthenticationJWTProfile(file *KeyFile, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, file.Key, scopes)
+		return httpclient.JWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, file.Key, scopes)
 	}
 }
 
@@ -30,7 +29,7 @@ func AuthenticationJWTProfile(file *KeyFile, scopes ...string) TokenSourceInitia
 //nolint:staticcheck // Keep deprecated signature for backward compatibility.
 func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
-		return profile.NewJWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, []byte(file.Key), scopes)
+		return httpclient.JWTProfileTokenSource(ctx, issuer, file.UserID, file.KeyID, []byte(file.Key), scopes)
 	}
 }
 
@@ -38,7 +37,7 @@ func JWTAuthentication(file *client.KeyFile, scopes ...string) TokenSourceInitia
 // of a service user provided by ZITADEL.
 func PasswordAuthentication(username, password string, scopes ...string) TokenSourceInitializer {
 	return func(ctx context.Context, issuer string) (oauth2.TokenSource, error) {
-		discovery, err := client.Discover(ctx, issuer, http.DefaultClient)
+		discovery, err := httpclient.Discover(ctx, issuer)
 		if err != nil {
 			return nil, err
 		}

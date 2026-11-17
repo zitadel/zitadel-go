@@ -7,12 +7,18 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	oidcclient "github.com/zitadel/oidc/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/client/internal/testidp"
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -20,6 +26,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func TestClient_TransportConfiguration_Table(t *testing.T) {
@@ -272,3 +279,195 @@ func TestClient_TokenSourceReused(t *testing.T) {
 	assert.Equal(t, 1, underlyingSource.calls)
 }
 
+// TestNew_Authentication_AppliesTransportOptionsToHTTP verifies that the TLS and header options also apply
+// to the OIDC discovery and token requests made by the authentication initializers.
+func TestNew_Authentication_AppliesTransportOptionsToHTTP(t *testing.T) {
+	keyData := testidp.KeyFileJSON(t)
+	keyPath := filepath.Join(t.TempDir(), "key.json")
+	require.NoError(t, os.WriteFile(keyPath, keyData, 0o600))
+	keyFile, err := ConfigFromKeyFileData(keyData)
+	require.NoError(t, err)
+
+	tests := []struct {
+		name string
+		auth TokenSourceInitializer
+	}{
+		{name: "AuthenticationJWTProfile", auth: AuthenticationJWTProfile(keyFile)},
+		{
+			name: "JWTAuthentication",
+			auth: JWTAuthentication(&oidcclient.KeyFile{UserID: keyFile.UserID, KeyID: keyFile.KeyID, Key: string(keyFile.Key)}),
+		},
+		{name: "DefaultServiceUserAuthentication", auth: DefaultServiceUserAuthentication(keyPath)},
+		{name: "PasswordAuthentication", auth: PasswordAuthentication("user", "secret")},
+	}
+	for _, tt := range tests {
+		for _, useTLS := range []bool{false, true} {
+			t.Run(tt.name+"/tls="+strconv.FormatBool(useTLS), func(t *testing.T) {
+				idp := testidp.New(t, useTLS)
+				_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+				require.NoError(t, err)
+
+				opts := []zitadel.Option{zitadel.WithTransportHeader("x-foo", "bar")}
+				if useTLS {
+					portNumber, err := strconv.Atoi(port)
+					require.NoError(t, err)
+					opts = append(opts, zitadel.WithPort(uint16(portNumber)), zitadel.WithInsecureSkipVerifyTLS())
+				} else {
+					opts = append(opts, zitadel.WithInsecure(port))
+				}
+
+				c, err := New(context.Background(), zitadel.New("127.0.0.1", opts...), WithAuth(tt.auth))
+				require.NoError(t, err)
+				_, err = c.tokenSource.Token()
+				require.NoError(t, err)
+
+				assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+				assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+			})
+		}
+	}
+}
+
+// TestNew_KeepsAnInjectedHTTPClient verifies that a client in the context, e.g. one that trusts a
+// private CA, keeps being used for the OIDC requests next to the transport options.
+func TestNew_KeepsAnInjectedHTTPClient(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	c, err := New(ctx,
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber)), zitadel.WithTransportHeader("x-foo", "bar")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+	)
+	require.NoError(t, err)
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
+	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+}
+
+// TestNew_PasswordAuthentication_UsesAnInjectedHTTPClient verifies that the discovery of the client credentials
+// authentication goes through a client in the context, e.g. one that trusts a private CA.
+func TestNew_PasswordAuthentication_UsesAnInjectedHTTPClient(t *testing.T) {
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, idp.Client())
+
+	c, err := New(ctx,
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber))),
+		WithAuth(PasswordAuthentication("user", "secret")),
+	)
+	require.NoError(t, err, "the discovery must trust the certificate of the injected client")
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.True(t, idp.Requested(testidp.DiscoveryPath))
+}
+
+// TestNew_HostHeader verifies that a Host transport header sets the host of the OIDC requests
+// and the authority of the gRPC calls.
+func TestNew_HostHeader(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, false)
+
+	var mu sync.Mutex
+	var authority string
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err)
+	srv := grpc.NewServer(grpc.UnknownServiceHandler(func(_ any, stream grpc.ServerStream) error {
+		md, _ := metadata.FromIncomingContext(stream.Context())
+		mu.Lock()
+		authority = strings.Join(md.Get(":authority"), ",")
+		mu.Unlock()
+		return status.Error(codes.Unimplemented, "not implemented")
+	}))
+	go func() { _ = srv.Serve(lis) }()
+	t.Cleanup(srv.GracefulStop)
+
+	// the OIDC requests and the gRPC calls go to different servers, so the gRPC dialer is redirected
+	_, idpPort, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithInsecure(idpPort), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+		WithGRPCDialOptions(grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
+			return (&net.Dialer{}).DialContext(ctx, "tcp", lis.Addr().String())
+		})),
+	)
+	require.NoError(t, err)
+	_ = c.connection.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+	mu.Lock()
+	defer mu.Unlock()
+	assert.Equal(t, "external.example", authority)
+}
+
+// TestNew_HostHeaderWithTLS verifies that a Host header does not conflict with the TLS server name
+// of the gRPC connection, and still sets the host of the OIDC requests.
+func TestNew_HostHeaderWithTLS(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber)), zitadel.WithInsecureSkipVerifyTLS(), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+	)
+	require.NoError(t, err, "the authority must not conflict with the TLS server name")
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+	require.NoError(t, c.Close())
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}
+
+// TestNew_HostHeader_PasswordAuthentication verifies the same for the discovery and token request of the
+// client credentials grant: ZITADEL is reached on its internal address and announces the external host.
+func TestNew_HostHeader_PasswordAuthentication(t *testing.T) {
+	idp := testidp.New(t, false)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithInsecure(port), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(PasswordAuthentication("user", "secret")),
+	)
+	require.NoError(t, err)
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}
+
+func TestNew_SkipVerifyWithAnInjectedNonTransport_ReturnsAnError(t *testing.T) {
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		return nil, errors.New("must not be used")
+	})})
+
+	_, err := New(ctx, zitadel.New("127.0.0.1", zitadel.WithInsecureSkipVerifyTLS()), WithAuth(PAT("pat")))
+
+	assert.ErrorContains(t, err, "cannot skip the TLS verification")
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }

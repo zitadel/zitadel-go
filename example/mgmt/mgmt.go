@@ -36,7 +36,7 @@ func main() {
 		*issuer,
 		*api,
 		[]string{oidc.ScopeOpenID, zitadel.ScopeZitadelAPI()},
-		//zitadel.WithJWTProfileTokenSource(middleware.JWTProfileFromPath(ctx, "key.json")),
+		//zitadel.WithJWTProfileTokenSourceContext(middleware.JWTProfileFromPathContext("key.json")),
 		//zitadel.WithOrgID(*orgID),
 	)
 	if err != nil {
