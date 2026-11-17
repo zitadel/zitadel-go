@@ -262,8 +262,10 @@ environment and security requirements. For more details, please refer to the
 request the client makes: the gRPC calls as well as the OIDC discovery and token
 requests of the JWT profile and client credentials authentication. Use them if ZITADEL is only reachable through a proxy that
 requires authentication or serves a self-signed certificate. A `Host` header
-sets the host of the HTTP requests and the authority of the gRPC calls, for an
-instance that is reached by another name than the one it is served under.
+sets the host of the HTTP requests and, if the gRPC connection does not use
+TLS, the authority of the gRPC calls, for an instance that is reached by another
+name than the one it is served under. With TLS the authority stays the name of
+the TLS server.
 
 ```go
 api, err := client.New(ctx,

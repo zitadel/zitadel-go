@@ -175,7 +175,7 @@ func newConnection(
 		}))
 	}
 
-	if host, ok := httpclient.Host(zitadel.TransportHeaders()); ok {
+	if host, ok := httpclient.Host(zitadel.TransportHeaders()); ok && !zitadel.IsTLS() {
 		dialOptions = append(dialOptions, grpc.WithAuthority(host))
 	}
 

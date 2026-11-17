@@ -3,8 +3,12 @@ package httpclient
 import (
 	"context"
 	"crypto/tls"
+	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"sync"
 	"testing"
 	"time"
 
@@ -228,4 +232,88 @@ func TestConfigure_BuildsOnTheDefaultClient(t *testing.T) {
 	assert.Equal(t, 11*time.Second, configured.Timeout)
 	assert.NotNil(t, configured.CheckRedirect)
 	assert.NotSame(t, http.DefaultClient, configured, "the default client must not be modified")
+}
+
+// connectProxy starts a forward proxy for CONNECT requests that records the headers of the last one.
+func connectProxy(t *testing.T) (*url.URL, func() http.Header) {
+	t.Helper()
+	var mu sync.Mutex
+	var last http.Header
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodConnect {
+			http.Error(w, "only CONNECT", http.StatusMethodNotAllowed)
+			return
+		}
+		mu.Lock()
+		last = r.Header.Clone()
+		mu.Unlock()
+		target, err := net.Dial("tcp", r.Host)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadGateway)
+			return
+		}
+		conn, _, err := w.(http.Hijacker).Hijack()
+		if err != nil {
+			_ = target.Close()
+			return
+		}
+		_, _ = conn.Write([]byte("HTTP/1.1 200 Connection Established\r\n\r\n"))
+		go func() { _, _ = io.Copy(target, conn); _ = target.Close() }()
+		_, _ = io.Copy(conn, target)
+		_ = conn.Close()
+	}))
+	t.Cleanup(srv.Close)
+	proxyURL, err := url.Parse(srv.URL)
+	require.NoError(t, err)
+	return proxyURL, func() http.Header {
+		mu.Lock()
+		defer mu.Unlock()
+		return last
+	}
+}
+
+func TestConfigure_ProxyAuthorizationReachesTheConnectRequest(t *testing.T) {
+	tests := []struct {
+		name         string
+		customize    func(tr *http.Transport)
+		expectHeader map[string]string
+	}{
+		{name: "plain proxy transport", customize: func(*http.Transport) {}, expectHeader: map[string]string{"Proxy-Authorization": "Basic abc"}},
+		{
+			name: "existing connect header is kept",
+			customize: func(tr *http.Transport) {
+				tr.ProxyConnectHeader = http.Header{"X-Existing": []string{"yes"}}
+			},
+			expectHeader: map[string]string{"Proxy-Authorization": "Basic abc", "X-Existing": "yes"},
+		},
+		{
+			name: "dynamic connect header is kept",
+			customize: func(tr *http.Transport) {
+				tr.GetProxyConnectHeader = func(context.Context, *url.URL, string) (http.Header, error) {
+					return http.Header{"X-Dynamic": []string{"yes"}, "Proxy-Authorization": []string{"Basic other"}}, nil
+				}
+			},
+			expectHeader: map[string]string{"Proxy-Authorization": "Basic abc", "X-Dynamic": "yes"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			proxyURL, connectHeaders := connectProxy(t)
+			target := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+			defer target.Close()
+			transport := http.DefaultTransport.(*http.Transport).Clone()
+			transport.Proxy = http.ProxyURL(proxyURL)
+			tt.customize(transport)
+			ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Transport: transport})
+
+			resp, err := FromContext(Configure(ctx, true, map[string]string{"proxy-authorization": "Basic abc"})).Get(target.URL)
+			require.NoError(t, err)
+			require.NoError(t, resp.Body.Close())
+
+			for name, value := range tt.expectHeader {
+				assert.Equal(t, value, connectHeaders().Get(name), name)
+			}
+			assert.Empty(t, transport.ProxyConnectHeader.Get("Proxy-Authorization"), "the injected transport must not be modified")
+		})
+	}
 }

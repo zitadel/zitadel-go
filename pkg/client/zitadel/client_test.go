@@ -443,3 +443,21 @@ func TestNewConnection_WithoutHostHeader_KeepsTheAuthority(t *testing.T) {
 	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
 	assert.Equal(t, "dial.example", authority(), "an explicit dial option must win over the header")
 }
+
+// TestNewConnection_HostHeaderWithTLS verifies that a Host header does not conflict with the TLS server name
+// of the gRPC connection, and still sets the host of the OIDC requests.
+func TestNewConnection_HostHeaderWithTLS(t *testing.T) {
+	idp := testidp.New(t, true)
+
+	conn, err := NewConnection(context.Background(), idp.URL, startMockGRPCServer(t), nil,
+		WithInsecureSkipVerifyTLS(),
+		WithTransportHeader("Host", "external.example"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err, "the authority must not conflict with the TLS server name")
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	require.NoError(t, conn.Close())
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}

@@ -9,6 +9,7 @@ import (
 	"maps"
 	"net"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -38,6 +39,9 @@ func Configure(ctx context.Context, insecureSkipVerify bool, headers map[string]
 	}
 	if insecureSkipVerify {
 		rt = skipVerify(rt)
+	}
+	if value, ok := lookup(headers, "Proxy-Authorization"); ok {
+		rt = proxyConnectHeader(rt, value)
 	}
 	if len(headers) > 0 {
 		rt = &headerRoundTripper{rt: rt, headers: maps.Clone(headers)}
@@ -75,6 +79,36 @@ func skipVerify(rt http.RoundTripper) *http.Transport {
 	return t
 }
 
+// proxyConnectHeader returns a copy of the transport which also sends the Proxy-Authorization header to
+// the proxy in the CONNECT request of a TLS connection, where the header of the request does not reach it.
+// A round tripper that is not a *http.Transport cannot be configured and is returned as it is.
+func proxyConnectHeader(rt http.RoundTripper, value string) http.RoundTripper {
+	base, ok := rt.(*http.Transport)
+	if !ok {
+		return rt
+	}
+	t := base.Clone()
+	if t.ProxyConnectHeader == nil {
+		t.ProxyConnectHeader = http.Header{}
+	}
+	t.ProxyConnectHeader.Set("Proxy-Authorization", value)
+	if previous := t.GetProxyConnectHeader; previous != nil {
+		t.GetProxyConnectHeader = func(ctx context.Context, proxyURL *url.URL, target string) (http.Header, error) {
+			header, err := previous(ctx, proxyURL, target)
+			if err != nil {
+				return nil, err
+			}
+			header = header.Clone()
+			if header == nil {
+				header = http.Header{}
+			}
+			header.Set("Proxy-Authorization", value)
+			return header, nil
+		}
+	}
+	return t
+}
+
 // FromContext returns the HTTP client stored in the context, or nil.
 func FromContext(ctx context.Context) *http.Client {
 	c, _ := ctx.Value(oauth2.HTTPClient).(*http.Client)
@@ -101,8 +135,13 @@ func JWTProfileTokenSource(ctx context.Context, issuer, clientID, keyID string, 
 // Host returns the value of the Host header in the headers, matching the name case-insensitively.
 // Neither the HTTP client nor gRPC takes the host from a header, so callers apply it themselves.
 func Host(headers map[string]string) (string, bool) {
+	return lookup(headers, "Host")
+}
+
+// lookup returns the value of the header, matching the name case-insensitively.
+func lookup(headers map[string]string, name string) (string, bool) {
 	for k, v := range headers {
-		if strings.EqualFold(k, "Host") {
+		if strings.EqualFold(k, name) {
 			return v, true
 		}
 	}

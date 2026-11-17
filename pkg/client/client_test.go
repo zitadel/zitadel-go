@@ -414,3 +414,27 @@ func TestNew_HostHeader(t *testing.T) {
 	defer mu.Unlock()
 	assert.Equal(t, "external.example", authority)
 }
+
+// TestNew_HostHeaderWithTLS verifies that a Host header does not conflict with the TLS server name
+// of the gRPC connection, and still sets the host of the OIDC requests.
+func TestNew_HostHeaderWithTLS(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, true)
+	_, port, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+	portNumber, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithPort(uint16(portNumber)), zitadel.WithInsecureSkipVerifyTLS(), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+	)
+	require.NoError(t, err, "the authority must not conflict with the TLS server name")
+	_, err = c.tokenSource.Token()
+	require.NoError(t, err)
+	require.NoError(t, c.Close())
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+}
