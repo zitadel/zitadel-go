@@ -43,3 +43,26 @@ func ExampleClient_GetValidToken() {
 	// The token will be automatically refreshed by the SDK if expired
 	fmt.Printf("Token retrieved successfully (length: %d)\n", len(token))
 }
+
+// ExampleNew_transportHeaders demonstrates how to reach ZITADEL through an authenticating proxy.
+// The headers are sent with the gRPC calls as well as with the OIDC discovery and token requests.
+func ExampleNew_transportHeaders() {
+	ctx := context.Background()
+
+	authOption := client.DefaultServiceUserAuthentication(
+		"path/to/key.json",
+		oidc.ScopeOpenID,
+		client.ScopeZitadelAPI(),
+	)
+
+	api, err := client.New(ctx,
+		zitadel.New("zitadel.internal.example",
+			zitadel.WithTransportHeader("Proxy-Authorization", "Bearer <proxy token>"),
+		),
+		client.WithAuth(authOption),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer api.Close()
+}

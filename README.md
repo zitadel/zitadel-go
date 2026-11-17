@@ -255,6 +255,41 @@ Choose the authentication method that best suits your needs based on your
 environment and security requirements. For more details, please refer to the
 [Zitadel documentation on authenticating service users](https://zitadel.com/docs/guides/integrate/service-users/authenticate-service-users).
 
+### Proxies and self-signed certificates
+
+`zitadel.WithTransportHeader` adds a header (e.g. `Proxy-Authorization`) and
+`zitadel.WithInsecureSkipVerifyTLS` skips the certificate verification for every
+request the client makes: the gRPC calls as well as the OIDC discovery and token
+requests of the JWT profile and client credentials authentication. Use them if ZITADEL is only reachable through a proxy that
+requires authentication or serves a self-signed certificate.
+
+```go
+api, err := client.New(ctx,
+	zitadel.New("zitadel.internal.example",
+		zitadel.WithTransportHeader("Proxy-Authorization", "Bearer <proxy token>"),
+	),
+	client.WithAuth(authOption),
+)
+```
+
+The clients created directly through `NewClient` of a service package, or
+through `zitadel.NewConnection`, accept the same options from
+`pkg/client/zitadel`. To have them applied to the OIDC requests too, provide
+the JWT profile with `WithJWTProfileTokenSourceContext` and one of the
+`middleware.JWTProfileFrom...Context` helpers (the default, which reads the key
+from the path in `ZITADEL_KEY_PATH`, already does):
+
+```go
+api, err := management.NewClient(ctx, issuer, "zitadel.internal.example:443",
+	[]string{oidc.ScopeOpenID, client.ScopeZitadelAPI()},
+	zitadel.WithTransportHeader("Proxy-Authorization", "Bearer <proxy token>"),
+	zitadel.WithJWTProfileTokenSourceContext(middleware.JWTProfileFromPathContext("key.json")),
+)
+```
+
+`WithJWTProfileTokenSource` with the existing helpers keeps working, but its
+provider cannot receive the client, so the options only apply to the gRPC calls.
+
 ### Versions
 
 If you're looking for older version of this module, please check out the following tags:
