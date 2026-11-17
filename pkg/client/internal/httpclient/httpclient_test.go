@@ -191,3 +191,28 @@ func TestConfigure_SkipVerifyLeavesSharedTransportsUntouched(t *testing.T) {
 	assert.False(t, injectedTransport.TLSClientConfig.InsecureSkipVerify)
 	assert.Equal(t, uint16(tls.VersionTLS12), injectedTransport.TLSClientConfig.MinVersion)
 }
+
+func TestConfigure_HostHeaderSetsTheRequestHost(t *testing.T) {
+	for _, name := range []string{"Host", "host", "HOST"} {
+		t.Run(name, func(t *testing.T) {
+			idp := testidp.New(t, false)
+
+			resp, err := FromContext(Configure(context.Background(), false, map[string]string{name: "external.example"})).Get(idp.URL + "/anything")
+			require.NoError(t, err)
+			require.NoError(t, resp.Body.Close())
+
+			assert.Equal(t, "external.example", idp.Host("/anything"))
+		})
+	}
+}
+
+func TestHost(t *testing.T) {
+	host, ok := Host(map[string]string{"x-foo": "bar", "hOsT": "external.example"})
+	assert.True(t, ok)
+	assert.Equal(t, "external.example", host)
+
+	_, ok = Host(map[string]string{"x-foo": "bar"})
+	assert.False(t, ok)
+	_, ok = Host(nil)
+	assert.False(t, ok)
+}

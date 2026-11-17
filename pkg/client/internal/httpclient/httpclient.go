@@ -9,6 +9,7 @@ import (
 	"maps"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/zitadel/oidc/v3/pkg/client/profile"
@@ -99,7 +100,19 @@ func JWTProfileTokenSource(ctx context.Context, issuer, clientID, keyID string, 
 	return profile.NewJWTProfileTokenSource(ctx, issuer, clientID, keyID, key, scopes)
 }
 
+// Host returns the value of the Host header in the headers, matching the name case-insensitively.
+// Neither the HTTP client nor gRPC takes the host from a header, so callers apply it themselves.
+func Host(headers map[string]string) (string, bool) {
+	for k, v := range headers {
+		if strings.EqualFold(k, "Host") {
+			return v, true
+		}
+	}
+	return "", false
+}
+
 // headerRoundTripper adds the headers to a copy of every request before handing it to the wrapped round tripper.
+// A Host header sets the host of the request, as the HTTP client ignores it in the header.
 type headerRoundTripper struct {
 	rt      http.RoundTripper
 	headers map[string]string
@@ -108,6 +121,10 @@ type headerRoundTripper struct {
 func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	newReq := req.Clone(req.Context())
 	for k, v := range h.headers {
+		if strings.EqualFold(k, "Host") {
+			newReq.Host = v
+			continue
+		}
 		newReq.Header.Set(k, v)
 	}
 	return h.rt.RoundTrip(newReq)

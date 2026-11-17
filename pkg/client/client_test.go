@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -24,6 +26,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func TestClient_TransportConfiguration_Table(t *testing.T) {
@@ -368,4 +371,46 @@ func TestNew_PasswordAuthentication_UsesAnInjectedHTTPClient(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.True(t, idp.Requested(testidp.DiscoveryPath))
+}
+
+// TestNew_HostHeader verifies that a Host transport header sets the host of the OIDC requests
+// and the authority of the gRPC calls.
+func TestNew_HostHeader(t *testing.T) {
+	keyFile, err := ConfigFromKeyFileData(testidp.KeyFileJSON(t))
+	require.NoError(t, err)
+	idp := testidp.New(t, false)
+
+	var mu sync.Mutex
+	var authority string
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err)
+	srv := grpc.NewServer(grpc.UnknownServiceHandler(func(_ any, stream grpc.ServerStream) error {
+		md, _ := metadata.FromIncomingContext(stream.Context())
+		mu.Lock()
+		authority = strings.Join(md.Get(":authority"), ",")
+		mu.Unlock()
+		return status.Error(codes.Unimplemented, "not implemented")
+	}))
+	go func() { _ = srv.Serve(lis) }()
+	t.Cleanup(srv.GracefulStop)
+
+	// the OIDC requests and the gRPC calls go to different servers, so the gRPC dialer is redirected
+	_, idpPort, err := net.SplitHostPort(idp.Listener.Addr().String())
+	require.NoError(t, err)
+
+	c, err := New(context.Background(),
+		zitadel.New("127.0.0.1", zitadel.WithInsecure(idpPort), zitadel.WithTransportHeader("Host", "external.example")),
+		WithAuth(AuthenticationJWTProfile(keyFile)),
+		WithGRPCDialOptions(grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
+			return (&net.Dialer{}).DialContext(ctx, "tcp", lis.Addr().String())
+		})),
+	)
+	require.NoError(t, err)
+	_ = c.connection.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+	mu.Lock()
+	defer mu.Unlock()
+	assert.Equal(t, "external.example", authority)
 }

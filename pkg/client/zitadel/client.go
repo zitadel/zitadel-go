@@ -80,6 +80,9 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 			c.streamInterceptors...,
 		),
 	}
+	if host, ok := httpclient.Host(c.transportHeaders); ok {
+		dialOptions = append(dialOptions, grpc.WithAuthority(host))
+	}
 	dialOptions = append(dialOptions, c.dialOptions...)
 	opt, err := transportOption(c.api, c.insecure, c.insecureSkipVerify)
 	if err != nil {
@@ -252,9 +255,9 @@ func WithInsecureSkipVerifyTLS() func(*Connection) error {
 }
 
 // WithTransportHeader sets a custom header (e.g. Proxy-Authorization) on outgoing gRPC requests and on the HTTP
-// requests for the OIDC discovery and token exchange. The HTTP client ignores a Host header set this way, and
-// the headers are sent to every host those requests are made to, including a token endpoint named by the
-// discovery document.
+// requests for the OIDC discovery and token exchange. A Host header sets the host of the HTTP requests and the
+// authority of the gRPC calls. The headers are sent to every host those requests are made to, including a
+// token endpoint named by the discovery document.
 func WithTransportHeader(key, value string) func(*Connection) error {
 	return func(client *Connection) error {
 		client.transportHeaders[key] = value

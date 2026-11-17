@@ -175,6 +175,10 @@ func newConnection(
 		}))
 	}
 
+	if host, ok := httpclient.Host(zitadel.TransportHeaders()); ok {
+		dialOptions = append(dialOptions, grpc.WithAuthority(host))
+	}
+
 	dialOptions = append(dialOptions, opts...)
 
 	//nolint:staticcheck // grpc.DialContext is kept for backward compatibility across supported gRPC versions.

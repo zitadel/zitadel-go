@@ -27,15 +27,17 @@ type Server struct {
 
 	mu      sync.Mutex
 	headers map[string]http.Header
+	hosts   map[string]string
 }
 
 // New starts a test OIDC provider, over TLS with a self-signed certificate if useTLS is set.
 func New(t *testing.T, useTLS bool) *Server {
 	t.Helper()
-	s := &Server{headers: map[string]http.Header{}}
+	s := &Server{headers: map[string]http.Header{}, hosts: map[string]string{}}
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
 		s.headers[r.URL.Path] = r.Header.Clone()
+		s.hosts[r.URL.Path] = r.Host
 		s.mu.Unlock()
 		w.Header().Set("Content-Type", "application/json")
 		switch r.URL.Path {
@@ -68,6 +70,13 @@ func (s *Server) Header(path, name string) string {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.headers[path].Get(name)
+}
+
+// Host returns the host of the last request to the path, or "" if there was none.
+func (s *Server) Host(path string) string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.hosts[path]
 }
 
 // Requested reports whether the path was requested.

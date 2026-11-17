@@ -58,9 +58,9 @@ func WithPort(port uint16) Option {
 }
 
 // WithTransportHeader allows to set custom headers (e.g. Proxy-Authorization) that will be sent
-// with both HTTP (authentication) and gRPC (API) requests. The HTTP client ignores a Host header set this way,
-// and the headers are sent to every host those requests are made to, including a token endpoint named by the
-// OIDC discovery document.
+// with both HTTP (authentication) and gRPC (API) requests. A Host header sets the host of the HTTP requests
+// and the authority of the gRPC calls. The headers are sent to every host those requests are made to, including
+// a token endpoint named by the OIDC discovery document.
 func WithTransportHeader(key, value string) Option {
 	return func(z *Zitadel) {
 		z.transportHeaders[key] = value

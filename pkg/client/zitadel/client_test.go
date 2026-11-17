@@ -6,6 +6,8 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"strings"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,6 +15,7 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -378,4 +381,65 @@ func TestNewConnection_KeepsAnInjectedHTTPClient(t *testing.T) {
 
 	assert.Equal(t, "bar", idp.Header(testidp.DiscoveryPath, "x-foo"))
 	assert.Equal(t, "bar", idp.Header(testidp.TokenPath, "x-foo"))
+}
+
+// authorityServer starts a gRPC server which records the authority of the last call.
+func authorityServer(t *testing.T) (string, func() string) {
+	t.Helper()
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err)
+	var mu sync.Mutex
+	var authority string
+	s := grpc.NewServer(grpc.UnknownServiceHandler(func(_ any, stream grpc.ServerStream) error {
+		md, _ := metadata.FromIncomingContext(stream.Context())
+		mu.Lock()
+		authority = strings.Join(md.Get(":authority"), ",")
+		mu.Unlock()
+		return status.Error(codes.Unimplemented, "not implemented")
+	}))
+	go func() { _ = s.Serve(lis) }()
+	t.Cleanup(s.GracefulStop)
+	return lis.Addr().String(), func() string {
+		mu.Lock()
+		defer mu.Unlock()
+		return authority
+	}
+}
+
+// TestNewConnection_HostHeader verifies that a Host transport header sets the host of the OIDC requests
+// and the authority of the gRPC calls.
+func TestNewConnection_HostHeader(t *testing.T) {
+	idp := testidp.New(t, false)
+	api, authority := authorityServer(t)
+
+	conn, err := NewConnection(context.Background(), idp.URL, api, nil,
+		WithInsecure(),
+		WithTransportHeader("Host", "external.example"),
+		WithJWTProfileTokenSourceContext(middleware.JWTProfileFromFileDataContext(testidp.KeyFileJSON(t))),
+	)
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+
+	assert.Equal(t, "external.example", idp.Host(testidp.DiscoveryPath))
+	assert.Equal(t, "external.example", idp.Host(testidp.TokenPath))
+	assert.Equal(t, "external.example", authority())
+}
+
+// TestNewConnection_WithoutHostHeader_KeepsTheAuthority verifies that the authority is the dialed address unless
+// a Host header is set, and that a dial option overrides it.
+func TestNewConnection_WithoutHostHeader_KeepsTheAuthority(t *testing.T) {
+	static := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "token", TokenType: "Bearer"})
+
+	api, authority := authorityServer(t)
+	conn, err := NewConnection(context.Background(), "https://issuer.example", api, nil, WithInsecure(), WithTokenSource(static))
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	assert.Equal(t, api, authority())
+
+	api, authority = authorityServer(t)
+	conn, err = NewConnection(context.Background(), "https://issuer.example", api, nil, WithInsecure(), WithTokenSource(static),
+		WithTransportHeader("Host", "external.example"), WithDialOptions(grpc.WithAuthority("dial.example")))
+	require.NoError(t, err)
+	_ = conn.Invoke(context.Background(), "/zitadel.test.Service/Method", &emptypb.Empty{}, &emptypb.Empty{})
+	assert.Equal(t, "dial.example", authority(), "an explicit dial option must win over the header")
 }
