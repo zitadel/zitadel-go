@@ -154,3 +154,23 @@ func TestJWTProfileTokenSource(t *testing.T) {
 		})
 	}
 }
+
+type closeTrackingTransport struct {
+	*http.Transport
+	closed *bool
+}
+
+func (c closeTrackingTransport) CloseIdleConnections() {
+	*c.closed = true
+	c.Transport.CloseIdleConnections()
+}
+
+func TestConfigure_ForwardsCloseIdleConnections(t *testing.T) {
+	closed := false
+	injected := &http.Client{Transport: closeTrackingTransport{Transport: http.DefaultTransport.(*http.Transport).Clone(), closed: &closed}}
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, injected)
+
+	FromContext(Configure(ctx, false, map[string]string{"x-foo": "bar"})).CloseIdleConnections()
+
+	assert.True(t, closed)
+}

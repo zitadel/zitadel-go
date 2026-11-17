@@ -306,18 +306,30 @@ func TestNewConnection_JWTProfileProvider(t *testing.T) {
 			expectedErrText: "context failed",
 		},
 		{
-			name: "a nil legacy provider is rejected",
+			name: "a nil legacy provider is ignored next to a token source",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSource(nil), WithTokenSource(static)}
+			},
+		},
+		{
+			name: "a nil context provider is ignored next to a pre-signed JWT",
+			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
+				return []Option{WithJWTProfileTokenSourceContext(nil), WithJWTDirectTokenSource("jwt")}
+			},
+		},
+		{
+			name: "a nil legacy provider alone is an error",
 			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
 				return []Option{WithJWTProfileTokenSource(nil)}
 			},
-			expectedErrText: "must not be nil",
+			expectedErrText: "no token source",
 		},
 		{
-			name: "a nil context provider is rejected",
+			name: "a nil context provider alone is an error",
 			options: func(_ middleware.JWTProfileTokenSource, _ middleware.JWTProfileTokenSourceContext) []Option {
 				return []Option{WithJWTProfileTokenSourceContext(nil)}
 			},
-			expectedErrText: "must not be nil",
+			expectedErrText: "no token source",
 		},
 	}
 	for _, tt := range tests {

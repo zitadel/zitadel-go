@@ -112,3 +112,10 @@ func (h *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error
 	}
 	return h.rt.RoundTrip(newReq)
 }
+
+// CloseIdleConnections closes the idle connections of the wrapped round tripper, if it supports that.
+func (h *headerRoundTripper) CloseIdleConnections() {
+	if c, ok := h.rt.(interface{ CloseIdleConnections() }); ok {
+		c.CloseIdleConnections()
+	}
+}

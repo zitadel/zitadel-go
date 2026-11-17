@@ -70,14 +70,6 @@ func (s *Server) Header(path, name string) string {
 	return s.headers[path].Get(name)
 }
 
-// Requested reports whether the path was requested.
-func (s *Server) Requested(path string) bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	_, ok := s.headers[path]
-	return ok
-}
-
 // PrivateKey returns a PEM encoded RSA private key for signing JWT profile assertions.
 func PrivateKey(t *testing.T) []byte {
 	t.Helper()

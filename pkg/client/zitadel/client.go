@@ -51,7 +51,7 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 		}
 	}
 
-	err := c.setInterceptors(httpclient.Configure(ctx, c.insecureSkipVerify, c.transportHeaders))
+	err := c.setInterceptors(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +96,9 @@ func NewConnection(ctx context.Context, issuer, api string, scopes []string, opt
 	return c, nil
 }
 
-// setInterceptors adds the authentication and organization interceptors. The context carries the
-// HTTP client for the OIDC discovery and token requests, built from the TLS and transport header options.
+// setInterceptors adds the authentication and organization interceptors. A provider which receives a
+// context gets one carrying the HTTP client for the OIDC discovery and token requests, built from the
+// TLS and transport header options.
 func (c *Connection) setInterceptors(ctx context.Context) error {
 	var auth *middleware.AuthInterceptor
 	var err error
@@ -108,12 +109,14 @@ func (c *Connection) setInterceptors(ctx context.Context) error {
 		auth, err = middleware.NewPresignedJWTAuthenticator(c.jwtDirectTokenSource)
 	case c.jwtProfileTokenSource != nil:
 		auth, err = middleware.NewAuthenticator(c.issuer, c.jwtProfileTokenSource, c.scopes...)
-	default:
+	case c.jwtProfileTokenSourceContext != nil:
 		var ts oauth2.TokenSource
-		ts, err = c.jwtProfileTokenSourceContext(ctx, c.issuer, c.scopes)
+		ts, err = c.jwtProfileTokenSourceContext(httpclient.Configure(ctx, c.insecureSkipVerify, c.transportHeaders), c.issuer, c.scopes)
 		if err == nil {
 			auth, err = middleware.NewGenericAuthenticator(ts)
 		}
+	default:
+		err = errors.New("zitadel: no token source for the authentication is set")
 	}
 	if err != nil {
 		return err
@@ -188,9 +191,6 @@ func WithTokenSource(ts oauth2.TokenSource) Option {
 // A middleware.JWTProfileFrom* helper does use the client of the context it was created with.
 func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*Connection) error {
 	return func(client *Connection) error {
-		if provider == nil {
-			return errors.New("zitadel: the JWT profile token source must not be nil")
-		}
 		client.jwtProfileTokenSource = provider
 		client.jwtProfileTokenSourceContext = nil
 		return nil
@@ -203,9 +203,6 @@ func WithJWTProfileTokenSource(provider middleware.JWTProfileTokenSource) func(*
 // is one of the middleware.JWTProfileFrom*Context helpers.
 func WithJWTProfileTokenSourceContext(provider middleware.JWTProfileTokenSourceContext) func(*Connection) error {
 	return func(client *Connection) error {
-		if provider == nil {
-			return errors.New("zitadel: the JWT profile token source must not be nil")
-		}
 		client.jwtProfileTokenSourceContext = provider
 		client.jwtProfileTokenSource = nil
 		return nil
