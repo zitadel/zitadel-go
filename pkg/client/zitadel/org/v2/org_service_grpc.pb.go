@@ -55,7 +55,7 @@ type OrganizationServiceClient interface {
 	UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*UpdateOrganizationResponse, error)
 	// List Organizations
 	//
-	// Search for Organizations. By default, we will return all organization of the instance that you have permission to read.
+	// Search for Organizations. By default, the first 100 organizations of the instance that you have permission to read are returned (the default and the maximum limit of 1000 can be configured).
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
@@ -294,7 +294,7 @@ type OrganizationServiceServer interface {
 	UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*UpdateOrganizationResponse, error)
 	// List Organizations
 	//
-	// Search for Organizations. By default, we will return all organization of the instance that you have permission to read.
+	// Search for Organizations. By default, the first 100 organizations of the instance that you have permission to read are returned (the default and the maximum limit of 1000 can be configured).
 	// Make sure to include a limit and sorting for pagination.
 	//
 	// Required permission:
